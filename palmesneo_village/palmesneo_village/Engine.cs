@@ -149,7 +149,7 @@ namespace palmesneo_village
         {
             base.LoadContent();
 
-            // Load content here
+            ResourcesManager.LoadContent(GraphicsDevice, Content, ContentDirectory);
         }
 
         protected override void Update(GameTime gameTime)
