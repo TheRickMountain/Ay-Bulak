@@ -1,3 +1,4 @@
-﻿
-using var game = new palmesneo_village.Game1();
+﻿using palmesneo_village;
+
+using var game = new Engine(1280, 720, false);
 game.Run();
