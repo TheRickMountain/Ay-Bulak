@@ -18,7 +18,7 @@ namespace palmesneo_village
     public class Engine : Game
     {
         public string Title = "Palmesneo village";
-        public Version Version = new Version(0, 0);
+        public GameVersion Version = new GameVersion(0, 0, 0);
 
         public static Engine Instance { get; private set; }
         public static GraphicsDeviceManager Graphics { get; private set; }
