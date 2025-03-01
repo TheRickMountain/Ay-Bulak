@@ -5,8 +5,6 @@ namespace palmesneo_village
     public class DevScene : Scene
     {
 
-        private ImageUI testImage;
-
         public DevScene()
         {
             
@@ -16,16 +14,18 @@ namespace palmesneo_village
         {
             base.Begin();
 
-            testImage = new ImageUI();
-            testImage.Texture = ResourcesManager.GetTexture("tileset");
-            testImage.LocalScale = new Vector2(2, 4);
-            MasterUIEntity.AddChild(testImage);
+            MTileset tileset = new MTileset(ResourcesManager.GetTexture("Tilesets", "ground_summer_tileset"), 16, 16);
+
+            Tilemap tilemap = new Tilemap(TilesetConnection.SidesAndCorners, 16, 16, 64, 64);
+            tilemap.Tileset = tileset;
+
+            tilemap.SetCell(1, 1, 0);
+
+            MasterEntity.AddChild(tilemap);
         }
 
         public override void Update()
         {
-            testImage.LocalRotation += 1.0f * Engine.GameDeltaTime;
-
             base.Update();
         }
 

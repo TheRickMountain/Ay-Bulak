@@ -22,10 +22,13 @@
 				"TextureFormat": "Color"
 			}
 		},
-		"localization":
-		{
+		"localization": {
 			"path": "Localization/*.csv",
 			"action": "copy"
 		},
+		"blob_sets": {
+			"path": "Tilesets/blob_sets.json",
+			"action": "copy"
+		}
 	}
 }
