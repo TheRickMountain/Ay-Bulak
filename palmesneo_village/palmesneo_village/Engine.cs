@@ -1,16 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using MonoGame.Extended;
+using Penumbra;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Resources;
 using System.Runtime;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace palmesneo_village
 {
@@ -20,14 +15,25 @@ namespace palmesneo_village
         public string Title = "Palmesneo village";
         public GameVersion Version = new GameVersion(0, 0, 0);
 
+        public const int TILE_SIZE = 16;
+
         public static Engine Instance { get; private set; }
         public static GraphicsDeviceManager Graphics { get; private set; }
+        public static Commands Commands { get; private set; }
 
-        public static Color ClearColor { get; private set; }
+        public static Color ClearColor;
 
         public static float DeltaTime { get; private set; }
         public static float GameDeltaTime { get; private set; }
         public static float TimeRate { get; set; } = 1.0f;
+
+        public static float GlobalUIScale { get; set; } = 2.0f;
+
+        public static bool IsMouseOnUI { get; set; } = false;
+
+        public static bool DebugRender { get; set; } = false;
+
+        public static Camera Camera { get; private set; }
 
         // content directory
 #if !CONSOLE
@@ -47,19 +53,29 @@ namespace palmesneo_village
 #endif
         }
 
+        public static int ViewportWidth { get; private set; }
+        public static int ViewportHeight { get; private set; }
+
+        public static PenumbraComponent Penumbra { get; private set; }
+
         public Action<int, int> ScreenSizeChanged { get; set; }
 
         private static bool resizing;
 
-        public static int ViewportWidth { get; private set; }
-        public static int ViewportHeight { get; private set; }
+        private Scene currentScene;
+        private Scene nextScene;
 
-        public Engine(int windowWidth, int windowHeight, bool isFullscreen)
+        public Engine(int windowWidth, int windowHeight, bool isFullscreen,
+            Scene mainScene, bool debugRender)
         {
             Instance = this;
 
             ViewportWidth = windowWidth;
             ViewportHeight = windowHeight;
+
+            CurrentScene = mainScene;
+
+            DebugRender = debugRender;
 
             ClearColor = Color.Black;
 
@@ -103,6 +119,8 @@ namespace palmesneo_village
             IsFixedTimeStep = false;
             Window.Title = $"{Title} {Version}";
 
+            Penumbra = new PenumbraComponent(this);
+
             GCSettings.LatencyMode = GCLatencyMode.SustainedLowLatency;
         }
 
@@ -142,7 +160,13 @@ namespace palmesneo_village
         {
             base.Initialize();
 
-            // TODO: initialize here
+            MInput.Initialize();
+            InputBindings.Initialize();
+            Commands = new Commands();
+
+            Camera = new Camera(ViewportWidth, ViewportHeight);
+
+            Penumbra.Initialize();
         }
 
         protected override void LoadContent()
@@ -150,12 +174,20 @@ namespace palmesneo_village
             base.LoadContent();
 
             ResourcesManager.LoadContent(GraphicsDevice, Content, ContentDirectory);
+
+            LocalizationManager.Initialize(GameCulture.Russian);
+
+            RenderManager.Initialize(GraphicsDevice);
         }
 
         protected override void Update(GameTime gameTime)
         {
             DeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             GameDeltaTime = DeltaTime * TimeRate;
+
+            IsMouseOnUI = false;
+
+            MInput.Update();
 
             if (Keyboard.GetState().IsKeyDown(Keys.F11))
             {
@@ -169,7 +201,40 @@ namespace palmesneo_village
                 }
             }
 
-            // TODO: update here
+            // Update current scene
+            if (currentScene != null)
+            {
+                currentScene.Update();
+            }
+
+            //Debug Console
+            if (Commands.Open)
+            {
+                Commands.UpdateOpen();
+            }
+            else if (Commands.Enabled)
+            {
+                Commands.UpdateClosed();
+            }
+
+            // Changing scenes
+            if (currentScene != nextScene)
+            {
+                Scene lastScene = currentScene;
+
+                if (currentScene != null)
+                {
+                    currentScene.End();
+                }
+
+                currentScene = nextScene;
+                OnSceneTransition(lastScene, nextScene);
+
+                if (currentScene != null)
+                {
+                    currentScene.Begin();
+                }
+            }
 
             base.Update(gameTime);
         }
@@ -179,13 +244,105 @@ namespace palmesneo_village
             GraphicsDevice.SetRenderTarget(null);
             GraphicsDevice.Clear(ClearColor);
 
+            #region World render
+
+            Penumbra.Transform = Camera.Matrix;
+            Penumbra.BeginDraw();
+
+            RenderManager.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap,
+                DepthStencilState.None, RasterizerState.CullNone, null, Camera.Matrix);
+
+            currentScene?.Render();
+
+            RenderManager.SpriteBatch.End();
+
+            Penumbra.Draw(gameTime);
+
+            #endregion
+
+            #region World debug render
+
+            if (DebugRender)
+            {
+                RenderManager.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap,
+                DepthStencilState.None, RasterizerState.CullNone, null, Camera.Matrix);
+
+                currentScene?.DebugRender();
+
+                RenderManager.SpriteBatch.End();
+            }
+
+            #endregion
+
+            #region UI render
+
+            RenderManager.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap,
+                DepthStencilState.None, RasterizerState.CullNone);
+
+            currentScene?.RenderUI();
+
+            if (DebugRender)
+            {
+                currentScene?.DebugRenderUI();
+            }
+
+            if (Commands.Open)
+            {
+                Commands.Render();
+            }
+
+            RenderManager.SpriteBatch.End();
+
+            #endregion
+
             base.Draw(gameTime);
         }
 
         protected override void OnExiting(object sender, ExitingEventArgs args)
         {
             base.OnExiting(sender, args);
+            MInput.Shutdown();
         }
+
+        public void RunWithLogging()
+        {
+            try
+            {
+                Run();
+            }
+            catch (Exception e)
+            {
+                ErrorLog.Write(e);
+#if DEBUG
+                ErrorLog.Open();
+#endif
+            }
+        }
+
+        #region scene
+
+        /// <summary>
+        /// Called after a Scene ends, before the next Scene begins
+        /// </summary>
+        protected virtual void OnSceneTransition(Scene from, Scene to)
+        {
+            Penumbra.AmbientColor = Color.White;
+            Penumbra.Lights.Clear();
+
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+        }
+
+        /// <summary>
+        /// The currently active Scene. Note that if set, the Scene will not actually change until the end of the Update
+        /// </summary>
+        public static Scene CurrentScene
+        {
+            get { return Instance.currentScene; }
+            set { Instance.nextScene = value; }
+        }
+
+        #endregion
 
         #region screen
 

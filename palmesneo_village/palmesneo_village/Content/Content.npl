@@ -21,6 +21,11 @@
 				"MakeSquare": "False",
 				"TextureFormat": "Color"
 			}
-		}
+		},
+		"localization":
+		{
+			"path": "Localization/*.csv",
+			"action": "copy"
+		},
 	}
 }

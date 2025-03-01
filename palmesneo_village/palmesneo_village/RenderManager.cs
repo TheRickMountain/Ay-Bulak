@@ -10,7 +10,7 @@ namespace palmesneo_village
     {
 
         public static SpriteBatch SpriteBatch { get; private set; }
-        //public static SpriteFontBase StashDefaultFont { get; private set; }
+        public static SpriteFontBase StashDefaultFont { get; private set; }
 
         public static MTexture Pixel { get; private set; }
 
@@ -20,8 +20,8 @@ namespace palmesneo_village
         {
             SpriteBatch = new SpriteBatch(graphicsDevice);
 
-            //var fntData = File.ReadAllText(Path.Combine("Content", "Fonts", "silver.fnt"));
-            //StashDefaultFont = StaticSpriteFont.FromBMFont(fntData, fileName => File.OpenRead(fileName), graphicsDevice);
+            var fntData = File.ReadAllText(Path.Combine("Content", "Fonts", "silver.fnt"));
+            StashDefaultFont = StaticSpriteFont.FromBMFont(fntData, fileName => File.OpenRead(fileName), graphicsDevice);
 
             InitializeDebugPixelTexture(graphicsDevice);
         }
@@ -35,7 +35,7 @@ namespace palmesneo_village
 
         public static void Rect(float x, float y, float width, float height, Color color)
         {
-            rect.X = (int)x; 
+            rect.X = (int)x;
             rect.Y = (int)y;
             rect.Width = (int)width;
             rect.Height = (int)height;

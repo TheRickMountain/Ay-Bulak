@@ -1,0 +1,276 @@
+﻿using Microsoft.Xna.Framework;
+using System;
+using System.Collections.Generic;
+
+namespace palmesneo_village
+{
+    public class Entity
+    {
+        public Entity Parent { get; private set; }
+
+        public string Name { get; set; } = "";
+
+        public bool IsActive { get; set; } = true;
+        public bool IsVisible { get; set; } = true;
+
+        public virtual Vector2 LocalPosition { get; set; } = Vector2.Zero;
+        public virtual float LocalRotation { get; set; } = 0f;
+        public virtual Vector2 LocalScale { get; set; } = Vector2.One;
+
+        public virtual Vector2 GlobalPosition { get => (LocalPosition * (Parent != null ? Parent.GlobalScale : Vector2.One)) + (Parent != null ? Parent.GlobalPosition : Vector2.Zero); }
+
+        public float GlobalRotation { get => LocalRotation + (Parent != null ? Parent.GlobalRotation : 0); }
+
+        public Vector2 GlobalScale { get => LocalScale * (Parent != null ? Parent.GlobalScale : Vector2.One); }
+
+        public Color SelfColor { get; set; } = Color.White;
+
+        private bool isDepthSortEnabled = false;
+        public bool IsDepthSortEnabled 
+        {
+            get => isDepthSortEnabled;
+            set
+            {
+                if (isDepthSortEnabled == value) return;
+
+                isDepthSortEnabled = value;
+
+                if (Parent != null)
+                {
+                    Parent.unsorted = true;
+                }
+            }
+        }
+
+        private int depth = 0;
+        public int Depth
+        {
+            get => depth;
+            set
+            {
+                if (depth == value) return;
+
+                depth = value;
+
+                if (Parent != null)
+                {
+                    Parent.unsorted = true;
+                }
+            }
+        }
+
+        private List<Entity> children;
+        private List<Entity> childrenToAdd;
+
+        private Dictionary<string, object> metadata;
+
+        private bool unsorted = false;
+
+        public Entity()
+        {
+            Name = GetType().Name;
+
+            children = new List<Entity>();
+            childrenToAdd = new List<Entity>();
+
+            metadata = new Dictionary<string, object>();
+        }
+
+        public virtual void Begin()
+        {
+            foreach (var child in children)
+            {
+                child.Begin();
+            }
+        }
+
+        public virtual void Update()
+        {
+            if(childrenToAdd.Count > 0)
+            {
+                for (int i = 0; i < childrenToAdd.Count; i++)
+                {
+                    Entity child = childrenToAdd[i];
+                    children.Add(child);
+                }
+
+                childrenToAdd.Clear();
+
+                if(IsDepthSortEnabled)
+                {
+                    unsorted = true;
+                }
+            }
+
+            for (int i = children.Count - 1; i >= 0; i--)
+            {
+                children[i].Update();
+            }
+
+            if(unsorted)
+            {
+                unsorted = false;
+                children.Sort(CompareDepth);
+
+                Console.WriteLine("Sorted in: " + this);
+            }
+        }
+
+        public virtual void Render()
+        {
+            foreach (var child in children)
+            {
+                if (child.IsVisible)
+                {
+                    child.Render();
+                }
+            }
+        }
+
+        public virtual void DebugRender()
+        {
+            foreach (var child in children)
+            {
+                if (child.IsVisible)
+                {
+                    child.DebugRender();
+                }
+            }
+        }
+
+        public virtual void AddChild(Entity child)
+        {
+            if(child.Parent != null)
+            {
+                throw new Exception($"Entity:{child} already has parent Entity:{child.Parent}");
+            }
+
+            child.Parent = this;
+            childrenToAdd.Add(child);
+        }
+
+        public T GetChildByName<T>(string name) where T : Entity
+        {
+            for (int i = 0; i < childrenToAdd.Count; i++)
+            {
+                if (childrenToAdd[i].Name == name) return (T)childrenToAdd[i];
+            }
+
+            for (int i = 0; i < children.Count; i++)
+            {
+                if (children[i].Name == name) return (T)children[i];
+            }
+
+            return null;
+        }
+
+        public Entity this[string name]
+        {
+            get
+            {
+                return GetChildByName<Entity>(name);
+            }
+        }
+
+        public virtual bool ContainsChild(Entity child)
+        {
+            if (child == null) return false;
+
+            return child.Parent == this;
+        }
+
+        public virtual void RemoveChild(Entity child)
+        {
+            if(child == null) return;
+
+            if(child.Parent != this)
+            {
+                throw new Exception($"Entity:{child} has another parent Entity:{child.Parent}");
+            }
+
+            child.Parent = null;
+            childrenToAdd.Remove(child);
+            children.Remove(child);
+        }
+
+        public IEnumerable<Entity> GetChildren()
+        {
+            foreach(var child in children)
+            {
+                yield return child;
+            }
+
+            foreach(var child in childrenToAdd)
+            {
+                yield return child;
+            }
+        }
+
+        public IEnumerable<T> GetChildren<T>() where T : Entity
+        {
+            foreach (var child in children)
+            {
+                if (child is T)
+                {
+                    yield return (T)child;
+                }
+            }
+
+            foreach (var child in childrenToAdd)
+            {
+                if (child is T)
+                {
+                    yield return (T)child;
+                }
+            }
+        }
+
+        public int GetChildrenAmount()
+        {
+            return children.Count + childrenToAdd.Count;
+        }
+
+        public void ClearChildren()
+        {
+            for (int i = childrenToAdd.Count - 1; i >= 0; i--)
+            {
+                Entity child = childrenToAdd[i];
+                RemoveChild(child);
+            }
+
+            for (int i = children.Count - 1; i >= 0; i--)
+            {
+                Entity child = children[i];
+                RemoveChild(child);
+            }
+        }
+
+        public void SetMetadata<T>(string key, T value)
+        {
+            if (metadata.ContainsKey(key))
+            {
+                metadata[key] = value;
+            }
+            else
+            {
+                metadata.Add(key, value);
+            }
+        }
+
+        public T GetMetadata<T>(string key)
+        {
+            return (T)metadata[key];
+        }
+
+        public void RemoveMetadata(string key)
+        {
+            if (metadata.ContainsKey(key))
+            {
+                metadata.Remove(key);
+            }
+        }
+
+        public static Comparison<Entity> CompareDepth = (a, b) => { return Math.Sign(a.Depth - b.Depth); };
+
+    }
+}
