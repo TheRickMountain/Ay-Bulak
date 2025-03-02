@@ -9,6 +9,7 @@ namespace palmesneo_village
     public class ItemsDatabase
     {
         public Item[] Items { get; init; }
+        public ToolItem[] ToolItems { get; init; }
 
         private Dictionary<string, Item> nameItemPairs;
 
@@ -16,12 +17,8 @@ namespace palmesneo_village
         {
             nameItemPairs = new Dictionary<string, Item>();
 
-            foreach (Item item in Items)
-            {
-                item.Initialize(itemsIcons);
-
-                nameItemPairs.Add(item.Name, item);
-            }
+            ReadAndInitializeCollection(Items, itemsIcons);
+            ReadAndInitializeCollection(ToolItems, itemsIcons);
         }
 
         public Item GetItemByName(string name)
@@ -32,6 +29,16 @@ namespace palmesneo_village
             }
 
             return null;
+        }
+    
+        private void ReadAndInitializeCollection(Item[] itemsArray, MTileset itemsIcons)
+        {
+            foreach(Item item in itemsArray)
+            {
+                item.Initialize(itemsIcons);
+
+                nameItemPairs.Add(item.Name, item);
+            }
         }
     }
 }

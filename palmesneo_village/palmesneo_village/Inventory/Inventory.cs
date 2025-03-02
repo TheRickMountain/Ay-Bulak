@@ -80,16 +80,19 @@ namespace palmesneo_village
 
         public bool TryAddItem(Item item, int quantity)
         {
-            // Trying to find and add an item to an existing item
-            int slotIndexWithItem = GetSlotIndexWithItem(item);
-
-            if(slotIndexWithItem != -1)
+            if (item.IsStackable)
             {
-                slotsByIndex[slotIndexWithItem].Quantity += quantity;
+                // Trying to find and add an item to an existing item
+                int slotIndexWithItem = GetSlotIndexWithItem(item);
 
-                ItemAdded?.Invoke(item, quantity, slotIndexWithItem);
+                if (slotIndexWithItem != -1)
+                {
+                    slotsByIndex[slotIndexWithItem].Quantity += quantity;
 
-                return true;
+                    ItemAdded?.Invoke(item, quantity, slotIndexWithItem);
+
+                    return true;
+                }
             }
 
             // Trying to add an item to an empty slot

@@ -90,5 +90,13 @@
 			"Category": "Resources",
 			"IsStackable": true
 		}
+	],
+	"ToolItems":[
+		{
+			"Id": 132,
+			"Name": "iron_hoe",
+			"Category": "Tools",
+			"IsStackable": false
+		}
 	]
 }
