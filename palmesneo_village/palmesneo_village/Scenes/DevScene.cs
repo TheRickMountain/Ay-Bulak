@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using System;
 
 namespace palmesneo_village
 {
@@ -19,15 +20,28 @@ namespace palmesneo_village
             Tilemap tilemap = new Tilemap(TilesetConnection.SidesAndCorners, 16, 16, 64, 64);
             tilemap.Tileset = tileset;
 
-            tilemap.SetCell(1, 1, 0);
+            for (int x = 0; x < 64; x++)
+            {
+                for (int y = 0; y < 64; y++)
+                {
+                    tilemap.SetCell(x, y, 0);
+                }
+            }
 
             MasterEntity.AddChild(tilemap);
 
-            player = new Player(new CreatureTemplate("Player", RenderManager.Pixel, 100f));
+            WorldInteractionManager worldInteractionManager = new WorldInteractionManager(tilemap);
+            MasterEntity.AddChild(worldInteractionManager);
+
+            player = new Player(new CreatureTemplate("Player", ResourcesManager.GetTexture("Sprites", "player"), 100f));
             MasterEntity.AddChild(player);
+
+            int tilemapWidth = tilemap.TileColumns * Engine.TILE_SIZE;
+            int tilemapHeight = tilemap.TileRows * Engine.TILE_SIZE;
 
             CameraMovement cameraMovement = new CameraMovement();
             cameraMovement.Target = player;
+            cameraMovement.Bounds = new Rectangle(0, 0, tilemapWidth, tilemapHeight);
             MasterEntity.AddChild(cameraMovement);
 
             base.Begin();
