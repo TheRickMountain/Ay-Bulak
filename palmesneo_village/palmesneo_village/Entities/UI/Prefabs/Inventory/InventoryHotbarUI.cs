@@ -19,6 +19,8 @@ namespace palmesneo_village
         {
             this.inventory = inventory;
 
+            inventory.ItemAdded += OnInventoryItemAdded;
+
             slots = new List<InventorySlotUI>();
 
             for (int i = 0; i < inventory.Width; i++)
@@ -86,5 +88,14 @@ namespace palmesneo_village
             slotSelector.LocalPosition = slot.LocalPosition;
         }
 
+        private void OnInventoryItemAdded(Item item, int quantity, int slotIndex)
+        {
+            if ((slots.Count - 1) < slotIndex)
+                return;
+
+            ItemContainer itemContainer = inventory.GetSlot(slotIndex);
+
+            slots[slotIndex].SetItem(itemContainer.Item, itemContainer.Quantity);
+        }
     }
 }

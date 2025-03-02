@@ -10,7 +10,7 @@ namespace palmesneo_village
     {
 
         public Item Item { get; set; }
-        private int Quantity { get; set; }
+        public int Quantity { get; set; }
 
     }
 }

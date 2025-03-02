@@ -3,15 +3,11 @@ using System;
 
 namespace palmesneo_village
 {
-    public class DevScene : Scene
+    public class GameplayScene : Scene
     {
+        public Inventory Inventory { get; private set; }
 
         private Player player;
-
-        public DevScene()
-        {
-            
-        }
 
         public override void Begin()
         {
@@ -47,9 +43,9 @@ namespace palmesneo_village
             cameraMovement.Bounds = new Rectangle(0, 0, tilemapWidth, tilemapHeight);
             MasterEntity.AddChild(cameraMovement);
 
-            Inventory inventory = new Inventory(10, 4);
+            Inventory = new Inventory(10, 4);
 
-            InventoryHotbarUI inventoryHotbarUI = new InventoryHotbarUI(inventory);
+            InventoryHotbarUI inventoryHotbarUI = new InventoryHotbarUI(Inventory);
             inventoryHotbarUI.Anchor = Anchor.BottomCenter;
             MasterUIEntity.AddChild(inventoryHotbarUI);
 

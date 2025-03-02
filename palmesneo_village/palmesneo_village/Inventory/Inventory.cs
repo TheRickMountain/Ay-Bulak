@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace palmesneo_village
 {
@@ -11,30 +7,105 @@ namespace palmesneo_village
         public int Width { get; private set; }
         public int Height { get; private set; }
 
-        private ItemContainer[,] slots;
+        public Action<Item, int, int> ItemAdded { get; set; }
+
+        private ItemContainer[,] slotsByGrid;
+        private ItemContainer[] slotsByIndex;
 
         public Inventory(int width, int height)
         {
             Width = width;
             Height = height;
 
-            slots = new ItemContainer[width, height];
+            InitializeAndPopulateCollections();
+        }
 
-            for (int x = 0; x < width; x++)
+        private void InitializeAndPopulateCollections()
+        {
+            slotsByGrid = new ItemContainer[Width, Height];
+            slotsByIndex = new ItemContainer[Width * Height];
+
+            int slotIndex = 0;
+
+            for (int x = 0; x < Width; x++)
             {
-                for (int y = 0; y < height; y++)
+                for (int y = 0; y < Height; y++)
                 {
-                    slots[x, y] = new ItemContainer();
+                    ItemContainer itemContainer = new ItemContainer();
+
+                    slotsByGrid[x, y] = itemContainer;
+
+                    slotsByIndex[slotIndex] = itemContainer;
+
+                    slotIndex++;
                 }
             }
         }
 
-        public ItemContainer GetSlot(int gridX, int gridY)
+        private ItemContainer GetSlot(int gridX, int gridY)
         {
             if (gridX < 0 || gridX >= Width || gridY < 0 || gridY >= Height)
                 return null;
 
-            return slots[gridX, gridY];
+            return slotsByGrid[gridX, gridY];
+        }
+
+        public ItemContainer GetSlot(int slotIndex)
+        {
+            if (slotIndex < 0 || slotIndex >= slotsByIndex.Length)
+                return null;
+
+            return slotsByIndex[slotIndex];
+        }
+
+        private int GetSlotIndexWithItem(Item item)
+        {
+            for (int i = 0; i < slotsByIndex.Length; i++)
+            {
+                if (slotsByIndex[i].Item == item)
+                    return i;
+            }
+            return -1;
+        }
+
+        private int GetEmptySlotIndex()
+        {
+            for (int i = 0; i < slotsByIndex.Length; i++)
+            {
+                if (slotsByIndex[i].Item == null)
+                    return i;
+            }
+            return -1;
+        }
+
+        public bool TryAddItem(Item item, int quantity)
+        {
+            // Trying to find and add an item to an existing item
+            int slotIndexWithItem = GetSlotIndexWithItem(item);
+
+            if(slotIndexWithItem != -1)
+            {
+                slotsByIndex[slotIndexWithItem].Quantity += quantity;
+
+                ItemAdded?.Invoke(item, quantity, slotIndexWithItem);
+
+                return true;
+            }
+
+            // Trying to add an item to an empty slot
+            int emptySlotIndex = GetEmptySlotIndex();
+
+            if (emptySlotIndex != -1)
+            {
+                slotsByIndex[emptySlotIndex].Item = item;
+                slotsByIndex[emptySlotIndex].Quantity = quantity;
+
+                ItemAdded?.Invoke(item, quantity, emptySlotIndex);
+
+                return true;
+            }
+
+            return false;
         }
 
     }

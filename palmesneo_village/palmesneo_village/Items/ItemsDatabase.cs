@@ -10,12 +10,28 @@ namespace palmesneo_village
     {
         public Item[] Items { get; init; }
 
+        private Dictionary<string, Item> nameItemPairs;
+
         public void Initialize(MTileset itemsIcons)
         {
-            foreach(Item item in Items)
+            nameItemPairs = new Dictionary<string, Item>();
+
+            foreach (Item item in Items)
             {
                 item.Initialize(itemsIcons);
+
+                nameItemPairs.Add(item.Name, item);
             }
+        }
+
+        public Item GetItemByName(string name)
+        {
+            if (nameItemPairs.ContainsKey(name))
+            {
+                return nameItemPairs[name];
+            }
+
+            return null;
         }
     }
 }
