@@ -1,0 +1,28 @@
+{
+"Items":[
+		{
+			"Id": 1,
+			"Name": "ceramic_pot",
+			"Category": "Resources",
+			"IsStackable": true
+		},
+		{
+			"Id": 7,
+			"Name": "pot_of_water",
+			"Category": "Resources",
+			"IsStackable": true
+		},
+		{
+			"Id": 15,
+			"Name": "wood",
+			"Category": "Resources",
+			"IsStackable": true
+		},
+		{
+			"Id": 19,
+			"Name": "clay",
+			"Category": "Resources",
+			"IsStackable": true
+		}
+	]
+}

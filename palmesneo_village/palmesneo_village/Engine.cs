@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Newtonsoft.Json.Linq;
 using Penumbra;
 using System;
 using System.IO;
@@ -59,6 +60,8 @@ namespace palmesneo_village
         public static PenumbraComponent Penumbra { get; private set; }
 
         public Action<int, int> ScreenSizeChanged { get; set; }
+
+        public static ItemsDatabase ItemsDatabase { get; private set; }
 
         private static bool resizing;
 
@@ -178,6 +181,11 @@ namespace palmesneo_village
             LocalizationManager.Initialize(GameCulture.Russian);
 
             RenderManager.Initialize(GraphicsDevice);
+
+            ItemsDatabase = JObject.Parse(File.ReadAllText(Path.Combine(ContentDirectory, "Items", "ItemsDatabase.json")))
+                .ToObject<ItemsDatabase>();
+
+            ItemsDatabase.Initialize(new MTileset(ResourcesManager.GetTexture("Items", "items_icons"), 16, 16));
         }
 
         protected override void Update(GameTime gameTime)

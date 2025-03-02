@@ -26,8 +26,8 @@
 			"path": "Localization/*.csv",
 			"action": "copy"
 		},
-		"blob_sets": {
-			"path": "Tilesets/blob_sets.json",
+		"json": {
+			"path": "*.json",
 			"action": "copy"
 		}
 	}

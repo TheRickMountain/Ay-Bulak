@@ -47,6 +47,12 @@ namespace palmesneo_village
             cameraMovement.Bounds = new Rectangle(0, 0, tilemapWidth, tilemapHeight);
             MasterEntity.AddChild(cameraMovement);
 
+            Inventory inventory = new Inventory(10, 4);
+
+            InventoryHotbarUI inventoryHotbarUI = new InventoryHotbarUI(inventory);
+            inventoryHotbarUI.Anchor = Anchor.BottomCenter;
+            MasterUIEntity.AddChild(inventoryHotbarUI);
+
             base.Begin();
         }
 
