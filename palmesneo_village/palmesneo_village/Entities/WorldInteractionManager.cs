@@ -5,14 +5,16 @@ namespace palmesneo_village
     public class WorldInteractionManager : Entity
     {
         private Tilemap tilemap;
+        private InventoryHotbar inventoryHotbar;
 
         private TileSelector tileSelector;
 
         private Vector2 mouseTile;
 
-        public WorldInteractionManager(Tilemap tilemap)
+        public WorldInteractionManager(Tilemap tilemap, InventoryHotbar inventoryHotbar)
         {
             this.tilemap = tilemap;
+            this.inventoryHotbar = inventoryHotbar;
 
             tileSelector = new TileSelector();
             AddChild(tileSelector);
@@ -29,7 +31,18 @@ namespace palmesneo_village
             // TEMP: test
             if(MInput.Mouse.PressedLeftButton)
             {
-                tilemap.SetCell((int)mouseTile.X, (int)mouseTile.Y, 1);
+                Item item = inventoryHotbar.TryGetCurrentSlotItem();
+
+                if(item != null)
+                {
+                    if(item is ToolItem toolItem)
+                    {
+                        if (toolItem.ToolType == ToolType.Hoe)
+                        {
+                            tilemap.SetCell((int)mouseTile.X, (int)mouseTile.Y, 3);
+                        }
+                    }
+                }
             }
             // TEMP: test
         }

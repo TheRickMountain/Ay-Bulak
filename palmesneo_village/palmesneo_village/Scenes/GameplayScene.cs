@@ -11,6 +11,11 @@ namespace palmesneo_village
 
         public override void Begin()
         {
+            Inventory = new Inventory(10, 4);
+
+            InventoryHotbar inventoryHotbar = new InventoryHotbar(Inventory);
+            MasterEntity.AddChild(inventoryHotbar);
+
             MTileset tileset = new MTileset(ResourcesManager.GetTexture("Tilesets", "ground_summer_tileset"), 16, 16);
 
             Tilemap tilemap = new Tilemap(TilesetConnection.SidesAndCorners, 16, 16, 64, 64);
@@ -29,11 +34,13 @@ namespace palmesneo_village
             TilemapsManager tilemapsManager = new TilemapsManager(tilemap);
             MasterEntity.AddChild(tilemapsManager);
 
-            WorldInteractionManager worldInteractionManager = new WorldInteractionManager(tilemap);
-            MasterEntity.AddChild(worldInteractionManager);
+            CreatureTemplate creatureTemplate = new CreatureTemplate("Player", ResourcesManager.GetTexture("Sprites", "player"), 100);
 
-            player = new Player(new CreatureTemplate("Player", ResourcesManager.GetTexture("Sprites", "player"), 100f));
+            player = new Player(creatureTemplate);
             MasterEntity.AddChild(player);
+
+            WorldInteractionManager worldInteractionManager = new WorldInteractionManager(tilemap, inventoryHotbar);
+            MasterEntity.AddChild(worldInteractionManager);
 
             int tilemapWidth = tilemap.TileColumns * Engine.TILE_SIZE;
             int tilemapHeight = tilemap.TileRows * Engine.TILE_SIZE;
@@ -43,9 +50,7 @@ namespace palmesneo_village
             cameraMovement.Bounds = new Rectangle(0, 0, tilemapWidth, tilemapHeight);
             MasterEntity.AddChild(cameraMovement);
 
-            Inventory = new Inventory(10, 4);
-
-            InventoryHotbarUI inventoryHotbarUI = new InventoryHotbarUI(Inventory);
+            InventoryHotbarUI inventoryHotbarUI = new InventoryHotbarUI(Inventory, inventoryHotbar);
             inventoryHotbarUI.Anchor = Anchor.BottomCenter;
             MasterUIEntity.AddChild(inventoryHotbarUI);
 

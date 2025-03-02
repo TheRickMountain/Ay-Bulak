@@ -96,7 +96,15 @@
 			"Id": 132,
 			"Name": "iron_hoe",
 			"Category": "Tools",
-			"IsStackable": false
+			"IsStackable": false,
+			"ToolType": "Hoe"
+		},
+		{
+			"Id": 176,
+			"Name": "iron_watering_can",
+			"Category": "Tools",
+			"IsStackable": false,
+			"ToolType": "WateringCan"
 		}
 	]
 }

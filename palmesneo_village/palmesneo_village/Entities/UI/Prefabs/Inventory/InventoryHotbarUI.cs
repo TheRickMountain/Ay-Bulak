@@ -8,18 +8,19 @@ namespace palmesneo_village
     public class InventoryHotbarUI : HorizontalContainerUI
     {
         private Inventory inventory;
+        private InventoryHotbar inventoryHotbar;
 
         private List<InventorySlotUI> slots;
 
         private ImageUI slotSelector;
 
-        private int currentSlotIndex = 0;
-
-        public InventoryHotbarUI(Inventory inventory)
+        public InventoryHotbarUI(Inventory inventory, InventoryHotbar inventoryHotbar)
         {
             this.inventory = inventory;
+            this.inventoryHotbar = inventoryHotbar;
 
             inventory.ItemAdded += OnInventoryItemAdded;
+            inventoryHotbar.CurrentSlotIndexChanged += OnInventoryHotbarCurrentSlotIndexChanged;
 
             slots = new List<InventorySlotUI>();
 
@@ -40,46 +41,7 @@ namespace palmesneo_village
 
             Size = new Vector2(Size.X, slots[0].Size.Y);
 
-            UpdateSlotSelectorPosition(currentSlotIndex);
-        }
-
-        public override void Update()
-        {
-            base.Update();
-
-            UpdateWheelInput();
-
-            UpdateKeyboardInput();
-        }
-
-        private void UpdateWheelInput()
-        {
-            int wheelDelta = MInput.Mouse.WheelDelta;
-
-            if (wheelDelta != 0)
-            {
-                currentSlotIndex = Math.Clamp(currentSlotIndex - 1 * Math.Sign(wheelDelta), 0, slots.Count - 1);
-
-                UpdateSlotSelectorPosition(currentSlotIndex);
-            }
-        }
-
-        private void UpdateKeyboardInput()
-        {
-            for (int i = 0; i < 10; i++)
-            {
-                if (MInput.Keyboard.Pressed(Keys.D1 + i))
-                {
-                    currentSlotIndex = i;
-                    UpdateSlotSelectorPosition(currentSlotIndex);
-                }
-            }
-
-            if (MInput.Keyboard.Pressed(Keys.D0))
-            {
-                currentSlotIndex = 9;
-                UpdateSlotSelectorPosition(currentSlotIndex);
-            }
+            UpdateSlotSelectorPosition(inventoryHotbar.CurrentSlotIndex);
         }
 
         private void UpdateSlotSelectorPosition(int slotIndex)
@@ -96,6 +58,11 @@ namespace palmesneo_village
             ItemContainer itemContainer = inventory.GetSlot(slotIndex);
 
             slots[slotIndex].SetItem(itemContainer.Item, itemContainer.Quantity);
+        }
+        
+        private void OnInventoryHotbarCurrentSlotIndexChanged(int slotIndex)
+        {
+            UpdateSlotSelectorPosition(slotIndex);
         }
     }
 }

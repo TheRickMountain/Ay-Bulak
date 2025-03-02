@@ -8,6 +8,6 @@ namespace palmesneo_village
 {
     public class ToolItem : Item
     {
-
+        public ToolType ToolType { get; init; }
     }
 }

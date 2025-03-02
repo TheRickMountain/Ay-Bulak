@@ -6,10 +6,10 @@
 
     public class Item
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public ItemCategory Category { get; set; }
-        public bool IsStackable { get; set; }
+        public int Id { get; init; }
+        public string Name { get; init; }
+        public ItemCategory Category { get; init; }
+        public bool IsStackable { get; init; }
 
         public MTexture Icon { get; private set; }
 
