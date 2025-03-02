@@ -30,6 +30,9 @@ namespace palmesneo_village
 
             MasterEntity.AddChild(tilemap);
 
+            TilemapsManager tilemapsManager = new TilemapsManager(tilemap);
+            MasterEntity.AddChild(tilemapsManager);
+
             WorldInteractionManager worldInteractionManager = new WorldInteractionManager(tilemap);
             MasterEntity.AddChild(worldInteractionManager);
 
