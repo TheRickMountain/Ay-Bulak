@@ -7,6 +7,8 @@ namespace palmesneo_village
     {
         public Inventory Inventory { get; private set; }
 
+        public MoneyAmountManager MoneyAmountManager { get; private set; }
+
         private InventoryHotbar inventoryHotbar;
 
         private TimeOfDayManager timeOfDayManager;
@@ -52,6 +54,13 @@ namespace palmesneo_village
             InventoryHotbarUI inventoryHotbarUI = new InventoryHotbarUI(Inventory, inventoryHotbar);
             inventoryHotbarUI.Anchor = Anchor.BottomCenter;
             MasterUIEntity.AddChild(inventoryHotbarUI);
+
+            MoneyAmountManager = new MoneyAmountManager();
+
+            MoneyAmountUI moneyAmountUI = new MoneyAmountUI(MoneyAmountManager);
+            moneyAmountUI.Anchor = Anchor.BottomLeft;
+            moneyAmountUI.LocalPosition = new Vector2(5, -5);
+            MasterUIEntity.AddChild(moneyAmountUI);
 
             timeText = new TextUI();
             timeText.Anchor = Anchor.TopLeft;

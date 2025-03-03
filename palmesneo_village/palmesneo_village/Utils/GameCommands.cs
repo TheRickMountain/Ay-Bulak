@@ -28,6 +28,15 @@ namespace palmesneo_village
         {
             Engine.DebugRender = value;
         }
+
+        [Command("add_money", "Adds money to the player")]
+        private static void AddMoney(int amount)
+        {
+            if (Engine.CurrentScene is GameplayScene)
+            {
+                ((GameplayScene)Engine.CurrentScene).MoneyAmountManager.MoneyAmount += amount;
+            }
+        }
 #endif
     }
 }
