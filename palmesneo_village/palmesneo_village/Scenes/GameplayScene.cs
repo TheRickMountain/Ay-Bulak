@@ -93,10 +93,10 @@ namespace palmesneo_village
 
             float distanceBetweenPlayerAndMouseTile = Vector2.Distance(playerTile, mouseTile);
 
-            if(distanceBetweenPlayerAndMouseTile < 4)
-            {
-                Item item = inventoryHotbar.TryGetCurrentSlotItem();
+            Item item = inventoryHotbar.TryGetCurrentSlotItem();
 
+            if (distanceBetweenPlayerAndMouseTile < 4)
+            {
                 if (item != null)
                 {
                     int tileX = (int)mouseTile.X;
@@ -113,6 +113,16 @@ namespace palmesneo_village
                             PlayerEnergyManager.ConsumeEnergy(1);
                         }
                     }
+                }
+            }
+
+            if(MInput.Mouse.PressedRightButton)
+            {
+                if(item != null && item is ConsumableItem)
+                {
+                    ConsumableItem consumableItem = (ConsumableItem)item;
+
+                    PlayerEnergyManager.AddEnergy(consumableItem.EnergyAmount);
                 }
             }
 

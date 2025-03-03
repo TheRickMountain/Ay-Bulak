@@ -42,14 +42,6 @@ namespace palmesneo_village
             }
         }
 
-        private ItemContainer GetSlot(int gridX, int gridY)
-        {
-            if (gridX < 0 || gridX >= Width || gridY < 0 || gridY >= Height)
-                return null;
-
-            return slotsByGrid[gridX, gridY];
-        }
-
         public ItemContainer GetSlot(int slotIndex)
         {
             if (slotIndex < 0 || slotIndex >= slotsByIndex.Length)
@@ -110,6 +102,5 @@ namespace palmesneo_village
 
             return false;
         }
-
     }
 }

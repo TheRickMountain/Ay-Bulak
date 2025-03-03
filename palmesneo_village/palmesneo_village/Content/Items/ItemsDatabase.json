@@ -1,5 +1,5 @@
 {
-"Items":[
+	"Items":[
 		{
 			"Id": 1,
 			"Name": "ceramic_pot",
@@ -105,6 +105,15 @@
 			"Category": "Tools",
 			"IsStackable": false,
 			"ToolType": "WateringCan"
+		}
+	],
+	"ConsumableItems":[
+		{
+			"Id": 26,
+			"Name": "cooked_meat",
+			"Category": "Food",
+			"IsStackable": true,
+			"EnergyAmount": 20
 		}
 	]
 }
