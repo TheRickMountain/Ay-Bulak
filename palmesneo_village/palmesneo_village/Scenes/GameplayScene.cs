@@ -9,6 +9,8 @@ namespace palmesneo_village
 
         private InventoryHotbar inventoryHotbar;
 
+        private TimeOfDayManager timeOfDayManager;
+
         private Player player;
 
         private GameLocation currentGameLocation;
@@ -17,12 +19,17 @@ namespace palmesneo_village
 
         private Vector2 mouseTile;
 
+        private TextUI timeText;
+
         public override void Begin()
         {
             Inventory = new Inventory(10, 4);
 
             inventoryHotbar = new InventoryHotbar(Inventory);
             MasterEntity.AddChild(inventoryHotbar);
+
+            timeOfDayManager = new TimeOfDayManager();
+            MasterUIEntity.AddChild(timeOfDayManager);
 
             FarmLocation farmLocation = new FarmLocation();
             MasterEntity.AddChild(farmLocation);
@@ -39,18 +46,25 @@ namespace palmesneo_village
             cameraMovement.Bounds = farmLocation.GetBoundaries();
             MasterEntity.AddChild(cameraMovement);
 
+            tileSelector = new TileSelector();
+            MasterEntity.AddChild(tileSelector);
+
             InventoryHotbarUI inventoryHotbarUI = new InventoryHotbarUI(Inventory, inventoryHotbar);
             inventoryHotbarUI.Anchor = Anchor.BottomCenter;
             MasterUIEntity.AddChild(inventoryHotbarUI);
 
-            tileSelector = new TileSelector();
-            MasterEntity.AddChild(tileSelector);
+            timeText = new TextUI();
+            timeText.Anchor = Anchor.TopLeft;
+            timeText.LocalPosition = new Vector2(5, 5);
+            MasterUIEntity.AddChild(timeText);
 
             base.Begin();
         }
 
         public override void Update()
         {
+            timeText.Text = timeOfDayManager.GetTimeString();
+
             mouseTile = currentGameLocation.WorldToMap(MInput.Mouse.GlobalPosition);
 
             tileSelector.LocalPosition = currentGameLocation.MapToWorld(mouseTile);
@@ -59,9 +73,12 @@ namespace palmesneo_village
             {
                 Item item = inventoryHotbar.TryGetCurrentSlotItem();
 
-                if (currentGameLocation.CanInteractWithTile((int)mouseTile.X, (int)mouseTile.Y, item))
+                int tileX = (int)mouseTile.X;
+                int tileY = (int)mouseTile.Y;
+
+                if (currentGameLocation.CanInteractWithTile(tileX, tileY, item))
                 {
-                    currentGameLocation.InteractWithTile((int)mouseTile.X, (int)mouseTile.Y, item);
+                    currentGameLocation.InteractWithTile(tileX, tileY, item);
                 }
             }
 

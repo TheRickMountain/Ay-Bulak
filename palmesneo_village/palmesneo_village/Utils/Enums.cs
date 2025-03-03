@@ -13,9 +13,4 @@ namespace palmesneo_village
         Up,
         Down
     }
-
-    public class Enums
-    {
-
-    }
 }
