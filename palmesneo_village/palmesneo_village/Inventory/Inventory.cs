@@ -8,6 +8,7 @@ namespace palmesneo_village
         public int Height { get; private set; }
 
         public Action<Item, int, int> ItemAdded { get; set; }
+        public Action<Item, int, int> ItemRemoved { get; set; }
 
         private ItemContainer[,] slotsByGrid;
         private ItemContainer[] slotsByIndex;
@@ -42,12 +43,20 @@ namespace palmesneo_village
             }
         }
 
-        public ItemContainer GetSlot(int slotIndex)
+        public Item GetSlotItem(int slotIndex)
         {
             if (slotIndex < 0 || slotIndex >= slotsByIndex.Length)
                 return null;
 
-            return slotsByIndex[slotIndex];
+            return slotsByIndex[slotIndex].Item;
+        }
+
+        public int GetSlotQuantity(int slotIndex)
+        {
+            if (slotIndex < 0 || slotIndex >= slotsByIndex.Length)
+                return 0;
+
+            return slotsByIndex[slotIndex].Quantity;
         }
 
         private int GetSlotIndexWithItem(Item item)
@@ -101,6 +110,27 @@ namespace palmesneo_village
             }
 
             return false;
+        }
+
+        public void RemoveItem(Item item, int quantity, int slotIndex)
+        {
+            if (slotIndex < 0 || slotIndex >= slotsByIndex.Length)
+                throw new IndexOutOfRangeException();
+
+            if (slotsByIndex[slotIndex].Item != item)
+                throw new Exception("Item does not match the item in the slot");
+
+            if(slotsByIndex[slotIndex].Quantity < quantity)
+                throw new Exception("Quantity is greater than the quantity in the slot");
+
+            slotsByIndex[slotIndex].Quantity -= quantity;
+
+            if (slotsByIndex[slotIndex].Quantity == 0)
+            {
+                slotsByIndex[slotIndex].Item = null;
+            }
+
+            ItemRemoved?.Invoke(item, quantity, slotIndex);
         }
     }
 }

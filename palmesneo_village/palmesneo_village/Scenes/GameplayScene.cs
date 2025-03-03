@@ -123,6 +123,8 @@ namespace palmesneo_village
                     ConsumableItem consumableItem = (ConsumableItem)item;
 
                     PlayerEnergyManager.AddEnergy(consumableItem.EnergyAmount);
+
+                    Inventory.RemoveItem(consumableItem, 1, inventoryHotbar.CurrentSlotIndex);
                 }
             }
 

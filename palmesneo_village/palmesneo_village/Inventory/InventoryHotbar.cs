@@ -33,7 +33,7 @@ namespace palmesneo_village
 
         public Item TryGetCurrentSlotItem()
         {
-            return inventory.GetSlot(CurrentSlotIndex).Item;
+            return inventory.GetSlotItem(CurrentSlotIndex);
         }
 
         private void UpdateWheelInput()

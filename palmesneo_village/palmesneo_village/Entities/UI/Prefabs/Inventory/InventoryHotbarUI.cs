@@ -19,7 +19,8 @@ namespace palmesneo_village
             this.inventory = inventory;
             this.inventoryHotbar = inventoryHotbar;
 
-            inventory.ItemAdded += OnInventoryItemAdded;
+            inventory.ItemAdded += OnInventoryItemChanged;
+            inventory.ItemRemoved += OnInventoryItemChanged;
             inventoryHotbar.CurrentSlotIndexChanged += OnInventoryHotbarCurrentSlotIndexChanged;
 
             slots = new List<InventorySlotUI>();
@@ -50,14 +51,22 @@ namespace palmesneo_village
             slotSelector.LocalPosition = slot.LocalPosition;
         }
 
-        private void OnInventoryItemAdded(Item item, int quantity, int slotIndex)
+        private void OnInventoryItemChanged(Item item, int quantity, int slotIndex)
         {
             if ((slots.Count - 1) < slotIndex)
                 return;
 
-            ItemContainer itemContainer = inventory.GetSlot(slotIndex);
+            Item slotItem = inventory.GetSlotItem(slotIndex);
+            int slotQuantity = inventory.GetSlotQuantity(slotIndex);
 
-            slots[slotIndex].SetItem(itemContainer.Item, itemContainer.Quantity);
+            if (slotItem == null)
+            {
+                slots[slotIndex].Clear();
+            }
+            else
+            {
+                slots[slotIndex].SetItem(slotItem, slotQuantity);
+            }
         }
         
         private void OnInventoryHotbarCurrentSlotIndexChanged(int slotIndex)
