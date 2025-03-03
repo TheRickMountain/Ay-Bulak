@@ -1,9 +1,5 @@
 ﻿namespace palmesneo_village
 {
-    public class ItemReader
-    {
-    }
-
     public class Item
     {
         public int Id { get; init; }

@@ -109,6 +109,8 @@ namespace palmesneo_village
                         if (MInput.Mouse.PressedLeftButton)
                         {
                             currentGameLocation.InteractWithTile(tileX, tileY, item);
+
+                            PlayerEnergyManager.ConsumeEnergy(1);
                         }
                     }
                 }
