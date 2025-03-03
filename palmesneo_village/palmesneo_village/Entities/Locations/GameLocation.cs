@@ -50,7 +50,7 @@ namespace palmesneo_village
                         break;
                     case ToolType.WateringCan:
                         {
-                            if (groundTileId == 3) return true;
+                            if (groundTileId == 3 && groundTopTileId != 0) return true;
                         }
                         break;
                 }

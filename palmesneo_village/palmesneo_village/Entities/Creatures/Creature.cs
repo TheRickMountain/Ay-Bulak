@@ -18,7 +18,7 @@ namespace palmesneo_village
             bodyImage.Texture = creatureTemplate.Texture;
             bodyImage.Centered = true;
             bodyImage.Offset = new Vector2(0, creatureTemplate.Texture.Height / 2 - Engine.TILE_SIZE / 2);
-            bodyImage.LocalPosition = new Vector2(Engine.TILE_SIZE / 2, Engine.TILE_SIZE / 2);
+
             AddChild(bodyImage);
         }
     }

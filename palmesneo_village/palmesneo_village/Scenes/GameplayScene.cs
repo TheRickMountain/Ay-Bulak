@@ -72,22 +72,36 @@ namespace palmesneo_village
 
         public override void Update()
         {
+            tileSelector.IsVisible = false;
+
             timeText.Text = timeOfDayManager.GetTimeString();
 
             mouseTile = currentGameLocation.WorldToMap(MInput.Mouse.GlobalPosition);
 
             tileSelector.LocalPosition = currentGameLocation.MapToWorld(mouseTile);
 
-            if (MInput.Mouse.PressedLeftButton)
+            Vector2 playerTile = currentGameLocation.WorldToMap(player.LocalPosition);
+
+            float distanceBetweenPlayerAndMouseTile = Vector2.Distance(playerTile, mouseTile);
+
+            if(distanceBetweenPlayerAndMouseTile < 4)
             {
                 Item item = inventoryHotbar.TryGetCurrentSlotItem();
 
-                int tileX = (int)mouseTile.X;
-                int tileY = (int)mouseTile.Y;
-
-                if (currentGameLocation.CanInteractWithTile(tileX, tileY, item))
+                if (item != null)
                 {
-                    currentGameLocation.InteractWithTile(tileX, tileY, item);
+                    int tileX = (int)mouseTile.X;
+                    int tileY = (int)mouseTile.Y;
+
+                    if(currentGameLocation.CanInteractWithTile(tileX, tileY, item))
+                    {
+                        tileSelector.IsVisible = true;
+
+                        if (MInput.Mouse.PressedLeftButton)
+                        {
+                            currentGameLocation.InteractWithTile(tileX, tileY, item);
+                        }
+                    }
                 }
             }
 
