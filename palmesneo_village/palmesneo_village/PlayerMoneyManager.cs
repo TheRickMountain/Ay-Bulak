@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace palmesneo_village
 {
-    public class MoneyAmountManager
+    public class PlayerMoneyManager
     {
         public Action<int> MoneyAmountChanged { get; set; }
 

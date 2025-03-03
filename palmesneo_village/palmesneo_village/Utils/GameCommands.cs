@@ -34,7 +34,34 @@ namespace palmesneo_village
         {
             if (Engine.CurrentScene is GameplayScene)
             {
-                ((GameplayScene)Engine.CurrentScene).MoneyAmountManager.MoneyAmount += amount;
+                ((GameplayScene)Engine.CurrentScene).PlayerMoneyManager.MoneyAmount += amount;
+            }
+        }
+
+        [Command("add_energy", "Adds energy to the player")]
+        private static void AddEnergy(int amount)
+        {
+            if (Engine.CurrentScene is GameplayScene)
+            {
+                ((GameplayScene)Engine.CurrentScene).PlayerEnergyManager.AddEnergy(amount);
+            }
+        }
+
+        [Command("consumer_energy", "Consumes energy from the player")]
+        private static void ConsumeEnergy(int amount)
+        {
+            if (Engine.CurrentScene is GameplayScene)
+            {
+                ((GameplayScene)Engine.CurrentScene).PlayerEnergyManager.ConsumeEnergy(amount);
+            }
+        }
+
+        [Command("set_max_energy", "Sets the max energy of the player")]
+        private static void SetMaxEnergy(int value)
+        {
+            if (Engine.CurrentScene is GameplayScene)
+            {
+                ((GameplayScene)Engine.CurrentScene).PlayerEnergyManager.SetMaxEnergy(value);
             }
         }
 #endif

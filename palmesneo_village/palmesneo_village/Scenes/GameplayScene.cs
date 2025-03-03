@@ -7,7 +7,9 @@ namespace palmesneo_village
     {
         public Inventory Inventory { get; private set; }
 
-        public MoneyAmountManager MoneyAmountManager { get; private set; }
+        public PlayerMoneyManager PlayerMoneyManager { get; private set; }
+
+        public PlayerEnergyManager PlayerEnergyManager { get; private set; }
 
         private InventoryHotbar inventoryHotbar;
 
@@ -55,16 +57,23 @@ namespace palmesneo_village
             inventoryHotbarUI.Anchor = Anchor.BottomCenter;
             MasterUIEntity.AddChild(inventoryHotbarUI);
 
-            MoneyAmountManager = new MoneyAmountManager();
+            PlayerEnergyManager = new PlayerEnergyManager(100, 100);
 
-            MoneyAmountUI moneyAmountUI = new MoneyAmountUI(MoneyAmountManager);
-            moneyAmountUI.Anchor = Anchor.BottomLeft;
-            moneyAmountUI.LocalPosition = new Vector2(5, -5);
-            MasterUIEntity.AddChild(moneyAmountUI);
+            PlayerEnergyBarUI playerEnergyBarUI = new PlayerEnergyBarUI(PlayerEnergyManager);
+            playerEnergyBarUI.Anchor = Anchor.TopLeft;
+            playerEnergyBarUI.LocalPosition = new Vector2(5, 5);
+            MasterUIEntity.AddChild(playerEnergyBarUI);
+
+            PlayerMoneyManager = new PlayerMoneyManager();
+
+            PlayerMoneyUI playerMoneyUI = new PlayerMoneyUI(PlayerMoneyManager);
+            playerMoneyUI.Anchor = Anchor.BottomLeft;
+            playerMoneyUI.LocalPosition = new Vector2(5, -5);
+            MasterUIEntity.AddChild(playerMoneyUI);
 
             timeText = new TextUI();
             timeText.Anchor = Anchor.TopLeft;
-            timeText.LocalPosition = new Vector2(5, 5);
+            timeText.LocalPosition = new Vector2(5, 32);
             MasterUIEntity.AddChild(timeText);
 
             base.Begin();

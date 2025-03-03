@@ -3,14 +3,14 @@ using palmesneo_village;
 
 namespace palmesneo_village
 {
-    public class MoneyAmountUI : HorizontalContainerUI
+    public class PlayerMoneyUI : HorizontalContainerUI
     {
 
         private ImageUI coinIcon;
 
         private TextUI moneyText;
 
-        public MoneyAmountUI(MoneyAmountManager moneyAmountManager)
+        public PlayerMoneyUI(PlayerMoneyManager moneyAmountManager)
         {
             coinIcon = new ImageUI();
             coinIcon.Texture = ResourcesManager.GetTexture("Sprites","coin_icon");
