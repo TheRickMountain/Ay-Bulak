@@ -4,9 +4,12 @@ namespace palmesneo_village
 {
     public class Player : Creature
     {
-        public Player(CreatureTemplate creatureTemplate) : base(creatureTemplate)
+        private const float COLLISION_CHECK_OFFSET = 6f;
+        private GameLocation currentLocation;
+
+        public Player(CreatureTemplate creatureTemplate, GameLocation location) : base(creatureTemplate)
         {
-            
+            currentLocation = location;
         }
 
         public override void Update()
@@ -15,12 +18,66 @@ namespace palmesneo_village
 
             Vector2 movement = new Vector2(InputBindings.MoveHorizontally.Value, InputBindings.MoveVertically.Value);
 
-            if(movement != Vector2.Zero)
+            if (movement != Vector2.Zero)
             {
                 movement.Normalize();
+                Vector2 newPosition = LocalPosition + movement * Speed * Engine.GameDeltaTime;
 
-                LocalPosition += movement * Speed * Engine.GameDeltaTime;
+                // Проверяем коллизии перед перемещением
+                if (IsValidMovement(newPosition))
+                {
+                    LocalPosition = newPosition;
+                }
+                else
+                {
+                    // Попробуем двигаться только по X или только по Y
+                    Vector2 testX = LocalPosition + new Vector2(movement.X * Speed * Engine.GameDeltaTime, 0);
+                    Vector2 testY = LocalPosition + new Vector2(0, movement.Y * Speed * Engine.GameDeltaTime);
+
+                    if (IsValidMovement(testX))
+                    {
+                        LocalPosition = testX;
+                    }
+                    else if (IsValidMovement(testY))
+                    {
+                        LocalPosition = testY;
+                    }
+                }
             }
+        }
+
+        private bool IsValidMovement(Vector2 newPosition)
+        {
+            // Преобразуем мировые координаты в координаты тайлов
+            Vector2 mapPos = currentLocation.WorldToMap(newPosition);
+
+            // Проверяем 4 точки вокруг игрока (предполагаем, что размер игрока примерно равен тайлу)
+            Vector2[] checkPoints = new Vector2[]
+            {
+                new Vector2(newPosition.X - COLLISION_CHECK_OFFSET, newPosition.Y - COLLISION_CHECK_OFFSET),
+                new Vector2(newPosition.X + COLLISION_CHECK_OFFSET, newPosition.Y - COLLISION_CHECK_OFFSET),
+                new Vector2(newPosition.X - COLLISION_CHECK_OFFSET, newPosition.Y + COLLISION_CHECK_OFFSET),
+                new Vector2(newPosition.X + COLLISION_CHECK_OFFSET, newPosition.Y + COLLISION_CHECK_OFFSET)
+            };
+
+            Rectangle boundaries = currentLocation.GetBoundaries();
+
+            foreach (Vector2 point in checkPoints)
+            {
+                // Проверка выхода за границы карты
+                if (!boundaries.Contains(point))
+                    return false;
+
+                Vector2 tilePos = currentLocation.WorldToMap(point);
+                int x = (int)tilePos.X;
+                int y = (int)tilePos.Y;
+
+                // Проверяем, является ли тайл непроходимым
+                if (currentLocation.IsTilePassable(x, y) == false)
+                    return false;
+            }
+
+            return true;
         }
     }
 }

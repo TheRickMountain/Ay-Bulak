@@ -7,26 +7,42 @@ namespace palmesneo_village
 
         private Tilemap groundTilemap;
         private Tilemap groundTopTilemap;
+        private bool[,] collisionMap;
 
         public GameLocation()
         {
-            groundTilemap = new Tilemap(TilesetConnection.SidesAndCorners, 16, 16, 64, 64);
-            AddChild(groundTilemap);
+            int mapWidth = 64;
+            int mapHeight = 64;
+
+            groundTilemap = new Tilemap(TilesetConnection.SidesAndCorners, 16, 16, mapWidth, mapHeight);
+            groundTopTilemap = new Tilemap(TilesetConnection.SidesAndCorners, 16, 16, mapWidth, mapHeight);
 
             groundTilemap.Tileset = new MTileset(ResourcesManager.GetTexture("Tilesets", "ground_summer_tileset"), 16, 16);
+            groundTopTilemap.Tileset = new MTileset(ResourcesManager.GetTexture("Tilesets", "ground_top_tileset"), 16, 16);
 
-            for (int x = 0; x < 64; x++)
+            AddChild(groundTilemap);
+            AddChild(groundTopTilemap);
+
+            collisionMap = new bool[mapWidth, mapHeight];
+
+            for (int x = 0; x < mapWidth; x++)
             {
-                for (int y = 0; y < 64; y++)
+                for (int y = 0; y < mapHeight; y++)
                 {
                     groundTilemap.SetCell(x, y, 0);
+
+                    collisionMap[x,y] = true;
                 }
             }
 
-            groundTopTilemap = new Tilemap(TilesetConnection.SidesAndCorners, 16, 16, 64, 64);
-            AddChild(groundTopTilemap);
+            groundTilemap.SetCell(10, 10, 2);
+            collisionMap[10, 10] = false;
 
-            groundTopTilemap.Tileset = new MTileset(ResourcesManager.GetTexture("Tilesets", "ground_top_tileset"), 16, 16);
+            groundTilemap.SetCell(12, 10, 2);
+            collisionMap[12, 10] = false;
+
+            groundTilemap.SetCell(13, 10, 2);
+            collisionMap[13, 10] = false;
         }
 
         public Rectangle GetBoundaries()
@@ -89,5 +105,9 @@ namespace palmesneo_village
             return groundTilemap.MapToWorld(vector);
         }
 
+        public bool IsTilePassable(int x, int y)
+        {
+            return collisionMap[x, y];
+        }
     }
 }

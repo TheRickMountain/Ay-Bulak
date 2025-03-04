@@ -42,7 +42,7 @@ namespace palmesneo_village
 
             CreatureTemplate creatureTemplate = new CreatureTemplate("Player", ResourcesManager.GetTexture("Sprites", "player"), 100);
 
-            player = new Player(creatureTemplate);
+            player = new Player(creatureTemplate, currentGameLocation);
             player.LocalPosition = new Vector2(20 * Engine.TILE_SIZE, 20 * Engine.TILE_SIZE);
             MasterEntity.AddChild(player);
 
