@@ -1,92 +1,16 @@
 {
 	"Items":[
 		{
-			"Id": 1,
-			"Name": "ceramic_pot",
-			"Category": "Resources",
-			"IsStackable": true
-		},
-		{
-			"Id": 7,
-			"Name": "pot_of_water",
-			"Category": "Resources",
-			"IsStackable": true
-		},
-		{
 			"Id": 15,
 			"Name": "wood",
-			"Category": "Resources",
-			"IsStackable": true
-		},
-		{
-			"Id": 19,
-			"Name": "clay",
+			"Description": "test",
 			"Category": "Resources",
 			"IsStackable": true
 		},
 		{
 			"Id": 20,
 			"Name": "stone",
-			"Category": "Resources",
-			"IsStackable": true
-		},
-		{
-			"Id": 71,
-			"Name": "leather",
-			"Category": "Resources",
-			"IsStackable": true
-		},
-		{
-			"Id": 113,
-			"Name": "copper",
-			"Category": "Resources",
-			"IsStackable": true
-		},
-		{
-			"Id": 114,
-			"Name": "bronze",
-			"Category": "Resources",
-			"IsStackable": true
-		},
-		{
-			"Id": 23,
-			"Name": "coal",
-			"Category": "Resources",
-			"IsStackable": true
-		},
-		{
-			"Id": 46,
-			"Name": "dry_skin",
-			"Category": "Resources",
-			"IsStackable": true
-		},
-		{
-			"Id": 42,
-			"Name": "raw_skin",
-			"Category": "Resources",
-			"IsStackable": true
-		},
-		{
-			"Id": 100,
-			"Name": "mudbrick",
-			"Category": "Resources",
-			"IsStackable": true
-		},
-		{
-			"Id": 117,
-			"Name": "brick",
-			"Category": "Resources",
-			"IsStackable": true
-		},
-		{
-			"Id": 22,
-			"Name": "bone",
-			"Category": "Resources",
-			"IsStackable": true
-		},
-		{
-			"Id": 36,
-			"Name": "unfired_pot",
+			"Description": "test",
 			"Category": "Resources",
 			"IsStackable": true
 		}
@@ -95,6 +19,7 @@
 		{
 			"Id": 132,
 			"Name": "iron_hoe",
+			"Description": "test",
 			"Category": "Tools",
 			"IsStackable": false,
 			"ToolType": "Hoe"
@@ -102,6 +27,7 @@
 		{
 			"Id": 176,
 			"Name": "iron_watering_can",
+			"Description": "test",
 			"Category": "Tools",
 			"IsStackable": false,
 			"ToolType": "WateringCan"
@@ -111,9 +37,24 @@
 		{
 			"Id": 26,
 			"Name": "cooked_meat",
+			"Description": "test",
 			"Category": "Food",
 			"IsStackable": true,
 			"EnergyAmount": 20
+		}
+	],
+	"BuildingItems":[
+		{
+			"Id": 1000,
+			"Name": "gas_stove",
+			"Description": "test",
+			"Category": "Food",
+			"IsStackable": false,
+			"Width": 2,
+			"Height": 2,
+			"GroundPattern": [
+				["B"]
+			]
 		}
 	]
 }

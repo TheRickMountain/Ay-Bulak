@@ -11,6 +11,7 @@ namespace palmesneo_village
         public Item[] Items { get; init; }
         public ToolItem[] ToolItems { get; init; }
         public ConsumableItem[] ConsumableItems { get; init; }
+        public BuildingItem[] BuildingItems { get; init; }
 
         private Dictionary<string, Item> nameItemPairs;
 
@@ -21,6 +22,7 @@ namespace palmesneo_village
             ReadAndInitializeCollection(Items, itemsIcons);
             ReadAndInitializeCollection(ToolItems, itemsIcons);
             ReadAndInitializeCollection(ConsumableItems, itemsIcons);
+            ReadAndInitializeCollection(BuildingItems, itemsIcons);
         }
 
         public Item GetItemByName(string name)

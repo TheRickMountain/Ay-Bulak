@@ -4,12 +4,13 @@
     {
         public int Id { get; init; }
         public string Name { get; init; }
+        public string Description { get; init; }
         public ItemCategory Category { get; init; }
         public bool IsStackable { get; init; }
 
-        public MTexture Icon { get; private set; }
+        public MTexture Icon { get; protected set; }
 
-        public void Initialize(MTileset sourceTileset) 
+        public virtual void Initialize(MTileset sourceTileset) 
         {
             Icon = sourceTileset[Id];
         }

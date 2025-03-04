@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 
 namespace palmesneo_village
 {
+    // Don't change the order
     public enum Direction
     {
+        Down,
         Left,
-        Right,
         Up,
-        Down
+        Right
     }
 }

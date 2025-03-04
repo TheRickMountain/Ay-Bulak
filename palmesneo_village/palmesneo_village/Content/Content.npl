@@ -27,6 +27,7 @@
 			"action": "copy"
 		},
 		"json": {
+			"recursive": "True",
 			"path": "*.json",
 			"action": "copy"
 		}
