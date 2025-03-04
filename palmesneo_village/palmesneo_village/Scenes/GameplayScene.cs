@@ -5,6 +5,8 @@ namespace palmesneo_village
 {
     public class GameplayScene : Scene
     {
+        public GameLocation CurrentGameLocation { get; private set; }
+
         public Inventory Inventory { get; private set; }
 
         public PlayerMoneyManager PlayerMoneyManager { get; private set; }
@@ -16,8 +18,6 @@ namespace palmesneo_village
         private TimeOfDayManager timeOfDayManager;
 
         private Player player;
-
-        private GameLocation currentGameLocation;
 
         private TileSelector tileSelector;
 
@@ -36,13 +36,15 @@ namespace palmesneo_village
             FarmLocation farmLocation = new FarmLocation();
             MasterEntity.AddChild(farmLocation);
 
-            currentGameLocation = farmLocation;
+            CurrentGameLocation = farmLocation;
 
             CreatureTemplate creatureTemplate = new CreatureTemplate("Player", ResourcesManager.GetTexture("Sprites", "player"), 100);
 
-            player = new Player(creatureTemplate, currentGameLocation);
+            player = new Player(creatureTemplate, Inventory);
             player.LocalPosition = new Vector2(20 * Engine.TILE_SIZE, 20 * Engine.TILE_SIZE);
             MasterEntity.AddChild(player);
+
+            player.SetCurrentLocation(farmLocation);
 
             CameraMovement cameraMovement = new CameraMovement();
             cameraMovement.Target = player;
@@ -82,12 +84,12 @@ namespace palmesneo_village
         {
             timeText.Text = timeOfDayManager.GetTimeString();
 
-            var mouseTile = currentGameLocation.WorldToMap(MInput.Mouse.GlobalPosition);
+            var mouseTile = CurrentGameLocation.WorldToMap(MInput.Mouse.GlobalPosition);
 
             tileSelector.IsVisible = false;
-            tileSelector.LocalPosition = currentGameLocation.MapToWorld(mouseTile);
+            tileSelector.LocalPosition = CurrentGameLocation.MapToWorld(mouseTile);
 
-            Vector2 playerTile = currentGameLocation.WorldToMap(player.LocalPosition);
+            Vector2 playerTile = CurrentGameLocation.WorldToMap(player.LocalPosition);
 
             Item item = inventoryHotbar.TryGetCurrentSlotItem();
 
@@ -98,13 +100,13 @@ namespace palmesneo_village
                     int tileX = (int)mouseTile.X;
                     int tileY = (int)mouseTile.Y;
 
-                    if(currentGameLocation.CanInteractWithTile(tileX, tileY, item))
+                    if(CurrentGameLocation.CanInteractWithTile(tileX, tileY, item))
                     {
                         tileSelector.IsVisible = true;
 
                         if (MInput.Mouse.PressedLeftButton)
                         {
-                            currentGameLocation.InteractWithTile(tileX, tileY, item);
+                            CurrentGameLocation.InteractWithTile(tileX, tileY, item);
 
                             PlayerEnergyManager.ConsumeEnergy(1);
                         }

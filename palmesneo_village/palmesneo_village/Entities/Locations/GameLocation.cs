@@ -1,4 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace palmesneo_village
 {
@@ -8,6 +11,8 @@ namespace palmesneo_village
         private Tilemap groundTilemap;
         private Tilemap groundTopTilemap;
         private bool[,] collisionMap;
+
+        private Entity itemList;
 
         public GameLocation(int mapWidth, int mapHeight)
         {
@@ -40,6 +45,10 @@ namespace palmesneo_village
 
             groundTilemap.SetCell(13, 10, 2);
             collisionMap[13, 10] = false;
+
+            itemList = new Entity();
+            itemList.IsDepthSortEnabled = true;
+            AddChild(itemList);
         }
 
         public Rectangle GetBoundaries()
@@ -92,6 +101,11 @@ namespace palmesneo_village
             }
         }
 
+        public bool IsTilePassable(int x, int y)
+        {
+            return collisionMap[x, y];
+        }
+
         public Vector2 WorldToMap(Vector2 vector)
         {
             return groundTilemap.WorldToMap(vector);
@@ -102,9 +116,31 @@ namespace palmesneo_village
             return groundTilemap.MapToWorld(vector);
         }
 
-        public bool IsTilePassable(int x, int y)
+        #region Items
+
+        public void AddItem(Vector2 position, Item item, int quantity)
         {
-            return collisionMap[x, y];
+            LocationItem locationItem = new LocationItem(item, quantity);
+            locationItem.LocalPosition = position;
+            locationItem.Depth = (int)position.Y;
+            itemList.AddChild(locationItem);
         }
+
+        public void RemoveItem(LocationItem item)
+        {
+            itemList.RemoveChild(item);
+        }
+
+        public IEnumerable<LocationItem> GetLocationItems(Vector2 position)
+        {
+            List<LocationItem> items = itemList.GetChildren<LocationItem>().ToList();
+
+            foreach (LocationItem item in items)
+            {
+                yield return item;
+            }
+        }
+
+        #endregion
     }
 }

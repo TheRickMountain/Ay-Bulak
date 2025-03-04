@@ -1,21 +1,36 @@
 ﻿using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 
 namespace palmesneo_village
 {
     public class Player : Creature
     {
+        private Inventory inventory;
+
         private const float COLLISION_CHECK_OFFSET = 6f;
         private GameLocation currentLocation;
 
-        public Player(CreatureTemplate creatureTemplate, GameLocation location) : base(creatureTemplate)
+        public Player(CreatureTemplate creatureTemplate, Inventory inventory) : base(creatureTemplate)
         {
-            currentLocation = location;
+            this.inventory = inventory;
         }
 
         public override void Update()
         {
             base.Update();
 
+            UpdateMovement();
+
+            CheckForItemPickup();
+        }
+
+        public void SetCurrentLocation(GameLocation location)
+        {
+            currentLocation = location;
+        }
+
+        private void UpdateMovement()
+        {
             Vector2 movement = new Vector2(InputBindings.MoveHorizontally.Value, InputBindings.MoveVertically.Value);
 
             if (movement != Vector2.Zero)
@@ -78,6 +93,32 @@ namespace palmesneo_village
             }
 
             return true;
+        }
+
+        private void CheckForItemPickup()
+        {
+            // TODO: check if inventory has enough space for pickup
+
+            foreach (LocationItem locationItem in currentLocation.GetLocationItems(GlobalPosition))
+            {
+                if (locationItem.IsActive && locationItem.CanBePickedUp(GlobalPosition))
+                {
+                    locationItem.StartPickup(GlobalPosition);
+                }
+                else if (!locationItem.IsActive)
+                {
+                    PickupItem(locationItem);
+
+                    currentLocation.RemoveItem(locationItem);
+                }
+            }
+        }
+
+        private void PickupItem(LocationItem locationItem)
+        {
+            // TODO: play pickup sound
+            
+            inventory.TryAddItem(locationItem.Item, locationItem.Quantity);
         }
     }
 }

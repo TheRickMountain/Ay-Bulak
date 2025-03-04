@@ -17,6 +17,18 @@ namespace palmesneo_village
             }
         }
 
+        [Command("spawn_item", "Spawns an item in the current game location")]
+        private static void SpawnItem(string itemName, int itemAmount)
+        {
+            Item item = Engine.ItemsDatabase.GetItemByName(itemName);
+
+            if (Engine.CurrentScene is GameplayScene)
+            {
+                ((GameplayScene)Engine.CurrentScene).CurrentGameLocation
+                    .AddItem(MInput.Mouse.GlobalPosition, item, itemAmount);
+            }
+        }
+
         [Command("ui_scale", "Sets UI scale")]
         private static void SetUIScale(float value)
         {
