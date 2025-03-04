@@ -21,8 +21,6 @@ namespace palmesneo_village
 
         private TileSelector tileSelector;
 
-        private Vector2 mouseTile;
-
         private TextUI timeText;
 
         public override void Begin()
@@ -82,12 +80,11 @@ namespace palmesneo_village
 
         public override void Update()
         {
-            tileSelector.IsVisible = false;
-
             timeText.Text = timeOfDayManager.GetTimeString();
 
-            mouseTile = currentGameLocation.WorldToMap(MInput.Mouse.GlobalPosition);
+            var mouseTile = currentGameLocation.WorldToMap(MInput.Mouse.GlobalPosition);
 
+            tileSelector.IsVisible = false;
             tileSelector.LocalPosition = currentGameLocation.MapToWorld(mouseTile);
 
             Vector2 playerTile = currentGameLocation.WorldToMap(player.LocalPosition);
@@ -130,14 +127,14 @@ namespace palmesneo_village
             base.Update();
         }
 
-        private bool CanShowTileSelector(Vector2 playerTile, Vector2 selectorTile, int maxDistance)
+        private bool CanShowTileSelector(Vector2 playerTile, Vector2 mouseTile, int maxDistance)
         {
-            if (playerTile == selectorTile)
+            if (playerTile == mouseTile)
             {
                 return false;
             }
 
-            float distance = Vector2.Distance(playerTile, selectorTile);
+            float distance = Vector2.Distance(playerTile, mouseTile);
 
             return distance < maxDistance;
         }

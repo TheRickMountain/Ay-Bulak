@@ -9,7 +9,7 @@ namespace palmesneo_village
     public class FarmLocation : GameLocation
     {
 
-        public FarmLocation() : base()
+        public FarmLocation() : base(64, 64)
         {
 
         }

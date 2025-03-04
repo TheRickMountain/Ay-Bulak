@@ -9,7 +9,7 @@ namespace palmesneo_village
     public class HouseLocation : GameLocation
     {
 
-        public HouseLocation()
+        public HouseLocation() : base(32, 32)
         {
             
         }

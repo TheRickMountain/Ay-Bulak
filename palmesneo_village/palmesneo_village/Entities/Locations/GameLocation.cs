@@ -9,11 +9,8 @@ namespace palmesneo_village
         private Tilemap groundTopTilemap;
         private bool[,] collisionMap;
 
-        public GameLocation()
+        public GameLocation(int mapWidth, int mapHeight)
         {
-            int mapWidth = 64;
-            int mapHeight = 64;
-
             groundTilemap = new Tilemap(TilesetConnection.SidesAndCorners, 16, 16, mapWidth, mapHeight);
             groundTopTilemap = new Tilemap(TilesetConnection.SidesAndCorners, 16, 16, mapWidth, mapHeight);
 
