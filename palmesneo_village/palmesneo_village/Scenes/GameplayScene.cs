@@ -43,6 +43,7 @@ namespace palmesneo_village
             CreatureTemplate creatureTemplate = new CreatureTemplate("Player", ResourcesManager.GetTexture("Sprites", "player"), 100);
 
             player = new Player(creatureTemplate);
+            player.LocalPosition = new Vector2(20 * Engine.TILE_SIZE, 20 * Engine.TILE_SIZE);
             MasterEntity.AddChild(player);
 
             CameraMovement cameraMovement = new CameraMovement();
@@ -91,11 +92,9 @@ namespace palmesneo_village
 
             Vector2 playerTile = currentGameLocation.WorldToMap(player.LocalPosition);
 
-            float distanceBetweenPlayerAndMouseTile = Vector2.Distance(playerTile, mouseTile);
-
             Item item = inventoryHotbar.TryGetCurrentSlotItem();
 
-            if (distanceBetweenPlayerAndMouseTile < 4)
+            if (CanShowTileSelector(playerTile, mouseTile, 4))
             {
                 if (item != null)
                 {
@@ -116,7 +115,7 @@ namespace palmesneo_village
                 }
             }
 
-            if(MInput.Mouse.PressedRightButton)
+            if (MInput.Mouse.PressedRightButton)
             {
                 if(item != null && item is ConsumableItem)
                 {
@@ -129,6 +128,18 @@ namespace palmesneo_village
             }
 
             base.Update();
+        }
+
+        private bool CanShowTileSelector(Vector2 playerTile, Vector2 selectorTile, int maxDistance)
+        {
+            if (playerTile == selectorTile)
+            {
+                return false;
+            }
+
+            float distance = Vector2.Distance(playerTile, selectorTile);
+
+            return distance < maxDistance;
         }
 
     }
