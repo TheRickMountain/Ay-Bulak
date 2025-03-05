@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using MonoGame.Extended.Particles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,7 @@ namespace palmesneo_village
         private Tilemap groundTilemap;
         private Tilemap groundTopTilemap;
         private bool[,] collisionMap;
+        private Building[,] buildingMap;
 
         private Entity itemList;
 
@@ -36,6 +38,8 @@ namespace palmesneo_village
                     collisionMap[x,y] = true;
                 }
             }
+
+            buildingMap = new Building[mapWidth, mapHeight];
 
             groundTilemap.SetCell(10, 10, 2);
             collisionMap[10, 10] = false;
@@ -115,6 +119,22 @@ namespace palmesneo_village
         {
             return groundTilemap.MapToWorld(vector);
         }
+
+        #region Buildings
+
+        public void BuildBuilding(int x, int y, BuildingItem buildingItem, Direction direction)
+        {
+            // TODO: complete the code
+        }
+
+        public bool CanBuildBuilding(int x, int y, BuildingItem buildingItem, Direction direction)
+        {
+            // TODO: complete the code
+
+            return true;
+        }
+
+        #endregion
 
         #region Items
 

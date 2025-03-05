@@ -93,13 +93,13 @@ namespace palmesneo_village
 
             Item item = inventoryHotbar.TryGetCurrentSlotItem();
 
+            int tileX = (int)mouseTile.X;
+            int tileY = (int)mouseTile.Y;
+
             if (CanShowTileSelector(playerTile, mouseTile, 4))
             {
                 if (item != null)
                 {
-                    int tileX = (int)mouseTile.X;
-                    int tileY = (int)mouseTile.Y;
-
                     if(CurrentGameLocation.CanInteractWithTile(tileX, tileY, item))
                     {
                         tileSelector.IsVisible = true;
@@ -116,13 +116,27 @@ namespace palmesneo_village
 
             if (MInput.Mouse.PressedRightButton)
             {
-                if(item != null && item is ConsumableItem)
+                if(item != null)
                 {
-                    ConsumableItem consumableItem = (ConsumableItem)item;
+                    if (item is ConsumableItem)
+                    {
+                        ConsumableItem consumableItem = (ConsumableItem)item;
 
-                    PlayerEnergyManager.AddEnergy(consumableItem.EnergyAmount);
+                        PlayerEnergyManager.AddEnergy(consumableItem.EnergyAmount);
 
-                    Inventory.RemoveItem(consumableItem, 1, inventoryHotbar.CurrentSlotIndex);
+                        Inventory.RemoveItem(consumableItem, 1, inventoryHotbar.CurrentSlotIndex);
+                    }
+                    else if (item is BuildingItem)
+                    {
+                        BuildingItem buildingItem = (BuildingItem)item;
+
+                        if (CurrentGameLocation.CanBuildBuilding(tileX, tileY, buildingItem, Direction.Down))
+                        {
+                            CurrentGameLocation.BuildBuilding(tileX, tileY, buildingItem, Direction.Down);
+
+                            Inventory.RemoveItem(buildingItem, 1, inventoryHotbar.CurrentSlotIndex);
+                        }
+                    }
                 }
             }
 
