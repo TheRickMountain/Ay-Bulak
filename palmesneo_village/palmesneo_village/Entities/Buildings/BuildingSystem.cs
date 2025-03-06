@@ -1,0 +1,176 @@
+﻿using Microsoft.Xna.Framework;
+using System.Collections.Generic;
+
+namespace palmesneo_village
+{
+    /// <summary>
+    /// Manages the building system, including placement, validation, and visualization
+    /// </summary>
+    public class BuildingSystem
+    {
+        private GameLocation gameLocation;
+        private BuildingPreview buildingPreview;
+        private BuildingItem currentBuildingItem;
+        private Direction currentDirection = Direction.Down;
+        private string[,] currentGroundPattern;
+        private bool isPlacementValid = false;
+
+        public BuildingSystem(GameLocation gameLocation)
+        {
+            this.gameLocation = gameLocation;
+
+            // Initialize building preview
+            buildingPreview = new BuildingPreview();
+            buildingPreview.Depth = 100;
+            buildingPreview.IsVisible = false;
+        }
+
+        public BuildingPreview Preview => buildingPreview;
+
+        /// <summary>
+        /// Sets the current building item to be placed
+        /// </summary>
+        public void SetCurrentBuildingItem(BuildingItem item)
+        {
+            currentBuildingItem = item;
+
+            if (item != null)
+            {
+                currentDirection = Direction.Down;
+                buildingPreview.Texture = item.DirectionIcon[currentDirection];
+                currentGroundPattern = item.GroundPattern;
+                buildingPreview.IsVisible = true;
+            }
+            else
+            {
+                buildingPreview.IsVisible = false;
+            }
+        }
+
+        /// <summary>
+        /// Rotates the current building preview
+        /// </summary>
+        public void RotateBuildingPreview()
+        {
+            if (currentBuildingItem != null && currentBuildingItem.IsRotatable)
+            {
+                currentDirection = currentDirection.Next();
+                buildingPreview.Texture = currentBuildingItem.DirectionIcon[currentDirection];
+                currentGroundPattern = Calc.RotateMatrix(currentBuildingItem.GroundPattern, currentDirection);
+            }
+        }
+
+        /// <summary>
+        /// Updates the building preview position and checks placement validity
+        /// </summary>
+        public void UpdatePreview(Vector2 mouseTilePosition)
+        {
+            if (currentBuildingItem != null)
+            {
+                buildingPreview.LocalPosition = gameLocation.MapToWorld(mouseTilePosition);
+                isPlacementValid = ValidatePlacement(mouseTilePosition);
+            }
+        }
+
+        /// <summary>
+        /// Tries to place the current building at the specified position
+        /// </summary>
+        /// <returns>True if the building was successfully placed</returns>
+        public bool TryPlaceBuilding(Vector2 position)
+        {
+            if (currentBuildingItem == null || !isPlacementValid)
+                return false;
+
+            bool success = gameLocation.TryBuild(
+                (int)position.X,
+                (int)position.Y,
+                currentBuildingItem,
+                currentDirection,
+                currentGroundPattern);
+
+            return success;
+        }
+
+        /// <summary>
+        /// Validates if the current building can be placed at the specified position
+        /// </summary>
+        public bool ValidatePlacement(Vector2 position)
+        {
+            if (currentBuildingItem == null || currentGroundPattern == null)
+                return false;
+
+            int tileX = (int)position.X;
+            int tileY = (int)position.Y;
+
+            foreach (var checkTile in GetTilesCoveredByPattern(position, currentGroundPattern))
+            {
+                int offsetX = (int)checkTile.X - tileX;
+                int offsetY = (int)checkTile.Y - tileY;
+
+                if (offsetX < 0 || offsetY < 0 ||
+                    offsetX >= currentGroundPattern.GetLength(0) ||
+                    offsetY >= currentGroundPattern.GetLength(1))
+                    continue;
+
+                string groundPatternId = currentGroundPattern[offsetX, offsetY];
+                if (!gameLocation.CheckGroundPattern((int)checkTile.X, (int)checkTile.Y, groundPatternId))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Renders the building preview and placement indicators
+        /// </summary>
+        public void RenderPreview(Vector2 mouseTilePosition)
+        {
+            if (currentBuildingItem == null || currentGroundPattern == null)
+                return;
+
+            foreach (var checkTile in GetTilesCoveredByPattern(mouseTilePosition, currentGroundPattern))
+            {
+                Color color = Color.YellowGreen * 0.5f;
+
+                int offsetX = (int)checkTile.X - (int)mouseTilePosition.X;
+                int offsetY = (int)checkTile.Y - (int)mouseTilePosition.Y;
+
+                if (offsetX < 0 || offsetY < 0 ||
+                    offsetX >= currentGroundPattern.GetLength(0) ||
+                    offsetY >= currentGroundPattern.GetLength(1))
+                    continue;
+
+                string groundPatternId = currentGroundPattern[offsetX, offsetY];
+                if (!gameLocation.CheckGroundPattern((int)checkTile.X, (int)checkTile.Y, groundPatternId))
+                {
+                    color = Color.OrangeRed * 0.5f;
+                }
+
+                RenderManager.Rect(checkTile * Engine.TILE_SIZE, new Vector2(Engine.TILE_SIZE), color);
+                RenderManager.HollowRect(checkTile * Engine.TILE_SIZE, new Vector2(Engine.TILE_SIZE), color);
+            }
+        }
+
+        /// <summary>
+        /// Returns all tiles covered by a building pattern at the specified position
+        /// </summary>
+        private IEnumerable<Vector2> GetTilesCoveredByPattern(Vector2 position, string[,] pattern)
+        {
+            int tileX = (int)position.X;
+            int tileY = (int)position.Y;
+
+            int widthInTiles = pattern.GetLength(0);
+            int heightInTiles = pattern.GetLength(1);
+
+            for (int i = 0; i < widthInTiles; i++)
+            {
+                for (int j = 0; j < heightInTiles; j++)
+                {
+                    yield return new Vector2(tileX + i, tileY + j);
+                }
+            }
+        }
+    }
+}

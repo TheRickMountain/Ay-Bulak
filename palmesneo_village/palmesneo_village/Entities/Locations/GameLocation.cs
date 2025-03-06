@@ -15,8 +15,10 @@ namespace palmesneo_village
 
         private Tilemap groundTilemap;
         private Tilemap groundTopTilemap;
+        private Building[,] buildingsMap;
         private bool[,] collisionMap;
 
+        private Entity buildingsList;
         private Entity itemsList;
         private Entity creaturesList;
 
@@ -40,6 +42,8 @@ namespace palmesneo_village
             AddChild(groundTilemap);
             AddChild(groundTopTilemap);
 
+            buildingsMap = new Building[mapWidth, mapHeight];
+
             collisionMap = new bool[mapWidth, mapHeight];
 
             for (int x = 0; x < mapWidth; x++)
@@ -51,6 +55,10 @@ namespace palmesneo_village
                     collisionMap[x,y] = true;
                 }
             }
+
+            buildingsList = new Entity();
+            buildingsList.IsDepthSortEnabled = true;
+            AddChild(buildingsList);
 
             itemsList = new Entity();
             itemsList.IsDepthSortEnabled = true;
@@ -165,14 +173,81 @@ namespace palmesneo_village
 
         public bool TryBuild(int x, int y, BuildingItem buildingItem, Direction direction, string[,] groundPattern)
         {
-            // TODO: complete the code
+            Vector2[,] tiles = CalculateBuildingTiles(x, y, groundPattern);
+
+            // Проверка, можно ли разместить здание
+            if (ValidateBuildingPlacement(tiles, groundPattern) == false)
+                return false;
+
+            // Размещение здания
+            Building building = new Building(buildingItem, this, direction, tiles);
+            building.LocalPosition = new Vector2(x, y) * Engine.TILE_SIZE;
+            buildingsList.AddChild(building);
+
+            // Размещаем здание на карте
+            RegisterBuildingTiles(building, tiles);
 
             return true;
         }
 
+        private bool ValidateBuildingPlacement(Vector2[,] tiles, string[,] groundPattern)
+        {
+            for (int i = 0; i < tiles.GetLength(0); i++)
+            {
+                for (int j = 0; j < tiles.GetLength(1); j++)
+                {
+                    int tileX = (int)tiles[i, j].X;
+                    int tileY = (int)tiles[i, j].Y;
+
+                    if (!IsWithinBounds(tileX, tileY))
+                        return false;
+
+                    string patternId = groundPattern[i, j];
+                    if (CheckGroundPattern(tileX, tileY, patternId) == false)
+                        return false;
+                }
+            }
+
+            return true;
+        }
+
+        private Vector2[,] CalculateBuildingTiles(int x, int y, string[,] groundPattern)
+        {
+            int width = groundPattern.GetLength(0);
+            int height = groundPattern.GetLength(1);
+            Vector2[,] tiles = new Vector2[width, height];
+
+            for (int i = 0; i < width; i++)
+            {
+                for (int j = 0; j < height; j++)
+                {
+                    tiles[i, j] = new Vector2(x + i, y + j);
+                }
+            }
+            return tiles;
+        }
+
+        private void RegisterBuildingTiles(Building building, Vector2[,] tiles)
+        {
+            for (int i = 0; i < tiles.GetLength(0); i++)
+            {
+                for (int j = 0; j < tiles.GetLength(1); j++)
+                {
+                    int tileX = (int)tiles[i, j].X;
+                    int tileY = (int)tiles[i, j].Y;
+                    buildingsMap[tileX, tileY] = building;
+                }
+            }
+        }
+
+        private bool IsWithinBounds(int x, int y)
+        {
+            return x >= 0 && x < mapWidth && y >= 0 && y < mapHeight;
+        }
+
         public bool CheckGroundPattern(int x, int y, string groundPatternId)
         {
-            // TODO: if tile there is any building - return false
+            if (buildingsMap[x, y] != null) return false;
 
             switch(groundPatternId)
             {

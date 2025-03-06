@@ -43,11 +43,9 @@ namespace palmesneo_village
         private FarmLocation farmLocation;
         private HouseLocation houseLocation;
 
-        private Item currentPlayerItem;
+        private BuildingSystem buildingSystem;
 
-        private BuildingPreview buildingPreview;
-        private Direction buildingPreviewDirection = Direction.Down;
-        private string[,] buildingPreviewGroundPattern;
+        private Item currentPlayerItem;
 
         public override void Begin()
         {
@@ -71,9 +69,8 @@ namespace palmesneo_village
 
             CurrentGameLocation = farmLocation;
 
-            buildingPreview = new BuildingPreview();
-            buildingPreview.Depth = 100;
-            MasterEntity.AddChild(buildingPreview);
+            buildingSystem = new BuildingSystem(farmLocation);
+            MasterEntity.AddChild(buildingSystem.Preview);
 
             tileSelector = new TileSelector();
             tileSelector.Depth = 100;
@@ -129,31 +126,32 @@ namespace palmesneo_village
 
             if (CurrentGameLocation != null)
             {
-                var mouseTile = CurrentGameLocation.WorldToMap(MInput.Mouse.GlobalPosition);
+                Vector2 mouseTile = CurrentGameLocation.WorldToMap(MInput.Mouse.GlobalPosition);
+                Vector2 playerTile = CurrentGameLocation.WorldToMap(player.LocalPosition);
 
                 tileSelector.IsVisible = false;
-                buildingPreview.IsVisible = false;
-
-                Vector2 playerTile = CurrentGameLocation.WorldToMap(player.LocalPosition);
 
                 int tileX = (int)mouseTile.X;
                 int tileY = (int)mouseTile.Y;
 
-                if(currentPlayerItem is BuildingItem)
+                // Handle building item selection
+                if (currentPlayerItem is BuildingItem buildingItem)
                 {
-                    BuildingItem buildingItem = (BuildingItem)currentPlayerItem;
+                    buildingSystem.UpdatePreview(mouseTile);
 
-                    buildingPreview.IsVisible = true;
-                    buildingPreview.LocalPosition = CurrentGameLocation.MapToWorld(mouseTile);
-
-                    if(buildingItem.IsRotatable && InputBindings.Rotate.Pressed)
+                    // Handle rotation
+                    if (buildingItem.IsRotatable && InputBindings.Rotate.Pressed)
                     {
-                        buildingPreviewDirection = buildingPreviewDirection.Next();
+                        buildingSystem.RotateBuildingPreview();
+                    }
 
-                        buildingPreview.Texture = buildingItem.DirectionIcon[buildingPreviewDirection];
-
-                        buildingPreviewGroundPattern = Calc.RotateMatrix(buildingItem.GroundPattern, buildingPreviewDirection);
-                    }    
+                    if(MInput.Mouse.PressedLeftButton)
+                    {
+                        if (buildingSystem.TryPlaceBuilding(mouseTile))
+                        {
+                            Inventory.RemoveItem(buildingItem, 1, inventoryHotbar.CurrentSlotIndex);
+                        }
+                    }
                 }
 
                 if (CanShowTileSelector(playerTile, mouseTile, 4))
@@ -179,36 +177,11 @@ namespace palmesneo_village
                 {
                     if (currentPlayerItem != null)
                     {
-                        if (currentPlayerItem is ConsumableItem)
+                        if (currentPlayerItem is ConsumableItem consumableItem)
                         {
-                            ConsumableItem consumableItem = (ConsumableItem)currentPlayerItem;
-
                             PlayerEnergyManager.AddEnergy(consumableItem.EnergyAmount);
 
                             Inventory.RemoveItem(consumableItem, 1, inventoryHotbar.CurrentSlotIndex);
-                        }
-                        else if (currentPlayerItem is BuildingItem)
-                        {
-                            BuildingItem buildingItem = (BuildingItem)currentPlayerItem;
-
-                            //bool canBuild = true;
-
-                            //foreach (var checkTile in GetTilesCoveredByBuildingPreview(mouseTile, buildingPreviewGroundPattern))
-                            //{
-                            //    string groundPatternId = buildingPreviewGroundPattern[(int)checkTile.X - (int)mouseTile.X,
-                            //        (int)checkTile.Y - (int)mouseTile.Y];
-
-                            //    if (CurrentGameLocation.CheckGroundPattern((int)checkTile.X, (int)checkTile.Y, groundPatternId) == false)
-                            //    {
-                            //        canBuild = false;
-                            //        break;
-                            //    }
-                            //}
-
-                            if (CurrentGameLocation.TryBuild(tileX, tileY, buildingItem, Direction.Down, buildingPreviewGroundPattern))
-                            {
-                                Inventory.RemoveItem(buildingItem, 1, inventoryHotbar.CurrentSlotIndex);
-                            }
                         }
                     }
                 }
@@ -241,45 +214,10 @@ namespace palmesneo_village
         {
             base.Render();
 
-            if(CurrentGameLocation != null)
+            if (CurrentGameLocation != null && currentPlayerItem is BuildingItem)
             {
-                if (currentPlayerItem is BuildingItem)
-                {
-                    var mouseTile = CurrentGameLocation.WorldToMap(MInput.Mouse.GlobalPosition);
-
-                    foreach(var checkTile in GetTilesCoveredByBuildingPreview(mouseTile, buildingPreviewGroundPattern))
-                    {
-                        Color color = Color.YellowGreen * 0.5f;
-
-                        string groundPatternId = buildingPreviewGroundPattern[(int)checkTile.X - (int)mouseTile.X, 
-                            (int)checkTile.Y - (int)mouseTile.Y];
-
-                        if (CurrentGameLocation.CheckGroundPattern((int)checkTile.X, (int)checkTile.Y, groundPatternId) == false)
-                        {
-                            color = Color.OrangeRed * 0.5f;
-                        }
-
-                        RenderManager.Rect(checkTile * Engine.TILE_SIZE, new Vector2(Engine.TILE_SIZE), color);
-                        RenderManager.HollowRect(checkTile * Engine.TILE_SIZE, new Vector2(Engine.TILE_SIZE), color);
-                    }
-                }
-            }
-        }
-
-        private IEnumerable<Vector2> GetTilesCoveredByBuildingPreview(Vector2 tile, string[,] groundPattern)
-        {
-            int tileX = (int)tile.X;
-            int tileY = (int)tile.Y;
-
-            int widthInTiles = groundPattern.GetLength(0);
-            int heightInTiles = groundPattern.GetLength(1);
-
-            for (int i = tileX; i < tileX + widthInTiles; i++)
-            {
-                for(int j = tileY; j < tileY + heightInTiles; j++)
-                {
-                    yield return new Vector2(i, j);
-                }
+                Vector2 mouseTile = CurrentGameLocation.WorldToMap(MInput.Mouse.GlobalPosition);
+                buildingSystem.RenderPreview(mouseTile);
             }
         }
 
@@ -312,15 +250,13 @@ namespace palmesneo_village
         {
             currentPlayerItem = item;
 
-            if(item is BuildingItem)
+            if (item is BuildingItem buildingItem)
             {
-                BuildingItem buildingItem = (BuildingItem)item;
-
-                buildingPreviewDirection = Direction.Down;
-
-                buildingPreview.Texture = buildingItem.DirectionIcon[Direction.Down];
-
-                buildingPreviewGroundPattern = buildingItem.GroundPattern;
+                buildingSystem.SetCurrentBuildingItem(buildingItem);
+            }
+            else
+            {
+                buildingSystem.SetCurrentBuildingItem(null);
             }
         }
     }

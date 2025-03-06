@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using System;
 
 namespace palmesneo_village
 {
@@ -7,21 +8,24 @@ namespace palmesneo_village
         private BuildingItem buildingItem;
         private GameLocation gameLocation;
         private Direction direction;
-        private Vector2[,] tiles;
-
+        private Vector2[,] occupiedTiles;
         private SpriteEntity sprite;
 
-        public Building(BuildingItem buildingItem, GameLocation gameLocation, Direction direction, Vector2[,] tiles)
+        public Building(BuildingItem buildingItem, GameLocation gameLocation, Direction direction, Vector2[,] occupiedTiles)
         {
             this.buildingItem = buildingItem;
             this.gameLocation = gameLocation;
             this.direction = direction;
-            this.tiles = tiles;
+            this.occupiedTiles = occupiedTiles;
 
             sprite = new SpriteEntity();
-            sprite.Centered = true;
+            sprite.Texture = buildingItem.DirectionIcon[direction];
             AddChild(sprite);
         }
+
+        public BuildingItem BuildingItem => buildingItem;
+        public Direction Direction => direction;
+        public Vector2[,] OccupiedTiles => occupiedTiles;
 
     }
 }
