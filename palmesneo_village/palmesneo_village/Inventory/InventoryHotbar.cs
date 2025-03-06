@@ -1,10 +1,5 @@
 ﻿using Microsoft.Xna.Framework.Input;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Reflection.Metadata.BlobBuilder;
 
 namespace palmesneo_village
 {
@@ -13,12 +8,10 @@ namespace palmesneo_village
         public int CurrentSlotIndex { get; private set; } = 0;
         public Action<int> CurrentSlotIndexChanged { get; set; }
 
-        private Inventory inventory;
         private int slotsCount;
 
         public InventoryHotbar(Inventory inventory)
         {
-            this.inventory = inventory;
             slotsCount = inventory.Width;
         }
 
@@ -29,11 +22,6 @@ namespace palmesneo_village
             UpdateWheelInput();
 
             UpdateKeyboardInput();
-        }
-
-        public Item TryGetCurrentSlotItem()
-        {
-            return inventory.GetSlotItem(CurrentSlotIndex);
         }
 
         private void UpdateWheelInput()

@@ -53,8 +53,24 @@
 			"Width": 2,
 			"Height": 2,
 			"GroundPattern": [
-				["B"]
-			]
+				["A", "A"],
+				["B", "B"]
+			],
+			"IsRotatable": true
+		},
+		{
+			"Id": 1001,
+			"Name": "coal_stove",
+			"Description": "test",
+			"Category": "Food",
+			"IsStackable": false,
+			"Width": 2,
+			"Height": 2,
+			"GroundPattern": [
+				["A", "A"],
+				["A", "A"]
+			],
+			"IsRotatable": false
 		}
 	]
 }

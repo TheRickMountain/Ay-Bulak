@@ -9,6 +9,60 @@ namespace palmesneo_village
     public static class Calc
     {
 
+        public static T[,] RotateMatrix<T>(T[,] oldMatrix, Direction direction)
+        {
+            int times = 0;
+
+            switch (direction)
+            {
+                case Direction.Down:
+                    times = 0;
+                    break;
+                case Direction.Left:
+                    times = 1;
+                    break;
+                case Direction.Up:
+                    times = 2;
+                    break;
+                case Direction.Right:
+                    times = 3;
+                    break;
+            }
+
+            if (times == 0)
+                return oldMatrix;
+
+            T[,] newMatrix = oldMatrix;
+
+            for (int t = 0; t < times; t++)
+            {
+                newMatrix = RotateMatrixCCW(newMatrix);
+            }
+
+            return newMatrix;
+        }
+
+        private static T[,] RotateMatrixCCW<T>(T[,] oldMatrix)
+        {
+            T[,] newMatrix = new T[oldMatrix.GetLength(1), oldMatrix.GetLength(0)];
+
+            int newColumn, newRow = 0;
+
+            for (int oldColumn = oldMatrix.GetLength(1) - 1; oldColumn >= 0; oldColumn--)
+            {
+                newColumn = 0;
+
+                for (int oldRow = 0; oldRow < oldMatrix.GetLength(0); oldRow++)
+                {
+                    newMatrix[newRow, newColumn] = oldMatrix[oldRow, oldColumn];
+                    newColumn++;
+                }
+                newRow++;
+            }
+
+            return newMatrix;
+        }
+
         public static Color HexToColor(string hex)
         {
             return new Color(
@@ -77,24 +131,6 @@ namespace palmesneo_village
             texture.SetData(colorArray);
 
             return new MTexture(texture);
-        }
-
-        public static T Next<T>(this T src) where T : struct
-        {
-            if (!typeof(T).IsEnum) throw new ArgumentException(String.Format("Argument {0} is not an Enum", typeof(T).FullName));
-
-            T[] Arr = (T[])Enum.GetValues(src.GetType());
-            int j = Array.IndexOf<T>(Arr, src) + 1;
-            return (Arr.Length == j) ? Arr[0] : Arr[j];
-        }
-
-        public static T Previous<T>(this T src) where T : struct
-        {
-            if (!typeof(T).IsEnum) throw new ArgumentException(String.Format("Argument {0} is not an Enum", typeof(T).FullName));
-
-            T[] Arr = (T[])Enum.GetValues(src.GetType());
-            int j = Array.IndexOf<T>(Arr, src) - 1;
-            return (j < 0) ? Arr[Arr.Length - 1] : Arr[j];
         }
 
         public static float SignThreshold(float value, float threshold)

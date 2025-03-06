@@ -163,16 +163,34 @@ namespace palmesneo_village
 
         #region Buildings
 
-        public void BuildBuilding(int x, int y, BuildingItem buildingItem, Direction direction)
-        {
-            // TODO: complete the code
-        }
-
-        public bool CanBuildBuilding(int x, int y, BuildingItem buildingItem, Direction direction)
+        public bool TryBuild(int x, int y, BuildingItem buildingItem, Direction direction, string[,] groundPattern)
         {
             // TODO: complete the code
 
             return true;
+        }
+
+        public bool CheckGroundPattern(int x, int y, string groundPatternId)
+        {
+            // TODO: if tile there is any building - return false
+
+            switch(groundPatternId)
+            {
+                case "A":
+                    {
+                        int groundTileId = groundTilemap.GetCell(x, y);
+                        if (groundTileId == 0 || groundTileId == 1) return true;
+                    }
+                    break;
+                case "B":
+                    {
+                        int groundTileId = groundTilemap.GetCell(x, y);
+                        if (groundTileId == 3) return true;
+                    }
+                    break;
+            }
+
+            return false;
         }
 
         #endregion

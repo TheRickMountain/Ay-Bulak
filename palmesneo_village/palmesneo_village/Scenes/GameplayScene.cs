@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
+using System.Collections.Generic;
 
 namespace palmesneo_village
 {
@@ -42,6 +43,12 @@ namespace palmesneo_village
         private FarmLocation farmLocation;
         private HouseLocation houseLocation;
 
+        private Item currentPlayerItem;
+
+        private BuildingPreview buildingPreview;
+        private Direction buildingPreviewDirection = Direction.Down;
+        private string[,] buildingPreviewGroundPattern;
+
         public override void Begin()
         {
             MasterEntity.IsDepthSortEnabled = true;
@@ -64,12 +71,20 @@ namespace palmesneo_village
 
             CurrentGameLocation = farmLocation;
 
+            buildingPreview = new BuildingPreview();
+            buildingPreview.Depth = 100;
+            MasterEntity.AddChild(buildingPreview);
+
             tileSelector = new TileSelector();
             tileSelector.Depth = 100;
             MasterEntity.AddChild(tileSelector);
 
             PlayerEnergyManager = new PlayerEnergyManager(100, 100);
             PlayerMoneyManager = new PlayerMoneyManager();
+
+            Inventory.ItemAdded += OnInventoryItemChanged;
+            Inventory.ItemRemoved += OnInventoryItemChanged;
+            inventoryHotbar.CurrentSlotIndexChanged += OnInventoryHotbarCurrentSlotIndexChanged;
 
             #region UI
 
@@ -117,26 +132,42 @@ namespace palmesneo_village
                 var mouseTile = CurrentGameLocation.WorldToMap(MInput.Mouse.GlobalPosition);
 
                 tileSelector.IsVisible = false;
-                tileSelector.LocalPosition = CurrentGameLocation.MapToWorld(mouseTile);
+                buildingPreview.IsVisible = false;
 
                 Vector2 playerTile = CurrentGameLocation.WorldToMap(player.LocalPosition);
-
-                Item item = inventoryHotbar.TryGetCurrentSlotItem();
 
                 int tileX = (int)mouseTile.X;
                 int tileY = (int)mouseTile.Y;
 
+                if(currentPlayerItem is BuildingItem)
+                {
+                    BuildingItem buildingItem = (BuildingItem)currentPlayerItem;
+
+                    buildingPreview.IsVisible = true;
+                    buildingPreview.LocalPosition = CurrentGameLocation.MapToWorld(mouseTile);
+
+                    if(buildingItem.IsRotatable && InputBindings.Rotate.Pressed)
+                    {
+                        buildingPreviewDirection = buildingPreviewDirection.Next();
+
+                        buildingPreview.Texture = buildingItem.DirectionIcon[buildingPreviewDirection];
+
+                        buildingPreviewGroundPattern = Calc.RotateMatrix(buildingItem.GroundPattern, buildingPreviewDirection);
+                    }    
+                }
+
                 if (CanShowTileSelector(playerTile, mouseTile, 4))
                 {
-                    if (item != null)
+                    if (currentPlayerItem != null)
                     {
-                        if (CurrentGameLocation.CanInteractWithTile(tileX, tileY, item))
+                        if (CurrentGameLocation.CanInteractWithTile(tileX, tileY, currentPlayerItem))
                         {
                             tileSelector.IsVisible = true;
+                            tileSelector.LocalPosition = CurrentGameLocation.MapToWorld(mouseTile);
 
                             if (MInput.Mouse.PressedLeftButton)
                             {
-                                CurrentGameLocation.InteractWithTile(tileX, tileY, item);
+                                CurrentGameLocation.InteractWithTile(tileX, tileY, currentPlayerItem);
 
                                 PlayerEnergyManager.ConsumeEnergy(1);
                             }
@@ -146,24 +177,36 @@ namespace palmesneo_village
 
                 if (MInput.Mouse.PressedRightButton)
                 {
-                    if (item != null)
+                    if (currentPlayerItem != null)
                     {
-                        if (item is ConsumableItem)
+                        if (currentPlayerItem is ConsumableItem)
                         {
-                            ConsumableItem consumableItem = (ConsumableItem)item;
+                            ConsumableItem consumableItem = (ConsumableItem)currentPlayerItem;
 
                             PlayerEnergyManager.AddEnergy(consumableItem.EnergyAmount);
 
                             Inventory.RemoveItem(consumableItem, 1, inventoryHotbar.CurrentSlotIndex);
                         }
-                        else if (item is BuildingItem)
+                        else if (currentPlayerItem is BuildingItem)
                         {
-                            BuildingItem buildingItem = (BuildingItem)item;
+                            BuildingItem buildingItem = (BuildingItem)currentPlayerItem;
 
-                            if (CurrentGameLocation.CanBuildBuilding(tileX, tileY, buildingItem, Direction.Down))
+                            //bool canBuild = true;
+
+                            //foreach (var checkTile in GetTilesCoveredByBuildingPreview(mouseTile, buildingPreviewGroundPattern))
+                            //{
+                            //    string groundPatternId = buildingPreviewGroundPattern[(int)checkTile.X - (int)mouseTile.X,
+                            //        (int)checkTile.Y - (int)mouseTile.Y];
+
+                            //    if (CurrentGameLocation.CheckGroundPattern((int)checkTile.X, (int)checkTile.Y, groundPatternId) == false)
+                            //    {
+                            //        canBuild = false;
+                            //        break;
+                            //    }
+                            //}
+
+                            if (CurrentGameLocation.TryBuild(tileX, tileY, buildingItem, Direction.Down, buildingPreviewGroundPattern))
                             {
-                                CurrentGameLocation.BuildBuilding(tileX, tileY, buildingItem, Direction.Down);
-
                                 Inventory.RemoveItem(buildingItem, 1, inventoryHotbar.CurrentSlotIndex);
                             }
                         }
@@ -194,6 +237,52 @@ namespace palmesneo_village
             base.Update();
         }
 
+        public override void Render()
+        {
+            base.Render();
+
+            if(CurrentGameLocation != null)
+            {
+                if (currentPlayerItem is BuildingItem)
+                {
+                    var mouseTile = CurrentGameLocation.WorldToMap(MInput.Mouse.GlobalPosition);
+
+                    foreach(var checkTile in GetTilesCoveredByBuildingPreview(mouseTile, buildingPreviewGroundPattern))
+                    {
+                        Color color = Color.YellowGreen * 0.5f;
+
+                        string groundPatternId = buildingPreviewGroundPattern[(int)checkTile.X - (int)mouseTile.X, 
+                            (int)checkTile.Y - (int)mouseTile.Y];
+
+                        if (CurrentGameLocation.CheckGroundPattern((int)checkTile.X, (int)checkTile.Y, groundPatternId) == false)
+                        {
+                            color = Color.OrangeRed * 0.5f;
+                        }
+
+                        RenderManager.Rect(checkTile * Engine.TILE_SIZE, new Vector2(Engine.TILE_SIZE), color);
+                        RenderManager.HollowRect(checkTile * Engine.TILE_SIZE, new Vector2(Engine.TILE_SIZE), color);
+                    }
+                }
+            }
+        }
+
+        private IEnumerable<Vector2> GetTilesCoveredByBuildingPreview(Vector2 tile, string[,] groundPattern)
+        {
+            int tileX = (int)tile.X;
+            int tileY = (int)tile.Y;
+
+            int widthInTiles = groundPattern.GetLength(0);
+            int heightInTiles = groundPattern.GetLength(1);
+
+            for (int i = tileX; i < tileX + widthInTiles; i++)
+            {
+                for(int j = tileY; j < tileY + heightInTiles; j++)
+                {
+                    yield return new Vector2(i, j);
+                }
+            }
+        }
+
         private bool CanShowTileSelector(Vector2 playerTile, Vector2 mouseTile, int maxDistance)
         {
             if (playerTile == mouseTile)
@@ -206,5 +295,33 @@ namespace palmesneo_village
             return distance < maxDistance;
         }
 
+        private void OnInventoryHotbarCurrentSlotIndexChanged(int slotIndex)
+        {
+            SetCurrentPlayerItem(Inventory.GetSlotItem(slotIndex));
+        }
+
+        private void OnInventoryItemChanged(Item item, int quantity, int slotIndex)
+        {
+            if (slotIndex != inventoryHotbar.CurrentSlotIndex)
+                return;
+
+            SetCurrentPlayerItem(Inventory.GetSlotItem(slotIndex));
+        }
+
+        private void SetCurrentPlayerItem(Item item)
+        {
+            currentPlayerItem = item;
+
+            if(item is BuildingItem)
+            {
+                BuildingItem buildingItem = (BuildingItem)item;
+
+                buildingPreviewDirection = Direction.Down;
+
+                buildingPreview.Texture = buildingItem.DirectionIcon[Direction.Down];
+
+                buildingPreviewGroundPattern = buildingItem.GroundPattern;
+            }
+        }
     }
 }

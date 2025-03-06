@@ -42,6 +42,11 @@ namespace palmesneo_village
             SpriteBatch.Draw(Pixel.Texture, rect, color);
         }
 
+        public static void Rect(Vector2 position, Vector2 size, Color color)
+        {
+            Rect(position.X, position.Y, size.X, size.X, color);
+        }
+
         public static void Rect(Rectangle rect, Color color)
         {
             Rect(rect.X, rect.Y, rect.Width, rect.Height, color);
@@ -78,6 +83,11 @@ namespace palmesneo_village
         public static void HollowRect(Vector2 position, float width, float height, Color color)
         {
             HollowRect(position.X, position.Y, width, height, color);
+        }
+
+        public static void HollowRect(Vector2 position, Vector2 size, Color color)
+        {
+            HollowRect(position.X, position.Y, size.X, size.Y, color);
         }
 
         public static void HollowRect(Rectangle rect, Color color)
