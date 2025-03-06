@@ -8,16 +8,29 @@ namespace palmesneo_village
 {
     public class GameLocation : Entity
     {
+        private int mapWidth;
+        private int mapHeight;
+
+        private CameraMovement cameraMovement;
 
         private Tilemap groundTilemap;
         private Tilemap groundTopTilemap;
         private bool[,] collisionMap;
-        private Building[,] buildingMap;
 
-        private Entity itemList;
+        private Entity itemsList;
+        private Entity creaturesList;
+
+        private Player _player;
 
         public GameLocation(int mapWidth, int mapHeight)
         {
+            this.mapWidth = mapWidth;
+            this.mapHeight = mapHeight;
+
+            cameraMovement = new CameraMovement();
+            cameraMovement.Bounds = GetBoundaries();
+            AddChild(cameraMovement);
+
             groundTilemap = new Tilemap(TilesetConnection.SidesAndCorners, 16, 16, mapWidth, mapHeight);
             groundTopTilemap = new Tilemap(TilesetConnection.SidesAndCorners, 16, 16, mapWidth, mapHeight);
 
@@ -39,7 +52,13 @@ namespace palmesneo_village
                 }
             }
 
-            buildingMap = new Building[mapWidth, mapHeight];
+            itemsList = new Entity();
+            itemsList.IsDepthSortEnabled = true;
+            AddChild(itemsList);
+
+            creaturesList = new Entity();
+            creaturesList.IsDepthSortEnabled = true;
+            AddChild(creaturesList);
 
             groundTilemap.SetCell(10, 10, 2);
             collisionMap[10, 10] = false;
@@ -49,15 +68,37 @@ namespace palmesneo_village
 
             groundTilemap.SetCell(13, 10, 2);
             collisionMap[13, 10] = false;
+        }
 
-            itemList = new Entity();
-            itemList.IsDepthSortEnabled = true;
-            AddChild(itemList);
+        public void SetPlayer(Player player)
+        {
+            if(_player != null)
+            {
+                throw new Exception("Player is already set!");
+            }
+
+            _player = player;
+
+            creaturesList.AddChild(player);
+            cameraMovement.Target = player;
+        }
+
+        public void RemovePlayer(Player player)
+        {
+            if (_player != player)
+            {
+                throw new Exception("Incrorrect player!");
+            }
+
+            creaturesList.RemoveChild(_player);
+            cameraMovement.Target = null;
+
+            _player = null;
         }
 
         public Rectangle GetBoundaries()
         {
-            return new Rectangle(0, 0, groundTilemap.TileColumns * Engine.TILE_SIZE, groundTilemap.TileRows * Engine.TILE_SIZE);
+            return new Rectangle(0, 0, mapWidth * Engine.TILE_SIZE, mapHeight * Engine.TILE_SIZE);
         }
 
         public bool CanInteractWithTile(int x, int y, Item handItem)
@@ -143,17 +184,17 @@ namespace palmesneo_village
             LocationItem locationItem = new LocationItem(item, quantity);
             locationItem.LocalPosition = position;
             locationItem.Depth = (int)position.Y;
-            itemList.AddChild(locationItem);
+            itemsList.AddChild(locationItem);
         }
 
         public void RemoveItem(LocationItem item)
         {
-            itemList.RemoveChild(item);
+            itemsList.RemoveChild(item);
         }
 
         public IEnumerable<LocationItem> GetLocationItems(Vector2 position)
         {
-            List<LocationItem> items = itemList.GetChildren<LocationItem>().ToList();
+            List<LocationItem> items = itemsList.GetChildren<LocationItem>().ToList();
 
             foreach (LocationItem item in items)
             {
