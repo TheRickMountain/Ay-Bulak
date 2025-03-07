@@ -19,7 +19,6 @@ namespace palmesneo_village
         {
             this.gameLocation = gameLocation;
 
-            // Initialize building preview
             buildingPreview = new BuildingPreview();
             buildingPreview.Depth = 100;
             buildingPreview.IsVisible = false;
@@ -27,9 +26,6 @@ namespace palmesneo_village
 
         public BuildingPreview Preview => buildingPreview;
 
-        /// <summary>
-        /// Sets the current building item to be placed
-        /// </summary>
         public void SetCurrentBuildingItem(BuildingItem item)
         {
             currentBuildingItem = item;
@@ -47,9 +43,6 @@ namespace palmesneo_village
             }
         }
 
-        /// <summary>
-        /// Rotates the current building preview
-        /// </summary>
         public void RotateBuildingPreview()
         {
             if (currentBuildingItem != null && currentBuildingItem.IsRotatable)
@@ -60,9 +53,6 @@ namespace palmesneo_village
             }
         }
 
-        /// <summary>
-        /// Updates the building preview position and checks placement validity
-        /// </summary>
         public void UpdatePreview(Vector2 mouseTilePosition)
         {
             if (currentBuildingItem != null)
@@ -72,10 +62,6 @@ namespace palmesneo_village
             }
         }
 
-        /// <summary>
-        /// Tries to place the current building at the specified position
-        /// </summary>
-        /// <returns>True if the building was successfully placed</returns>
         public bool TryPlaceBuilding(Vector2 position)
         {
             if (currentBuildingItem == null || !isPlacementValid)
@@ -91,40 +77,6 @@ namespace palmesneo_village
             return success;
         }
 
-        /// <summary>
-        /// Validates if the current building can be placed at the specified position
-        /// </summary>
-        public bool ValidatePlacement(Vector2 position)
-        {
-            if (currentBuildingItem == null || currentGroundPattern == null)
-                return false;
-
-            int tileX = (int)position.X;
-            int tileY = (int)position.Y;
-
-            foreach (var checkTile in GetTilesCoveredByPattern(position, currentGroundPattern))
-            {
-                int offsetX = (int)checkTile.X - tileX;
-                int offsetY = (int)checkTile.Y - tileY;
-
-                if (offsetX < 0 || offsetY < 0 ||
-                    offsetX >= currentGroundPattern.GetLength(0) ||
-                    offsetY >= currentGroundPattern.GetLength(1))
-                    continue;
-
-                string groundPatternId = currentGroundPattern[offsetX, offsetY];
-                if (!gameLocation.CheckGroundPattern((int)checkTile.X, (int)checkTile.Y, groundPatternId))
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        /// <summary>
-        /// Renders the building preview and placement indicators
-        /// </summary>
         public void RenderPreview(Vector2 mouseTilePosition)
         {
             if (currentBuildingItem == null || currentGroundPattern == null)
@@ -153,9 +105,34 @@ namespace palmesneo_village
             }
         }
 
-        /// <summary>
-        /// Returns all tiles covered by a building pattern at the specified position
-        /// </summary>
+        private bool ValidatePlacement(Vector2 position)
+        {
+            if (currentBuildingItem == null || currentGroundPattern == null)
+                return false;
+
+            int tileX = (int)position.X;
+            int tileY = (int)position.Y;
+
+            foreach (var checkTile in GetTilesCoveredByPattern(position, currentGroundPattern))
+            {
+                int offsetX = (int)checkTile.X - tileX;
+                int offsetY = (int)checkTile.Y - tileY;
+
+                if (offsetX < 0 || offsetY < 0 ||
+                    offsetX >= currentGroundPattern.GetLength(0) ||
+                    offsetY >= currentGroundPattern.GetLength(1))
+                    continue;
+
+                string groundPatternId = currentGroundPattern[offsetX, offsetY];
+                if (!gameLocation.CheckGroundPattern((int)checkTile.X, (int)checkTile.Y, groundPatternId))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
         private IEnumerable<Vector2> GetTilesCoveredByPattern(Vector2 position, string[,] pattern)
         {
             int tileX = (int)position.X;
