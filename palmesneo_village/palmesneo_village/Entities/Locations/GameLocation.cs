@@ -120,6 +120,8 @@ namespace palmesneo_village
                 {
                     case ToolType.Hoe:
                         {
+                            if (buildingsMap[x, y] != null) return false;
+
                             if (groundTileId == 0 || groundTileId == 1) return true;
                         }
                         break;
@@ -129,6 +131,10 @@ namespace palmesneo_village
                         }
                         break;
                 }
+            }
+            else if (handItem is SeedItem seedItem)
+            {
+                if (groundTileId == 3 && buildingsMap[x, y] == null) return true;
             }
 
             return false;
@@ -151,6 +157,12 @@ namespace palmesneo_village
                         }
                         break;
                 }
+            }
+            else if(handItem is SeedItem seedItem)
+            {
+                BuildingItem plantBuilding = Engine.ItemsDatabase.GetItemByName<BuildingItem>(seedItem.PlantName);
+
+                TryBuild(x, y, plantBuilding, Direction.Down, plantBuilding.GroundPattern);
             }
         }
 

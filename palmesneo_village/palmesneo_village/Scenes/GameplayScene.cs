@@ -137,7 +137,7 @@ namespace palmesneo_village
                 // Handle building item selection
                 if (currentPlayerItem is BuildingItem buildingItem)
                 {
-                    buildingSystem.UpdatePreview(mouseTile);
+                    buildingSystem.UpdatePreviewPosition(mouseTile);
 
                     // Handle rotation
                     if (buildingItem.IsRotatable && InputBindings.Rotate.Pressed)
@@ -167,7 +167,14 @@ namespace palmesneo_village
                             {
                                 CurrentGameLocation.InteractWithTile(tileX, tileY, currentPlayerItem);
 
-                                PlayerEnergyManager.ConsumeEnergy(1);
+                                if(currentPlayerItem is SeedItem)
+                                {
+                                    Inventory.RemoveItem(currentPlayerItem, 1, inventoryHotbar.CurrentSlotIndex);
+                                }
+                                else
+                                {
+                                    PlayerEnergyManager.ConsumeEnergy(1);
+                                }
                             }
                         }
                     }

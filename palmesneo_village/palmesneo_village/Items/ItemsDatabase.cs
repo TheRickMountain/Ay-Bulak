@@ -12,6 +12,7 @@ namespace palmesneo_village
         public ToolItem[] ToolItems { get; init; }
         public ConsumableItem[] ConsumableItems { get; init; }
         public BuildingItem[] BuildingItems { get; init; }
+        public SeedItem[] SeedItems { get; init; }
 
         private Dictionary<string, Item> nameItemPairs;
 
@@ -23,13 +24,14 @@ namespace palmesneo_village
             ReadAndInitializeCollection(ToolItems, itemsIcons);
             ReadAndInitializeCollection(ConsumableItems, itemsIcons);
             ReadAndInitializeCollection(BuildingItems, itemsIcons);
+            ReadAndInitializeCollection(SeedItems, itemsIcons);
         }
 
-        public Item GetItemByName(string name)
+        public T GetItemByName<T>(string name) where T : Item
         {
             if (nameItemPairs.ContainsKey(name))
             {
-                return nameItemPairs[name];
+                return (T)nameItemPairs[name];
             }
 
             return null;

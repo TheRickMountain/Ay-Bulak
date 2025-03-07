@@ -33,8 +33,14 @@ namespace palmesneo_village
             if (item != null)
             {
                 currentDirection = Direction.Down;
-                buildingPreview.Texture = item.DirectionIcon[currentDirection];
-                currentGroundPattern = item.GroundPattern;
+                buildingPreview.Texture = currentBuildingItem.DirectionIcon[currentDirection];
+                currentGroundPattern = currentBuildingItem.GroundPattern;
+
+                int buildingHeightInPixels = currentBuildingItem.Height * Engine.TILE_SIZE;
+                int buildingTextureHeight = currentBuildingItem.DirectionIcon[currentDirection].Height;
+
+                buildingPreview.Offset = new Vector2(0, buildingTextureHeight - buildingHeightInPixels);
+
                 buildingPreview.IsVisible = true;
             }
             else
@@ -50,16 +56,20 @@ namespace palmesneo_village
                 currentDirection = currentDirection.Next();
                 buildingPreview.Texture = currentBuildingItem.DirectionIcon[currentDirection];
                 currentGroundPattern = Calc.RotateMatrix(currentBuildingItem.GroundPattern, currentDirection);
+
+                int buildingHeightInPixels = currentBuildingItem.Height * Engine.TILE_SIZE;
+                int buildingTextureHeight = currentBuildingItem.DirectionIcon[currentDirection].Height;
+
+                buildingPreview.Offset = new Vector2(0, buildingTextureHeight - buildingHeightInPixels);
             }
         }
 
-        public void UpdatePreview(Vector2 mouseTilePosition)
+        public void UpdatePreviewPosition(Vector2 mouseTilePosition)
         {
-            if (currentBuildingItem != null)
-            {
-                buildingPreview.LocalPosition = gameLocation.MapToWorld(mouseTilePosition);
-                isPlacementValid = ValidatePlacement(mouseTilePosition);
-            }
+            if (currentBuildingItem == null) return;
+
+            buildingPreview.LocalPosition = gameLocation.MapToWorld(mouseTilePosition);
+            isPlacementValid = ValidatePlacement(mouseTilePosition);
         }
 
         public bool TryPlaceBuilding(Vector2 position)

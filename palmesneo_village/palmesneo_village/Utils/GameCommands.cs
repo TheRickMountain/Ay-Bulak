@@ -9,9 +9,16 @@ namespace palmesneo_village
         [Command("add_item", "Adds an item to the players inventory")]
         private static void AddItem(string itemName, int itemAmount)
         {
-            Item item = Engine.ItemsDatabase.GetItemByName(itemName);
+            Item item = Engine.ItemsDatabase.GetItemByName<Item>(itemName);
 
-            if(Engine.CurrentScene is GameplayScene)
+            if (item == null) 
+            {
+                Engine.Commands.Log($"Item '{itemName}' not found", Color.Red);
+
+                return;
+            }
+
+            if (Engine.CurrentScene is GameplayScene)
             {
                 ((GameplayScene)Engine.CurrentScene).Inventory.TryAddItem(item, itemAmount);
             }
@@ -20,7 +27,7 @@ namespace palmesneo_village
         [Command("spawn_item", "Spawns an item in the current game location")]
         private static void SpawnItem(string itemName, int itemAmount)
         {
-            Item item = Engine.ItemsDatabase.GetItemByName(itemName);
+            Item item = Engine.ItemsDatabase.GetItemByName<Item>(itemName);
 
             if (Engine.CurrentScene is GameplayScene)
             {

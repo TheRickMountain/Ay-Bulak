@@ -20,6 +20,12 @@ namespace palmesneo_village
 
             sprite = new SpriteEntity();
             sprite.Texture = buildingItem.DirectionIcon[direction];
+
+            int buildingHeightInPixels = buildingItem.Height * Engine.TILE_SIZE;
+            int buildingTextureHeight = buildingItem.DirectionIcon[direction].Height;
+
+            sprite.Offset = new Vector2(0, buildingTextureHeight - buildingHeightInPixels);
+
             AddChild(sprite);
         }
 
