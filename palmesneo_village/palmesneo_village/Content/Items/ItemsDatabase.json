@@ -4,14 +4,12 @@
 			"Id": 15,
 			"Name": "wood",
 			"Description": "test",
-			"Category": "Resources",
 			"IsStackable": true
 		},
 		{
 			"Id": 20,
 			"Name": "stone",
 			"Description": "test",
-			"Category": "Resources",
 			"IsStackable": true
 		}
 	],
@@ -20,7 +18,6 @@
 			"Id": 132,
 			"Name": "iron_hoe",
 			"Description": "test",
-			"Category": "Tools",
 			"IsStackable": false,
 			"ToolType": "Hoe"
 		},
@@ -28,7 +25,6 @@
 			"Id": 176,
 			"Name": "iron_watering_can",
 			"Description": "test",
-			"Category": "Tools",
 			"IsStackable": false,
 			"ToolType": "WateringCan"
 		}
@@ -38,7 +34,6 @@
 			"Id": 26,
 			"Name": "cooked_meat",
 			"Description": "test",
-			"Category": "Food",
 			"IsStackable": true,
 			"EnergyAmount": 20
 		}
@@ -48,7 +43,6 @@
 			"Id": 1000,
 			"Name": "gas_stove",
 			"Description": "test",
-			"Category": "Food",
 			"IsStackable": false,
 			"Width": 2,
 			"Height": 2,
@@ -62,7 +56,6 @@
 			"Id": 1001,
 			"Name": "toilet",
 			"Description": "test",
-			"Category": "Food",
 			"IsStackable": false,
 			"Width": 2,
 			"Height": 2,
@@ -76,7 +69,6 @@
 			"Id": 1002,
 			"Name": "tomato_plant",
 			"Description": "test",
-			"Category": "Food",
 			"IsStackable": false,
 			"Width": 1,
 			"Height": 1,
@@ -91,7 +83,6 @@
 			"Id": 73,
 			"Name": "tomato_seeds",
 			"Description": "test",
-			"Category": "Food",
 			"IsStackable": true,
 			"PlantName": "tomato_plant"
 		}

@@ -192,7 +192,7 @@ namespace palmesneo_village
                 return false;
 
             // Размещение здания
-            Building building = new Building(buildingItem, this, direction, tiles);
+            Building building = new Building(buildingItem, direction, tiles);
             building.LocalPosition = new Vector2(x, y) * Engine.TILE_SIZE;
             buildingsList.AddChild(building);
 

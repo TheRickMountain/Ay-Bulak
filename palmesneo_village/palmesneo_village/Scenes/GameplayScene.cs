@@ -166,7 +166,7 @@ namespace palmesneo_village
                             if (MInput.Mouse.PressedLeftButton)
                             {
                                 CurrentGameLocation.InteractWithTile(tileX, tileY, currentPlayerItem);
-
+                                 
                                 if(currentPlayerItem is SeedItem)
                                 {
                                     Inventory.RemoveItem(currentPlayerItem, 1, inventoryHotbar.CurrentSlotIndex);

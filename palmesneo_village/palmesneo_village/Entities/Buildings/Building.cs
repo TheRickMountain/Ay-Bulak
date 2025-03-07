@@ -6,15 +6,13 @@ namespace palmesneo_village
     public class Building : Entity
     {
         private BuildingItem buildingItem;
-        private GameLocation gameLocation;
         private Direction direction;
         private Vector2[,] occupiedTiles;
         private SpriteEntity sprite;
 
-        public Building(BuildingItem buildingItem, GameLocation gameLocation, Direction direction, Vector2[,] occupiedTiles)
+        public Building(BuildingItem buildingItem, Direction direction, Vector2[,] occupiedTiles)
         {
             this.buildingItem = buildingItem;
-            this.gameLocation = gameLocation;
             this.direction = direction;
             this.occupiedTiles = occupiedTiles;
 
