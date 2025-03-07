@@ -64,8 +64,8 @@ namespace palmesneo_village
             player = new Player(creatureTemplate, Inventory);
             player.LocalPosition = new Vector2(5 * Engine.TILE_SIZE, 5 * Engine.TILE_SIZE);
 
-            farmLocation = new FarmLocation();
-            houseLocation = new HouseLocation();
+            farmLocation = new FarmLocation(timeOfDayManager);
+            houseLocation = new HouseLocation(timeOfDayManager);
 
             CurrentGameLocation = farmLocation;
 

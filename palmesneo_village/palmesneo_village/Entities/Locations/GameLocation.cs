@@ -10,6 +10,7 @@ namespace palmesneo_village
     {
         private int mapWidth;
         private int mapHeight;
+        private TimeOfDayManager timeOfDayManager;
 
         private CameraMovement cameraMovement;
 
@@ -24,10 +25,13 @@ namespace palmesneo_village
 
         private Player _player;
 
-        public GameLocation(int mapWidth, int mapHeight)
+        public GameLocation(int mapWidth, int mapHeight, TimeOfDayManager timeOfDayManager)
         {
             this.mapWidth = mapWidth;
             this.mapHeight = mapHeight;
+            this.timeOfDayManager = timeOfDayManager;
+
+            timeOfDayManager.DayChanged += OnDayChanged;
 
             cameraMovement = new CameraMovement();
             cameraMovement.Bounds = GetBoundaries();
@@ -160,7 +164,7 @@ namespace palmesneo_village
             }
             else if(handItem is SeedItem seedItem)
             {
-                BuildingItem plantBuilding = Engine.ItemsDatabase.GetItemByName<BuildingItem>(seedItem.PlantName);
+                PlantItem plantBuilding = Engine.ItemsDatabase.GetItemByName<PlantItem>(seedItem.PlantName);
 
                 TryBuild(x, y, plantBuilding, Direction.Down, plantBuilding.GroundPattern);
             }
@@ -181,6 +185,17 @@ namespace palmesneo_village
             return groundTilemap.MapToWorld(vector);
         }
 
+        private void OnDayChanged(int day)
+        {
+            foreach(Entity entity in buildingsList.GetChildren())
+            {
+                if (entity is Building building)
+                {
+                    building.OnDayChanged(day);
+                }
+            }
+        }
+
         #region Buildings
 
         public bool TryBuild(int x, int y, BuildingItem buildingItem, Direction direction, string[,] groundPattern)
@@ -192,7 +207,17 @@ namespace palmesneo_village
                 return false;
 
             // Размещение здания
-            Building building = new Building(buildingItem, direction, tiles);
+            Building building;
+
+            if(buildingItem is PlantItem plantItem)
+            {
+                building = new PlantBuilding(plantItem, direction, tiles);
+            }
+            else
+            {
+                building = new Building(buildingItem, direction, tiles);
+            }
+
             building.LocalPosition = new Vector2(x, y) * Engine.TILE_SIZE;
             buildingsList.AddChild(building);
 

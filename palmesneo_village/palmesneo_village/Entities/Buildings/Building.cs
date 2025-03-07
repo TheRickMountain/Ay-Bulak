@@ -8,7 +8,7 @@ namespace palmesneo_village
         private BuildingItem buildingItem;
         private Direction direction;
         private Vector2[,] occupiedTiles;
-        private SpriteEntity sprite;
+        protected SpriteEntity Sprite { get; private set; }
 
         public Building(BuildingItem buildingItem, Direction direction, Vector2[,] occupiedTiles)
         {
@@ -16,20 +16,24 @@ namespace palmesneo_village
             this.direction = direction;
             this.occupiedTiles = occupiedTiles;
 
-            sprite = new SpriteEntity();
-            sprite.Texture = buildingItem.DirectionIcon[direction];
+            Sprite = new SpriteEntity();
+            Sprite.Texture = buildingItem.DirectionIcon[direction];
 
             int buildingHeightInPixels = buildingItem.Height * Engine.TILE_SIZE;
             int buildingTextureHeight = buildingItem.DirectionIcon[direction].Height;
 
-            sprite.Offset = new Vector2(0, buildingTextureHeight - buildingHeightInPixels);
+            Sprite.Offset = new Vector2(0, buildingTextureHeight - buildingHeightInPixels);
 
-            AddChild(sprite);
+            AddChild(Sprite);
         }
 
         public BuildingItem BuildingItem => buildingItem;
         public Direction Direction => direction;
         public Vector2[,] OccupiedTiles => occupiedTiles;
 
+        public virtual void OnDayChanged(int day)
+        {
+
+        }
     }
 }

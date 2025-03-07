@@ -9,7 +9,7 @@ namespace palmesneo_village
     public class HouseLocation : GameLocation
     {
 
-        public HouseLocation() : base(32, 32)
+        public HouseLocation(TimeOfDayManager timeOfDayManager) : base(32, 32, timeOfDayManager)
         {
             
         }

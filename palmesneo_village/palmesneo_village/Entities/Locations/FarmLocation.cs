@@ -9,7 +9,7 @@ namespace palmesneo_village
     public class FarmLocation : GameLocation
     {
 
-        public FarmLocation() : base(64, 64)
+        public FarmLocation(TimeOfDayManager timeOfDayManager) : base(64, 64, timeOfDayManager)
         {
 
         }
