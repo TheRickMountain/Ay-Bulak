@@ -1,30 +1,34 @@
 ﻿using Microsoft.Xna.Framework;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace palmesneo_village
 {
     /// <summary>
     /// Manages the building system, including placement, validation, and visualization
     /// </summary>
-    public class BuildingSystem
+    public class BuildingSystem : Entity
     {
         private GameLocation gameLocation;
-        private BuildingPreview buildingPreview;
+        private ImageEntity buildingPreview;
         private BuildingItem currentBuildingItem;
         private Direction currentDirection = Direction.Down;
         private string[,] currentGroundPattern;
-        private bool isPlacementValid = false;
+        private Vector2 mouseTile;
 
-        public BuildingSystem(GameLocation gameLocation)
+        public BuildingSystem()
         {
-            this.gameLocation = gameLocation;
-
-            buildingPreview = new BuildingPreview();
+            buildingPreview = new ImageEntity();
+            buildingPreview.SelfColor = Color.White * 0.5f;
             buildingPreview.Depth = 100;
             buildingPreview.IsVisible = false;
+            AddChild(buildingPreview);
         }
 
-        public BuildingPreview Preview => buildingPreview;
+        public void SetGameLocation(GameLocation gameLocation)
+        {
+            this.gameLocation = gameLocation;
+        }
 
         public void SetCurrentBuildingItem(BuildingItem item)
         {
@@ -33,13 +37,9 @@ namespace palmesneo_village
             if (item != null)
             {
                 currentDirection = Direction.Down;
-                buildingPreview.Texture = currentBuildingItem.DirectionIcon[currentDirection];
                 currentGroundPattern = currentBuildingItem.GroundPattern;
 
-                int buildingHeightInPixels = currentBuildingItem.Height * Engine.TILE_SIZE;
-                int buildingTextureHeight = currentBuildingItem.DirectionIcon[currentDirection].Height;
-
-                buildingPreview.Offset = new Vector2(0, buildingTextureHeight - buildingHeightInPixels);
+                UpdatePreviewTexture();
 
                 buildingPreview.IsVisible = true;
             }
@@ -51,53 +51,66 @@ namespace palmesneo_village
 
         public void RotateBuildingPreview()
         {
-            if (currentBuildingItem != null && currentBuildingItem.IsRotatable)
-            {
-                currentDirection = currentDirection.Next();
-                buildingPreview.Texture = currentBuildingItem.DirectionIcon[currentDirection];
-                currentGroundPattern = Calc.RotateMatrix(currentBuildingItem.GroundPattern, currentDirection);
+            if (currentBuildingItem == null || currentBuildingItem.IsRotatable == false) return;
 
-                int buildingHeightInPixels = currentBuildingItem.Height * Engine.TILE_SIZE;
-                int buildingTextureHeight = currentBuildingItem.DirectionIcon[currentDirection].Height;
+            currentDirection = currentDirection.Next();
+            currentGroundPattern = Calc.RotateMatrix(currentBuildingItem.GroundPattern, currentDirection);
 
-                buildingPreview.Offset = new Vector2(0, buildingTextureHeight - buildingHeightInPixels);
-            }
+            UpdatePreviewTexture();
         }
 
-        public void UpdatePreviewPosition(Vector2 mouseTilePosition)
+        private void UpdatePreviewTexture()
         {
-            if (currentBuildingItem == null) return;
+            buildingPreview.Texture = currentBuildingItem.DirectionIcon[currentDirection];
 
-            buildingPreview.LocalPosition = gameLocation.MapToWorld(mouseTilePosition);
-            isPlacementValid = ValidatePlacement(mouseTilePosition);
+            int buildingHeightInPixels = currentBuildingItem.Height * Engine.TILE_SIZE;
+            int buildingTextureHeight = currentBuildingItem.DirectionIcon[currentDirection].Height;
+
+            buildingPreview.Offset = new Vector2(0, buildingTextureHeight - buildingHeightInPixels);
         }
 
         public bool TryPlaceBuilding(Vector2 position)
         {
-            if (currentBuildingItem == null || !isPlacementValid)
-                return false;
+            if (currentBuildingItem == null) return false;
 
-            bool success = gameLocation.TryBuild(
-                (int)position.X,
-                (int)position.Y,
-                currentBuildingItem,
-                currentDirection,
-                currentGroundPattern);
+            Vector2[,] tiles = GetTilesCoveredByPattern(position, currentGroundPattern);
 
-            return success;
+            if (ValidatePlacement(tiles) == false) return false;
+
+            gameLocation.Build(currentBuildingItem, tiles, currentDirection);
+
+            return true;
         }
 
-        public void RenderPreview(Vector2 mouseTilePosition)
+        public override void Update()
+        {
+            base.Update();
+
+            if (currentBuildingItem == null) return;
+
+            mouseTile = gameLocation.WorldToMap(MInput.Mouse.GlobalPosition);
+
+            buildingPreview.LocalPosition = gameLocation.MapToWorld(mouseTile);
+        }
+
+        public override void Render()
+        {
+            base.Render();
+
+            RenderGroundPattern(mouseTile);
+        }
+
+        private void RenderGroundPattern(Vector2 position)
         {
             if (currentBuildingItem == null || currentGroundPattern == null)
                 return;
 
-            foreach (var checkTile in GetTilesCoveredByPattern(mouseTilePosition, currentGroundPattern))
+            foreach (var checkTile in GetTilesCoveredByPattern(position, currentGroundPattern))
             {
                 Color color = Color.YellowGreen * 0.5f;
 
-                int offsetX = (int)checkTile.X - (int)mouseTilePosition.X;
-                int offsetY = (int)checkTile.Y - (int)mouseTilePosition.Y;
+                int offsetX = (int)checkTile.X - (int)position.X;
+                int offsetY = (int)checkTile.Y - (int)position.Y;
 
                 if (offsetX < 0 || offsetY < 0 ||
                     offsetX >= currentGroundPattern.GetLength(0) ||
@@ -115,15 +128,15 @@ namespace palmesneo_village
             }
         }
 
-        private bool ValidatePlacement(Vector2 position)
+        private bool ValidatePlacement(Vector2[,] tiles)
         {
             if (currentBuildingItem == null || currentGroundPattern == null)
                 return false;
 
-            int tileX = (int)position.X;
-            int tileY = (int)position.Y;
+            int tileX = (int)tiles[0, 0].X;
+            int tileY = (int)tiles[0, 0].Y;
 
-            foreach (var checkTile in GetTilesCoveredByPattern(position, currentGroundPattern))
+            foreach (var checkTile in tiles)
             {
                 int offsetX = (int)checkTile.X - tileX;
                 int offsetY = (int)checkTile.Y - tileY;
@@ -143,7 +156,7 @@ namespace palmesneo_village
             return true;
         }
 
-        private IEnumerable<Vector2> GetTilesCoveredByPattern(Vector2 position, string[,] pattern)
+        private Vector2[,] GetTilesCoveredByPattern(Vector2 position, string[,] pattern)
         {
             int tileX = (int)position.X;
             int tileY = (int)position.Y;
@@ -151,13 +164,17 @@ namespace palmesneo_village
             int widthInTiles = pattern.GetLength(0);
             int heightInTiles = pattern.GetLength(1);
 
+            Vector2[,] tiles = new Vector2[widthInTiles, heightInTiles];
+
             for (int i = 0; i < widthInTiles; i++)
             {
                 for (int j = 0; j < heightInTiles; j++)
                 {
-                    yield return new Vector2(tileX + i, tileY + j);
+                    tiles[i, j] = new Vector2(tileX + i, tileY + j);
                 }
             }
+
+            return tiles;
         }
     }
 }

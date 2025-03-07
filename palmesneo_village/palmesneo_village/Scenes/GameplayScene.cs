@@ -67,10 +67,9 @@ namespace palmesneo_village
             farmLocation = new FarmLocation(timeOfDayManager);
             houseLocation = new HouseLocation(timeOfDayManager);
 
-            CurrentGameLocation = farmLocation;
-
-            buildingSystem = new BuildingSystem(farmLocation);
-            MasterEntity.AddChild(buildingSystem.Preview);
+            buildingSystem = new BuildingSystem();
+            buildingSystem.Depth = 100;
+            MasterEntity.AddChild(buildingSystem);
 
             tileSelector = new TileSelector();
             tileSelector.Depth = 100;
@@ -82,6 +81,8 @@ namespace palmesneo_village
             Inventory.ItemAdded += OnInventoryItemChanged;
             Inventory.ItemRemoved += OnInventoryItemChanged;
             inventoryHotbar.CurrentSlotIndexChanged += OnInventoryHotbarCurrentSlotIndexChanged;
+
+            CurrentGameLocation = farmLocation;
 
             #region UI
 
@@ -137,9 +138,6 @@ namespace palmesneo_village
                 // Handle building item selection
                 if (currentPlayerItem is BuildingItem buildingItem)
                 {
-                    buildingSystem.UpdatePreviewPosition(mouseTile);
-
-                    // Handle rotation
                     if (buildingItem.IsRotatable && InputBindings.Rotate.Pressed)
                     {
                         buildingSystem.RotateBuildingPreview();
@@ -211,21 +209,11 @@ namespace palmesneo_village
 
                 currentGameLocation.SetPlayer(player);
 
-                player.SetCurrentLocation(currentGameLocation);
+                player.SetGameLocation(currentGameLocation);
+                buildingSystem.SetGameLocation(currentGameLocation);
             }
 
             base.Update();
-        }
-
-        public override void Render()
-        {
-            base.Render();
-
-            if (CurrentGameLocation != null && currentPlayerItem is BuildingItem)
-            {
-                Vector2 mouseTile = CurrentGameLocation.WorldToMap(MInput.Mouse.GlobalPosition);
-                buildingSystem.RenderPreview(mouseTile);
-            }
         }
 
         private bool CanShowTileSelector(Vector2 playerTile, Vector2 mouseTile, int maxDistance)

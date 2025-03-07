@@ -166,7 +166,10 @@ namespace palmesneo_village
             {
                 PlantItem plantBuilding = Engine.ItemsDatabase.GetItemByName<PlantItem>(seedItem.PlantName);
 
-                TryBuild(x, y, plantBuilding, Direction.Down, plantBuilding.GroundPattern);
+                Vector2[,] tiles = new Vector2[1, 1];
+                tiles[0, 0] = new Vector2(x, y);
+
+                Build(plantBuilding, tiles, Direction.Down);
             }
         }
 
@@ -198,15 +201,8 @@ namespace palmesneo_village
 
         #region Buildings
 
-        public bool TryBuild(int x, int y, BuildingItem buildingItem, Direction direction, string[,] groundPattern)
+        public void Build(BuildingItem buildingItem, Vector2[,] tiles, Direction direction)
         {
-            Vector2[,] tiles = CalculateBuildingTiles(x, y, groundPattern);
-
-            // Проверка, можно ли разместить здание
-            if (ValidateBuildingPlacement(tiles, groundPattern) == false)
-                return false;
-
-            // Размещение здания
             Building building;
 
             if(buildingItem is PlantItem plantItem)
@@ -218,50 +214,10 @@ namespace palmesneo_village
                 building = new Building(buildingItem, direction, tiles);
             }
 
-            building.LocalPosition = new Vector2(x, y) * Engine.TILE_SIZE;
+            building.LocalPosition = tiles[0, 0] * Engine.TILE_SIZE;
             buildingsList.AddChild(building);
 
-            // Размещаем здание на карте
             RegisterBuildingTiles(building, tiles);
-
-            return true;
-        }
-
-        private bool ValidateBuildingPlacement(Vector2[,] tiles, string[,] groundPattern)
-        {
-            for (int i = 0; i < tiles.GetLength(0); i++)
-            {
-                for (int j = 0; j < tiles.GetLength(1); j++)
-                {
-                    int tileX = (int)tiles[i, j].X;
-                    int tileY = (int)tiles[i, j].Y;
-
-                    if (!IsWithinBounds(tileX, tileY))
-                        return false;
-
-                    string patternId = groundPattern[i, j];
-                    if (CheckGroundPattern(tileX, tileY, patternId) == false)
-                        return false;
-                }
-            }
-
-            return true;
-        }
-
-        private Vector2[,] CalculateBuildingTiles(int x, int y, string[,] groundPattern)
-        {
-            int width = groundPattern.GetLength(0);
-            int height = groundPattern.GetLength(1);
-            Vector2[,] tiles = new Vector2[width, height];
-
-            for (int i = 0; i < width; i++)
-            {
-                for (int j = 0; j < height; j++)
-                {
-                    tiles[i, j] = new Vector2(x + i, y + j);
-                }
-            }
-            return tiles;
         }
 
         private void RegisterBuildingTiles(Building building, Vector2[,] tiles)
@@ -275,11 +231,6 @@ namespace palmesneo_village
                     buildingsMap[tileX, tileY] = building;
                 }
             }
-        }
-
-        private bool IsWithinBounds(int x, int y)
-        {
-            return x >= 0 && x < mapWidth && y >= 0 && y < mapHeight;
         }
 
         public bool CheckGroundPattern(int x, int y, string groundPatternId)

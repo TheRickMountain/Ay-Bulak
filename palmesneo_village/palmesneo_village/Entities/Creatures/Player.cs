@@ -24,7 +24,7 @@ namespace palmesneo_village
             CheckForItemPickup();
         }
 
-        public void SetCurrentLocation(GameLocation location)
+        public void SetGameLocation(GameLocation location)
         {
             currentLocation = location;
         }
