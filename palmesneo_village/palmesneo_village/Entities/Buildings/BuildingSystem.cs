@@ -14,7 +14,6 @@ namespace palmesneo_village
         private BuildingItem currentBuildingItem;
         private Direction currentDirection = Direction.Down;
         private string[,] currentGroundPattern;
-        private Vector2 mouseTile;
 
         public BuildingSystem()
         {
@@ -75,7 +74,7 @@ namespace palmesneo_village
 
             Vector2[,] tiles = GetTilesCoveredByPattern(position, currentGroundPattern);
 
-            if (ValidatePlacement(tiles) == false) return false;
+            if (ValidatePlacement(tiles, currentGroundPattern) == false) return false;
 
             gameLocation.Build(currentBuildingItem, tiles, currentDirection);
 
@@ -88,24 +87,22 @@ namespace palmesneo_village
 
             if (currentBuildingItem == null) return;
 
-            mouseTile = gameLocation.WorldToMap(MInput.Mouse.GlobalPosition);
-
-            buildingPreview.LocalPosition = gameLocation.MapToWorld(mouseTile);
+            buildingPreview.LocalPosition = gameLocation.MapToWorld(gameLocation.MouseTile);
         }
 
         public override void Render()
         {
             base.Render();
 
-            RenderGroundPattern(mouseTile);
+            RenderGroundPattern(gameLocation.MouseTile, currentGroundPattern);
         }
 
-        private void RenderGroundPattern(Vector2 position)
+        private void RenderGroundPattern(Vector2 position, string[,] pattern)
         {
-            if (currentBuildingItem == null || currentGroundPattern == null)
+            if (currentBuildingItem == null)
                 return;
 
-            foreach (var checkTile in GetTilesCoveredByPattern(position, currentGroundPattern))
+            foreach (var checkTile in GetTilesCoveredByPattern(position, pattern))
             {
                 Color color = Color.YellowGreen * 0.5f;
 
@@ -113,11 +110,11 @@ namespace palmesneo_village
                 int offsetY = (int)checkTile.Y - (int)position.Y;
 
                 if (offsetX < 0 || offsetY < 0 ||
-                    offsetX >= currentGroundPattern.GetLength(0) ||
-                    offsetY >= currentGroundPattern.GetLength(1))
+                    offsetX >= pattern.GetLength(0) ||
+                    offsetY >= pattern.GetLength(1))
                     continue;
 
-                string groundPatternId = currentGroundPattern[offsetX, offsetY];
+                string groundPatternId = pattern[offsetX, offsetY];
                 if (!gameLocation.CheckGroundPattern((int)checkTile.X, (int)checkTile.Y, groundPatternId))
                 {
                     color = Color.OrangeRed * 0.5f;
@@ -128,9 +125,9 @@ namespace palmesneo_village
             }
         }
 
-        private bool ValidatePlacement(Vector2[,] tiles)
+        private bool ValidatePlacement(Vector2[,] tiles, string[,] pattern)
         {
-            if (currentBuildingItem == null || currentGroundPattern == null)
+            if (currentBuildingItem == null)
                 return false;
 
             int tileX = (int)tiles[0, 0].X;
@@ -142,11 +139,11 @@ namespace palmesneo_village
                 int offsetY = (int)checkTile.Y - tileY;
 
                 if (offsetX < 0 || offsetY < 0 ||
-                    offsetX >= currentGroundPattern.GetLength(0) ||
-                    offsetY >= currentGroundPattern.GetLength(1))
+                    offsetX >= pattern.GetLength(0) ||
+                    offsetY >= pattern.GetLength(1))
                     continue;
 
-                string groundPatternId = currentGroundPattern[offsetX, offsetY];
+                string groundPatternId = pattern[offsetX, offsetY];
                 if (!gameLocation.CheckGroundPattern((int)checkTile.X, (int)checkTile.Y, groundPatternId))
                 {
                     return false;

@@ -127,7 +127,7 @@ namespace palmesneo_village
 
             if (CurrentGameLocation != null)
             {
-                Vector2 mouseTile = CurrentGameLocation.WorldToMap(MInput.Mouse.GlobalPosition);
+                Vector2 mouseTile = CurrentGameLocation.MouseTile;
                 Vector2 playerTile = CurrentGameLocation.WorldToMap(player.LocalPosition);
 
                 tileSelector.IsVisible = false;

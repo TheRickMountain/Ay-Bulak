@@ -8,6 +8,8 @@ namespace palmesneo_village
 {
     public class GameLocation : Entity
     {
+        public Vector2 MouseTile { get; private set; }
+
         private int mapWidth;
         private int mapHeight;
         private TimeOfDayManager timeOfDayManager;
@@ -80,6 +82,13 @@ namespace palmesneo_village
 
             groundTilemap.SetCell(13, 10, 2);
             collisionMap[13, 10] = false;
+        }
+
+        public override void Update()
+        {
+            base.Update();
+
+            MouseTile = Vector2.Clamp(WorldToMap(MInput.Mouse.GlobalPosition), Vector2.Zero, new Vector2(mapWidth, mapHeight));
         }
 
         public void SetPlayer(Player player)
