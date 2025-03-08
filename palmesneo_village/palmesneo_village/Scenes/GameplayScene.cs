@@ -9,7 +9,8 @@ namespace palmesneo_village
     {
         Game,
         SceneTransitionIn,
-        SceneTransitionOut
+        DayTransitionIn,
+        TransitionOut
     }
 
     public class GameplayScene : Scene
@@ -40,6 +41,7 @@ namespace palmesneo_village
         private Dictionary<string, GameLocation> gameLocations = new();
         private GameLocation currentGameLocation;
         private GameLocation nextGameLocation;
+
         private float transitionTimer = 0.0f;
         private ImageUI transitionImage;
 
@@ -65,8 +67,8 @@ namespace palmesneo_village
             player.LocalPosition = new Vector2(5 * Engine.TILE_SIZE, 5 * Engine.TILE_SIZE);
 
             
-            RegisterLocation(new FarmLocation("farm", timeOfDayManager));
-            RegisterLocation(new HouseLocation("house", timeOfDayManager));
+            RegisterLocation(new FarmLocation("farm"));
+            RegisterLocation(new HouseLocation("house"));
 
             buildingSystem = new BuildingSystem();
             buildingSystem.Depth = 100;
@@ -190,6 +192,11 @@ namespace palmesneo_village
                                 }
                             }
                         }
+
+                        if (timeOfDayManager.CurrentHour == 0)
+                        {
+                            gameState = GameState.DayTransitionIn;
+                        }
                     }
                     break;
                 case GameState.SceneTransitionIn:
@@ -224,12 +231,30 @@ namespace palmesneo_village
                                 player.SetGameLocation(currentGameLocation);
                                 buildingSystem.SetGameLocation(currentGameLocation);
 
-                                gameState = GameState.SceneTransitionOut;
+                                gameState = GameState.TransitionOut;
                             }
                         }
                     }
                     break;
-                case GameState.SceneTransitionOut:
+                case GameState.DayTransitionIn:
+                    {
+                        Engine.TimeRate = 0;
+
+                        transitionTimer += Engine.DeltaTime;
+
+                        transitionImage.SelfColor = Color.Black * transitionTimer;
+
+                        if (transitionTimer >= 1.0f)
+                        {
+                            transitionTimer = 0.0f;
+
+                            StartNextDay();
+
+                            gameState = GameState.TransitionOut;
+                        }
+                    }
+                    break;
+                case GameState.TransitionOut:
                     {
                         transitionTimer += Engine.DeltaTime;
 
@@ -250,6 +275,17 @@ namespace palmesneo_village
             }
 
             base.Update();
+        }
+
+        public void StartNextDay()
+        {
+            timeOfDayManager.StartNextDay();
+
+            foreach (var kvp in gameLocations)
+            {
+                GameLocation gameLocation = kvp.Value;
+                gameLocation.StartNextDay();
+            }
         }
 
         public void GoToLocation(string locationId)

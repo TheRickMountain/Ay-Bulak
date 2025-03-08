@@ -6,6 +6,21 @@ namespace palmesneo_village
     {
 #if !CONSOLE
 
+        [Command("set_time_speed", "Set time speed")]
+        private static void SetTimeSpeed(int value)
+        {
+            Engine.TimeRate = value;
+        }
+
+        [Command("start_next_day", "Start next day")]
+        private static void StartNextDay()
+        {
+            if (Engine.CurrentScene is GameplayScene)
+            {
+                ((GameplayScene)Engine.CurrentScene).StartNextDay();
+            }
+        }
+
         [Command("go_to_location", "Transition to location")]
         private static void GoToLocation(string locationId)
         {

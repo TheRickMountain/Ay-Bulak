@@ -31,7 +31,7 @@ namespace palmesneo_village
         public Direction Direction => direction;
         public Vector2[,] OccupiedTiles => occupiedTiles;
 
-        public virtual void OnDayChanged(int day)
+        public virtual void OnDayChanged()
         {
 
         }

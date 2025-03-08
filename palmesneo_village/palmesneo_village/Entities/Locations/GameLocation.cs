@@ -28,14 +28,11 @@ namespace palmesneo_village
 
         private Player _player;
 
-        public GameLocation(string id, int mapWidth, int mapHeight, TimeOfDayManager timeOfDayManager)
+        public GameLocation(string id, int mapWidth, int mapHeight)
         {
             Id = id;
             this.mapWidth = mapWidth;
             this.mapHeight = mapHeight;
-            this.timeOfDayManager = timeOfDayManager;
-
-            timeOfDayManager.DayChanged += OnDayChanged;
 
             cameraMovement = new CameraMovement();
             cameraMovement.Bounds = GetBoundaries();
@@ -199,13 +196,13 @@ namespace palmesneo_village
             return groundTilemap.MapToWorld(vector);
         }
 
-        private void OnDayChanged(int day)
+        public void StartNextDay()
         {
-            foreach(Entity entity in buildingsList.GetChildren())
+            foreach (Entity entity in buildingsList.GetChildren())
             {
                 if (entity is Building building)
                 {
-                    building.OnDayChanged(day);
+                    building.OnDayChanged();
                 }
             }
         }

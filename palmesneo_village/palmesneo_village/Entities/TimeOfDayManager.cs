@@ -21,11 +21,12 @@ namespace palmesneo_village
         public const int MINUTES_PER_HOUR = 30;
         public const int HOURS_PER_CYCLE = 24;
         public const int MINUTES_PER_DAY = MINUTES_PER_HOUR * HOURS_PER_CYCLE;
-        public const int INITIAL_HOUR = 12;
-        public const int DAYS_IN_THE_SEASON = 10;
+        public const int INITIAL_HOUR = 6;
+        public const int DAYS_IN_THE_SEASON = 20;
 
         public Season CurrentSeason { get; private set; } = Season.Spring;
         public Weather CurrentWeather { get; private set; } = Weather.Sunny;
+        public int CurrentHour { get => hour; }
 
         private GradientTexture1D currentDayGradient;
 
@@ -35,17 +36,13 @@ namespace palmesneo_village
         private TimeOfDayGradients timeOfDayGradients;
 
         private float totalMinutes = INITIAL_HOUR * MINUTES_PER_HOUR;
-        private float currentDayMinutes = 0;
 
+        private float currentDayMinutes = 0;
         private float cycleProgress = 0;
 
-        private int day = 0;
+        private int day = 1;
         private int hour = 0;
         private int minute = 0;
-
-        private int lastDay = 0;
-
-        private Season lastSeason;
 
         public TimeOfDayManager()
         {
@@ -64,8 +61,6 @@ namespace palmesneo_village
                     }
                     break;
             }
-
-            lastSeason = CurrentSeason;
         }
 
         public override void Update()
@@ -73,10 +68,6 @@ namespace palmesneo_village
             base.Update();
 
             totalMinutes += Engine.GameDeltaTime;
-
-            cycleProgress = (MathF.Sin(totalMinutes - MathF.PI / 2.0f) + 1.0f) / 2.0f;
-
-            day = (int)(totalMinutes / MINUTES_PER_DAY);
 
             currentDayMinutes = totalMinutes % MINUTES_PER_DAY;
 
@@ -87,41 +78,40 @@ namespace palmesneo_village
             cycleProgress = currentDayMinutes / MINUTES_PER_DAY;
 
             Engine.Penumbra.AmbientColor = currentDayGradient.GetColor(cycleProgress);
+        }
 
-            if (lastDay != day)
+        public void StartNextDay()
+        {
+            totalMinutes = INITIAL_HOUR * MINUTES_PER_HOUR;
+
+            day++;
+
+            CurrentWeather = Calc.Random.Chance(0.2f) ? Weather.Rainy : Weather.Sunny;
+
+            switch (CurrentWeather)
             {
-                lastDay = day;
-
-                CurrentWeather = Calc.Random.Chance(0.2f) ? Weather.Rainy : Weather.Sunny;
-
-                switch(CurrentWeather)
-                {
-                    case Weather.Rainy:
-                        {
-                            currentDayGradient = timeOfDayGradients.RainyDayGradient;
-                        }
-                        break;
-                    case Weather.Sunny:
-                        {
-                            currentDayGradient = timeOfDayGradients.SunnyDayGradient;
-                        }
-                        break;
-                }
-
-                if (day % DAYS_IN_THE_SEASON == 0)
-                {
-                    CurrentSeason = CurrentSeason.Next();
-                }
-
-                DayChanged?.Invoke(day);
+                case Weather.Rainy:
+                    {
+                        currentDayGradient = timeOfDayGradients.RainyDayGradient;
+                    }
+                    break;
+                case Weather.Sunny:
+                    {
+                        currentDayGradient = timeOfDayGradients.SunnyDayGradient;
+                    }
+                    break;
             }
 
-            if(lastSeason != CurrentSeason)
+            if (day == DAYS_IN_THE_SEASON + 1)
             {
-                lastSeason = CurrentSeason;
+                day = 1;
+
+                CurrentSeason = CurrentSeason.Next();
 
                 SeasonChanged?.Invoke(CurrentSeason);
             }
+
+            DayChanged?.Invoke(day);
         }
 
         public string GetTimeString()

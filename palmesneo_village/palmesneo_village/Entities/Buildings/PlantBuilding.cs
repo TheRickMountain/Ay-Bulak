@@ -23,7 +23,7 @@ namespace palmesneo_village
             Sprite.Texture = plantItem.GrowthStagesTextures[0];
         }
 
-        public override void OnDayChanged(int day)
+        public override void OnDayChanged()
         {
             if (IsRipe) return;
 

@@ -9,7 +9,7 @@ namespace palmesneo_village
     public class FarmLocation : GameLocation
     {
 
-        public FarmLocation(string id, TimeOfDayManager timeOfDayManager) : base(id, 64, 64, timeOfDayManager)
+        public FarmLocation(string id) : base(id, 64, 64)
         {
 
         }
