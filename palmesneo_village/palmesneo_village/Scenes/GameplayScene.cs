@@ -1,24 +1,22 @@
 ﻿using Microsoft.Xna.Framework;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 
 namespace palmesneo_village
 {
+    public enum GameState
+    {
+        Game,
+        SceneTransitionIn,
+        SceneTransitionOut
+    }
+
     public class GameplayScene : Scene
     {
         public GameLocation CurrentGameLocation 
         {
             get => currentGameLocation;
-            private set 
-            {
-                // Попытка переключиться на ту же локацию
-                if(currentGameLocation == value)
-                {
-                    return;
-                }
-
-                nextGameLocation = value; 
-            }
         }
 
         public Inventory Inventory { get; private set; }
@@ -26,6 +24,8 @@ namespace palmesneo_village
         public PlayerMoneyManager PlayerMoneyManager { get; private set; }
 
         public PlayerEnergyManager PlayerEnergyManager { get; private set; }
+
+        private GameState gameState = GameState.Game;
 
         private InventoryHotbar inventoryHotbar;
 
@@ -37,11 +37,11 @@ namespace palmesneo_village
 
         private TextUI timeText;
 
+        private Dictionary<string, GameLocation> gameLocations = new();
         private GameLocation currentGameLocation;
         private GameLocation nextGameLocation;
-
-        private FarmLocation farmLocation;
-        private HouseLocation houseLocation;
+        private float transitionTimer = 0.0f;
+        private ImageUI transitionImage;
 
         private BuildingSystem buildingSystem;
 
@@ -64,8 +64,9 @@ namespace palmesneo_village
             player = new Player(creatureTemplate, Inventory);
             player.LocalPosition = new Vector2(5 * Engine.TILE_SIZE, 5 * Engine.TILE_SIZE);
 
-            farmLocation = new FarmLocation(timeOfDayManager);
-            houseLocation = new HouseLocation(timeOfDayManager);
+            
+            RegisterLocation(new FarmLocation("farm", timeOfDayManager));
+            RegisterLocation(new HouseLocation("house", timeOfDayManager));
 
             buildingSystem = new BuildingSystem();
             buildingSystem.Depth = 100;
@@ -81,8 +82,6 @@ namespace palmesneo_village
             Inventory.ItemAdded += OnInventoryItemChanged;
             Inventory.ItemRemoved += OnInventoryItemChanged;
             inventoryHotbar.CurrentSlotIndexChanged += OnInventoryHotbarCurrentSlotIndexChanged;
-
-            CurrentGameLocation = farmLocation;
 
             #region UI
 
@@ -105,115 +104,175 @@ namespace palmesneo_village
             timeText.LocalPosition = new Vector2(5, 32);
             MasterUIEntity.AddChild(timeText);
 
+            transitionImage = new ImageUI();
+            transitionImage.Texture = RenderManager.Pixel;
+            transitionImage.SelfColor = Color.Black;
+            transitionImage.IsActive = false;
+            MasterUIEntity.AddChild(transitionImage);
+
             #endregion
+
+            GoToLocation("farm");
 
             base.Begin();
         }
 
         public override void Update()
         {
-            // Temp
-            if(MInput.Keyboard.Pressed(Microsoft.Xna.Framework.Input.Keys.Q))
-            {
-                CurrentGameLocation = farmLocation;
-            }
-            else if (MInput.Keyboard.Pressed(Microsoft.Xna.Framework.Input.Keys.E))
-            {
-                CurrentGameLocation = houseLocation;
-            }
-            // Temp
+            transitionImage.Size = MasterUIEntity.Size;
 
             timeText.Text = timeOfDayManager.GetTimeString();
 
-            if (CurrentGameLocation != null)
+            switch (gameState)
             {
-                Vector2 mouseTile = CurrentGameLocation.MouseTile;
-                Vector2 playerTile = CurrentGameLocation.WorldToMap(player.LocalPosition);
-
-                tileSelector.IsVisible = false;
-
-                int tileX = (int)mouseTile.X;
-                int tileY = (int)mouseTile.Y;
-
-                // Handle building item selection
-                if (currentPlayerItem is BuildingItem buildingItem)
-                {
-                    if (buildingItem.IsRotatable && InputBindings.Rotate.Pressed)
+                case GameState.Game:
                     {
-                        buildingSystem.RotateBuildingPreview();
-                    }
+                        Vector2 mouseTile = CurrentGameLocation.MouseTile;
+                        Vector2 playerTile = CurrentGameLocation.WorldToMap(player.LocalPosition);
 
-                    if(MInput.Mouse.PressedLeftButton)
-                    {
-                        if (buildingSystem.TryPlaceBuilding(mouseTile))
+                        tileSelector.IsVisible = false;
+
+                        int tileX = (int)mouseTile.X;
+                        int tileY = (int)mouseTile.Y;
+
+                        // Handle building item selection
+                        if (currentPlayerItem is BuildingItem buildingItem)
                         {
-                            Inventory.RemoveItem(buildingItem, 1, inventoryHotbar.CurrentSlotIndex);
-                        }
-                    }
-                }
-
-                if (CanShowTileSelector(playerTile, mouseTile, 4))
-                {
-                    if (currentPlayerItem != null)
-                    {
-                        if (CurrentGameLocation.CanInteractWithTile(tileX, tileY, currentPlayerItem))
-                        {
-                            tileSelector.IsVisible = true;
-                            tileSelector.LocalPosition = CurrentGameLocation.MapToWorld(mouseTile);
+                            if (buildingItem.IsRotatable && InputBindings.Rotate.Pressed)
+                            {
+                                buildingSystem.RotateBuildingPreview();
+                            }
 
                             if (MInput.Mouse.PressedLeftButton)
                             {
-                                CurrentGameLocation.InteractWithTile(tileX, tileY, currentPlayerItem);
-                                 
-                                if(currentPlayerItem is SeedItem)
+                                if (buildingSystem.TryPlaceBuilding(mouseTile))
                                 {
-                                    Inventory.RemoveItem(currentPlayerItem, 1, inventoryHotbar.CurrentSlotIndex);
+                                    Inventory.RemoveItem(buildingItem, 1, inventoryHotbar.CurrentSlotIndex);
                                 }
-                                else
+                            }
+                        }
+
+                        if (CanShowTileSelector(playerTile, mouseTile, 4))
+                        {
+                            if (currentPlayerItem != null)
+                            {
+                                if (CurrentGameLocation.CanInteractWithTile(tileX, tileY, currentPlayerItem))
                                 {
-                                    PlayerEnergyManager.ConsumeEnergy(1);
+                                    tileSelector.IsVisible = true;
+                                    tileSelector.LocalPosition = CurrentGameLocation.MapToWorld(mouseTile);
+
+                                    if (MInput.Mouse.PressedLeftButton)
+                                    {
+                                        CurrentGameLocation.InteractWithTile(tileX, tileY, currentPlayerItem);
+
+                                        if (currentPlayerItem is SeedItem)
+                                        {
+                                            Inventory.RemoveItem(currentPlayerItem, 1, inventoryHotbar.CurrentSlotIndex);
+                                        }
+                                        else
+                                        {
+                                            PlayerEnergyManager.ConsumeEnergy(1);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        if (MInput.Mouse.PressedRightButton)
+                        {
+                            if (currentPlayerItem != null)
+                            {
+                                if (currentPlayerItem is ConsumableItem consumableItem)
+                                {
+                                    PlayerEnergyManager.AddEnergy(consumableItem.EnergyAmount);
+
+                                    Inventory.RemoveItem(consumableItem, 1, inventoryHotbar.CurrentSlotIndex);
                                 }
                             }
                         }
                     }
-                }
-
-                if (MInput.Mouse.PressedRightButton)
-                {
-                    if (currentPlayerItem != null)
+                    break;
+                case GameState.SceneTransitionIn:
                     {
-                        if (currentPlayerItem is ConsumableItem consumableItem)
-                        {
-                            PlayerEnergyManager.AddEnergy(consumableItem.EnergyAmount);
+                        Engine.TimeRate = 0;
 
-                            Inventory.RemoveItem(consumableItem, 1, inventoryHotbar.CurrentSlotIndex);
+                        transitionTimer += Engine.DeltaTime;
+
+                        transitionImage.SelfColor = Color.Black * transitionTimer;
+
+                        if (transitionTimer >= 1.0f)
+                        {
+                            transitionTimer = 0.0f;
+
+                            // Location switching
+                            if (currentGameLocation != nextGameLocation)
+                            {
+                                if (currentGameLocation != null)
+                                {
+                                    currentGameLocation.RemovePlayer(player);
+
+                                    MasterEntity.RemoveChild(currentGameLocation);
+                                }
+
+                                currentGameLocation = nextGameLocation;
+                                currentGameLocation.Depth = 0;
+
+                                MasterEntity.AddChild(currentGameLocation);
+
+                                currentGameLocation.SetPlayer(player);
+
+                                player.SetGameLocation(currentGameLocation);
+                                buildingSystem.SetGameLocation(currentGameLocation);
+
+                                gameState = GameState.SceneTransitionOut;
+                            }
                         }
                     }
-                }
-            }
+                    break;
+                case GameState.SceneTransitionOut:
+                    {
+                        transitionTimer += Engine.DeltaTime;
 
-            // Location switching
-            if(currentGameLocation != nextGameLocation)
-            {
-                if (currentGameLocation != null)
-                {
-                    currentGameLocation.RemovePlayer(player);
+                        transitionImage.SelfColor = Color.Black * (1.0f - transitionTimer);
 
-                    MasterEntity.RemoveChild(currentGameLocation);
-                }
+                        if (transitionTimer >= 1.0f)
+                        {
+                            transitionTimer = 0.0f;
 
-                currentGameLocation = nextGameLocation;
-                currentGameLocation.Depth = 0;
+                            Engine.TimeRate = 1.0f;
 
-                MasterEntity.AddChild(currentGameLocation);
+                            transitionImage.IsActive = false;
 
-                currentGameLocation.SetPlayer(player);
-
-                player.SetGameLocation(currentGameLocation);
-                buildingSystem.SetGameLocation(currentGameLocation);
+                            gameState = GameState.Game;
+                        }
+                    }
+                    break;
             }
 
             base.Update();
+        }
+
+        public void GoToLocation(string locationId)
+        {
+            // Предусматриваем попытку перейти на ту же локацию
+            GameLocation newGameLocation = gameLocations[locationId];
+
+            if(currentGameLocation == newGameLocation)
+            {
+                return;
+            }
+
+            nextGameLocation = newGameLocation;
+
+            gameState = GameState.SceneTransitionIn;
+
+            transitionImage.IsActive = true;
+            transitionImage.SelfColor = Color.Black * 0.0f;
+        }
+
+        private void RegisterLocation(GameLocation gameLocation)
+        {
+            gameLocations.Add(gameLocation.Id, gameLocation);
         }
 
         private bool CanShowTileSelector(Vector2 playerTile, Vector2 mouseTile, int maxDistance)

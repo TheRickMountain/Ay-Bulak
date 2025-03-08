@@ -6,6 +6,15 @@ namespace palmesneo_village
     {
 #if !CONSOLE
 
+        [Command("go_to_location", "Transition to location")]
+        private static void GoToLocation(string locationId)
+        {
+            if (Engine.CurrentScene is GameplayScene)
+            {
+                ((GameplayScene)Engine.CurrentScene).GoToLocation(locationId);
+            }
+        }
+
         [Command("add_item", "Adds an item to the players inventory")]
         private static void AddItem(string itemName, int itemAmount)
         {

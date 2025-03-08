@@ -94,6 +94,8 @@ namespace palmesneo_village
         {
             base.Render();
 
+            if(currentBuildingItem == null) return;
+
             RenderGroundPattern(gameLocation.MouseTile, currentGroundPattern);
         }
 

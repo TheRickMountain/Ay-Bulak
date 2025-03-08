@@ -8,6 +8,7 @@ namespace palmesneo_village
 {
     public class GameLocation : Entity
     {
+        public string Id { get; private set; }
         public Vector2 MouseTile { get; private set; }
 
         private int mapWidth;
@@ -27,8 +28,9 @@ namespace palmesneo_village
 
         private Player _player;
 
-        public GameLocation(int mapWidth, int mapHeight, TimeOfDayManager timeOfDayManager)
+        public GameLocation(string id, int mapWidth, int mapHeight, TimeOfDayManager timeOfDayManager)
         {
+            Id = id;
             this.mapWidth = mapWidth;
             this.mapHeight = mapHeight;
             this.timeOfDayManager = timeOfDayManager;
