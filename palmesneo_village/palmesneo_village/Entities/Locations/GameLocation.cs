@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Microsoft.Win32;
+using Microsoft.Xna.Framework;
 using MonoGame.Extended.Particles;
 using System;
 using System.Collections.Generic;
@@ -126,6 +127,19 @@ namespace palmesneo_village
             int groundTileId = groundTilemap.GetCell(x, y);
             int groundTopTileId = groundTopTilemap.GetCell(x, y);
 
+            Building building = buildingsMap[x, y];
+
+            if (building != null)
+            {
+                if(building is PlantBuilding plantBuilding)
+                {
+                    if(plantBuilding.IsRipe)
+                    {
+                        return true;
+                    }
+                }
+            }
+
             if (handItem is ToolItem toolItem)
             {
                 switch (toolItem.ToolType)
@@ -154,6 +168,20 @@ namespace palmesneo_village
 
         public void InteractWithTile(int x, int y, Item handItem)
         {
+            Building building = buildingsMap[x, y];
+
+            if (building != null)
+            {
+                if(building is PlantBuilding plantBuilding)
+                {
+                    if(plantBuilding.IsRipe)
+                    {
+                        plantBuilding.Harvest();
+                        return;
+                    }
+                }
+            }
+
             if (handItem is ToolItem toolItem)
             {
                 switch (toolItem.ToolType)
@@ -215,17 +243,26 @@ namespace palmesneo_village
 
             if(buildingItem is PlantItem plantItem)
             {
-                building = new PlantBuilding(plantItem, direction, tiles);
+                building = new PlantBuilding(this, plantItem, direction, tiles);
             }
             else
             {
-                building = new Building(buildingItem, direction, tiles);
+                building = new Building(this, buildingItem, direction, tiles);
             }
 
             building.LocalPosition = tiles[0, 0] * Engine.TILE_SIZE;
             buildingsList.AddChild(building);
 
             RegisterBuildingTiles(building, tiles);
+        }
+
+        public void RemoveBuilding(Building building)
+        {
+            buildingsList.RemoveChild(building);
+
+            Vector2[,] tiles = building.OccupiedTiles;
+
+            ClearTilesFromBuilding(tiles);
         }
 
         private void RegisterBuildingTiles(Building building, Vector2[,] tiles)
@@ -237,6 +274,19 @@ namespace palmesneo_village
                     int tileX = (int)tiles[i, j].X;
                     int tileY = (int)tiles[i, j].Y;
                     buildingsMap[tileX, tileY] = building;
+                }
+            }
+        }
+
+        private void ClearTilesFromBuilding(Vector2[,] tiles)
+        {
+            for (int i = 0; i < tiles.GetLength(0); i++)
+            {
+                for (int j = 0; j < tiles.GetLength(1); j++)
+                {
+                    int tileX = (int)tiles[i, j].X;
+                    int tileY = (int)tiles[i, j].Y;
+                    buildingsMap[tileX, tileY] = null;
                 }
             }
         }

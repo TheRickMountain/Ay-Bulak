@@ -156,25 +156,22 @@ namespace palmesneo_village
 
                         if (CanShowTileSelector(playerTile, mouseTile, 4))
                         {
-                            if (currentPlayerItem != null)
+                            if (CurrentGameLocation.CanInteractWithTile(tileX, tileY, currentPlayerItem))
                             {
-                                if (CurrentGameLocation.CanInteractWithTile(tileX, tileY, currentPlayerItem))
+                                tileSelector.IsVisible = true;
+                                tileSelector.LocalPosition = CurrentGameLocation.MapToWorld(mouseTile);
+
+                                if (MInput.Mouse.PressedLeftButton)
                                 {
-                                    tileSelector.IsVisible = true;
-                                    tileSelector.LocalPosition = CurrentGameLocation.MapToWorld(mouseTile);
+                                    CurrentGameLocation.InteractWithTile(tileX, tileY, currentPlayerItem);
 
-                                    if (MInput.Mouse.PressedLeftButton)
+                                    if (currentPlayerItem is SeedItem)
                                     {
-                                        CurrentGameLocation.InteractWithTile(tileX, tileY, currentPlayerItem);
-
-                                        if (currentPlayerItem is SeedItem)
-                                        {
-                                            Inventory.RemoveItem(currentPlayerItem, 1, inventoryHotbar.CurrentSlotIndex);
-                                        }
-                                        else
-                                        {
-                                            PlayerEnergyManager.ConsumeEnergy(1);
-                                        }
+                                        Inventory.RemoveItem(currentPlayerItem, 1, inventoryHotbar.CurrentSlotIndex);
+                                    }
+                                    else
+                                    {
+                                        PlayerEnergyManager.ConsumeEnergy(1);
                                     }
                                 }
                             }

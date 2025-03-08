@@ -15,8 +15,8 @@ namespace palmesneo_village
 
         private int currentGrowthStage = 0;
 
-        public PlantBuilding(PlantItem plantItem, Direction direction, Vector2[,] occupiedTiles) 
-            : base(plantItem, direction, occupiedTiles)
+        public PlantBuilding(GameLocation gameLocation, PlantItem plantItem, Direction direction, Vector2[,] occupiedTiles) 
+            : base(gameLocation, plantItem, direction, occupiedTiles)
         {
             this.plantItem = plantItem;
 
@@ -34,6 +34,19 @@ namespace palmesneo_village
             currentGrowthStage = (int)(growthProgress * ((plantItem.GrowthStages - 1) / 1.0f));
 
             Sprite.Texture = plantItem.GrowthStagesTextures[currentGrowthStage];
+        }
+
+        public void Harvest()
+        {
+            if(IsRipe == false) return;
+
+            Item harvestItem = Engine.ItemsDatabase.GetItemByName<Item>(plantItem.HarvestItem);
+            gameLocation.AddItem(OccupiedTiles[0, 0] * Engine.TILE_SIZE, harvestItem, plantItem.HarvestAmount);
+
+            if (plantItem.RemoveAfterHarvest)
+            {
+                gameLocation.RemoveBuilding(this);
+            }
         }
 
     }

@@ -11,6 +11,7 @@ namespace palmesneo_village
     {
         public int GrowthStages { get; init; }
         public int GrowthRateInDays { get; init; }
+        public bool RemoveAfterHarvest { get; init; }
         public string HarvestItem { get; init; }
         public int HarvestAmount { get; init; }
 

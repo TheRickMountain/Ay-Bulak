@@ -5,13 +5,15 @@ namespace palmesneo_village
 {
     public class Building : Entity
     {
+        public GameLocation gameLocation { get; private set; }
         private BuildingItem buildingItem;
         private Direction direction;
         private Vector2[,] occupiedTiles;
         protected SpriteEntity Sprite { get; private set; }
 
-        public Building(BuildingItem buildingItem, Direction direction, Vector2[,] occupiedTiles)
+        public Building(GameLocation gameLocation, BuildingItem buildingItem, Direction direction, Vector2[,] occupiedTiles)
         {
+            this.gameLocation = gameLocation;
             this.buildingItem = buildingItem;
             this.direction = direction;
             this.occupiedTiles = occupiedTiles;

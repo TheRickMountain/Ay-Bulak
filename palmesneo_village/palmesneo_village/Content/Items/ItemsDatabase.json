@@ -36,6 +36,13 @@
 			"Description": "test",
 			"IsStackable": true,
 			"EnergyAmount": 20
+		},
+		{
+			"Id": 57,
+			"Name": "tomato",
+			"Description": "test",
+			"IsStackable": true,
+			"EnergyAmount": 10
 		}
 	],
 	"BuildingItems":[
@@ -81,6 +88,7 @@
 			"IsRotatable": false,
 			"GrowthStages": 5,
 			"GrowthRateInDays": 6,
+			"RemoveAfterHarvest": true,
 			"HarvestItem": "tomato",
 			"HarvestAmount": 2
 		}	
