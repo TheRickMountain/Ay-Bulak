@@ -7,13 +7,23 @@ using System.Linq;
 
 namespace palmesneo_village
 {
+    public enum GroundTile
+    {
+        Grass = 0,
+        Ground = 1,
+        Water = 2,
+        FarmPlot = 3,
+        HouseFloor = 4,
+        HouseWall = 5
+    }
+
     public class GameLocation : Entity
     {
         public string Id { get; private set; }
         public Vector2 MouseTile { get; private set; }
 
-        private int mapWidth;
-        private int mapHeight;
+        public int MapWidth { get; private set; }
+        public int MapHeight { get; private set; }
         private TimeOfDayManager timeOfDayManager;
 
         private CameraMovement cameraMovement;
@@ -32,8 +42,8 @@ namespace palmesneo_village
         public GameLocation(string id, int mapWidth, int mapHeight)
         {
             Id = id;
-            this.mapWidth = mapWidth;
-            this.mapHeight = mapHeight;
+            MapWidth = mapWidth;
+            MapHeight = mapHeight;
 
             cameraMovement = new CameraMovement();
             cameraMovement.Bounds = GetBoundaries();
@@ -52,16 +62,6 @@ namespace palmesneo_village
 
             collisionMap = new bool[mapWidth, mapHeight];
 
-            for (int x = 0; x < mapWidth; x++)
-            {
-                for (int y = 0; y < mapHeight; y++)
-                {
-                    groundTilemap.SetCell(x, y, 0);
-
-                    collisionMap[x,y] = true;
-                }
-            }
-
             buildingsList = new Entity();
             buildingsList.IsDepthSortEnabled = true;
             AddChild(buildingsList);
@@ -73,22 +73,29 @@ namespace palmesneo_village
             creaturesList = new Entity();
             creaturesList.IsDepthSortEnabled = true;
             AddChild(creaturesList);
-
-            groundTilemap.SetCell(10, 10, 2);
-            collisionMap[10, 10] = false;
-
-            groundTilemap.SetCell(12, 10, 2);
-            collisionMap[12, 10] = false;
-
-            groundTilemap.SetCell(13, 10, 2);
-            collisionMap[13, 10] = false;
         }
 
         public override void Update()
         {
             base.Update();
 
-            MouseTile = Vector2.Clamp(WorldToMap(MInput.Mouse.GlobalPosition), Vector2.Zero, new Vector2(mapWidth, mapHeight));
+            MouseTile = Vector2.Clamp(WorldToMap(MInput.Mouse.GlobalPosition), Vector2.Zero, new Vector2(MapWidth, MapHeight));
+        }
+
+        public void SetGroundTile(int x, int y, GroundTile groundTile)
+        {
+            groundTilemap.SetCell(x, y, (int)groundTile);
+
+            switch(groundTile)
+            {
+                case GroundTile.Water:
+                case GroundTile.HouseWall:
+                    collisionMap[x, y] = false;
+                    break;
+                default:
+                    collisionMap[x, y] = true;
+                    break;
+            }
         }
 
         public void SetPlayer(Player player)
@@ -119,7 +126,7 @@ namespace palmesneo_village
 
         public Rectangle GetBoundaries()
         {
-            return new Rectangle(0, 0, mapWidth * Engine.TILE_SIZE, mapHeight * Engine.TILE_SIZE);
+            return new Rectangle(0, 0, MapWidth * Engine.TILE_SIZE, MapHeight * Engine.TILE_SIZE);
         }
 
         public bool CanInteractWithTile(int x, int y, Item handItem)

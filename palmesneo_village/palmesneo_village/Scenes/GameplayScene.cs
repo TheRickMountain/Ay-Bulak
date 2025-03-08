@@ -114,7 +114,7 @@ namespace palmesneo_village
 
             #endregion
 
-            GoToLocation("farm");
+            GoToLocation("house");
 
             base.Begin();
         }
