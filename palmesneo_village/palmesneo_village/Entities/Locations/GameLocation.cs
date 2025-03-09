@@ -14,7 +14,8 @@ namespace palmesneo_village
         Water = 2,
         FarmPlot = 3,
         HouseFloor = 4,
-        HouseWall = 5
+        HouseWall = 5,
+        Plinth = 6
     }
 
     public class GameLocation : Entity
@@ -30,6 +31,7 @@ namespace palmesneo_village
 
         private Tilemap groundTilemap;
         private Tilemap groundTopTilemap;
+        private Tilemap buildingTopTilemap;
         private Building[,] buildingsMap;
         private bool[,] collisionMap;
 
@@ -73,13 +75,17 @@ namespace palmesneo_village
             creaturesList = new Entity();
             creaturesList.IsDepthSortEnabled = true;
             AddChild(creaturesList);
+
+            buildingTopTilemap = new Tilemap(TilesetConnection.Individual, 16, 16, mapWidth, mapHeight);
+            buildingTopTilemap.Tileset = new MTileset(ResourcesManager.GetTexture("Tilesets", "building_top_tileset"), 16, 16);
+            AddChild(buildingTopTilemap);
         }
 
         public override void Update()
         {
             base.Update();
 
-            MouseTile = Vector2.Clamp(WorldToMap(MInput.Mouse.GlobalPosition), Vector2.Zero, new Vector2(MapWidth, MapHeight));
+            MouseTile = Vector2.Clamp(WorldToMap(MInput.Mouse.GlobalPosition), Vector2.Zero, new Vector2(MapWidth - 1, MapHeight - 1));
         }
 
         public void SetGroundTile(int x, int y, GroundTile groundTile)
@@ -90,12 +96,18 @@ namespace palmesneo_village
             {
                 case GroundTile.Water:
                 case GroundTile.HouseWall:
+                case GroundTile.Plinth:
                     collisionMap[x, y] = false;
                     break;
                 default:
                     collisionMap[x, y] = true;
                     break;
             }
+        }
+
+        public void SetBuildingTopTile(int x, int y, int terrainId)
+        {
+            buildingTopTilemap.SetCell(x, y, terrainId);
         }
 
         public void SetPlayer(Player player)

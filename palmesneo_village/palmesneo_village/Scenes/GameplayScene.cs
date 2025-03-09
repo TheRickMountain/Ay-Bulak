@@ -64,7 +64,7 @@ namespace palmesneo_village
             CreatureTemplate creatureTemplate = new CreatureTemplate("Player", ResourcesManager.GetTexture("Sprites", "player"), 100);
 
             player = new Player(creatureTemplate, Inventory);
-            player.LocalPosition = new Vector2(5 * Engine.TILE_SIZE, 5 * Engine.TILE_SIZE);
+            player.LocalPosition = new Vector2(8 * Engine.TILE_SIZE, 6 * Engine.TILE_SIZE);
 
             
             RegisterLocation(new FarmLocation("farm"));

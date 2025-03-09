@@ -70,6 +70,19 @@ namespace palmesneo_village
             int halfVisibleWidth = visibleWidthInWorld / 2;
             int halfVisibleHeight = visibleHeightInWorld / 2;
 
+            bool centerInX = Bounds.Width < visibleWidthInWorld;
+            bool centerInY = Bounds.Height < visibleHeightInWorld;
+
+            if(centerInX)
+            {
+                halfVisibleWidth = Bounds.Width / 2;
+            }
+
+            if (centerInY)
+            {
+                halfVisibleHeight = Bounds.Height / 2;
+            }
+
             realBounds = new Rectangle(
                 Bounds.X + halfVisibleWidth,
                 Bounds.Y + halfVisibleHeight,
