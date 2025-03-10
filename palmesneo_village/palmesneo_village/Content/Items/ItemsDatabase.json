@@ -72,7 +72,26 @@
 			],
 			"IsRotatable": false
 		},
-		
+		{
+			"Id": 1003,
+			"Name": "player_house",
+			"Description": "test",
+			"IsStackable": false,
+			"Width": 9,
+			"Height": 5,
+			"GroundPattern": [
+				["A","A","A","A","A"],
+				["A","A","A","A","A"],
+				["A","A","A","A","A"],
+				["A","A","A","A","A"],
+				["A","A","A","A","A"],
+				["A","A","A","A","A"],
+				["A","A","A","A","A"],
+				["A","A","A","A","B"],
+				["A","A","A","A","A"]
+			],
+			"IsRotatable": false
+		}
 	],
 	"PlantItems":[
 		{
