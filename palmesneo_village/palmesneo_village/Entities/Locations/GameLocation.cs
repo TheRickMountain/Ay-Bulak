@@ -161,20 +161,15 @@ namespace palmesneo_village
 
             if (handItem is ToolItem toolItem)
             {
-                switch (toolItem.ToolType)
+                if (handItem is ShowelItem showelItem)
                 {
-                    case ToolType.Hoe:
-                        {
-                            if (buildingsMap[x, y] != null) return false;
+                    if (buildingsMap[x, y] != null) return false;
 
-                            if (groundTileId == 0 || groundTileId == 1) return true;
-                        }
-                        break;
-                    case ToolType.WateringCan:
-                        {
-                            if (groundTileId == 3 && groundTopTileId != 0) return true;
-                        }
-                        break;
+                    if (groundTileId == 0 || groundTileId == 1) return true;
+                }
+                else if (handItem is WateringCanItem wateringCanItem)
+                {
+                    if (groundTileId == 3 && groundTopTileId != 0) return true;
                 }
             }
             else if (handItem is SeedItem seedItem)
@@ -203,18 +198,13 @@ namespace palmesneo_village
 
             if (handItem is ToolItem toolItem)
             {
-                switch (toolItem.ToolType)
+                if (handItem is ShowelItem showelItem)
                 {
-                    case ToolType.Hoe:
-                        {
-                            groundTilemap.SetCell(x, y, 3);
-                        }
-                        break;
-                    case ToolType.WateringCan:
-                        {
-                            groundTopTilemap.SetCell(x, y, 0);
-                        }
-                        break;
+                    groundTilemap.SetCell(x, y, 3);
+                }
+                else if (handItem is WateringCanItem wateringCanItem)
+                {
+                    groundTopTilemap.SetCell(x, y, 0);
                 }
             }
             else if(handItem is SeedItem seedItem)

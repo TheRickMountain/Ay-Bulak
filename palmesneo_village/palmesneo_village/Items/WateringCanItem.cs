@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace palmesneo_village
 {
-    public class ToolItem : Item
+    public class WateringCanItem : ToolItem
     {
+
+        public int Capacity { get; init; }
+
     }
 }

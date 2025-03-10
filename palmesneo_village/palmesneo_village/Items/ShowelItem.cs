@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace palmesneo_village
 {
-    public class ToolItem : Item
+    public class ShowelItem : ToolItem
     {
     }
 }

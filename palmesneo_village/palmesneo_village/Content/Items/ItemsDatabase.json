@@ -13,20 +13,24 @@
 			"IsStackable": true
 		}
 	],
-	"ToolItems":[
-		{
-			"Id": 132,
-			"Name": "iron_hoe",
-			"Description": "test",
-			"IsStackable": false,
-			"ToolType": "Hoe"
-		},
+	"WateringCanItems":[
 		{
 			"Id": 176,
 			"Name": "iron_watering_can",
 			"Description": "test",
 			"IsStackable": false,
-			"ToolType": "WateringCan"
+			"Capacity": 20
+		}	
+	],
+	"ToolItems":[
+		
+	],
+	"ShowelItems":[
+		{
+			"Id": 132,
+			"Name": "iron_showel",
+			"Description": "test",
+			"IsStackable": false
 		}
 	],
 	"ConsumableItems":[

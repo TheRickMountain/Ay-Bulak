@@ -14,6 +14,8 @@ namespace palmesneo_village
         public BuildingItem[] BuildingItems { get; init; }
         public PlantItem[] PlantItems { get; init; }
         public SeedItem[] SeedItems { get; init; }
+        public WateringCanItem[] WateringCanItems { get; init; }
+        public ShowelItem[] ShowelItems { get; init; }
 
         private Dictionary<string, Item> nameItemPairs;
 
@@ -27,6 +29,8 @@ namespace palmesneo_village
             ReadAndInitializeCollection(BuildingItems, itemsIcons);
             ReadAndInitializeCollection(PlantItems, itemsIcons);
             ReadAndInitializeCollection(SeedItems, itemsIcons);
+            ReadAndInitializeCollection(WateringCanItems, itemsIcons);
+            ReadAndInitializeCollection(ShowelItems, itemsIcons);
         }
 
         public T GetItemByName<T>(string name) where T : Item
