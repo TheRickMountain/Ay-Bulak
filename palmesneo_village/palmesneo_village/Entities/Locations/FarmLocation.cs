@@ -30,6 +30,26 @@ namespace palmesneo_village
             SetGroundTopTile(5, 4, GroundTopTile.Wood);
 
             SetGroundTopTile(17, 6, GroundTopTile.Wood);
+
+            for (int x = 0; x < MapWidth; x++)
+            {
+                SetGroundTopTile(x, 0, GroundTopTile.Gate);
+            }
+
+            for (int x = 0; x < MapWidth; x++)
+            {
+                SetGroundTopTile(x, 48, GroundTopTile.Gate);
+            }
+
+            for (int y = 1; y <= 48; y++)
+            {
+                SetGroundTopTile(0, y, GroundTopTile.Gate);
+            }
+
+            for (int y = 1; y <= 48; y++)
+            {
+                SetGroundTopTile(MapWidth - 1, y, GroundTopTile.Gate);
+            }
         }
 
     }

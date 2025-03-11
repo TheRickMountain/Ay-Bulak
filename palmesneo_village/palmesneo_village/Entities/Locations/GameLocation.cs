@@ -23,7 +23,8 @@ namespace palmesneo_village
         None = -1,
         Moisture = 0,
         Stone = 1,
-        Wood = 2
+        Wood = 2,
+        Gate = 3
     }
 
     public class GameLocation : Entity
