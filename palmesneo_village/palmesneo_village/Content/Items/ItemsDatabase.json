@@ -125,6 +125,19 @@
 				["A","A","A","A","A"]
 			],
 			"IsRotatable": false
+		},
+		{
+			"Id": 1004,
+			"Name": "carpet",
+			"Description": "test",
+			"Width": 3,
+			"Height": 2,
+			"GroundPattern": [
+				["C","C"],
+				["C","C"],
+				["C","C"]
+			],
+			"IsRotatable": false
 		}
 	],
 	"PlantItems":[

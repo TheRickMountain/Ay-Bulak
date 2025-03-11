@@ -424,20 +424,22 @@ namespace palmesneo_village
         {
             if (buildingsMap[x, y] != null) return false;
 
-            switch(groundPatternId)
+            GroundTile groundTile = GetGroundTile(x, y);
+
+            switch (groundPatternId)
             {
                 case "A":
                     {
-                        int groundTileId = groundTilemap.GetCell(x, y);
-                        if (groundTileId == 0 || groundTileId == 1) return true;
+                        return groundTile == GroundTile.Grass || groundTile == GroundTile.Ground;
                     }
-                    break;
                 case "B":
                     {
-                        int groundTileId = groundTilemap.GetCell(x, y);
-                        if (groundTileId == 3) return true;
+                        return groundTile == GroundTile.FarmPlot;
                     }
-                    break;
+                case "C":
+                    {
+                        return groundTile == GroundTile.HouseWall;
+                    }
             }
 
             return false;
