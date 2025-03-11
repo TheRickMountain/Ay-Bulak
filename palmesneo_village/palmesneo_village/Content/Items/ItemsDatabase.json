@@ -33,6 +33,22 @@
 			"IsStackable": false
 		}
 	],
+	"PickaxeItems":[
+		{
+			"Id": 131,
+			"Name": "iron_pickaxe",
+			"Description": "test",
+			"IsStackable": false
+		}	
+	],
+	"AxeItems":[
+		{
+			"Id": 130,
+			"Name": "iron_axe",
+			"Description": "test",
+			"IsStackable": false
+		}	
+	],
 	"ConsumableItems":[
 		{
 			"Id": 26,

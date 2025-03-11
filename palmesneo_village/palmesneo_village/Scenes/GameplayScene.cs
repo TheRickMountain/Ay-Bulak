@@ -64,7 +64,7 @@ namespace palmesneo_village
             player = new Player(creatureTemplate, Inventory);
             player.LocalPosition = new Vector2(8 * Engine.TILE_SIZE, 6 * Engine.TILE_SIZE);
 
-            
+
             RegisterLocation(new FarmLocation("farm"));
             RegisterLocation(new HouseLocation("house"));
 
@@ -92,7 +92,7 @@ namespace palmesneo_village
             playerEnergyBarUI.Anchor = Anchor.TopLeft;
             playerEnergyBarUI.LocalPosition = new Vector2(5, 5);
             MasterUIEntity.AddChild(playerEnergyBarUI);
-          
+
             PlayerMoneyUI playerMoneyUI = new PlayerMoneyUI(PlayerMoneyManager);
             playerMoneyUI.Anchor = Anchor.BottomLeft;
             playerMoneyUI.LocalPosition = new Vector2(5, -5);
@@ -112,6 +112,13 @@ namespace palmesneo_village
             #endregion
 
             GoToLocation("farm");
+            Inventory.TryAddItem(Engine.ItemsDatabase.GetItemByName<PickaxeItem>("iron_pickaxe"), 1, 0);
+            Inventory.TryAddItem(Engine.ItemsDatabase.GetItemByName<AxeItem>("iron_axe"), 1, 0);
+            Inventory.TryAddItem(Engine.ItemsDatabase.GetItemByName<ShowelItem>("iron_showel"), 1, 0);
+
+            WateringCanItem ironWateringCan = Engine.ItemsDatabase.GetItemByName<WateringCanItem>("iron_watering_can");
+
+            Inventory.TryAddItem(ironWateringCan, 1, ironWateringCan.Capacity);
 
             base.Begin();
         }

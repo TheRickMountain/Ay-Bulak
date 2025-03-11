@@ -21,7 +21,9 @@ namespace palmesneo_village
     public enum GroundTopTile
     {
         None = -1,
-        Moisture = 0
+        Moisture = 0,
+        Stone = 1,
+        Wood = 2
     }
 
     public class GameLocation : Entity
@@ -31,7 +33,6 @@ namespace palmesneo_village
 
         public int MapWidth { get; private set; }
         public int MapHeight { get; private set; }
-        private TimeOfDayManager timeOfDayManager;
 
         private CameraMovement cameraMovement;
 
@@ -191,6 +192,18 @@ namespace palmesneo_village
 
                     if (groundTileId == 3 && groundTopTileId != 0) return true;
                 }
+                else if (handItem is PickaxeItem pickaxeItem)
+                {
+                    if (building != null) return false;
+
+                    if (GetGroundTopTile(x, y) == GroundTopTile.Stone) return true;
+                }
+                else if (handItem is AxeItem axeItem)
+                {
+                    if (building != null) return false;
+
+                    if (GetGroundTopTile(x, y) == GroundTopTile.Wood) return true;
+                }
             }
             else if (handItem is SeedItem seedItem)
             {
@@ -238,7 +251,7 @@ namespace palmesneo_village
                         {
                             inventory.SubSlotItemContentAmount(slotIndex, 1);
 
-                            groundTopTilemap.SetCell(x, y, 0);
+                            SetGroundTopTile(x, y, GroundTopTile.Moisture);
 
                             playerEnergyManager.ConsumeEnergy(1);
                         }
@@ -247,6 +260,34 @@ namespace palmesneo_village
                             //TODO: дать знать игроку, что лейка пуста
                         }
                     }
+                }
+                else if (handItem is PickaxeItem pickaxeItem)
+                {
+                    SetGroundTopTile(x, y, GroundTopTile.None);
+
+                    Item spawnItem = Engine.ItemsDatabase.GetItemByName<Item>("stone");
+
+                    AddItem(new Vector2(x, y) * Engine.TILE_SIZE, new ItemContainer()
+                    {
+                        Item = spawnItem,
+                        Quantity = Calc.Random.Range(1, 2)
+                    });
+
+                    playerEnergyManager.ConsumeEnergy(1);
+                }
+                else if(handItem is AxeItem axeItem)
+                {
+                    SetGroundTopTile(x, y, GroundTopTile.None);
+
+                    Item spawnItem = Engine.ItemsDatabase.GetItemByName<Item>("wood");
+
+                    AddItem(new Vector2(x, y) * Engine.TILE_SIZE, new ItemContainer()
+                    {
+                        Item = spawnItem,
+                        Quantity = Calc.Random.Range(1, 2)
+                    });
+
+                    playerEnergyManager.ConsumeEnergy(1);
                 }
             }
             else if(handItem is SeedItem seedItem)

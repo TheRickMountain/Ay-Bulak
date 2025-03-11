@@ -102,12 +102,8 @@ namespace palmesneo_village
             return -1;
         }
 
-        public bool TryAddItem(ItemContainer itemContainer)
+        public bool TryAddItem(Item item, int quantity, int contentAmount)
         {
-            Item item = itemContainer.Item;
-            int quantity = itemContainer.Quantity;
-            int contentAmount = itemContainer.ContentAmount;
-
             if (item.IsStackable)
             {
                 // Trying to find and add an item to an existing item

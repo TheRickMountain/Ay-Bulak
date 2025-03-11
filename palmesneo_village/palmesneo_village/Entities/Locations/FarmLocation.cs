@@ -18,6 +18,18 @@ namespace palmesneo_village
                     SetGroundTile(x, y, GroundTile.Grass);
                 }
             }
+
+            SetGroundTopTile(10, 10, GroundTopTile.Stone);
+
+            SetGroundTopTile(14, 11, GroundTopTile.Stone);
+
+            SetGroundTopTile(10, 15, GroundTopTile.Stone);
+
+            SetGroundTopTile(13, 8, GroundTopTile.Wood);
+
+            SetGroundTopTile(5, 4, GroundTopTile.Wood);
+
+            SetGroundTopTile(17, 6, GroundTopTile.Wood);
         }
 
     }

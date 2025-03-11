@@ -117,8 +117,9 @@ namespace palmesneo_village
         private void PickupItem(LocationItem locationItem)
         {
             // TODO: play pickup sound
-            
-            inventory.TryAddItem(locationItem.ItemContainer);
+            ItemContainer itemContainer = locationItem.ItemContainer;
+
+            inventory.TryAddItem(itemContainer.Item, itemContainer.Quantity, itemContainer.ContentAmount);
         }
     }
 }

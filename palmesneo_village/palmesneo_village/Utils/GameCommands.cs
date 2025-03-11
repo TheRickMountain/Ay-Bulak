@@ -44,10 +44,7 @@ namespace palmesneo_village
 
             if (Engine.CurrentScene is GameplayScene)
             {
-                ItemContainer itemContainer = new ItemContainer();
-                itemContainer.Item = item;
-                itemContainer.Quantity = itemAmount;
-                ((GameplayScene)Engine.CurrentScene).Inventory.TryAddItem(itemContainer);
+                ((GameplayScene)Engine.CurrentScene).Inventory.TryAddItem(item, itemAmount, 0);
             }
         }
 
