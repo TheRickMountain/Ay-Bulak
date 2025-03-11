@@ -7,20 +7,13 @@ namespace palmesneo_village
 {
     public class InventoryHotbarUI : HorizontalContainerUI
     {
-        private Inventory inventory;
-        private InventoryHotbar inventoryHotbar;
-
         private List<InventorySlotUI> slots;
 
         private ImageUI slotSelector;
 
         public InventoryHotbarUI(Inventory inventory, InventoryHotbar inventoryHotbar)
         {
-            this.inventory = inventory;
-            this.inventoryHotbar = inventoryHotbar;
-
-            inventory.ItemAdded += OnInventoryItemChanged;
-            inventory.ItemRemoved += OnInventoryItemChanged;
+            inventory.SlotDataChanged += OnInventorySlotDataChanged;
             inventoryHotbar.CurrentSlotIndexChanged += OnInventoryHotbarCurrentSlotIndexChanged;
 
             slots = new List<InventorySlotUI>();
@@ -51,20 +44,22 @@ namespace palmesneo_village
             slotSelector.LocalPosition = slot.LocalPosition;
         }
 
-        private void OnInventoryItemChanged(Item item, int quantity, int slotIndex)
+        private void OnInventorySlotDataChanged(Inventory inventory, int slotIndex)
         {
             if ((slots.Count - 1) < slotIndex)
                 return;
 
-            ItemContainer itemContainer = inventory.GetSlotItemContainer(slotIndex);
+            Item item = inventory.GetSlotItem(slotIndex);
+            int quantity = inventory.GetSlotQuantity(slotIndex);
+            int contentAmount = inventory.GetSlotContentAmount(slotIndex);
 
-            if (itemContainer.Item == null)
+            if (item == null)
             {
                 slots[slotIndex].Clear();
             }
             else
             {
-                slots[slotIndex].SetItem(itemContainer);
+                slots[slotIndex].SetItem(item, quantity, contentAmount);
             }
         }
         

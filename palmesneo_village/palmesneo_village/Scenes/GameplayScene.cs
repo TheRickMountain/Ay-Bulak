@@ -47,8 +47,6 @@ namespace palmesneo_village
 
         private BuildingSystem buildingSystem;
 
-        private Item currentPlayerItem;
-
         public override void Begin()
         {
             MasterEntity.IsDepthSortEnabled = true;
@@ -81,8 +79,7 @@ namespace palmesneo_village
             PlayerEnergyManager = new PlayerEnergyManager(100, 100);
             PlayerMoneyManager = new PlayerMoneyManager();
 
-            Inventory.ItemAdded += OnInventoryItemChanged;
-            Inventory.ItemRemoved += OnInventoryItemChanged;
+            Inventory.SlotDataChanged += OnInventorySlotDataChanged;
             inventoryHotbar.CurrentSlotIndexChanged += OnInventoryHotbarCurrentSlotIndexChanged;
 
             #region UI
@@ -137,6 +134,10 @@ namespace palmesneo_village
                         int tileX = (int)mouseTile.X;
                         int tileY = (int)mouseTile.Y;
 
+                        int hotbarCurrentSlotIndex = inventoryHotbar.CurrentSlotIndex;
+
+                        Item currentPlayerItem = Inventory.GetSlotItem(hotbarCurrentSlotIndex);
+
                         // Handle building item selection
                         if (currentPlayerItem is BuildingItem buildingItem)
                         {
@@ -163,16 +164,8 @@ namespace palmesneo_village
 
                                 if (MInput.Mouse.PressedLeftButton)
                                 {
-                                    CurrentGameLocation.InteractWithTile(tileX, tileY, currentPlayerItem);
-
-                                    if (currentPlayerItem is SeedItem)
-                                    {
-                                        Inventory.RemoveItem(currentPlayerItem, 1, inventoryHotbar.CurrentSlotIndex);
-                                    }
-                                    else
-                                    {
-                                        PlayerEnergyManager.ConsumeEnergy(1);
-                                    }
+                                    CurrentGameLocation.InteractWithTile(tileX, tileY, Inventory, 
+                                        inventoryHotbar.CurrentSlotIndex, PlayerEnergyManager);
                                 }
                             }
                         }
@@ -322,25 +315,20 @@ namespace palmesneo_village
 
         private void OnInventoryHotbarCurrentSlotIndexChanged(int slotIndex)
         {
-            ItemContainer itemContainer = Inventory.GetSlotItemContainer(slotIndex);
-            SetCurrentPlayerItem(itemContainer);
+            SetCurrentPlayerItem(Inventory.GetSlotItem(slotIndex));
         }
 
-        private void OnInventoryItemChanged(Item item, int quantity, int slotIndex)
+        private void OnInventorySlotDataChanged(Inventory inventory, int slotIndex)
         {
             if (slotIndex != inventoryHotbar.CurrentSlotIndex)
                 return;
 
-            ItemContainer itemContainer = Inventory.GetSlotItemContainer(slotIndex);
-
-            SetCurrentPlayerItem(itemContainer);
+            SetCurrentPlayerItem(inventory.GetSlotItem(slotIndex));
         }
 
-        private void SetCurrentPlayerItem(ItemContainer itemContainer)
+        private void SetCurrentPlayerItem(Item item)
         {
-            currentPlayerItem = itemContainer.Item;
-
-            if (currentPlayerItem is BuildingItem buildingItem)
+            if (item is BuildingItem buildingItem)
             {
                 buildingSystem.SetCurrentBuildingItem(buildingItem);
             }

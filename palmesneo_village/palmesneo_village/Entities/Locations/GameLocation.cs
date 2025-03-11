@@ -148,14 +148,11 @@ namespace palmesneo_village
 
             Building building = buildingsMap[x, y];
 
-            if (building != null)
+            if (building is PlantBuilding plantBuilding)
             {
-                if(building is PlantBuilding plantBuilding)
+                if (plantBuilding.IsRipe)
                 {
-                    if(plantBuilding.IsRipe)
-                    {
-                        return true;
-                    }
+                    return true;
                 }
             }
 
@@ -163,24 +160,26 @@ namespace palmesneo_village
             {
                 if (handItem is ShowelItem showelItem)
                 {
-                    if (buildingsMap[x, y] != null) return false;
+                    if (building != null) return false;
 
                     if (groundTileId == 0 || groundTileId == 1) return true;
                 }
                 else if (handItem is WateringCanItem wateringCanItem)
                 {
+                    if (building is WaterSourceBuilding) return true;
+
                     if (groundTileId == 3 && groundTopTileId != 0) return true;
                 }
             }
             else if (handItem is SeedItem seedItem)
             {
-                if (groundTileId == 3 && buildingsMap[x, y] == null) return true;
+                if (groundTileId == 3 && building == null) return true;
             }
 
             return false;
         }
 
-        public void InteractWithTile(int x, int y, Item handItem)
+        public void InteractWithTile(int x, int y, Inventory inventory, int slotIndex, PlayerEnergyManager playerEnergyManager)
         {
             Building building = buildingsMap[x, y];
 
@@ -196,15 +195,37 @@ namespace palmesneo_village
                 }
             }
 
+            Item handItem = inventory.GetSlotItem(slotIndex);
+
             if (handItem is ToolItem toolItem)
             {
                 if (handItem is ShowelItem showelItem)
                 {
                     groundTilemap.SetCell(x, y, 3);
+
+                    playerEnergyManager.ConsumeEnergy(1);
                 }
                 else if (handItem is WateringCanItem wateringCanItem)
                 {
-                    groundTopTilemap.SetCell(x, y, 0);
+                    if (building is WaterSourceBuilding)
+                    {
+                        inventory.AddSlotItemContentAmount(slotIndex, wateringCanItem.Capacity);
+                    }
+                    else
+                    {
+                        if (inventory.GetSlotContentAmount(slotIndex) > 0)
+                        {
+                            inventory.SubSlotItemContentAmount(slotIndex, 1);
+
+                            groundTopTilemap.SetCell(x, y, 0);
+
+                            playerEnergyManager.ConsumeEnergy(1);
+                        }
+                        else
+                        {
+                            //TODO: дать знать игроку, что лейка пуста
+                        }
+                    }
                 }
             }
             else if(handItem is SeedItem seedItem)
@@ -215,6 +236,8 @@ namespace palmesneo_village
                 tiles[0, 0] = new Vector2(x, y);
 
                 Build(plantBuilding, tiles, Direction.Down);
+
+                inventory.RemoveItem(handItem, 1, slotIndex);
             }
         }
 

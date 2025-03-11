@@ -7,8 +7,7 @@ namespace palmesneo_village
         public int Width { get; private set; }
         public int Height { get; private set; }
 
-        public Action<Item, int, int> ItemAdded { get; set; }
-        public Action<Item, int, int> ItemRemoved { get; set; }
+        public Action<Inventory, int> SlotDataChanged { get; set; }
 
         private ItemContainer[,] slotsByGrid;
         private ItemContainer[] slotsByIndex;
@@ -43,12 +42,44 @@ namespace palmesneo_village
             }
         }
 
-        public ItemContainer GetSlotItemContainer(int slotIndex)
+        public Item GetSlotItem(int slotIndex)
         {
-            if (slotIndex < 0 || slotIndex >= slotsByIndex.Length)
-                return null;
+            return slotsByIndex[slotIndex].Item;
+        }
 
-            return slotsByIndex[slotIndex];
+        public int GetSlotQuantity(int slotIndex)
+        {
+            return slotsByIndex[slotIndex].Quantity;
+        }
+
+        public int GetSlotContentAmount(int slotIndex)
+        {
+            return slotsByIndex[slotIndex].ContentAmount;
+        }
+
+        public void SubSlotItemContentAmount(int slotIndex, int value)
+        {
+            ItemContainer itemContainer = slotsByIndex[slotIndex];
+
+            itemContainer.ContentAmount -= value;
+
+            if(itemContainer.ContentAmount < 0)
+            {
+                throw new InvalidOperationException("Content amount can't be lower than zero!");
+            }
+
+            SlotDataChanged?.Invoke(this, slotIndex);
+        }
+
+        public void AddSlotItemContentAmount(int slotIndex, int value)
+        {
+            ItemContainer itemContainer = slotsByIndex[slotIndex];
+
+            WateringCanItem wateringCanItem = itemContainer.Item as WateringCanItem;
+
+            itemContainer.ContentAmount = Math.Clamp(itemContainer.ContentAmount + value, 0, wateringCanItem.Capacity);
+
+            SlotDataChanged?.Invoke(this, slotIndex);
         }
 
         private int GetSlotIndexWithItem(Item item)
@@ -86,7 +117,7 @@ namespace palmesneo_village
                 {
                     slotsByIndex[slotIndexWithItem].Quantity += quantity;
 
-                    ItemAdded?.Invoke(item, quantity, slotIndexWithItem);
+                    SlotDataChanged?.Invoke(this, slotIndexWithItem);
 
                     return true;
                 }
@@ -101,7 +132,7 @@ namespace palmesneo_village
                 slotsByIndex[emptySlotIndex].Quantity = quantity;
                 slotsByIndex[emptySlotIndex].ContentAmount = contentAmount;
 
-                ItemAdded?.Invoke(item, quantity, emptySlotIndex);
+                SlotDataChanged?.Invoke(this, emptySlotIndex);
 
                 return true;
             }
@@ -128,7 +159,7 @@ namespace palmesneo_village
                 slotsByIndex[slotIndex].ContentAmount = 0;
             }
 
-            ItemRemoved?.Invoke(item, quantity, slotIndex);
+            SlotDataChanged?.Invoke(this, slotIndex);
         }
     }
 }

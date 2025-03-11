@@ -35,26 +35,26 @@ namespace palmesneo_village
             AddChild(contentProgress);
         }
 
-        public void SetItem(ItemContainer itemContainer)
+        public void SetItem(Item item, int quantity, int contentAmount)
         {
             iconImage.IsVisible = true;
             quantityText.IsVisible = true;
 
-            if (itemContainer.Item is WateringCanItem wateringCanItem)
+            if (item is WateringCanItem wateringCanItem)
             {
                 contentProgress.IsVisible = true;
 
                 contentProgress.MinValue = 0;
                 contentProgress.MaxValue = wateringCanItem.Capacity;
-                contentProgress.CurrentValue = itemContainer.ContentAmount;
+                contentProgress.CurrentValue = contentAmount;
             }
             else
             {
                 contentProgress.IsVisible = false;
             }
 
-            iconImage.Texture = itemContainer.Item.Icon;
-            quantityText.Text = $"{itemContainer.Quantity}";
+            iconImage.Texture = item.Icon;
+            quantityText.Text = $"{quantity}";
         }
 
         public void Clear()
