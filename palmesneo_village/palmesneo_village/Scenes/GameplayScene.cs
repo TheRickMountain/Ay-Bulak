@@ -114,7 +114,7 @@ namespace palmesneo_village
 
             #endregion
 
-            GoToLocation("house");
+            GoToLocation("farm");
 
             base.Begin();
         }
@@ -322,7 +322,8 @@ namespace palmesneo_village
 
         private void OnInventoryHotbarCurrentSlotIndexChanged(int slotIndex)
         {
-            SetCurrentPlayerItem(Inventory.GetSlotItem(slotIndex));
+            ItemContainer itemContainer = Inventory.GetSlotItemContainer(slotIndex);
+            SetCurrentPlayerItem(itemContainer);
         }
 
         private void OnInventoryItemChanged(Item item, int quantity, int slotIndex)
@@ -330,14 +331,16 @@ namespace palmesneo_village
             if (slotIndex != inventoryHotbar.CurrentSlotIndex)
                 return;
 
-            SetCurrentPlayerItem(Inventory.GetSlotItem(slotIndex));
+            ItemContainer itemContainer = Inventory.GetSlotItemContainer(slotIndex);
+
+            SetCurrentPlayerItem(itemContainer);
         }
 
-        private void SetCurrentPlayerItem(Item item)
+        private void SetCurrentPlayerItem(ItemContainer itemContainer)
         {
-            currentPlayerItem = item;
+            currentPlayerItem = itemContainer.Item;
 
-            if (item is BuildingItem buildingItem)
+            if (currentPlayerItem is BuildingItem buildingItem)
             {
                 buildingSystem.SetCurrentBuildingItem(buildingItem);
             }

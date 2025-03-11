@@ -327,9 +327,9 @@ namespace palmesneo_village
 
         #region Items
 
-        public void AddItem(Vector2 position, Item item, int quantity)
+        public void AddItem(Vector2 position, ItemContainer itemContainer)
         {
-            LocationItem locationItem = new LocationItem(item, quantity);
+            LocationItem locationItem = new LocationItem(itemContainer);
             locationItem.LocalPosition = position;
             locationItem.Depth = (int)position.Y;
             itemsList.AddChild(locationItem);

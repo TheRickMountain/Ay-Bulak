@@ -118,7 +118,7 @@ namespace palmesneo_village
         {
             // TODO: play pickup sound
             
-            inventory.TryAddItem(locationItem.Item, locationItem.Quantity);
+            inventory.TryAddItem(locationItem.ItemContainer);
         }
     }
 }

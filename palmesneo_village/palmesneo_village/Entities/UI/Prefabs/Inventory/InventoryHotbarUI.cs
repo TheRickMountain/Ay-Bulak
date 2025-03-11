@@ -56,16 +56,15 @@ namespace palmesneo_village
             if ((slots.Count - 1) < slotIndex)
                 return;
 
-            Item slotItem = inventory.GetSlotItem(slotIndex);
-            int slotQuantity = inventory.GetSlotQuantity(slotIndex);
+            ItemContainer itemContainer = inventory.GetSlotItemContainer(slotIndex);
 
-            if (slotItem == null)
+            if (itemContainer == null)
             {
                 slots[slotIndex].Clear();
             }
             else
             {
-                slots[slotIndex].SetItem(slotItem, slotQuantity);
+                slots[slotIndex].SetItem(itemContainer);
             }
         }
         

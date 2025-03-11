@@ -4,21 +4,18 @@ namespace palmesneo_village
 {
     public class LocationItem : ImageEntity
     {
-
-        public Item Item { get; }
-        public int Quantity { get; }
+        public ItemContainer ItemContainer { get; }
 
         private float pickupRadius = 48f;
         private bool isBeingPickedUp;
         private Vector2 targetPosition;
         private float pickupSpeed = 300f;
 
-        public LocationItem(Item item, int quantity)
+        public LocationItem(ItemContainer itemContainer)
         {
-            Item = item;
-            Quantity = quantity;
+            ItemContainer = itemContainer;
 
-            Texture = item.Icon;
+            Texture = ItemContainer.Item.Icon;
             Centered = true;
         }
 

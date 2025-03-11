@@ -43,20 +43,12 @@ namespace palmesneo_village
             }
         }
 
-        public Item GetSlotItem(int slotIndex)
+        public ItemContainer GetSlotItemContainer(int slotIndex)
         {
             if (slotIndex < 0 || slotIndex >= slotsByIndex.Length)
                 return null;
 
-            return slotsByIndex[slotIndex].Item;
-        }
-
-        public int GetSlotQuantity(int slotIndex)
-        {
-            if (slotIndex < 0 || slotIndex >= slotsByIndex.Length)
-                return 0;
-
-            return slotsByIndex[slotIndex].Quantity;
+            return slotsByIndex[slotIndex];
         }
 
         private int GetSlotIndexWithItem(Item item)
@@ -79,8 +71,11 @@ namespace palmesneo_village
             return -1;
         }
 
-        public bool TryAddItem(Item item, int quantity)
+        public bool TryAddItem(ItemContainer itemContainer)
         {
+            Item item = itemContainer.Item;
+            int quantity = itemContainer.Quantity;
+
             if (item.IsStackable)
             {
                 // Trying to find and add an item to an existing item
@@ -101,8 +96,7 @@ namespace palmesneo_village
 
             if (emptySlotIndex != -1)
             {
-                slotsByIndex[emptySlotIndex].Item = item;
-                slotsByIndex[emptySlotIndex].Quantity = quantity;
+                slotsByIndex[emptySlotIndex] = itemContainer;
 
                 ItemAdded?.Invoke(item, quantity, emptySlotIndex);
 

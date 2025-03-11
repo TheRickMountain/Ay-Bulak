@@ -7,6 +7,7 @@ namespace palmesneo_village
 
         private ImageUI iconImage;
         private TextUI quantityText;
+        private ProgressBarUI contentProgress;
 
         public InventorySlotUI()
         {
@@ -24,15 +25,36 @@ namespace palmesneo_village
             quantityText.IsVisible = false;
             quantityText.SelfColor = Color.Black;
             AddChild(quantityText);
+
+            contentProgress = new ProgressBarUI();
+            contentProgress.Anchor = Anchor.BottomCenter;
+            contentProgress.IsVisible = false;
+            contentProgress.FrontColor = Color.LightBlue;
+            contentProgress.BackColor = Color.Black;
+            contentProgress.Size = new Vector2(32, 4);
+            AddChild(contentProgress);
         }
 
-        public void SetItem(Item item, int quantity)
+        public void SetItem(ItemContainer itemContainer)
         {
             iconImage.IsVisible = true;
             quantityText.IsVisible = true;
 
-            iconImage.Texture = item.Icon;
-            quantityText.Text = $"{quantity}";
+            if (itemContainer.Item is WateringCanItem wateringCanItem)
+            {
+                contentProgress.IsVisible = true;
+
+                contentProgress.MinValue = 0;
+                contentProgress.MaxValue = wateringCanItem.Capacity;
+                contentProgress.CurrentValue = itemContainer.ContentAmount;
+            }
+            else
+            {
+                contentProgress.IsVisible = false;
+            }
+
+            iconImage.Texture = itemContainer.Item.Icon;
+            quantityText.Text = $"{itemContainer.Quantity}";
         }
 
         public void Clear()

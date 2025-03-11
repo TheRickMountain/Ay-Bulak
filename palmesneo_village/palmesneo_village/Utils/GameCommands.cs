@@ -44,7 +44,10 @@ namespace palmesneo_village
 
             if (Engine.CurrentScene is GameplayScene)
             {
-                ((GameplayScene)Engine.CurrentScene).Inventory.TryAddItem(item, itemAmount);
+                ItemContainer itemContainer = new ItemContainer();
+                itemContainer.Item = item;
+                itemContainer.Quantity = itemAmount;
+                ((GameplayScene)Engine.CurrentScene).Inventory.TryAddItem(itemContainer);
             }
         }
 
@@ -55,8 +58,11 @@ namespace palmesneo_village
 
             if (Engine.CurrentScene is GameplayScene)
             {
+                ItemContainer itemContainer = new ItemContainer();
+                itemContainer.Item = item;
+                itemContainer.Quantity = itemAmount;
                 ((GameplayScene)Engine.CurrentScene).CurrentGameLocation
-                    .AddItem(MInput.Mouse.GlobalPosition, item, itemAmount);
+                    .AddItem(MInput.Mouse.GlobalPosition, itemContainer);
             }
         }
 
