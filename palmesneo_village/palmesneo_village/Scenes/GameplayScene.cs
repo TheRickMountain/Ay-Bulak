@@ -274,7 +274,7 @@ namespace palmesneo_village
             foreach (var kvp in gameLocations)
             {
                 GameLocation gameLocation = kvp.Value;
-                gameLocation.StartNextDay();
+                gameLocation.StartNextDay(timeOfDayManager);
             }
         }
 

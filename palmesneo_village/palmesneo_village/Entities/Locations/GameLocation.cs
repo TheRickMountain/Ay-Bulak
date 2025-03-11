@@ -18,6 +18,12 @@ namespace palmesneo_village
         Plinth = 6
     }
 
+    public enum GroundTopTile
+    {
+        None = -1,
+        Moisture = 0
+    }
+
     public class GameLocation : Entity
     {
         public string Id { get; private set; }
@@ -103,6 +109,21 @@ namespace palmesneo_village
                     collisionMap[x, y] = true;
                     break;
             }
+        }
+
+        public GroundTile GetGroundTile(int x, int y)
+        {
+            return (GroundTile)groundTilemap.GetCell(x, y);
+        }
+
+        public void SetGroundTopTile(int x, int y, GroundTopTile groundTopTile)
+        {
+            groundTopTilemap.SetCell(x, y, (int)groundTopTile);
+        }
+
+        public GroundTopTile GetGroundTopTile(int x, int y)
+        {
+            return (GroundTopTile)groundTopTilemap.GetCell(x, y);
         }
 
         public void SetBuildingTopTile(int x, int y, int terrainId)
@@ -256,8 +277,38 @@ namespace palmesneo_village
             return groundTilemap.MapToWorld(vector);
         }
 
-        public void StartNextDay()
+        public void StartNextDay(TimeOfDayManager timeOfDayManager)
         {
+            if (timeOfDayManager.CurrentWeather == Weather.Rainy)
+            {
+                for (int x = 0; x < MapWidth; x++)
+                {
+                    for (int y = 0; y < MapHeight; y++)
+                    {
+                        GroundTile groundTile = GetGroundTile(x, y);
+
+                        if(groundTile == GroundTile.FarmPlot)
+                        {
+                            SetGroundTopTile(x, y, GroundTopTile.Moisture);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                for (int x = 0; x < MapWidth; x++)
+                {
+                    for (int y = 0; y < MapHeight; y++)
+                    {
+                        GroundTopTile groundTopTile = GetGroundTopTile(x, y);
+                        if (groundTopTile == GroundTopTile.Moisture)
+                        {
+                            SetGroundTopTile(x, y, GroundTopTile.None);
+                        }
+                    }
+                }
+            }
+
             foreach (Entity entity in buildingsList.GetChildren())
             {
                 if (entity is Building building)
