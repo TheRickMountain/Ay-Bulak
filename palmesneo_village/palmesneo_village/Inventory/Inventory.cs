@@ -75,6 +75,7 @@ namespace palmesneo_village
         {
             Item item = itemContainer.Item;
             int quantity = itemContainer.Quantity;
+            int contentAmount = itemContainer.ContentAmount;
 
             if (item.IsStackable)
             {
@@ -96,7 +97,9 @@ namespace palmesneo_village
 
             if (emptySlotIndex != -1)
             {
-                slotsByIndex[emptySlotIndex] = itemContainer;
+                slotsByIndex[emptySlotIndex].Item = item;
+                slotsByIndex[emptySlotIndex].Quantity = quantity;
+                slotsByIndex[emptySlotIndex].ContentAmount = contentAmount;
 
                 ItemAdded?.Invoke(item, quantity, emptySlotIndex);
 
@@ -122,6 +125,7 @@ namespace palmesneo_village
             if (slotsByIndex[slotIndex].Quantity == 0)
             {
                 slotsByIndex[slotIndex].Item = null;
+                slotsByIndex[slotIndex].ContentAmount = 0;
             }
 
             ItemRemoved?.Invoke(item, quantity, slotIndex);

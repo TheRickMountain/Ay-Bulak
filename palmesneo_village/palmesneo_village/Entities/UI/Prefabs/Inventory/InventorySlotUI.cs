@@ -61,6 +61,7 @@ namespace palmesneo_village
         {
             iconImage.IsVisible = false;
             quantityText.IsVisible = false;
+            contentProgress.IsVisible = false;
         }
 
     }
