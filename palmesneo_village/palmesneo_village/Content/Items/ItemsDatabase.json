@@ -39,11 +39,25 @@
 			"Name": "cooked_meat",
 			"Description": "test",
 			"IsStackable": true,
-			"EnergyAmount": 20
+			"EnergyAmount": 10
 		},
 		{
 			"Id": 57,
 			"Name": "tomato",
+			"Description": "test",
+			"IsStackable": true,
+			"EnergyAmount": 10
+		},
+		{
+			"Id": 89,
+			"Name": "eggplant",
+			"Description": "test",
+			"IsStackable": true,
+			"EnergyAmount": 10
+		},
+		{
+			"Id": 90,
+			"Name": "garlic",
 			"Description": "test",
 			"IsStackable": true,
 			"EnergyAmount": 10
@@ -99,7 +113,7 @@
 	],
 	"PlantItems":[
 		{
-			"Id": 1002,
+			"Id": 2000,
 			"Name": "tomato_plant",
 			"Description": "test",
 			"IsStackable": false,
@@ -114,11 +128,45 @@
 			"RemoveAfterHarvest": true,
 			"HarvestItem": "tomato",
 			"HarvestAmount": 2
-		}	
+		},
+		{
+			"Id": 2001,
+			"Name": "eggplant_plant",
+			"Description": "test",
+			"IsStackable": false,
+			"Width": 1,
+			"Height": 1,
+			"GroundPattern": [
+				["B"]
+			],
+			"IsRotatable": false,
+			"GrowthStages": 5,
+			"GrowthRateInDays": 6,
+			"RemoveAfterHarvest": true,
+			"HarvestItem": "eggplant",
+			"HarvestAmount": 2
+		},
+		{
+			"Id": 2002,
+			"Name": "garlic_plant",
+			"Description": "test",
+			"IsStackable": false,
+			"Width": 1,
+			"Height": 1,
+			"GroundPattern": [
+				["B"]
+			],
+			"IsRotatable": false,
+			"GrowthStages": 5,
+			"GrowthRateInDays": 6,
+			"RemoveAfterHarvest": true,
+			"HarvestItem": "garlic",
+			"HarvestAmount": 2
+		}
 	],
 	"WaterSourceItems": [
 		{
-			"Id": 1004,
+			"Id": 3000,
 			"Name": "standpipe",
 			"Description": "test",
 			"IsStackable": false,
@@ -137,6 +185,20 @@
 			"Description": "test",
 			"IsStackable": true,
 			"PlantName": "tomato_plant"
+		},
+		{
+			"Id": 105,
+			"Name": "eggplant_seeds",
+			"Description": "test",
+			"IsStackable": true,
+			"PlantName": "eggplant_plant"
+		},
+		{
+			"Id": 106,
+			"Name": "garlic_seeds",
+			"Description": "test",
+			"IsStackable": true,
+			"PlantName": "garlic_plant"
 		}
 	]
 }
