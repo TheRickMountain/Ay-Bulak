@@ -58,7 +58,7 @@ namespace palmesneo_village
 
             ItemContainer itemContainer = inventory.GetSlotItemContainer(slotIndex);
 
-            if (itemContainer == null)
+            if (itemContainer.Item == null)
             {
                 slots[slotIndex].Clear();
             }

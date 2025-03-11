@@ -254,6 +254,10 @@ namespace palmesneo_village
             {
                 building = new PlantBuilding(this, plantItem, direction, tiles);
             }
+            else if(buildingItem is WaterSourceItem waterSourceItem)
+            {
+                building = new WaterSourceBuilding(this, waterSourceItem, direction, tiles);
+            }
             else
             {
                 building = new Building(this, buildingItem, direction, tiles);
