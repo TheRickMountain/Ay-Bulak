@@ -111,7 +111,7 @@ namespace palmesneo_village
 
             #endregion
 
-            GoToLocation("farm");
+            GoToLocation("house");
             Inventory.TryAddItem(Engine.ItemsDatabase.GetItemByName<PickaxeItem>("iron_pickaxe"), 1, 0);
             Inventory.TryAddItem(Engine.ItemsDatabase.GetItemByName<AxeItem>("iron_axe"), 1, 0);
             Inventory.TryAddItem(Engine.ItemsDatabase.GetItemByName<ShowelItem>("iron_showel"), 1, 0);
