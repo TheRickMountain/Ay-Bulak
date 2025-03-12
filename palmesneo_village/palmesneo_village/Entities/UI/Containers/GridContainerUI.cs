@@ -13,7 +13,7 @@ namespace palmesneo_village
             {
                 columns = Math.Clamp(value, 1, int.MaxValue);
 
-                isDirty = true;
+                UpdateChildrenTransformation();
             }
         }
 
@@ -25,7 +25,7 @@ namespace palmesneo_village
             {
                 hSeparation = Math.Clamp(value, 0, int.MaxValue);
 
-                isDirty = true;
+                UpdateChildrenTransformation();
             }
         }
 
@@ -37,21 +37,7 @@ namespace palmesneo_village
             {
                 vSeparation = Math.Clamp(value, 0, int.MaxValue);
 
-                isDirty = true;
-            }
-        }
-
-        private bool isDirty = false;
-
-        public override void Update()
-        {
-            base.Update();
-
-            if (isDirty)
-            {
                 UpdateChildrenTransformation();
-
-                isDirty = false;
             }
         }
 
@@ -59,14 +45,14 @@ namespace palmesneo_village
         {
             base.AddChild(entity);
 
-            isDirty = true;
+            UpdateChildrenTransformation();
         }
 
         public override void RemoveChild(Entity entity)
         {
             base.RemoveChild(entity);
 
-            isDirty = true;
+            UpdateChildrenTransformation();
         }
 
         private void UpdateChildrenTransformation()
