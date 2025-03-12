@@ -11,6 +11,7 @@ namespace palmesneo_village
         public static VirtualButton Rotate { get; private set; }
 
         public static VirtualButton Pause { get; private set; }
+        public static VirtualButton Exit { get; private set; }
 
         public static void Initialize()
         {
@@ -27,6 +28,9 @@ namespace palmesneo_village
 
             Pause = new VirtualButton();
             Pause.Nodes.Add(new VirtualButton.KeyboardKey(Keys.Space));
+
+            Exit = new VirtualButton();
+            Exit.Nodes.Add(new VirtualButton.KeyboardKey(Keys.Escape));
         }
 
     }
