@@ -42,6 +42,11 @@ namespace palmesneo_village
             }
         }
 
+        public bool IsSlotEmpty(int slotIndex)
+        {
+            return slotsByIndex[slotIndex].Item == null;
+        }
+
         public Item GetSlotItem(int slotIndex)
         {
             return slotsByIndex[slotIndex].Item;
@@ -100,6 +105,28 @@ namespace palmesneo_village
                     return i;
             }
             return -1;
+        }
+
+        public void AddItem(Item item, int quantity, int contentAmount, int slotIndex)
+        {
+            ItemContainer slotItemContainer = slotsByIndex[slotIndex];
+
+            if(slotItemContainer.Item == null)
+            {
+                slotItemContainer.Item = item;
+                slotItemContainer.Quantity = quantity;
+                slotItemContainer.ContentAmount = contentAmount;
+            }
+            else if(slotItemContainer.Item == item)
+            {
+                slotItemContainer.Quantity += quantity;
+            }
+            else
+            {
+                throw new InvalidOperationException($"Slot[{slotIndex}] has another item already");
+            }
+
+            SlotDataChanged?.Invoke(this, slotIndex);
         }
 
         public bool TryAddItem(Item item, int quantity, int contentAmount)

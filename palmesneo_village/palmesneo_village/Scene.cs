@@ -23,6 +23,7 @@ namespace palmesneo_village
             cursor.Depth = 100;
             cursor.Texture = ResourcesManager.GetTexture("Sprites", "cursor");
             cursor.Size = new Vector2(16, 16);
+            cursor.Name = "Cursor";
             MasterUIEntity.AddChild(cursor);
 
             MasterEntity.Begin();

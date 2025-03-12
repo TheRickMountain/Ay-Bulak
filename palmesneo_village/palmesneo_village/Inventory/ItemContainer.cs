@@ -13,5 +13,12 @@ namespace palmesneo_village
         public int Quantity { get; set; }
         public int ContentAmount { get; set; }
 
+        public void Clear()
+        {
+            Item = null;
+            Quantity = 0;
+            ContentAmount = 0;
+        }
+
     }
 }
