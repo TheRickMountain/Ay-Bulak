@@ -50,6 +50,8 @@ namespace palmesneo_village
 
         private List<EntityUI> gameUIElements = new();
 
+        private InventoryUI inventoryUI;
+
         public override void Begin()
         {
             MasterEntity.IsDepthSortEnabled = true;
@@ -112,17 +114,13 @@ namespace palmesneo_village
             gameUIElements.Add(playerMoneyUI);
             gameUIElements.Add(timeText);
 
-            InventoryUI inventoryUI = new InventoryUI(Inventory);
-            inventoryUI.Name = "InventoryUI";
+            inventoryUI = new InventoryUI(Inventory);
             inventoryUI.Anchor = Anchor.Center;
-            inventoryUI.IsActive = false;
-            inventoryUI.IsVisible = false;
-            MasterUIEntity.AddChild(inventoryUI);
 
             transitionImage = new ImageUI();
             transitionImage.Texture = RenderManager.Pixel;
             transitionImage.SelfColor = Color.Black;
-            transitionImage.IsActive = false;
+            transitionImage.IsVisible = false;
             MasterUIEntity.AddChild(transitionImage);
 
             #endregion
@@ -153,13 +151,10 @@ namespace palmesneo_village
                         {
                             foreach (var gameUIElement in gameUIElements)
                             {
-                                gameUIElement.IsActive = true;
-                                gameUIElement.IsVisible = true;
+                                MasterUIEntity.AddChild(gameUIElement);
                             }
 
-                            InventoryUI inventoryUI = MasterUIEntity.GetChildByName<InventoryUI>("InventoryUI");
-                            inventoryUI.IsActive = false;
-                            inventoryUI.IsVisible = false;
+                            MasterUIEntity.RemoveChild(inventoryUI);
 
                             gameState = GameState.Game;
                         }
@@ -233,14 +228,10 @@ namespace palmesneo_village
                         {
                             foreach(var gameUIElement in gameUIElements)
                             {
-                                gameUIElement.IsActive = false;
-                                gameUIElement.IsVisible = false;
+                                MasterUIEntity.RemoveChild(gameUIElement);
                             }
 
-                            InventoryUI inventoryUI = MasterUIEntity.GetChildByName<InventoryUI>("InventoryUI");
-                            inventoryUI.IsActive = true;
-                            inventoryUI.IsVisible = true;
-
+                            MasterUIEntity.AddChild(inventoryUI);
                             inventoryUI.Open();
 
                             gameState = GameState.Inventory;
@@ -314,7 +305,7 @@ namespace palmesneo_village
 
                             Engine.TimeRate = 1.0f;
 
-                            transitionImage.IsActive = false;
+                            transitionImage.IsVisible = false;
 
                             gameState = GameState.Game;
                         }
@@ -350,7 +341,7 @@ namespace palmesneo_village
 
             gameState = GameState.SceneTransitionIn;
 
-            transitionImage.IsActive = true;
+            transitionImage.IsVisible = true;
             transitionImage.SelfColor = Color.Black * 0.0f;
         }
 
