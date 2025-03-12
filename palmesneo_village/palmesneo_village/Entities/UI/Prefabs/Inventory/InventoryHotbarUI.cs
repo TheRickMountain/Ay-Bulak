@@ -2,12 +2,13 @@
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.Net.Http.Headers;
 
 namespace palmesneo_village
 {
     public class InventoryHotbarUI : HorizontalContainerUI
     {
-        private List<InventorySlotUI> slots;
+        private List<SlotButtonUI> slots;
 
         private ImageUI slotSelector;
 
@@ -16,11 +17,11 @@ namespace palmesneo_village
             inventory.SlotDataChanged += OnInventorySlotDataChanged;
             inventoryHotbar.CurrentSlotIndexChanged += OnInventoryHotbarCurrentSlotIndexChanged;
 
-            slots = new List<InventorySlotUI>();
+            slots = new List<SlotButtonUI>();
 
             for (int i = 0; i < inventory.Width; i++)
             {
-                InventorySlotUI slot = new InventorySlotUI();
+                SlotButtonUI slot = new SlotButtonUI();
 
                 slots.Add(slot);
 
@@ -28,9 +29,8 @@ namespace palmesneo_village
             }
 
             slotSelector = new ImageUI();
-            slotSelector.Texture = RenderManager.Pixel;
-            slotSelector.SelfColor = Color.Red;
-            slotSelector.Size = new Vector2(16, 16);
+            slotSelector.Texture = ResourcesManager.GetTexture("Sprites", "UI", "slot_selector");
+            slotSelector.Size = new Vector2(28, 28);
             AddChild(slotSelector);
 
             Size = new Vector2(Size.X, slots[0].Size.Y);
@@ -40,9 +40,9 @@ namespace palmesneo_village
 
         private void UpdateSlotSelectorPosition(int slotIndex)
         {
-            InventorySlotUI slot = slots[slotIndex];
-            slotSelector.LocalPosition = slot.LocalPosition;
-        }
+            SlotButtonUI slot = slots[slotIndex];
+            slotSelector.LocalPosition = slot.LocalPosition - new Vector2(2, 2);
+        } 
 
         private void OnInventorySlotDataChanged(Inventory inventory, int slotIndex)
         {

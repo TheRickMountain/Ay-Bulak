@@ -8,6 +8,7 @@ namespace palmesneo_village
     public enum GameState
     {
         Game,
+        Inventory,
         SceneTransitionIn,
         DayTransitionIn,
         TransitionOut
@@ -46,6 +47,8 @@ namespace palmesneo_village
         private ImageUI transitionImage;
 
         private BuildingSystem buildingSystem;
+
+        private List<EntityUI> gameUIElements = new();
 
         public override void Begin()
         {
@@ -86,6 +89,7 @@ namespace palmesneo_village
 
             InventoryHotbarUI inventoryHotbarUI = new InventoryHotbarUI(Inventory, inventoryHotbar);
             inventoryHotbarUI.Anchor = Anchor.BottomCenter;
+            inventoryHotbarUI.LocalPosition = new Vector2(0, -5);
             MasterUIEntity.AddChild(inventoryHotbarUI);
 
             PlayerEnergyBarUI playerEnergyBarUI = new PlayerEnergyBarUI(PlayerEnergyManager);
@@ -103,6 +107,18 @@ namespace palmesneo_village
             timeText.LocalPosition = new Vector2(5, 32);
             MasterUIEntity.AddChild(timeText);
 
+            gameUIElements.Add(inventoryHotbarUI);
+            gameUIElements.Add(playerEnergyBarUI);
+            gameUIElements.Add(playerMoneyUI);
+            gameUIElements.Add(timeText);
+
+            InventoryUI inventoryUI = new InventoryUI(Inventory);
+            inventoryUI.Name = "InventoryUI";
+            inventoryUI.Anchor = Anchor.Center;
+            inventoryUI.IsActive = false;
+            inventoryUI.IsVisible = false;
+            MasterUIEntity.AddChild(inventoryUI);
+
             transitionImage = new ImageUI();
             transitionImage.Texture = RenderManager.Pixel;
             transitionImage.SelfColor = Color.Black;
@@ -111,7 +127,7 @@ namespace palmesneo_village
 
             #endregion
 
-            GoToLocation("house");
+            GoToLocation("farm");
             Inventory.TryAddItem(Engine.ItemsDatabase.GetItemByName<PickaxeItem>("iron_pickaxe"), 1, 0);
             Inventory.TryAddItem(Engine.ItemsDatabase.GetItemByName<AxeItem>("iron_axe"), 1, 0);
             Inventory.TryAddItem(Engine.ItemsDatabase.GetItemByName<ShowelItem>("iron_showel"), 1, 0);
@@ -131,6 +147,24 @@ namespace palmesneo_village
 
             switch (gameState)
             {
+                case GameState.Inventory:
+                    {
+                        if (InputBindings.Exit.Pressed)
+                        {
+                            foreach (var gameUIElement in gameUIElements)
+                            {
+                                gameUIElement.IsActive = true;
+                                gameUIElement.IsVisible = true;
+                            }
+
+                            InventoryUI inventoryUI = MasterUIEntity.GetChildByName<InventoryUI>("InventoryUI");
+                            inventoryUI.IsActive = false;
+                            inventoryUI.IsVisible = false;
+
+                            gameState = GameState.Game;
+                        }
+                    }
+                    break;
                 case GameState.Game:
                     {
                         Vector2 mouseTile = CurrentGameLocation.MouseTile;
@@ -193,6 +227,23 @@ namespace palmesneo_village
                         if (timeOfDayManager.CurrentHour == 0)
                         {
                             gameState = GameState.DayTransitionIn;
+                        }
+                    
+                        if(InputBindings.Exit.Pressed)
+                        {
+                            foreach(var gameUIElement in gameUIElements)
+                            {
+                                gameUIElement.IsActive = false;
+                                gameUIElement.IsVisible = false;
+                            }
+
+                            InventoryUI inventoryUI = MasterUIEntity.GetChildByName<InventoryUI>("InventoryUI");
+                            inventoryUI.IsActive = true;
+                            inventoryUI.IsVisible = true;
+
+                            inventoryUI.Open();
+
+                            gameState = GameState.Inventory;
                         }
                     }
                     break;
