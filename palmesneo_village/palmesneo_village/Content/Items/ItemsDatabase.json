@@ -67,6 +67,14 @@
 			"EnergyAmount": 10
 		},
 		{
+			"Id": 58,
+			"Name": "carrot",
+			"Description": "test",
+			"IsStackable": true,
+			"Price": 10,
+			"EnergyAmount": 10
+		},
+		{
 			"Id": 89,
 			"Name": "eggplant",
 			"Description": "test",
@@ -187,7 +195,7 @@
 			"GrowthRateInDays": 6,
 			"RemoveAfterHarvest": true,
 			"HarvestItem": "tomato",
-			"HarvestAmount": 2
+			"HarvestAmount": 1
 		},
 		{
 			"Id": 2001,
@@ -204,7 +212,7 @@
 			"GrowthRateInDays": 6,
 			"RemoveAfterHarvest": true,
 			"HarvestItem": "eggplant",
-			"HarvestAmount": 2
+			"HarvestAmount": 1
 		},
 		{
 			"Id": 2002,
@@ -221,7 +229,24 @@
 			"GrowthRateInDays": 6,
 			"RemoveAfterHarvest": true,
 			"HarvestItem": "garlic",
-			"HarvestAmount": 2
+			"HarvestAmount": 1
+		},
+		{
+			"Id": 2003,
+			"Name": "carrot_plant",
+			"Description": "test",
+			"IsStackable": false,
+			"Width": 1,
+			"Height": 1,
+			"GroundPattern": [
+				["B"]
+			],
+			"IsRotatable": false,
+			"GrowthStages": 5,
+			"GrowthRateInDays": 6,
+			"RemoveAfterHarvest": true,
+			"HarvestItem": "carrot",
+			"HarvestAmount": 1
 		}
 	],
 	"WaterSourceItems": [
@@ -262,6 +287,14 @@
 			"IsStackable": true,
 			"Price": 10,
 			"PlantName": "garlic_plant"
+		},
+		{
+			"Id": 74,
+			"Name": "carrot_seeds",
+			"Description": "test",
+			"IsStackable": true,
+			"Price": 10,
+			"PlantName": "carrot_plant"
 		}
 	]
 }
