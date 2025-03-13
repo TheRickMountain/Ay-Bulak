@@ -42,6 +42,7 @@ namespace palmesneo_village
         private Tilemap buildingTopTilemap;
         private Building[,] buildingsMap;
         private bool[,] collisionMap;
+        private Teleport[,] teleportsMap;
 
         private Entity buildingsList;
         private Entity itemsList;
@@ -71,6 +72,8 @@ namespace palmesneo_village
             buildingsMap = new Building[mapWidth, mapHeight];
 
             collisionMap = new bool[mapWidth, mapHeight];
+
+            teleportsMap = new Teleport[mapWidth, mapHeight];
 
             buildingsList = new Entity();
             buildingsList.IsDepthSortEnabled = true;
@@ -171,6 +174,11 @@ namespace palmesneo_village
 
             Building building = buildingsMap[x, y];
 
+            if (teleportsMap[x, y] != null)
+            {
+                return true;
+            }
+
             if (building is PlantBuilding plantBuilding)
             {
                 if (plantBuilding.IsRipe)
@@ -214,19 +222,17 @@ namespace palmesneo_village
             return false;
         }
 
-        public void InteractWithTile(int x, int y, Inventory inventory, int slotIndex, PlayerEnergyManager playerEnergyManager)
+        public void InteractWithTile(int x, int y, Inventory inventory, int slotIndex, 
+            PlayerEnergyManager playerEnergyManager, GameplayScene gameplayScene)
         {
             Building building = buildingsMap[x, y];
 
-            if (building != null)
+            if (building is PlantBuilding plantBuilding)
             {
-                if(building is PlantBuilding plantBuilding)
+                if (plantBuilding.IsRipe)
                 {
-                    if(plantBuilding.IsRipe)
-                    {
-                        plantBuilding.Harvest();
-                        return;
-                    }
+                    plantBuilding.Harvest();
+                    return;
                 }
             }
 
@@ -383,6 +389,28 @@ namespace palmesneo_village
             buildingsList.AddChild(building);
 
             RegisterBuildingTiles(building, tiles);
+        
+            if(buildingItem.TeleportData != null)
+            {
+                TeleportData teleportData = buildingItem.TeleportData;
+
+                int[,] teleportPattern = Calc.RotateMatrix(teleportData.TeleportPattern, direction);
+
+                for (int x = 0; x < teleportPattern.GetLength(0); x++)
+                {
+                    for (int y = 0; y < teleportPattern.GetLength(1); y++)
+                    {
+                        if (teleportPattern[x, y] == 1)
+                        {
+                            Vector2 teleportTile = tiles[x, y];
+
+                            teleportsMap[(int)teleportTile.X, (int)teleportTile.Y] = new Teleport(
+                                teleportData.Location,
+                                new Vector2(teleportData.X, teleportData.Y));
+                        }
+                    }
+                }
+            }
         }
 
         public void RemoveBuilding(Building building)

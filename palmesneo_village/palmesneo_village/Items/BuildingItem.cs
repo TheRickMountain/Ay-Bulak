@@ -13,6 +13,7 @@ namespace palmesneo_village
         public int Height { get; init; }
         public string[,] GroundPattern { get; init; }
         public bool IsRotatable { get; init; }
+        public TeleportData TeleportData { get; init; }
 
         public Dictionary<Direction, MTexture> DirectionIcon { get; private set; }
 

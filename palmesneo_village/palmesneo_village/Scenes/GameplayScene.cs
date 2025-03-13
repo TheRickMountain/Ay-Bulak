@@ -131,6 +131,9 @@ namespace palmesneo_village
             #endregion
 
             GoToLocation("farm");
+
+            PlayerMoneyManager.MoneyAmount = 500;
+
             Inventory.TryAddItem(Engine.ItemsDatabase.GetItemByName<PickaxeItem>("iron_pickaxe"), 1, 0);
             Inventory.TryAddItem(Engine.ItemsDatabase.GetItemByName<AxeItem>("iron_axe"), 1, 0);
             Inventory.TryAddItem(Engine.ItemsDatabase.GetItemByName<ShowelItem>("iron_showel"), 1, 0);
@@ -257,6 +260,7 @@ namespace palmesneo_village
                             gameState = GameState.Inventory;
                         }
 
+                        // TODO: temp
                         if(MInput.Keyboard.Pressed(Microsoft.Xna.Framework.Input.Keys.T))
                         {
                             foreach (var gameUIElement in gameUIElements)
