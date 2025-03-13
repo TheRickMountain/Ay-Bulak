@@ -265,7 +265,13 @@ namespace palmesneo_village
                             }
 
                             MasterUIEntity.AddChild(tradingUI);
-                            tradingUI.Open();
+                            // TODO: Temp
+                            tradingUI.Open(new List<Item>() 
+                            {
+                                Engine.ItemsDatabase.GetItemByName<SeedItem>("tomato_seeds"),
+                                Engine.ItemsDatabase.GetItemByName<SeedItem>("garlic_seeds"),
+                                Engine.ItemsDatabase.GetItemByName<SeedItem>("eggplant_seeds")
+                            });
 
                             gameState = GameState.Trading;
                         }

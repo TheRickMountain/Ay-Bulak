@@ -17,6 +17,8 @@ namespace palmesneo_village
 
         private TextUI playerMoneyText;
 
+        private List<Item> traderItems;
+
         public TradingUI(Inventory inventory, PlayerMoneyManager playerMoneyManager)
         {
             this.inventory = inventory;
@@ -36,6 +38,8 @@ namespace palmesneo_village
             Size = new Vector2(
                 playerInventoryGrid.Size.X + 16,
                 playerInventoryGrid.Size.Y + 16 + 16 + traderInventoryGrid.Size.Y);
+
+            traderItems = new List<Item>();
         }
 
         private void CreatePlayerInventory()
@@ -84,7 +88,23 @@ namespace palmesneo_village
             }
         }
 
-        public void Open()
+        public void Open(List<Item> items)
+        {
+            traderItems.Clear();
+            traderItems.AddRange(items);
+
+            RefreshUI();
+        }
+
+        private void RefreshUI()
+        {
+            UpdatePlayerInventory();
+            UpdateTraderInventory();
+
+            playerMoneyText.Text = playerMoneyManager.MoneyAmount.ToString();
+        }
+
+        private void UpdatePlayerInventory()
         {
             for (int slotIndex = 0; slotIndex < inventory.Width * inventory.Height; slotIndex++)
             {
@@ -100,7 +120,7 @@ namespace palmesneo_village
                 {
                     playerInventorySlots[slotIndex].SetItem(item, quantity, contentAmount);
 
-                    if(item.Price == 0)
+                    if (item.Price == 0)
                     {
                         playerInventorySlots[slotIndex].IsDisabled = true;
                         playerInventorySlots[slotIndex].GetChildByName<ImageUI>("Icon").SelfColor = Color.White * 0.5f;
@@ -114,8 +134,23 @@ namespace palmesneo_village
                     }
                 }
             }
+        }
 
-            playerMoneyText.Text = playerMoneyManager.MoneyAmount.ToString();
+        private void UpdateTraderInventory()
+        {
+            for (int slotIndex = 0; slotIndex < traderInventorySlots.Count; slotIndex++)
+            {
+                if (slotIndex < traderItems.Count)
+                {
+                    Item item = traderItems[slotIndex];
+
+                    traderInventorySlots[slotIndex].SetItem(item, 999, 0);
+                }
+                else
+                {
+                    traderInventorySlots[slotIndex].Clear();
+                }
+            }
         }
 
         private void OnPlayerInventorySlotPressed(ButtonUI button, int slotIndex)
@@ -127,12 +162,25 @@ namespace palmesneo_village
 
             inventory.RemoveItem(item, quantity, slotIndex);
 
-            Open();
+            RefreshUI();
         }
 
         private void OnTraderInventorySlotPressed(ButtonUI button, int slotIndex)
         {
-            // Buy item
+            if (slotIndex >= traderItems.Count) return;
+
+            Item item = traderItems[slotIndex];
+
+            if (playerMoneyManager.MoneyAmount >= item.Price)
+            {
+                int quantity = 1;
+
+                inventory.TryAddItem(item, quantity, 0);
+
+                playerMoneyManager.MoneyAmount -= item.Price * quantity;
+            }
+
+            RefreshUI();
         }
     }
 }
