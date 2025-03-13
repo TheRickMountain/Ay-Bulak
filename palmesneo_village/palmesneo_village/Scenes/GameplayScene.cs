@@ -43,6 +43,7 @@ namespace palmesneo_village
         private Dictionary<string, GameLocation> gameLocations = new();
         private GameLocation currentGameLocation;
         private GameLocation nextGameLocation;
+        private Vector2 nextGameLocationTile;
 
         private float transitionTimer = 0.0f;
         private ImageUI transitionImage;
@@ -70,7 +71,6 @@ namespace palmesneo_village
 
             player = new Player(creatureTemplate, Inventory);
             player.LocalPosition = new Vector2(8 * Engine.TILE_SIZE, 6 * Engine.TILE_SIZE);
-
 
             RegisterLocation(new FarmLocation("farm"));
             RegisterLocation(new HouseLocation("house"));
@@ -130,7 +130,7 @@ namespace palmesneo_village
 
             #endregion
 
-            GoToLocation("farm");
+            GoToLocation("farm", new Vector2(20, 20));
 
             PlayerMoneyManager.MoneyAmount = 500;
 
@@ -224,7 +224,7 @@ namespace palmesneo_village
                                 if (MInput.Mouse.PressedLeftButton)
                                 {
                                     CurrentGameLocation.InteractWithTile(tileX, tileY, Inventory, 
-                                        inventoryHotbar.CurrentSlotIndex, PlayerEnergyManager);
+                                        inventoryHotbar.CurrentSlotIndex, PlayerEnergyManager, this);
                                 }
                             }
                         }
@@ -313,6 +313,8 @@ namespace palmesneo_village
                                 player.SetGameLocation(currentGameLocation);
                                 buildingSystem.SetGameLocation(currentGameLocation);
 
+                                player.LocalPosition = nextGameLocationTile * Engine.TILE_SIZE;
+
                                 gameState = GameState.TransitionOut;
                             }
                         }
@@ -370,8 +372,10 @@ namespace palmesneo_village
             }
         }
 
-        public void GoToLocation(string locationId)
+        public void GoToLocation(string locationId, Vector2 tile)
         {
+            nextGameLocationTile = tile;
+
             // Предусматриваем попытку перейти на ту же локацию
             GameLocation newGameLocation = gameLocations[locationId];
 

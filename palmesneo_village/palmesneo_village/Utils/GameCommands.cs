@@ -22,11 +22,11 @@ namespace palmesneo_village
         }
 
         [Command("go_to_location", "Transition to location")]
-        private static void GoToLocation(string locationId)
+        private static void GoToLocation(string locationId, int x, int y)
         {
             if (Engine.CurrentScene is GameplayScene)
             {
-                ((GameplayScene)Engine.CurrentScene).GoToLocation(locationId);
+                ((GameplayScene)Engine.CurrentScene).GoToLocation(locationId, new Vector2(x, y) * Engine.TILE_SIZE);
             }
         }
 

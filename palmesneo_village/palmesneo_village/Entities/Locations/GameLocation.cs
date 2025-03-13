@@ -44,6 +44,8 @@ namespace palmesneo_village
         private bool[,] collisionMap;
         private Teleport[,] teleportsMap;
 
+        private Dictionary<Building, List<Teleport>> buildingsTeleports = new();
+
         private Entity buildingsList;
         private Entity itemsList;
         private Entity creaturesList;
@@ -222,17 +224,27 @@ namespace palmesneo_village
             return false;
         }
 
-        public void InteractWithTile(int x, int y, Inventory inventory, int slotIndex, 
-            PlayerEnergyManager playerEnergyManager, GameplayScene gameplayScene)
+        public void InteractWithTile(int x, int y, Inventory inventory, int slotIndex, PlayerEnergyManager playerEnergyManager,
+            GameplayScene gameplayScene)
         {
+            if (teleportsMap[x, y] != null)
+            {
+                Teleport teleport = teleportsMap[x, y];
+                gameplayScene.GoToLocation(teleport.Location, teleport.Tile);
+                return;
+            }
+
             Building building = buildingsMap[x, y];
 
-            if (building is PlantBuilding plantBuilding)
+            if (building != null)
             {
-                if (plantBuilding.IsRipe)
+                if (building is PlantBuilding plantBuilding)
                 {
-                    plantBuilding.Harvest();
-                    return;
+                    if (plantBuilding.IsRipe)
+                    {
+                        plantBuilding.Harvest();
+                        return;
+                    }
                 }
             }
 
@@ -402,11 +414,19 @@ namespace palmesneo_village
                     {
                         if (teleportPattern[x, y] == 1)
                         {
-                            Vector2 teleportTile = tiles[x, y];
+                            Vector2 teleportEnterTile = tiles[x, y];
 
-                            teleportsMap[(int)teleportTile.X, (int)teleportTile.Y] = new Teleport(
-                                teleportData.Location,
+                            Teleport teleport = new Teleport(teleportData.Location,
                                 new Vector2(teleportData.X, teleportData.Y));
+
+                            if(buildingsTeleports.ContainsKey(building) == false)
+                            {
+                                buildingsTeleports.Add(building, new List<Teleport>());
+                            }
+
+                            buildingsTeleports[building].Add(teleport);
+
+                            teleportsMap[(int)teleportEnterTile.X, (int)teleportEnterTile.Y] = teleport;
                         }
                     }
                 }
@@ -420,6 +440,33 @@ namespace palmesneo_village
             Vector2[,] tiles = building.OccupiedTiles;
 
             ClearTilesFromBuilding(tiles);
+
+            RemoveBuildingTeleports(building);
+        }
+
+        private void RemoveBuildingTeleports(Building building)
+        {
+            if (buildingsTeleports.ContainsKey(building) == false)
+            {
+                return;
+            }
+
+            foreach (Teleport teleport in buildingsTeleports[building])
+            {
+                for (int x = 0; x < teleportsMap.GetLength(0); x++)
+                {
+                    for (int y = 0; y < teleportsMap.GetLength(1); y++)
+                    {
+                        if (teleportsMap[x, y] == teleport)
+                        {
+                            teleportsMap[x, y] = null;
+                        }
+                    }
+                }
+            }
+
+            buildingsTeleports[building].Clear();
+            buildingsTeleports.Remove(building);
         }
 
         private void RegisterBuildingTiles(Building building, Vector2[,] tiles)
