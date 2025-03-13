@@ -22,12 +22,14 @@ namespace palmesneo_village
             StatesColors[ButtonUIState.Toggled] = new Color((byte)255, (byte)170, (byte)40, (byte)255);
 
             iconImage = new ImageUI();
+            iconImage.Name = "Icon";
             iconImage.Size = new Vector2(16, 16);
             iconImage.Anchor = Anchor.Center;
             iconImage.IsVisible = false;
             AddChild(iconImage);
 
             quantityText = new TextUI();
+            quantityText.Name = "Quantity";
             quantityText.Anchor = Anchor.TopLeft;
             quantityText.IsVisible = false;
             quantityText.SelfColor = Color.White;
@@ -77,6 +79,5 @@ namespace palmesneo_village
             quantityText.IsVisible = false;
             contentProgress.IsVisible = false;
         }
-
     }
 }

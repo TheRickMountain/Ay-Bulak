@@ -55,6 +55,7 @@
 			"Name": "cooked_meat",
 			"Description": "test",
 			"IsStackable": true,
+			"Price": 10,
 			"EnergyAmount": 10
 		},
 		{
@@ -62,6 +63,7 @@
 			"Name": "tomato",
 			"Description": "test",
 			"IsStackable": true,
+			"Price": 10,
 			"EnergyAmount": 10
 		},
 		{
@@ -69,6 +71,7 @@
 			"Name": "eggplant",
 			"Description": "test",
 			"IsStackable": true,
+			"Price": 10,
 			"EnergyAmount": 10
 		},
 		{
@@ -76,6 +79,7 @@
 			"Name": "garlic",
 			"Description": "test",
 			"IsStackable": true,
+			"Price": 10,
 			"EnergyAmount": 10
 		}
 	],
@@ -224,6 +228,7 @@
 			"Name": "tomato_seeds",
 			"Description": "test",
 			"IsStackable": true,
+			"Price": 10,
 			"PlantName": "tomato_plant"
 		},
 		{
@@ -231,6 +236,7 @@
 			"Name": "eggplant_seeds",
 			"Description": "test",
 			"IsStackable": true,
+			"Price": 10,
 			"PlantName": "eggplant_plant"
 		},
 		{
@@ -238,6 +244,7 @@
 			"Name": "garlic_seeds",
 			"Description": "test",
 			"IsStackable": true,
+			"Price": 10,
 			"PlantName": "garlic_plant"
 		}
 	]

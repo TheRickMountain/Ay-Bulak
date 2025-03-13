@@ -6,6 +6,7 @@
         public string Name { get; init; }
         public string Description { get; init; }
         public bool IsStackable { get; init; }
+        public int Price { get; init; }
 
         public MTexture Icon { get; protected set; }
 

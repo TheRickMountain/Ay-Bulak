@@ -9,6 +9,7 @@ namespace palmesneo_village
     {
         Game,
         Inventory,
+        Trading,
         SceneTransitionIn,
         DayTransitionIn,
         TransitionOut
@@ -51,6 +52,7 @@ namespace palmesneo_village
         private List<EntityUI> gameUIElements = new();
 
         private InventoryUI inventoryUI;
+        private TradingUI tradingUI;
 
         public override void Begin()
         {
@@ -117,6 +119,9 @@ namespace palmesneo_village
             inventoryUI = new InventoryUI(Inventory);
             inventoryUI.Anchor = Anchor.Center;
 
+            tradingUI = new TradingUI(Inventory, PlayerMoneyManager);
+            tradingUI.Anchor = Anchor.Center;
+
             transitionImage = new ImageUI();
             transitionImage.Texture = RenderManager.Pixel;
             transitionImage.SelfColor = Color.Black;
@@ -145,6 +150,21 @@ namespace palmesneo_village
 
             switch (gameState)
             {
+                case GameState.Trading:
+                    {
+                        if (InputBindings.Exit.Pressed)
+                        {
+                            foreach (var gameUIElement in gameUIElements)
+                            {
+                                MasterUIEntity.AddChild(gameUIElement);
+                            }
+
+                            MasterUIEntity.RemoveChild(tradingUI);
+
+                            gameState = GameState.Game;
+                        }
+                    }
+                    break;
                 case GameState.Inventory:
                     {
                         if (InputBindings.Exit.Pressed)
@@ -235,6 +255,19 @@ namespace palmesneo_village
                             inventoryUI.Open();
 
                             gameState = GameState.Inventory;
+                        }
+
+                        if(MInput.Keyboard.Pressed(Microsoft.Xna.Framework.Input.Keys.T))
+                        {
+                            foreach (var gameUIElement in gameUIElements)
+                            {
+                                MasterUIEntity.RemoveChild(gameUIElement);
+                            }
+
+                            MasterUIEntity.AddChild(tradingUI);
+                            tradingUI.Open();
+
+                            gameState = GameState.Trading;
                         }
                     }
                     break;
