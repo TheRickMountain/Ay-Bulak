@@ -8,6 +8,23 @@ namespace palmesneo_village
 {
     public static class Calc
     {
+        public static Vector2[,] GetVector2DArray(Vector2 position, int width, int height)
+        {
+            int tileX = (int)position.X;
+            int tileY = (int)position.Y;
+
+            Vector2[,] tiles = new Vector2[width, height];
+
+            for (int i = 0; i < width; i++)
+            {
+                for (int j = 0; j < height; j++)
+                {
+                    tiles[i, j] = new Vector2(tileX + i, tileY + j);
+                }
+            }
+
+            return tiles;
+        }
 
         public static T[,] RotateMatrix<T>(T[,] oldMatrix, Direction direction)
         {

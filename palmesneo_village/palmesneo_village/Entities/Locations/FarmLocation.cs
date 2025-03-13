@@ -50,6 +50,28 @@ namespace palmesneo_village
             {
                 SetGroundTopTile(MapWidth - 1, y, GroundTopTile.Gate);
             }
+
+            for (int x = 0; x < MapWidth; x++)
+            {
+                SetAirTile(x, 50, 11);
+            }
+
+            BuildingItem toilet = Engine.ItemsDatabase.GetItemByName<BuildingItem>("toilet");
+            TryBuild(toilet, 34, 24, Direction.Down);
+
+            BuildingItem playerHouse = Engine.ItemsDatabase.GetItemByName<BuildingItem>("player_house");
+            TryBuild(playerHouse, 23, 38, Direction.Down);
+
+            int gasPipePolesAmount = 6;
+
+            BuildingItem gasPipePoleItem = Engine.ItemsDatabase.GetItemByName<BuildingItem>("gas_pipe_pole");
+
+            for (int i = 0; i <= gasPipePolesAmount; i++)
+            {
+                int step = MapWidth / gasPipePolesAmount;
+
+                TryBuild(gasPipePoleItem, i * step, 53, Direction.Down);
+            }
         }
 
     }

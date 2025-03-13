@@ -72,13 +72,11 @@ namespace palmesneo_village
         {
             if (currentBuildingItem == null) return false;
 
-            Vector2[,] tiles = GetTilesCoveredByPattern(position, currentGroundPattern);
-
-            if (ValidatePlacement(tiles, currentGroundPattern) == false) return false;
-
-            gameLocation.Build(currentBuildingItem, tiles, currentDirection);
-
-            return true;
+            return gameLocation.TryBuild(
+                currentBuildingItem, 
+                (int)position.X, 
+                (int)position.Y, 
+                currentDirection);
         }
 
         public override void Update()
@@ -104,7 +102,7 @@ namespace palmesneo_village
             if (currentBuildingItem == null)
                 return;
 
-            foreach (var checkTile in GetTilesCoveredByPattern(position, pattern))
+            foreach (var checkTile in Calc.GetVector2DArray(position, pattern.GetLength(0), pattern.GetLength(1)))
             {
                 Color color = Color.YellowGreen * 0.5f;
 
@@ -125,55 +123,6 @@ namespace palmesneo_village
                 RenderManager.Rect(checkTile * Engine.TILE_SIZE, new Vector2(Engine.TILE_SIZE), color);
                 RenderManager.HollowRect(checkTile * Engine.TILE_SIZE, new Vector2(Engine.TILE_SIZE), color);
             }
-        }
-
-        private bool ValidatePlacement(Vector2[,] tiles, string[,] pattern)
-        {
-            if (currentBuildingItem == null)
-                return false;
-
-            int tileX = (int)tiles[0, 0].X;
-            int tileY = (int)tiles[0, 0].Y;
-
-            foreach (var checkTile in tiles)
-            {
-                int offsetX = (int)checkTile.X - tileX;
-                int offsetY = (int)checkTile.Y - tileY;
-
-                if (offsetX < 0 || offsetY < 0 ||
-                    offsetX >= pattern.GetLength(0) ||
-                    offsetY >= pattern.GetLength(1))
-                    continue;
-
-                string groundPatternId = pattern[offsetX, offsetY];
-                if (!gameLocation.CheckGroundPattern((int)checkTile.X, (int)checkTile.Y, groundPatternId))
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        private Vector2[,] GetTilesCoveredByPattern(Vector2 position, string[,] pattern)
-        {
-            int tileX = (int)position.X;
-            int tileY = (int)position.Y;
-
-            int widthInTiles = pattern.GetLength(0);
-            int heightInTiles = pattern.GetLength(1);
-
-            Vector2[,] tiles = new Vector2[widthInTiles, heightInTiles];
-
-            for (int i = 0; i < widthInTiles; i++)
-            {
-                for (int j = 0; j < heightInTiles; j++)
-                {
-                    tiles[i, j] = new Vector2(tileX + i, tileY + j);
-                }
-            }
-
-            return tiles;
         }
     }
 }

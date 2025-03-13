@@ -177,6 +177,17 @@
 				["D"]
 			],
 			"IsRotatable": false
+		},
+		{
+			"Id": 1006,
+			"Name": "gas_pipe_pole",
+			"Description": "test",
+			"Width": 1,
+			"Height": 1,
+			"GroundPattern": [
+				["A"]
+			],
+			"IsRotatable": false
 		}
 	],
 	"PlantItems":[

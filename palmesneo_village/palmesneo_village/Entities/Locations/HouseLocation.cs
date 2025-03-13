@@ -105,11 +105,11 @@ namespace palmesneo_village
 
                     if(pattern == '!')
                     {
-                        SetBuildingTopTile(x, y, 10);
+                        SetAirTile(x, y, 10);
                     }
                     else
                     {
-                        SetBuildingTopTile(x, y, int.Parse(pattern + " "));
+                        SetAirTile(x, y, int.Parse(pattern + " "));
                     }
                 }
             }

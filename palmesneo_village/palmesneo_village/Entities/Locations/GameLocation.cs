@@ -39,7 +39,7 @@ namespace palmesneo_village
 
         private Tilemap groundTilemap;
         private Tilemap groundTopTilemap;
-        private Tilemap buildingTopTilemap;
+        private Tilemap airTopTilemap;
         private Building[,] buildingsMap;
         private bool[,] collisionMap;
         private Teleport[,] teleportsMap;
@@ -89,9 +89,9 @@ namespace palmesneo_village
             creaturesList.IsDepthSortEnabled = true;
             AddChild(creaturesList);
 
-            buildingTopTilemap = new Tilemap(TilesetConnection.Individual, 16, 16, mapWidth, mapHeight);
-            buildingTopTilemap.Tileset = new MTileset(ResourcesManager.GetTexture("Tilesets", "building_top_tileset"), 16, 16);
-            AddChild(buildingTopTilemap);
+            airTopTilemap = new Tilemap(TilesetConnection.Individual, 16, 16, mapWidth, mapHeight);
+            airTopTilemap.Tileset = new MTileset(ResourcesManager.GetTexture("Tilesets", "air_tileset"), 16, 16);
+            AddChild(airTopTilemap);
         }
 
         public override void Update()
@@ -133,9 +133,9 @@ namespace palmesneo_village
             return (GroundTopTile)groundTopTilemap.GetCell(x, y);
         }
 
-        public void SetBuildingTopTile(int x, int y, int terrainId)
+        public void SetAirTile(int x, int y, int terrainId)
         {
-            buildingTopTilemap.SetCell(x, y, terrainId);
+            airTopTilemap.SetCell(x, y, terrainId);
         }
 
         public void SetPlayer(Player player)
@@ -380,7 +380,56 @@ namespace palmesneo_village
 
         #region Buildings
 
-        public void Build(BuildingItem buildingItem, Vector2[,] tiles, Direction direction)
+        public bool TryBuild(BuildingItem buildingItem, int x, int y, Direction direction)
+        {
+            string[,] groundPattern = Calc.RotateMatrix(buildingItem.GroundPattern, direction);
+
+            Vector2[,] tiles = Calc.GetVector2DArray(new Vector2(x, y), groundPattern.GetLength(0), groundPattern.GetLength(1));
+
+            if (CanBuildHere(tiles, groundPattern) == false) return false;
+
+            Build(buildingItem, tiles, direction);
+
+            return true;
+        }
+
+        public void RemoveBuilding(Building building)
+        {
+            buildingsList.RemoveChild(building);
+
+            Vector2[,] tiles = building.OccupiedTiles;
+
+            ClearTilesFromBuilding(tiles);
+
+            RemoveBuildingTeleports(building);
+        }
+
+        private bool CanBuildHere(Vector2[,] tiles, string[,] groundPattern)
+        {
+            int tileX = (int)tiles[0, 0].X;
+            int tileY = (int)tiles[0, 0].Y;
+
+            foreach (var checkTile in tiles)
+            {
+                int offsetX = (int)checkTile.X - tileX;
+                int offsetY = (int)checkTile.Y - tileY;
+
+                if (offsetX < 0 || offsetY < 0 ||
+                    offsetX >= groundPattern.GetLength(0) ||
+                    offsetY >= groundPattern.GetLength(1))
+                    continue;
+
+                string groundPatternId = groundPattern[offsetX, offsetY];
+                if (!CheckGroundPattern((int)checkTile.X, (int)checkTile.Y, groundPatternId))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private void Build(BuildingItem buildingItem, Vector2[,] tiles, Direction direction)
         {
             Building building;
 
@@ -433,17 +482,6 @@ namespace palmesneo_village
             }
         }
 
-        public void RemoveBuilding(Building building)
-        {
-            buildingsList.RemoveChild(building);
-
-            Vector2[,] tiles = building.OccupiedTiles;
-
-            ClearTilesFromBuilding(tiles);
-
-            RemoveBuildingTeleports(building);
-        }
-
         private void RemoveBuildingTeleports(Building building)
         {
             if (buildingsTeleports.ContainsKey(building) == false)
@@ -494,7 +532,7 @@ namespace palmesneo_village
                 }
             }
         }
-
+        
         public bool CheckGroundPattern(int x, int y, string groundPatternId)
         {
             if (buildingsMap[x, y] != null) return false;
