@@ -196,6 +196,17 @@
 				["A"]
 			],
 			"IsRotatable": false
+		},
+		{
+			"Id": 1007,
+			"Name": "wall_clock",
+			"Description": "test",
+			"Width": 1,
+			"Height": 1,
+			"GroundPattern": [
+				["C"]
+			],
+			"IsRotatable": false
 		}
 	],
 	"PlantItems":[
