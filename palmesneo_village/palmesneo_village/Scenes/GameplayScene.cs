@@ -213,8 +213,7 @@ namespace palmesneo_village
                                 }
                             }
                         }
-
-                        if (CanShowTileSelector(playerTile, mouseTile, 4))
+                        else if (CanShowTileSelector(playerTile, mouseTile, 4))
                         {
                             if (CurrentGameLocation.CanInteractWithTile(tileX, tileY, currentPlayerItem))
                             {
@@ -244,7 +243,7 @@ namespace palmesneo_village
 
                         if (timeOfDayManager.CurrentHour == 0)
                         {
-                            gameState = GameState.DayTransitionIn;
+                            StartNextDay();
                         }
                     
                         if(InputBindings.Exit.Pressed)
@@ -333,7 +332,13 @@ namespace palmesneo_village
                         {
                             transitionTimer = 0.0f;
 
-                            StartNextDay();
+                            timeOfDayManager.StartNextDay();
+
+                            foreach (var kvp in gameLocations)
+                            {
+                                GameLocation gameLocation = kvp.Value;
+                                gameLocation.StartNextDay(timeOfDayManager);
+                            }
 
                             gameState = GameState.TransitionOut;
                         }
@@ -364,28 +369,22 @@ namespace palmesneo_village
 
         public void StartNextDay()
         {
-            timeOfDayManager.StartNextDay();
+            gameState = GameState.DayTransitionIn;
 
-            foreach (var kvp in gameLocations)
-            {
-                GameLocation gameLocation = kvp.Value;
-                gameLocation.StartNextDay(timeOfDayManager);
-            }
+            transitionImage.IsVisible = true;
+            transitionImage.SelfColor = Color.Black * 0.0f;
         }
 
         public void GoToLocation(string locationId, Vector2 tile)
         {
             nextGameLocationTile = tile;
 
-            // Предусматриваем попытку перейти на ту же локацию
-            GameLocation newGameLocation = gameLocations[locationId];
-
-            if(currentGameLocation == newGameLocation)
+            if(currentGameLocation == gameLocations[locationId])
             {
                 return;
             }
 
-            nextGameLocation = newGameLocation;
+            nextGameLocation = gameLocations[locationId];
 
             gameState = GameState.SceneTransitionIn;
 

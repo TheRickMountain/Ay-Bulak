@@ -188,6 +188,10 @@ namespace palmesneo_village
                     return true;
                 }
             }
+            else if (building is BedBuilding)
+            {
+                return true;
+            }
 
             if (handItem is ToolItem toolItem)
             {
@@ -245,6 +249,11 @@ namespace palmesneo_village
                         plantBuilding.Harvest();
                         return;
                     }
+                }
+                else if(building is BedBuilding)
+                {
+                    gameplayScene.StartNextDay();
+                    return;
                 }
             }
 
@@ -440,6 +449,10 @@ namespace palmesneo_village
             else if(buildingItem is WaterSourceItem waterSourceItem)
             {
                 building = new WaterSourceBuilding(this, waterSourceItem, direction, tiles);
+            }
+            else if(buildingItem is BedItem bedItem)
+            {
+                building = new BedBuilding(this, bedItem, direction, tiles);
             }
             else
             {

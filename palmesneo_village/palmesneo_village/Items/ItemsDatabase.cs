@@ -19,6 +19,7 @@ namespace palmesneo_village
         public PickaxeItem[] PickaxeItems { get; init; }
         public AxeItem[] AxeItems { get; init; }
         public WaterSourceItem[] WaterSourceItems { get; init; }
+        public BedItem[] BedItems { get; init; }
 
         private Dictionary<string, Item> nameItemPairs;
 
@@ -37,6 +38,7 @@ namespace palmesneo_village
             ReadAndInitializeCollection(PickaxeItems, itemsIcons);
             ReadAndInitializeCollection(AxeItems, itemsIcons);
             ReadAndInitializeCollection(WaterSourceItems, itemsIcons);
+            ReadAndInitializeCollection(BedItems, itemsIcons);
         }
 
         public T GetItemByName<T>(string name) where T : Item

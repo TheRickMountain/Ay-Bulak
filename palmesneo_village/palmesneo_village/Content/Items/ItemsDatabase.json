@@ -274,6 +274,21 @@
 			"IsRotatable": false
 		}
 	],
+	"BedItems": [
+		{
+			"Id": 5000,
+			"Name": "single_bed",
+			"Description": "test",
+			"IsStackable": false,
+			"Width": 2,
+			"Height": 3,
+			"GroundPattern": [
+				["D","D","D"],
+				["D","D","D"]
+			],
+			"IsRotatable": false
+		}
+	],
 	"SeedItems":[
 		{
 			"Id": 73,
