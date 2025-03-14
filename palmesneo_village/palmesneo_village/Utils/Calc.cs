@@ -80,15 +80,6 @@ namespace palmesneo_village
             return newMatrix;
         }
 
-        public static Color HexToColor(string hex)
-        {
-            return new Color(
-                Convert.ToByte(hex.Substring(0, 2), 16),
-                Convert.ToByte(hex.Substring(2, 2), 16),
-                Convert.ToByte(hex.Substring(4, 2), 16)
-            );
-        }
-
         public static float Angle(Vector2 from, Vector2 to)
         {
             return (float)Math.Atan2(to.Y - from.Y, to.X - from.X);

@@ -178,7 +178,7 @@ namespace palmesneo_village
 
             ResourcesManager.LoadContent(GraphicsDevice, Content, ContentDirectory);
 
-            LocalizationManager.Initialize(GameCulture.Russian);
+            LocalizationManager.Initialize(GameCulture.Tatar);
 
             RenderManager.Initialize(GraphicsDevice);
 

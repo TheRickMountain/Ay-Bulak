@@ -71,6 +71,8 @@ namespace palmesneo_village
 
             iconImage.Texture = item.Icon;
             quantityText.Text = $"{quantity}";
+
+            Tooltip = item.GetTooltipInfo();
         }
 
         public void Clear()
@@ -78,6 +80,8 @@ namespace palmesneo_village
             iconImage.IsVisible = false;
             quantityText.IsVisible = false;
             contentProgress.IsVisible = false;
+
+            Tooltip = string.Empty;
         }
     }
 }

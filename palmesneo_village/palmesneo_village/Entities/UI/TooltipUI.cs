@@ -11,14 +11,14 @@ namespace palmesneo_village
     public class TooltipUI : ImageUI
     {
 
-        private TextUI tooltipText;
+        private RichTextUI tooltipText;
 
         public TooltipUI()
         {
             Texture = RenderManager.Pixel;
             SelfColor = Color.Black * 0.75f;
 
-            tooltipText = new TextUI();
+            tooltipText = new RichTextUI();
             AddChild(tooltipText);
         }
 

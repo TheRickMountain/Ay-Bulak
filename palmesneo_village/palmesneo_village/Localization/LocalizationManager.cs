@@ -11,10 +11,9 @@ namespace palmesneo_village
 {
     public enum GameCulture
     {
-        German,
+        Tatar,
+        Kyrgyz,
         English,
-        French,
-        Portuguese,
         Russian
     }
 
@@ -23,7 +22,9 @@ namespace palmesneo_village
         private static Dictionary<GameCulture, CultureInfo> supportedCultures = new Dictionary<GameCulture, CultureInfo>()
             {
                 { GameCulture.English, new CultureInfo("en-US") },
-                { GameCulture.Russian, new CultureInfo("ru-RU") }
+                { GameCulture.Russian, new CultureInfo("ru-RU") },
+                { GameCulture.Tatar, new CultureInfo("tt-TT") },
+                { GameCulture.Kyrgyz, new CultureInfo("ky-KY") },
             };
 
         private static Dictionary<string, string> languageKeyValuePairs = new Dictionary<string, string>();

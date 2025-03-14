@@ -15,5 +15,17 @@
             Icon = sourceTileset[Id];
         }
 
+        public virtual string GetTooltipInfo()
+        {
+            string tooltip = $"{LocalizationManager.GetText(Name)}";
+
+            if (Price > 0)
+            {
+                tooltip += $"\n/c[{ColorUtils.YELLOW_HEX}]{LocalizationManager.GetText("price")}: {Price}/cd";
+            }
+
+            return tooltip;
+        }
+
     }
 }
