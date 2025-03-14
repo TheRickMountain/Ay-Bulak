@@ -113,6 +113,9 @@ namespace palmesneo_village
                     }
                 }
             }
+
+            BuildingItem singleBed = Engine.ItemsDatabase.GetItemByName<BuildingItem>("single_bed");
+            TryBuild(singleBed, 6, 5, Direction.Down);
         }
 
     }
