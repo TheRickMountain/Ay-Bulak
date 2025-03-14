@@ -42,6 +42,13 @@ namespace palmesneo_village
                 return;
             }
 
+            if(itemAmount <= 0)
+            {
+                Engine.Commands.Log("Item amount can't be lower than 1", Color.Red);
+
+                return;
+            }
+
             if (Engine.CurrentScene is GameplayScene)
             {
                 ((GameplayScene)Engine.CurrentScene).Inventory.TryAddItem(item, itemAmount, 0);
