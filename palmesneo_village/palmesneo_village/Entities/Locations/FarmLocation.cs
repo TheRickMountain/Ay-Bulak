@@ -72,6 +72,19 @@ namespace palmesneo_village
 
                 TryBuild(gasPipePoleItem, i * step, 53, Direction.Down);
             }
+
+            BuildingItem electricPoleItem = Engine.ItemsDatabase.GetItemByName<BuildingItem>("electric_pole");
+
+            TryBuild(electricPoleItem, 24, 55, Direction.Down);
+            TryBuild(electricPoleItem, 59, 55, Direction.Down);
+
+            for (int x = 0; x < MapWidth; x++)
+            {
+                if (x == 24 || x == 59) continue;
+
+                SetAirTile(x, 51, 12);
+                SetAirTile(x, 52, 13);
+            }
         }
 
     }
