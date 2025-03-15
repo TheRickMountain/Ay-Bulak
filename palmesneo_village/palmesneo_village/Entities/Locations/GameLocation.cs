@@ -28,7 +28,7 @@ namespace palmesneo_village
 
     public class GameLocation : Entity
     {
-        public string Id { get; private set; }
+        public string LocationId { get; private set; }
         public Vector2 MouseTile { get; private set; }
 
         public int MapWidth { get; private set; }
@@ -51,9 +51,9 @@ namespace palmesneo_village
 
         private Player _player;
 
-        public GameLocation(string id, int mapWidth, int mapHeight)
+        public GameLocation(string locationId, int mapWidth, int mapHeight)
         {
-            Id = id;
+            LocationId = locationId;
             MapWidth = mapWidth;
             MapHeight = mapHeight;
 
@@ -476,8 +476,10 @@ namespace palmesneo_village
                         {
                             Vector2 teleportEnterTile = tiles[x, y];
 
-                            Teleport teleport = new Teleport(teleportData.Location,
-                                new Vector2(teleportData.X, teleportData.Y));
+                            string enterLocationId = teleportData.Location + "_" + building.Id;
+                            Vector2 enterLocationSpawnPosition = new Vector2(teleportData.X, teleportData.Y);
+
+                            Teleport teleport = new Teleport(enterLocationId, enterLocationSpawnPosition);
 
                             if(buildingsTeleports.ContainsKey(building) == false)
                             {
@@ -487,6 +489,15 @@ namespace palmesneo_village
                             buildingsTeleports[building].Add(teleport);
 
                             CreateTeleport((int)teleportEnterTile.X, (int)teleportEnterTile.Y, teleport);
+
+                            // Создаем локацию для строения
+                            if (teleportData.Location == "house")
+                            {
+                                HouseLocation houseLocation = new HouseLocation(
+                                    enterLocationId, new Teleport(LocationId, teleportEnterTile));
+
+                                ((GameplayScene)Engine.CurrentScene).RegisterLocation(houseLocation);
+                            }
                         }
                     }
                 }

@@ -73,7 +73,6 @@ namespace palmesneo_village
             player.LocalPosition = new Vector2(8 * Engine.TILE_SIZE, 6 * Engine.TILE_SIZE);
 
             RegisterLocation(new FarmLocation("farm"));
-            RegisterLocation(new HouseLocation("house"));
 
             buildingSystem = new BuildingSystem();
             buildingSystem.Depth = 100;
@@ -393,9 +392,9 @@ namespace palmesneo_village
             transitionImage.SelfColor = Color.Black * 0.0f;
         }
 
-        private void RegisterLocation(GameLocation gameLocation)
+        public void RegisterLocation(GameLocation gameLocation)
         {
-            gameLocations.Add(gameLocation.Id, gameLocation);
+            gameLocations.Add(gameLocation.LocationId, gameLocation);
         }
 
         private bool CanShowTileSelector(Vector2 playerTile, Vector2 mouseTile, int maxDistance)

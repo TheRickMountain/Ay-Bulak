@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
 
 namespace palmesneo_village
 {
     public class HouseLocation : GameLocation
     {
 
-        public HouseLocation(string id) : base(id, 32, 16)
+        public HouseLocation(string id, Teleport exitTeleport) : base(id, 32, 16)
         {
             CreateHouseFirstLayer();
             CreateHouseSecondLayer();
+
+            CreateTeleport(25, 8, exitTeleport);
         }
 
         private void CreateHouseFirstLayer()

@@ -6,6 +6,7 @@ namespace palmesneo_village
 {
     public class Entity
     {
+        public Guid Id { get; set; }
         public Entity Parent { get; private set; }
 
         public string Name { get; set; } = "";
@@ -68,6 +69,8 @@ namespace palmesneo_village
 
         public Entity()
         {
+            Id = Guid.NewGuid();
+
             Name = GetType().Name;
 
             children = new List<Entity>();
