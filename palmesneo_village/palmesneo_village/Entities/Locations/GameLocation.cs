@@ -14,8 +14,7 @@ namespace palmesneo_village
         Water = 2,
         FarmPlot = 3,
         HouseFloor = 4,
-        HouseWall = 5,
-        Plinth = 6
+        HouseWall = 5
     }
 
     public enum GroundTopTile
@@ -109,7 +108,6 @@ namespace palmesneo_village
             {
                 case GroundTile.Water:
                 case GroundTile.HouseWall:
-                case GroundTile.Plinth:
                     collisionMap[x, y] = false;
                     break;
                 default:
