@@ -14,7 +14,9 @@ namespace palmesneo_village
         Water = 2,
         FarmPlot = 3,
         HouseFloor = 4,
-        HouseWall = 5
+        HouseWall = 5,
+        AnimalHouseFloor = 6,
+        AnimalHouseWall = 7
     }
 
     public enum GroundTopTile
@@ -108,6 +110,7 @@ namespace palmesneo_village
             {
                 case GroundTile.Water:
                 case GroundTile.HouseWall:
+                case GroundTile.AnimalHouseWall:
                     collisionMap[x, y] = false;
                     break;
                 default:
@@ -493,10 +496,17 @@ namespace palmesneo_village
                             // Создаем локацию для строения
                             if (teleportData.Location == "house")
                             {
-                                HouseLocation houseLocation = new HouseLocation(
+                                HouseLocation location = new HouseLocation(
                                     enterLocationId, new Teleport(LocationId, teleportEnterTile));
 
-                                ((GameplayScene)Engine.CurrentScene).RegisterLocation(houseLocation);
+                                ((GameplayScene)Engine.CurrentScene).RegisterLocation(location);
+                            }
+                            else if(teleportData.Location == "coop")
+                            {
+                                CoopLocation location = new CoopLocation(
+                                    enterLocationId, new Teleport(LocationId, teleportEnterTile));
+
+                                ((GameplayScene)Engine.CurrentScene).RegisterLocation(location);
                             }
                         }
                     }

@@ -158,8 +158,8 @@
 					[0,0,0,0,0],
 				],
 				"Location": "house",
-				"X": 8,
-				"Y": 6
+				"X": 25,
+				"Y": 8
 			}
 		},
 		{
@@ -207,7 +207,35 @@
 				["C","C"]
 			],
 			"IsRotatable": false
-		}
+		},
+		{
+			"Id": 1008,
+			"Name": "coop",
+			"Description": "test",
+			"IsStackable": false,
+			"Width": 5,
+			"Height": 3,
+			"GroundPattern": [
+				["A","A","A"],
+				["A","A","A"],
+				["A","A","A"],
+				["A","A","A"],
+				["A","A","A"]
+			],
+			"IsRotatable": false,
+			"TeleportData":{
+				"TeleportPattern": [
+					[0,0,0],
+					[0,0,0],
+					[0,0,0],
+					[0,0,1],
+					[0,0,0]
+				],
+				"Location": "coop",
+				"X": 21,
+				"Y": 9
+			}
+		},
 	],
 	"PlantItems":[
 		{
