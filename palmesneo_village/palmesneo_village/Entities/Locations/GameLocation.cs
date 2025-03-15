@@ -486,7 +486,7 @@ namespace palmesneo_village
 
                             buildingsTeleports[building].Add(teleport);
 
-                            teleportsMap[(int)teleportEnterTile.X, (int)teleportEnterTile.Y] = teleport;
+                            CreateTeleport((int)teleportEnterTile.X, (int)teleportEnterTile.Y, teleport);
                         }
                     }
                 }
@@ -502,16 +502,7 @@ namespace palmesneo_village
 
             foreach (Teleport teleport in buildingsTeleports[building])
             {
-                for (int x = 0; x < teleportsMap.GetLength(0); x++)
-                {
-                    for (int y = 0; y < teleportsMap.GetLength(1); y++)
-                    {
-                        if (teleportsMap[x, y] == teleport)
-                        {
-                            teleportsMap[x, y] = null;
-                        }
-                    }
-                }
+                RemoveTeleport(teleport);
             }
 
             buildingsTeleports[building].Clear();
@@ -601,5 +592,31 @@ namespace palmesneo_village
         }
 
         #endregion
+
+        protected void CreateTeleport(int x, int y, Teleport teleport)
+        {
+            if (teleportsMap[x, y] != null)
+            {
+                throw new Exception("Teleport already exists!");
+            }
+
+            teleportsMap[x, y] = teleport;
+        }
+
+        protected void RemoveTeleport(Teleport teleport)
+        {
+            for (int x = 0; x < MapWidth; x++)
+            {
+                for (int y = 0; y < MapHeight; y++)
+                {
+                    if (teleportsMap[x, y] == teleport)
+                    {
+                        teleportsMap[x, y] = null;
+                        return;
+                    }
+                }
+            }
+        }
+
     }
 }
