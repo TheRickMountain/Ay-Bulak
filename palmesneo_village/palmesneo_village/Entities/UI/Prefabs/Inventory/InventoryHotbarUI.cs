@@ -23,6 +23,13 @@ namespace palmesneo_village
             {
                 SlotButtonUI slot = new SlotButtonUI();
 
+                int slotIndex = i;
+
+                slot.ActionTriggered += (x) => 
+                {
+                    inventoryHotbar.SetCurrentSlot(slotIndex);
+                };
+
                 slots.Add(slot);
 
                 AddChild(slot);

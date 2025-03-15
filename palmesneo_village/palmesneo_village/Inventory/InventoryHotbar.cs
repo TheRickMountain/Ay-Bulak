@@ -53,5 +53,11 @@ namespace palmesneo_village
                 CurrentSlotIndexChanged?.Invoke(CurrentSlotIndex);
             }
         }
+        
+        public void SetCurrentSlot(int slotIndex)
+        {
+            CurrentSlotIndex = slotIndex;
+            CurrentSlotIndexChanged?.Invoke(CurrentSlotIndex);
+        }
     }
 }
