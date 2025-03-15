@@ -274,7 +274,8 @@ namespace palmesneo_village
                                 Engine.ItemsDatabase.GetItemByName<SeedItem>("garlic_seeds"),
                                 Engine.ItemsDatabase.GetItemByName<SeedItem>("eggplant_seeds"),
                                 Engine.ItemsDatabase.GetItemByName<SeedItem>("carrot_seeds"),
-                                Engine.ItemsDatabase.GetItemByName<SeedItem>("cabbage_seeds")
+                                Engine.ItemsDatabase.GetItemByName<SeedItem>("cabbage_seeds"),
+                                Engine.ItemsDatabase.GetItemByName<SeedItem>("beetroot_seeds")
                             });
 
                             gameState = GameState.Trading;
