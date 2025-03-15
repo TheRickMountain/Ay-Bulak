@@ -202,9 +202,9 @@
 			"Name": "wall_clock",
 			"Description": "test",
 			"Width": 1,
-			"Height": 1,
+			"Height": 2,
 			"GroundPattern": [
-				["C"]
+				["C","C"]
 			],
 			"IsRotatable": false
 		}
