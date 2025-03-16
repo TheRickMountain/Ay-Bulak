@@ -255,6 +255,17 @@
 			],
 			"IsRotatable": false
 		},
+		{
+			"Id": 1010,
+			"Name": "wash_basin",
+			"Description": "test",
+			"Width": 1,
+			"Height": 1,
+			"GroundPattern": [
+				["D"]
+			],
+			"IsRotatable": false
+		},
 	],
 	"PlantItems":[
 		{
