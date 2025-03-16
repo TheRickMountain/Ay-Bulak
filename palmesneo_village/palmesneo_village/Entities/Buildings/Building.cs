@@ -22,10 +22,14 @@ namespace palmesneo_village
             Sprite = new SpriteEntity();
             Sprite.Texture = buildingItem.DirectionIcon[direction];
 
+            int buildingWidthInPixels = buildingItem.Width * Engine.TILE_SIZE;
+            int buildingTextureWidth = buildingItem.DirectionIcon[direction].Width;
+
             int buildingHeightInPixels = buildingItem.Height * Engine.TILE_SIZE;
             int buildingTextureHeight = buildingItem.DirectionIcon[direction].Height;
 
-            Sprite.Offset = new Vector2(0, buildingTextureHeight - buildingHeightInPixels);
+            Sprite.Offset = new Vector2(-(buildingWidthInPixels / 2 - buildingTextureWidth / 2), 
+                buildingTextureHeight - buildingHeightInPixels);
 
             AddChild(Sprite);
         }

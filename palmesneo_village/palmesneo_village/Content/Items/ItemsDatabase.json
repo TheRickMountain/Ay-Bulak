@@ -404,6 +404,23 @@
 			"IsPassable": false
 		}
 	],
+	"TreeItems": [
+		{
+			"Id": 6000,
+			"Name": "birch_tree",
+			"Description": "test",
+			"IsStackable": false,
+			"Width": 1,
+			"Height": 1,
+			"GroundPattern": [
+				["A"]
+			],
+			"IsRotatable": false,
+			"IsPassable": false,
+			"GrowthStages": 4,
+			"GrowthRateInDays": 14
+		}	
+	],
 	"SeedItems":[
 		{
 			"Id": 72,

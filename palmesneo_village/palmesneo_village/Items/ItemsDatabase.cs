@@ -13,6 +13,7 @@ namespace palmesneo_village
         public ConsumableItem[] ConsumableItems { get; init; }
         public BuildingItem[] BuildingItems { get; init; }
         public PlantItem[] PlantItems { get; init; }
+        public TreeItem[] TreeItems { get; init; }
         public SeedItem[] SeedItems { get; init; }
         public TreeSeedItem[] TreeSeedItems { get; init; }
         public WateringCanItem[] WateringCanItems { get; init; }
@@ -33,6 +34,7 @@ namespace palmesneo_village
             ReadAndInitializeCollection(ConsumableItems, itemsIcons);
             ReadAndInitializeCollection(BuildingItems, itemsIcons);
             ReadAndInitializeCollection(PlantItems, itemsIcons);
+            ReadAndInitializeCollection(TreeItems, itemsIcons);
             ReadAndInitializeCollection(SeedItems, itemsIcons);
             ReadAndInitializeCollection(TreeSeedItems, itemsIcons);
             ReadAndInitializeCollection(WateringCanItems, itemsIcons);

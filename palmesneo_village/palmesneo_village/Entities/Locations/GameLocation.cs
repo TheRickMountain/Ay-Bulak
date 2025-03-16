@@ -219,6 +219,12 @@ namespace palmesneo_village
             {
                 if (groundTile == GroundTile.FarmPlot && building == null) return true;
             }
+            else if (handItem is TreeSeedItem treeSeedItem)
+            {
+                if (building != null) return false;
+
+                if (groundTile == GroundTile.Ground || groundTile == GroundTile.Grass) return true;
+            }
 
             return false;
         }
@@ -315,12 +321,23 @@ namespace palmesneo_village
             }
             else if(handItem is SeedItem seedItem)
             {
-                PlantItem plantBuilding = Engine.ItemsDatabase.GetItemByName<PlantItem>(seedItem.PlantName);
+                PlantItem plantItem = Engine.ItemsDatabase.GetItemByName<PlantItem>(seedItem.PlantName);
 
                 Vector2[,] tiles = new Vector2[1, 1];
                 tiles[0, 0] = new Vector2(x, y);
 
-                Build(plantBuilding, tiles, Direction.Down);
+                Build(plantItem, tiles, Direction.Down);
+
+                inventory.RemoveItem(handItem, 1, slotIndex);
+            }
+            else if(handItem is TreeSeedItem treeSeedItem)
+            {
+                TreeItem treeItem = Engine.ItemsDatabase.GetItemByName<TreeItem>(treeSeedItem.TreeName);
+
+                Vector2[,] tiles = new Vector2[1, 1];
+                tiles[0, 0] = new Vector2(x, y);
+
+                Build(treeItem, tiles, Direction.Down);
 
                 inventory.RemoveItem(handItem, 1, slotIndex);
             }
@@ -441,11 +458,15 @@ namespace palmesneo_village
             {
                 building = new PlantBuilding(this, plantItem, direction, tiles);
             }
-            else if(buildingItem is WaterSourceItem waterSourceItem)
+            else if(buildingItem is TreeItem treeItem)
+            {
+                building = new TreeBuilding(this, treeItem, direction, tiles);
+            }
+            else if (buildingItem is WaterSourceItem waterSourceItem)
             {
                 building = new WaterSourceBuilding(this, waterSourceItem, direction, tiles);
             }
-            else if(buildingItem is BedItem bedItem)
+            else if (buildingItem is BedItem bedItem)
             {
                 building = new BedBuilding(this, bedItem, direction, tiles);
             }
