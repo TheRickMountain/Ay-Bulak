@@ -172,7 +172,7 @@ namespace palmesneo_village
 
         public bool CanInteractWithTile(int x, int y, Item handItem)
         {
-            int groundTileId = groundTilemap.GetCell(x, y);
+            GroundTile groundTile = GetGroundTile(x, y);
             int groundTopTileId = groundTopTilemap.GetCell(x, y);
 
             Building building = buildingsMap[x, y];
@@ -200,13 +200,15 @@ namespace palmesneo_village
                 {
                     if (building != null) return false;
 
-                    if (groundTileId == 0 || groundTileId == 1) return true;
+                    if (groundTile == GroundTile.Grass || groundTile == GroundTile.Ground) return true;
                 }
                 else if (handItem is WateringCanItem wateringCanItem)
                 {
                     if (building is WaterSourceBuilding) return true;
 
-                    if (groundTileId == 3 && groundTopTileId != 0) return true;
+                    if (groundTile == GroundTile.Water) return true;
+
+                    if (groundTile == GroundTile.FarmPlot && groundTopTileId != 0) return true;
                 }
                 else if (handItem is PickaxeItem pickaxeItem)
                 {
@@ -223,7 +225,7 @@ namespace palmesneo_village
             }
             else if (handItem is SeedItem seedItem)
             {
-                if (groundTileId == 3 && building == null) return true;
+                if (groundTile == GroundTile.FarmPlot && building == null) return true;
             }
 
             return false;
@@ -270,7 +272,7 @@ namespace palmesneo_village
                 }
                 else if (handItem is WateringCanItem wateringCanItem)
                 {
-                    if (building is WaterSourceBuilding)
+                    if (GetGroundTile(x, y) == GroundTile.Water || building is WaterSourceBuilding)
                     {
                         inventory.AddSlotItemContentAmount(slotIndex, wateringCanItem.Capacity);
                     }

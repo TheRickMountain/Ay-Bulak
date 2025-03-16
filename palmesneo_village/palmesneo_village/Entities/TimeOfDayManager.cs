@@ -22,7 +22,7 @@ namespace palmesneo_village
         public const int HOURS_PER_CYCLE = 24;
         public const int MINUTES_PER_DAY = MINUTES_PER_HOUR * HOURS_PER_CYCLE;
         public const int INITIAL_HOUR = 5;
-        public const int DAYS_IN_THE_SEASON = 20;
+        public const int DAYS_IN_THE_SEASON = 28;
 
         public Season CurrentSeason { get; private set; } = Season.Spring;
         public Weather CurrentWeather { get; private set; } = Weather.Sunny;

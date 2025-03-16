@@ -19,6 +19,22 @@ namespace palmesneo_village
                 }
             }
 
+            SetGroundTile(56, 32, GroundTile.Water);
+            SetGroundTile(57, 32, GroundTile.Water);
+            SetGroundTile(55, 33, GroundTile.Water);
+            SetGroundTile(56, 33, GroundTile.Water);
+            SetGroundTile(57, 33, GroundTile.Water);
+            SetGroundTile(58, 33, GroundTile.Water);
+            SetGroundTile(55, 34, GroundTile.Water);
+            SetGroundTile(56, 34, GroundTile.Water);
+            SetGroundTile(57, 34, GroundTile.Water);
+            SetGroundTile(58, 34, GroundTile.Water);
+            SetGroundTile(55, 35, GroundTile.Water);
+            SetGroundTile(56, 35, GroundTile.Water);
+            SetGroundTile(57, 35, GroundTile.Water);
+            SetGroundTile(58, 35, GroundTile.Water);
+
+
             SetGroundTopTile(10, 10, GroundTopTile.Stone);
 
             SetGroundTopTile(14, 11, GroundTopTile.Stone);
