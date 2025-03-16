@@ -453,5 +453,15 @@
 			"Price": 10,
 			"PlantName": "beetroot_plant"
 		}
+	],
+	"TreeSeedItems": [
+		{
+			"Id": 16,
+			"Name": "birch_seeds",
+			"Description": "test",
+			"IsStackable": true,
+			"Price": 0,
+			"TreeName": "birch_tree"
+		},
 	]
 }
