@@ -119,7 +119,8 @@
 				["A", "A"],
 				["A", "A"]
 			],
-			"IsRotatable": false
+			"IsRotatable": false,
+			"IsPassable": false
 		},
 		{
 			"Id": 1001,
@@ -140,6 +141,7 @@
 				["A","A","A","A","A"]
 			],
 			"IsRotatable": false,
+			"IsPassable": false,
 			"TeleportData":{
 				"TeleportPattern": [
 					[0,0,0,0,0],
@@ -168,7 +170,8 @@
 				["C","C"],
 				["C","C"]
 			],
-			"IsRotatable": false
+			"IsRotatable": false,
+			"IsPassable": false
 		},
 		{
 			"Id": 1003,
@@ -179,7 +182,8 @@
 			"GroundPattern": [
 				["D"]
 			],
-			"IsRotatable": false
+			"IsRotatable": false,
+			"IsPassable": false
 		},
 		{
 			"Id": 1004,
@@ -190,7 +194,8 @@
 			"GroundPattern": [
 				["A"]
 			],
-			"IsRotatable": false
+			"IsRotatable": false,
+			"IsPassable": false
 		},
 		{
 			"Id": 1005,
@@ -201,7 +206,8 @@
 			"GroundPattern": [
 				["C","C"]
 			],
-			"IsRotatable": false
+			"IsRotatable": false,
+			"IsPassable": false
 		},
 		{
 			"Id": 1006,
@@ -218,6 +224,7 @@
 				["A","A","A"]
 			],
 			"IsRotatable": false,
+			"IsPassable": false,
 			"TeleportData":{
 				"TeleportPattern": [
 					[0,0,0],
@@ -240,7 +247,8 @@
 			"GroundPattern": [
 				["A"]
 			],
-			"IsRotatable": false
+			"IsRotatable": false,
+			"IsPassable": false
 		},
 		{
 			"Id": 1008,
@@ -251,7 +259,8 @@
 			"GroundPattern": [
 				["D"]
 			],
-			"IsRotatable": false
+			"IsRotatable": false,
+			"IsPassable": false
 		},
 	],
 	"PlantItems":[
@@ -266,6 +275,7 @@
 				["B"]
 			],
 			"IsRotatable": false,
+			"IsPassable": true,
 			"GrowthStages": 5,
 			"GrowthRateInDays": 6,
 			"RemoveAfterHarvest": true,
@@ -283,6 +293,7 @@
 				["B"]
 			],
 			"IsRotatable": false,
+			"IsPassable": true,
 			"GrowthStages": 5,
 			"GrowthRateInDays": 6,
 			"RemoveAfterHarvest": true,
@@ -300,6 +311,7 @@
 				["B"]
 			],
 			"IsRotatable": false,
+			"IsPassable": true,
 			"GrowthStages": 5,
 			"GrowthRateInDays": 6,
 			"RemoveAfterHarvest": true,
@@ -317,6 +329,7 @@
 				["B"]
 			],
 			"IsRotatable": false,
+			"IsPassable": true,
 			"GrowthStages": 5,
 			"GrowthRateInDays": 6,
 			"RemoveAfterHarvest": true,
@@ -334,6 +347,7 @@
 				["B"]
 			],
 			"IsRotatable": false,
+			"IsPassable": true,
 			"GrowthStages": 5,
 			"GrowthRateInDays": 6,
 			"RemoveAfterHarvest": true,
@@ -351,6 +365,7 @@
 				["B"]
 			],
 			"IsRotatable": false,
+			"IsPassable": true,
 			"GrowthStages": 5,
 			"GrowthRateInDays": 6,
 			"RemoveAfterHarvest": true,
@@ -369,7 +384,8 @@
 			"GroundPattern": [
 				["A"]
 			],
-			"IsRotatable": false
+			"IsRotatable": false,
+			"IsPassable": false
 		}
 	],
 	"BedItems": [
@@ -384,7 +400,8 @@
 				["D","D","D"],
 				["D","D","D"]
 			],
-			"IsRotatable": false
+			"IsRotatable": false,
+			"IsPassable": false
 		}
 	],
 	"SeedItems":[

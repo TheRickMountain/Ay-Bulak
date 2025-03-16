@@ -5,6 +5,7 @@ namespace palmesneo_village
 {
     public class Building : Entity
     {
+        public bool IsPassable => buildingItem.IsPassable;
         public GameLocation gameLocation { get; private set; }
         private BuildingItem buildingItem;
         private Direction direction;

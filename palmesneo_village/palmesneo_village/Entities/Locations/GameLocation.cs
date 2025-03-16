@@ -106,17 +106,7 @@ namespace palmesneo_village
         {
             groundTilemap.SetCell(x, y, (int)groundTile);
 
-            switch(groundTile)
-            {
-                case GroundTile.Water:
-                case GroundTile.HouseWall:
-                case GroundTile.AnimalHouseWall:
-                    collisionMap[x, y] = false;
-                    break;
-                default:
-                    collisionMap[x, y] = true;
-                    break;
-            }
+            UpdateTilePassability(x, y);
         }
 
         public GroundTile GetGroundTile(int x, int y)
@@ -127,6 +117,8 @@ namespace palmesneo_village
         public void SetGroundTopTile(int x, int y, GroundTopTile groundTopTile)
         {
             groundTopTilemap.SetCell(x, y, (int)groundTopTile);
+
+            UpdateTilePassability(x, y);
         }
 
         public GroundTopTile GetGroundTopTile(int x, int y)
@@ -173,7 +165,7 @@ namespace palmesneo_village
         public bool CanInteractWithTile(int x, int y, Item handItem)
         {
             GroundTile groundTile = GetGroundTile(x, y);
-            int groundTopTileId = groundTopTilemap.GetCell(x, y);
+            GroundTopTile groundTopTile = GetGroundTopTile(x, y);
 
             Building building = buildingsMap[x, y];
 
@@ -208,7 +200,7 @@ namespace palmesneo_village
 
                     if (groundTile == GroundTile.Water) return true;
 
-                    if (groundTile == GroundTile.FarmPlot && groundTopTileId != 0) return true;
+                    if (groundTile == GroundTile.FarmPlot && groundTopTile != GroundTopTile.Moisture) return true;
                 }
                 else if (handItem is PickaxeItem pickaxeItem)
                 {
@@ -266,7 +258,7 @@ namespace palmesneo_village
             {
                 if (handItem is ShowelItem showelItem)
                 {
-                    groundTilemap.SetCell(x, y, 3);
+                    SetGroundTile(x, y, GroundTile.FarmPlot);
 
                     playerEnergyManager.ConsumeEnergy(1);
                 }
@@ -541,6 +533,8 @@ namespace palmesneo_village
                     int tileX = (int)tiles[i, j].X;
                     int tileY = (int)tiles[i, j].Y;
                     buildingsMap[tileX, tileY] = building;
+
+                    UpdateTilePassability(tileX, tileY);
                 }
             }
         }
@@ -554,6 +548,8 @@ namespace palmesneo_village
                     int tileX = (int)tiles[i, j].X;
                     int tileY = (int)tiles[i, j].Y;
                     buildingsMap[tileX, tileY] = null;
+
+                    UpdateTilePassability(tileX, tileY);
                 }
             }
         }
@@ -641,5 +637,32 @@ namespace palmesneo_village
             }
         }
 
+        private void UpdateTilePassability(int x, int y)
+        {
+            collisionMap[x, y] = true;
+
+            switch(GetGroundTile(x, y))
+            {
+                case GroundTile.AnimalHouseWall:
+                case GroundTile.HouseWall:
+                case GroundTile.Water:
+                    collisionMap[x, y] = false;
+                    break;
+            }
+
+            switch(GetGroundTopTile(x, y))
+            {
+                case GroundTopTile.Gate:
+                case GroundTopTile.Stone:
+                case GroundTopTile.Wood:
+                    collisionMap[x, y] = false;
+                    break;
+            }
+
+            if (buildingsMap[x, y] != null && buildingsMap[x, y].IsPassable == false)
+            {
+                collisionMap[x, y] = false;
+            }
+        }
     }
 }
