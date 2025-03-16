@@ -1,13 +1,13 @@
 {
 	"Items":[
 		{
-			"Id": 15,
+			"Id": 0,
 			"Name": "wood",
 			"Description": "test",
 			"IsStackable": true
 		},
 		{
-			"Id": 20,
+			"Id": 1,
 			"Name": "stone",
 			"Description": "test",
 			"IsStackable": true
@@ -15,7 +15,7 @@
 	],
 	"WateringCanItems":[
 		{
-			"Id": 176,
+			"Id": 129,
 			"Name": "iron_watering_can",
 			"Description": "test",
 			"IsStackable": false,
