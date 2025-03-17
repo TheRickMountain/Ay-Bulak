@@ -47,5 +47,10 @@ namespace palmesneo_village
         {
 
         }
+
+        public virtual bool CanInteract(Item item)
+        {
+            return false;
+        }
     }
 }

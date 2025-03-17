@@ -440,6 +440,42 @@
 			"GrowthRateInDays": 14
 		}	
 	],
+	"ResourceItems": [
+		{
+			"Id": 7000,
+			"Name": "stone_resource",
+			"Description": "test",
+			"IsStackable": false,
+			"Width": 1,
+			"Height": 1,
+			"GroundPattern": [
+				["A"]
+			],
+			"IsRotatable": false,
+			"IsPassable": false,
+			"Strength": 1,
+			"ItemName": "stone",
+			"ItemAmount": 1,
+			"RequiredToolType": "Pickaxe"
+		},
+		{
+			"Id": 7001,
+			"Name": "wood_resource",
+			"Description": "test",
+			"IsStackable": false,
+			"Width": 1,
+			"Height": 1,
+			"GroundPattern": [
+				["A"]
+			],
+			"IsRotatable": false,
+			"IsPassable": false,
+			"Strength": 1,
+			"ItemName": "wood",
+			"ItemAmount": 1,
+			"RequiredToolType": "Axe"
+		}	
+	],
 	"SeedItems":[
 		{
 			"Id": 72,

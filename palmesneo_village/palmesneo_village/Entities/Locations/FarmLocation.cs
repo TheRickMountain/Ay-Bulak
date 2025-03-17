@@ -36,22 +36,7 @@ namespace palmesneo_village
 
             for (int x = 0; x < MapWidth; x++)
             {
-                SetGroundTopTile(x, 0, GroundTopTile.Gate);
-            }
-
-            for (int x = 0; x < MapWidth; x++)
-            {
                 SetGroundTopTile(x, 48, GroundTopTile.Gate);
-            }
-
-            for (int y = 1; y <= 48; y++)
-            {
-                SetGroundTopTile(0, y, GroundTopTile.Gate);
-            }
-
-            for (int y = 1; y <= 48; y++)
-            {
-                SetGroundTopTile(MapWidth - 1, y, GroundTopTile.Gate);
             }
 
             for (int x = 0; x < MapWidth; x++)
@@ -70,13 +55,30 @@ namespace palmesneo_village
             {
                 for (int y = 0; y < 48; y++)
                 {
-                    TreeItem birchTree = Engine.ItemsDatabase.GetItemByName<TreeItem>("birch_tree");
+                    int generationType = Calc.Random.Range(0, 3);
 
-                    if (Calc.Random.Chance(0.05f))
+                    if (Calc.Random.Chance(0.10f))
                     {
-                        TreeBuilding treeBuilding = TryBuild(birchTree, x, y, Direction.Down) as TreeBuilding;
+                        if (generationType == 0)
+                        {
+                            TreeItem birchTree = Engine.ItemsDatabase.GetItemByName<TreeItem>("birch_tree");
 
-                        treeBuilding?.SetGrowthProgress(Calc.Random.Choose(0.35f, 0.5f, 0.75f, 1.0f));
+                            TreeBuilding treeBuilding = TryBuild(birchTree, x, y, Direction.Down) as TreeBuilding;
+
+                            treeBuilding?.SetGrowthProgress(Calc.Random.Choose(0.35f, 0.5f, 0.75f, 1.0f));
+                        }
+                        else if(generationType == 1)
+                        {
+                            ResourceItem resourceItem = Engine.ItemsDatabase.GetItemByName<ResourceItem>("stone_resource");
+
+                            TryBuild(resourceItem, x, y, Direction.Down);
+                        }
+                        else if (generationType == 2)
+                        {
+                            ResourceItem resourceItem = Engine.ItemsDatabase.GetItemByName<ResourceItem>("wood_resource");
+
+                            TryBuild(resourceItem, x, y, Direction.Down);
+                        }
                     }
                 }
             }

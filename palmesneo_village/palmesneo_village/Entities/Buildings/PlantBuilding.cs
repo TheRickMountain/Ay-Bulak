@@ -45,10 +45,8 @@ namespace palmesneo_village
         {
             if (IsRipe)
             {
-                Item harvestItem = Engine.ItemsDatabase.GetItemByName<Item>(plantItem.HarvestItem);
-
                 ItemContainer itemContainer = new ItemContainer();
-                itemContainer.Item = harvestItem;
+                itemContainer.Item = Engine.ItemsDatabase.GetItemByName<Item>(plantItem.HarvestItem);
                 itemContainer.Quantity = plantItem.HarvestAmount;
 
                 gameLocation.AddItem(OccupiedTiles[0, 0] * Engine.TILE_SIZE, itemContainer);

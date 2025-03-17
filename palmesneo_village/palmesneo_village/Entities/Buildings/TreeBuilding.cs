@@ -14,9 +14,8 @@ namespace palmesneo_village
             get => currentGrowthStage == treeItem.GrowthStagesData.Length - 1;
         }
 
-        public int CurrentStrength { get; set; }
-
         private TreeItem treeItem;
+        private int currentStrength;
 
         private float growthProgress = 0.0f;
 
@@ -47,16 +46,23 @@ namespace palmesneo_village
 
             Sprite.Texture = treeItem.GrowthStagesTextures[currentGrowthStage];
 
-            CurrentStrength = treeItem.GrowthStagesData[currentGrowthStage].Strength;
+            currentStrength = treeItem.GrowthStagesData[currentGrowthStage].Strength;
+        }
+
+        public override bool CanInteract(Item item)
+        {
+            return item is ToolItem toolItem && toolItem.ToolType == ToolType.Axe;
         }
 
         public override void Interact(Item item)
         {
-            if (item is ToolItem toolItem && toolItem.ToolType == ToolType.Axe)
+            if (CanInteract(item))
             {
-                CurrentStrength -= toolItem.Efficiency;
+                ToolItem toolItem = (ToolItem)item;
 
-                if (CurrentStrength <= 0)
+                currentStrength -= toolItem.Efficiency;
+
+                if (currentStrength <= 0)
                 {
                     foreach (var kvp in treeItem.GrowthStagesData[currentGrowthStage].Loot)
                     {

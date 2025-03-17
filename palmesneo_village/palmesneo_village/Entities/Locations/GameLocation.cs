@@ -23,8 +23,6 @@ namespace palmesneo_village
     {
         None = -1,
         Moisture = 0,
-        Stone = 1,
-        Wood = 2,
         Gate = 3
     }
 
@@ -202,17 +200,9 @@ namespace palmesneo_village
 
                     if (groundTile == GroundTile.FarmPlot && groundTopTile != GroundTopTile.Moisture) return true;
                 }
-                else if (toolItem.ToolType == ToolType.Pickaxe)
+                else if (toolItem.ToolType == ToolType.Pickaxe || toolItem.ToolType == ToolType.Axe)
                 {
-                    if (building != null) return false;
-
-                    if (GetGroundTopTile(x, y) == GroundTopTile.Stone) return true;
-                }
-                else if (toolItem.ToolType == ToolType.Axe)
-                {
-                    if (building is TreeBuilding) return true;
-
-                    if (GetGroundTopTile(x, y) == GroundTopTile.Wood) return true;
+                    if (building != null && building.CanInteract(toolItem)) return true;
                 }
             }
             else if (handItem is SeedItem seedItem)
@@ -290,40 +280,14 @@ namespace palmesneo_village
                         }
                     }
                 }
-                else if (toolItem.ToolType == ToolType.Pickaxe)
+                else if (toolItem.ToolType == ToolType.Pickaxe || toolItem.ToolType == ToolType.Axe)
                 {
-                    SetGroundTopTile(x, y, GroundTopTile.None);
-
-                    Item spawnItem = Engine.ItemsDatabase.GetItemByName<Item>("stone");
-
-                    AddItem(new Vector2(x, y) * Engine.TILE_SIZE, new ItemContainer()
+                    if (building != null)
                     {
-                        Item = spawnItem,
-                        Quantity = Calc.Random.Range(1, 2)
-                    });
+                        building.Interact(toolItem);
 
-                    playerEnergyManager.ConsumeEnergy(1);
-                }
-                else if(toolItem.ToolType == ToolType.Axe)
-                {
-                    if (building is TreeBuilding)
-                    {
-                        ((TreeBuilding)building).Interact(toolItem);
+                        playerEnergyManager.ConsumeEnergy(1);
                     }
-                    else
-                    {
-                        SetGroundTopTile(x, y, GroundTopTile.None);
-
-                        Item spawnItem = Engine.ItemsDatabase.GetItemByName<Item>("wood");
-
-                        AddItem(new Vector2(x, y) * Engine.TILE_SIZE, new ItemContainer()
-                        {
-                            Item = spawnItem,
-                            Quantity = Calc.Random.Range(1, 2)
-                        });
-                    }
-
-                    playerEnergyManager.ConsumeEnergy(1);
                 }
             }
             else if(handItem is SeedItem seedItem)
@@ -474,6 +438,10 @@ namespace palmesneo_village
             else if (buildingItem is BedItem bedItem)
             {
                 building = new BedBuilding(this, bedItem, direction, tiles);
+            }
+            else if(buildingItem is ResourceItem resourceItem)
+            {
+                building = new ResourceBuilding(this, resourceItem, direction, tiles);
             }
             else
             {
@@ -681,8 +649,6 @@ namespace palmesneo_village
             switch(GetGroundTopTile(x, y))
             {
                 case GroundTopTile.Gate:
-                case GroundTopTile.Stone:
-                case GroundTopTile.Wood:
                     collisionMap[x, y] = false;
                     break;
             }
