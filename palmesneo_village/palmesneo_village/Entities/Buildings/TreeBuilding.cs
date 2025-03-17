@@ -11,8 +11,10 @@ namespace palmesneo_village
     {
         public bool IsRipe
         {
-            get => currentGrowthStage == treeItem.GrowthStages - 1;
+            get => currentGrowthStage == treeItem.GrowthStagesData.Length - 1;
         }
+
+        public int CurrentStrength { get; set; }
 
         private TreeItem treeItem;
 
@@ -36,9 +38,30 @@ namespace palmesneo_village
 
             growthProgress = MathHelper.Clamp(growthProgress + progressPerDay, 0.0f, 1.0f);
 
-            currentGrowthStage = (int)(growthProgress * ((treeItem.GrowthStages - 1) / 1.0f));
+            currentGrowthStage = (int)(growthProgress * ((treeItem.GrowthStagesData.Length - 1) / 1.0f));
 
             Sprite.Texture = treeItem.GrowthStagesTextures[currentGrowthStage];
+
+            CurrentStrength = treeItem.GrowthStagesData[currentGrowthStage].Strength;
+        }
+
+        public void Chop(AxeItem axeItem)
+        {
+            CurrentStrength -= axeItem.Efficiency;
+
+            if(CurrentStrength <= 0)
+            {
+                foreach(var kvp in treeItem.GrowthStagesData[currentGrowthStage].Loot)
+                {
+                    ItemContainer itemContainer = new ItemContainer();
+                    itemContainer.Item= Engine.ItemsDatabase.GetItemByName(kvp.Key);
+                    itemContainer.Quantity = kvp.Value;
+
+                    gameLocation.AddItem(OccupiedTiles[0, 0] * Engine.TILE_SIZE, itemContainer);
+                }
+
+                gameLocation.RemoveBuilding(this);
+            }
         }
     }
 }

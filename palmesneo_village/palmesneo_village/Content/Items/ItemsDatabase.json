@@ -19,7 +19,8 @@
 			"Name": "iron_watering_can",
 			"Description": "test",
 			"IsStackable": false,
-			"Capacity": 20
+			"Capacity": 20,
+			"Efficiency": 1
 		}	
 	],
 	"ToolItems":[
@@ -30,7 +31,8 @@
 			"Id": 132,
 			"Name": "iron_showel",
 			"Description": "test",
-			"IsStackable": false
+			"IsStackable": false,
+			"Efficiency": 1
 		}
 	],
 	"PickaxeItems":[
@@ -38,7 +40,8 @@
 			"Id": 131,
 			"Name": "iron_pickaxe",
 			"Description": "test",
-			"IsStackable": false
+			"IsStackable": false,
+			"Efficiency": 1
 		}	
 	],
 	"AxeItems":[
@@ -46,7 +49,8 @@
 			"Id": 130,
 			"Name": "iron_axe",
 			"Description": "test",
-			"IsStackable": false
+			"IsStackable": false,
+			"Efficiency": 1
 		}	
 	],
 	"ConsumableItems":[
@@ -417,7 +421,24 @@
 			],
 			"IsRotatable": false,
 			"IsPassable": false,
-			"GrowthStages": 4,
+			"GrowthStagesData": [
+				{
+					"Strength": 1,
+					"Loot": {}
+				},
+				{
+					"Strength": 4,
+					"Loot": { "wood": 5 }
+				},
+				{
+					"Strength": 6,
+					"Loot": { "wood": 10 }
+				},
+				{
+					"Strength": 10,
+					"Loot": { "wood": 25, "birch_seeds": 2 }
+				}
+			],
 			"GrowthRateInDays": 14
 		}	
 	],

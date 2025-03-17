@@ -45,6 +45,16 @@ namespace palmesneo_village
             ReadAndInitializeCollection(BedItems, itemsIcons);
         }
 
+        public Item GetItemByName(string name)
+        {
+            if (nameItemPairs.ContainsKey(name))
+            {
+                return nameItemPairs[name];
+            }
+
+            return null;
+        }
+
         public T GetItemByName<T>(string name) where T : Item
         {
             if (nameItemPairs.ContainsKey(name))

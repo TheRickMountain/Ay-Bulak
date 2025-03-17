@@ -1,11 +1,18 @@
 ﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace palmesneo_village
 {
+    public class GrowthStageData
+    {
+        public int Strength { get; set; }
+        public Dictionary<string, int> Loot { get; set; }
+    }
+
     public class TreeItem : BuildingItem
     {
-        public int GrowthStages { get; init; }
         public int GrowthRateInDays { get; init; }
+        public GrowthStageData[] GrowthStagesData { get; init; }
 
         [JsonIgnore]
         public MTexture[] GrowthStagesTextures { get; private set; }
@@ -16,12 +23,14 @@ namespace palmesneo_village
 
             MTexture texture = ResourcesManager.GetTexture("Items", Name);
 
-            int textureWidth = texture.Width / GrowthStages;
+            int growthStages = GrowthStagesData.Length;
+
+            int textureWidth = texture.Width / growthStages;
             int textureHeight = texture.Height;
 
-            GrowthStagesTextures = new MTexture[GrowthStages];
+            GrowthStagesTextures = new MTexture[growthStages];
 
-            for (int i = 0; i < GrowthStages; i++)
+            for (int i = 0; i < growthStages; i++)
             {
                 GrowthStagesTextures[i] = new MTexture(texture, i * textureWidth, 0, textureWidth, textureHeight);
             }

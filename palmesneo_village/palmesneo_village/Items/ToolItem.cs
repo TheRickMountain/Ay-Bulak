@@ -8,5 +8,6 @@ namespace palmesneo_village
 {
     public class ToolItem : Item
     {
+        public int Efficiency { get; init; }
     }
 }
