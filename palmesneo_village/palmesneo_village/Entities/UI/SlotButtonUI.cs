@@ -56,12 +56,12 @@ namespace palmesneo_village
             iconImage.IsVisible = true;
             quantityText.IsVisible = true;
 
-            if (item is WateringCanItem wateringCanItem)
+            if (item is ToolItem toolItem && toolItem.Capacity > 0)
             {
                 contentProgress.IsVisible = true;
 
                 contentProgress.MinValue = 0;
-                contentProgress.MaxValue = wateringCanItem.Capacity;
+                contentProgress.MaxValue = toolItem.Capacity;
                 contentProgress.CurrentValue = contentAmount;
             }
             else

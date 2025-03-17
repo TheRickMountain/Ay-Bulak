@@ -188,13 +188,13 @@ namespace palmesneo_village
 
             if (handItem is ToolItem toolItem)
             {
-                if (handItem is ShowelItem showelItem)
+                if (toolItem.ToolType == ToolType.Showel)
                 {
                     if (building != null) return false;
 
                     if (groundTile == GroundTile.Grass || groundTile == GroundTile.Ground) return true;
                 }
-                else if (handItem is WateringCanItem wateringCanItem)
+                else if (toolItem.ToolType == ToolType.WateringCan)
                 {
                     if (building is WaterSourceBuilding) return true;
 
@@ -202,13 +202,13 @@ namespace palmesneo_village
 
                     if (groundTile == GroundTile.FarmPlot && groundTopTile != GroundTopTile.Moisture) return true;
                 }
-                else if (handItem is PickaxeItem pickaxeItem)
+                else if (toolItem.ToolType == ToolType.Pickaxe)
                 {
                     if (building != null) return false;
 
                     if (GetGroundTopTile(x, y) == GroundTopTile.Stone) return true;
                 }
-                else if (handItem is AxeItem axeItem)
+                else if (toolItem.ToolType == ToolType.Axe)
                 {
                     if (building is TreeBuilding) return true;
 
@@ -247,7 +247,7 @@ namespace palmesneo_village
                 {
                     if (plantBuilding.IsRipe)
                     {
-                        plantBuilding.Harvest();
+                        plantBuilding.Interact(null);
                         return;
                     }
                 }
@@ -262,17 +262,17 @@ namespace palmesneo_village
 
             if (handItem is ToolItem toolItem)
             {
-                if (handItem is ShowelItem showelItem)
+                if (toolItem.ToolType == ToolType.Showel)
                 {
                     SetGroundTile(x, y, GroundTile.FarmPlot);
 
                     playerEnergyManager.ConsumeEnergy(1);
                 }
-                else if (handItem is WateringCanItem wateringCanItem)
+                else if (toolItem.ToolType == ToolType.WateringCan)
                 {
                     if (GetGroundTile(x, y) == GroundTile.Water || building is WaterSourceBuilding)
                     {
-                        inventory.AddSlotItemContentAmount(slotIndex, wateringCanItem.Capacity);
+                        inventory.AddSlotItemContentAmount(slotIndex, toolItem.Capacity);
                     }
                     else
                     {
@@ -290,7 +290,7 @@ namespace palmesneo_village
                         }
                     }
                 }
-                else if (handItem is PickaxeItem pickaxeItem)
+                else if (toolItem.ToolType == ToolType.Pickaxe)
                 {
                     SetGroundTopTile(x, y, GroundTopTile.None);
 
@@ -304,11 +304,11 @@ namespace palmesneo_village
 
                     playerEnergyManager.ConsumeEnergy(1);
                 }
-                else if(handItem is AxeItem axeItem)
+                else if(toolItem.ToolType == ToolType.Axe)
                 {
                     if (building is TreeBuilding)
                     {
-                        ((TreeBuilding)building).Chop(axeItem);
+                        ((TreeBuilding)building).Interact(toolItem);
                     }
                     else
                     {
@@ -408,17 +408,15 @@ namespace palmesneo_village
 
         #region Buildings
 
-        public bool TryBuild(BuildingItem buildingItem, int x, int y, Direction direction)
+        public Building TryBuild(BuildingItem buildingItem, int x, int y, Direction direction)
         {
             string[,] groundPattern = Calc.RotateMatrix(buildingItem.GroundPattern, direction);
 
             Vector2[,] tiles = Calc.GetVector2DArray(new Vector2(x, y), groundPattern.GetLength(0), groundPattern.GetLength(1));
 
-            if (CanBuildHere(tiles, groundPattern) == false) return false;
+            if (CanBuildHere(tiles, groundPattern) == false) return null;
 
-            Build(buildingItem, tiles, direction);
-
-            return true;
+            return Build(buildingItem, tiles, direction);
         }
 
         public void RemoveBuilding(Building building)
@@ -457,7 +455,7 @@ namespace palmesneo_village
             return true;
         }
 
-        private void Build(BuildingItem buildingItem, Vector2[,] tiles, Direction direction)
+        private Building Build(BuildingItem buildingItem, Vector2[,] tiles, Direction direction)
         {
             Building building;
 
@@ -534,6 +532,8 @@ namespace palmesneo_village
                     }
                 }
             }
+
+            return building;
         }
 
         private void RemoveBuildingTeleports(Building building)

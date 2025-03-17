@@ -34,19 +34,6 @@ namespace palmesneo_village
             SetGroundTile(57, 35, GroundTile.Water);
             SetGroundTile(58, 35, GroundTile.Water);
 
-
-            SetGroundTopTile(10, 10, GroundTopTile.Stone);
-
-            SetGroundTopTile(14, 11, GroundTopTile.Stone);
-
-            SetGroundTopTile(10, 15, GroundTopTile.Stone);
-
-            SetGroundTopTile(13, 8, GroundTopTile.Wood);
-
-            SetGroundTopTile(5, 4, GroundTopTile.Wood);
-
-            SetGroundTopTile(17, 6, GroundTopTile.Wood);
-
             for (int x = 0; x < MapWidth; x++)
             {
                 SetGroundTopTile(x, 0, GroundTopTile.Gate);
@@ -78,6 +65,23 @@ namespace palmesneo_village
             BuildingItem playerHouse = Engine.ItemsDatabase.GetItemByName<BuildingItem>("player_house");
             TryBuild(playerHouse, 23, 38, Direction.Down);
 
+            // Выделяем участок, в пределах которого можно генерировать строения
+            for (int x = 0; x < MapWidth; x++)
+            {
+                for (int y = 0; y < 48; y++)
+                {
+                    TreeItem birchTree = Engine.ItemsDatabase.GetItemByName<TreeItem>("birch_tree");
+
+                    if (Calc.Random.Chance(0.05f))
+                    {
+                        TreeBuilding treeBuilding = TryBuild(birchTree, x, y, Direction.Down) as TreeBuilding;
+
+                        treeBuilding?.SetGrowthProgress(Calc.Random.Choose(0.35f, 0.5f, 0.75f, 1.0f));
+                    }
+                }
+            }
+
+            // Газовая труба
             int gasPipePolesAmount = 6;
 
             BuildingItem gasPipePoleItem = Engine.ItemsDatabase.GetItemByName<BuildingItem>("gas_pipe_pole");
@@ -89,6 +93,7 @@ namespace palmesneo_village
                 TryBuild(gasPipePoleItem, i * step, 53, Direction.Down);
             }
 
+            // Линия электропередач
             BuildingItem electricPoleItem = Engine.ItemsDatabase.GetItemByName<BuildingItem>("electric_pole");
 
             TryBuild(electricPoleItem, 24, 55, Direction.Down);

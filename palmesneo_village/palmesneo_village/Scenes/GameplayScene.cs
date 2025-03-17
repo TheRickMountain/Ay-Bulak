@@ -133,11 +133,11 @@ namespace palmesneo_village
 
             PlayerMoneyManager.MoneyAmount = 500;
 
-            Inventory.TryAddItem(Engine.ItemsDatabase.GetItemByName<PickaxeItem>("iron_pickaxe"), 1, 0);
-            Inventory.TryAddItem(Engine.ItemsDatabase.GetItemByName<AxeItem>("iron_axe"), 1, 0);
-            Inventory.TryAddItem(Engine.ItemsDatabase.GetItemByName<ShowelItem>("iron_showel"), 1, 0);
+            Inventory.TryAddItem(Engine.ItemsDatabase.GetItemByName("iron_pickaxe"), 1, 0);
+            Inventory.TryAddItem(Engine.ItemsDatabase.GetItemByName("iron_axe"), 1, 0);
+            Inventory.TryAddItem(Engine.ItemsDatabase.GetItemByName("iron_showel"), 1, 0);
 
-            WateringCanItem ironWateringCan = Engine.ItemsDatabase.GetItemByName<WateringCanItem>("iron_watering_can");
+            ToolItem ironWateringCan = Engine.ItemsDatabase.GetItemByName<ToolItem>("iron_watering_can");
 
             Inventory.TryAddItem(ironWateringCan, 1, ironWateringCan.Capacity);
 
@@ -206,7 +206,7 @@ namespace palmesneo_village
 
                             if (MInput.Mouse.PressedLeftButton)
                             {
-                                if (buildingSystem.TryPlaceBuilding(mouseTile))
+                                if (buildingSystem.TryPlaceBuilding(mouseTile) != null)
                                 {
                                     Inventory.RemoveItem(buildingItem, 1, inventoryHotbar.CurrentSlotIndex);
                                 }

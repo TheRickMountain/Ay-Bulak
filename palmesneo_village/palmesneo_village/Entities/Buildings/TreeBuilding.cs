@@ -36,7 +36,12 @@ namespace palmesneo_village
 
             float progressPerDay = 1.0f / treeItem.GrowthRateInDays;
 
-            growthProgress = MathHelper.Clamp(growthProgress + progressPerDay, 0.0f, 1.0f);
+            SetGrowthProgress(growthProgress + progressPerDay);
+        }
+
+        public void SetGrowthProgress(float value)
+        {
+            growthProgress = MathHelper.Clamp(value, 0.0f, 1.0f);
 
             currentGrowthStage = (int)(growthProgress * ((treeItem.GrowthStagesData.Length - 1) / 1.0f));
 
@@ -45,22 +50,25 @@ namespace palmesneo_village
             CurrentStrength = treeItem.GrowthStagesData[currentGrowthStage].Strength;
         }
 
-        public void Chop(AxeItem axeItem)
+        public override void Interact(Item item)
         {
-            CurrentStrength -= axeItem.Efficiency;
-
-            if(CurrentStrength <= 0)
+            if (item is ToolItem toolItem && toolItem.ToolType == ToolType.Axe)
             {
-                foreach(var kvp in treeItem.GrowthStagesData[currentGrowthStage].Loot)
+                CurrentStrength -= toolItem.Efficiency;
+
+                if (CurrentStrength <= 0)
                 {
-                    ItemContainer itemContainer = new ItemContainer();
-                    itemContainer.Item= Engine.ItemsDatabase.GetItemByName(kvp.Key);
-                    itemContainer.Quantity = kvp.Value;
+                    foreach (var kvp in treeItem.GrowthStagesData[currentGrowthStage].Loot)
+                    {
+                        ItemContainer itemContainer = new ItemContainer();
+                        itemContainer.Item = Engine.ItemsDatabase.GetItemByName(kvp.Key);
+                        itemContainer.Quantity = kvp.Value;
 
-                    gameLocation.AddItem(OccupiedTiles[0, 0] * Engine.TILE_SIZE, itemContainer);
+                        gameLocation.AddItem(OccupiedTiles[0, 0] * Engine.TILE_SIZE, itemContainer);
+                    }
+
+                    gameLocation.RemoveBuilding(this);
                 }
-
-                gameLocation.RemoveBuilding(this);
             }
         }
     }

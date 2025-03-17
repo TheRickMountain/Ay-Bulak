@@ -29,30 +29,35 @@ namespace palmesneo_village
 
             float progressPerDay = 1.0f / plantItem.GrowthRateInDays;
 
-            growthProgress = MathHelper.Clamp(growthProgress + progressPerDay, 0.0f, 1.0f);
+            SetGrowthProgress(growthProgress + progressPerDay);
+        }
 
-            currentGrowthStage = (int)(growthProgress * ((plantItem.GrowthStages - 1) / 1.0f));
+        public void SetGrowthProgress(float value)
+        {
+            growthProgress = MathHelper.Clamp(value, 0.0f, 1.0f);
+
+            currentGrowthStage = (int)(value * ((plantItem.GrowthStages - 1) / 1.0f));
 
             Sprite.Texture = plantItem.GrowthStagesTextures[currentGrowthStage];
         }
 
-        public void Harvest()
+        public override void Interact(Item item)
         {
-            if(IsRipe == false) return;
-
-            Item harvestItem = Engine.ItemsDatabase.GetItemByName<Item>(plantItem.HarvestItem);
-
-            ItemContainer itemContainer = new ItemContainer();
-            itemContainer.Item = harvestItem;
-            itemContainer.Quantity = plantItem.HarvestAmount;
-
-            gameLocation.AddItem(OccupiedTiles[0, 0] * Engine.TILE_SIZE, itemContainer);
-
-            if (plantItem.RemoveAfterHarvest)
+            if (IsRipe)
             {
-                gameLocation.RemoveBuilding(this);
+                Item harvestItem = Engine.ItemsDatabase.GetItemByName<Item>(plantItem.HarvestItem);
+
+                ItemContainer itemContainer = new ItemContainer();
+                itemContainer.Item = harvestItem;
+                itemContainer.Quantity = plantItem.HarvestAmount;
+
+                gameLocation.AddItem(OccupiedTiles[0, 0] * Engine.TILE_SIZE, itemContainer);
+
+                if (plantItem.RemoveAfterHarvest)
+                {
+                    gameLocation.RemoveBuilding(this);
+                }
             }
         }
-
     }
 }

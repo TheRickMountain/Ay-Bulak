@@ -42,5 +42,10 @@ namespace palmesneo_village
         {
 
         }
+
+        public virtual void Interact(Item item)
+        {
+
+        }
     }
 }

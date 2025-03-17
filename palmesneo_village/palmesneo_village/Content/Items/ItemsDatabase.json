@@ -13,45 +13,43 @@
 			"IsStackable": true
 		}
 	],
-	"WateringCanItems":[
+	"ToolItems":[
 		{
 			"Id": 129,
 			"Name": "iron_watering_can",
 			"Description": "test",
 			"IsStackable": false,
+			"ToolType": "WateringCan",
 			"Capacity": 20,
 			"Efficiency": 1
-		}	
-	],
-	"ToolItems":[
-		
-	],
-	"ShowelItems":[
+		},
 		{
 			"Id": 132,
 			"Name": "iron_showel",
 			"Description": "test",
 			"IsStackable": false,
+			"ToolType": "Showel",
+			"Capacity": 0,
 			"Efficiency": 1
-		}
-	],
-	"PickaxeItems":[
+		},
 		{
 			"Id": 131,
 			"Name": "iron_pickaxe",
 			"Description": "test",
 			"IsStackable": false,
+			"ToolType": "Pickaxe",
+			"Capacity": 0,
 			"Efficiency": 1
-		}	
-	],
-	"AxeItems":[
+		},
 		{
 			"Id": 130,
 			"Name": "iron_axe",
 			"Description": "test",
 			"IsStackable": false,
+			"ToolType": "Axe",
+			"Capacity": 0,
 			"Efficiency": 1
-		}	
+		}
 	],
 	"ConsumableItems":[
 		{

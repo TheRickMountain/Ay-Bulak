@@ -80,9 +80,9 @@ namespace palmesneo_village
         {
             ItemContainer itemContainer = slotsByIndex[slotIndex];
 
-            WateringCanItem wateringCanItem = itemContainer.Item as WateringCanItem;
+            ToolItem toolItem = itemContainer.Item as ToolItem;
 
-            itemContainer.ContentAmount = Math.Clamp(itemContainer.ContentAmount + value, 0, wateringCanItem.Capacity);
+            itemContainer.ContentAmount = Math.Clamp(itemContainer.ContentAmount + value, 0, toolItem.Capacity);
 
             SlotDataChanged?.Invoke(this, slotIndex);
         }
