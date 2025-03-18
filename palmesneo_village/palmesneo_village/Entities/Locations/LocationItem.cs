@@ -17,6 +17,8 @@ namespace palmesneo_village
 
             Texture = ItemContainer.Item.Icon;
             Centered = true;
+
+            LocalScale = new Vector2(0.8f, 0.8f);
         }
 
         public bool CanBePickedUp(Vector2 playerPosition)

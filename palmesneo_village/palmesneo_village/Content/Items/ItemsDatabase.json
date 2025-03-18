@@ -485,7 +485,7 @@
 			"Width": 1,
 			"Height": 1,
 			"GroundPattern": [
-				["A"]
+				["E"]
 			],
 			"IsRotatable": false,
 			"IsPassable": true,
@@ -499,7 +499,7 @@
 			"Width": 1,
 			"Height": 1,
 			"GroundPattern": [
-				["A"]
+				["E"]
 			],
 			"IsRotatable": false,
 			"IsPassable": true,
@@ -513,7 +513,7 @@
 			"Width": 1,
 			"Height": 1,
 			"GroundPattern": [
-				["A"]
+				["E"]
 			],
 			"IsRotatable": false,
 			"IsPassable": true,

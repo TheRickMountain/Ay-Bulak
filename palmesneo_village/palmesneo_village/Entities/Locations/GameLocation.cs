@@ -41,6 +41,7 @@ namespace palmesneo_village
         private Tilemap floorPathTilemap;
         private Tilemap airTopTilemap;
         private Building[,] buildingsMap;
+        private FloorPathItem[,] floorPathMap;
         private bool[,] collisionMap;
         private Teleport[,] teleportsMap;
 
@@ -75,6 +76,8 @@ namespace palmesneo_village
             AddChild(floorPathTilemap);
 
             buildingsMap = new Building[mapWidth, mapHeight];
+
+            floorPathMap = new FloorPathItem[mapWidth, mapHeight];
 
             collisionMap = new bool[mapWidth, mapHeight];
 
@@ -126,6 +129,20 @@ namespace palmesneo_village
         public GroundTopTile GetGroundTopTile(int x, int y)
         {
             return (GroundTopTile)groundTopTilemap.GetCell(x, y);
+        }
+
+        public void SetTileFloorPathItem(int x, int y, FloorPathItem floorPathItem)
+        {
+            if(floorPathItem == null)
+            {
+                floorPathMap[x, y] = null;
+                floorPathTilemap.SetCell(x, y, -1);
+            }
+            else
+            {
+                floorPathMap[x, y] = floorPathItem;
+                floorPathTilemap.SetCell(x, y, floorPathItem.TilesetIndex);
+            }       
         }
 
         public void SetAirTile(int x, int y, int terrainId)
@@ -302,7 +319,7 @@ namespace palmesneo_village
                             Quantity = 1
                         });
 
-                        floorPathTilemap.SetCell(x, y, -1);
+                        SetTileFloorPathItem(x, y, null);
 
                         playerEnergyManager.ConsumeEnergy(1);
                     }
@@ -451,9 +468,7 @@ namespace palmesneo_village
         {
             if (buildingItem is FloorPathItem floorPathItem)
             {
-                int tilesetIndex = floorPathItem.TilesetIndex;
-
-                floorPathTilemap.SetCell((int)tiles[0, 0].X, (int)tiles[0, 0].Y, tilesetIndex);
+                SetTileFloorPathItem((int)tiles[0, 0].X, (int)tiles[0, 0].Y, floorPathItem);
             }
             else
             {
@@ -608,6 +623,11 @@ namespace palmesneo_village
                 case "D":
                     {
                         return groundTile == GroundTile.HouseFloor;
+                    }
+                case "E":
+                    {
+                        return (groundTile == GroundTile.Grass || groundTile == GroundTile.Ground) &&
+                            floorPathMap[x, y] == null;
                     }
             }
 
