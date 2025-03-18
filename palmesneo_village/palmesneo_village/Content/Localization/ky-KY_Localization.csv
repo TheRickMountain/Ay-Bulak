@@ -6,6 +6,8 @@ cabbage,
 cabbage_seeds,
 carrot,Сабиз
 carrot_seeds,Сабиз уруктары
+concrete_path,Бетон жол
+dirt_path,
 eggplant,Баклажан
 eggplant_seeds,Баклажан уруктары
 energy,Энергия
@@ -14,7 +16,9 @@ garlic_seeds,Сарымсак уруктары
 iron_axe,Темир балта
 iron_pickaxe,
 iron_showel,Темир күрөк
-iron_watering_can,
+iron_watering_can,Темир лейка
 price,Баасы
+stone_path,Таш жол
 tomato,Помидор
 tomato_seeds,Помидор уруктары
+wooden_path,

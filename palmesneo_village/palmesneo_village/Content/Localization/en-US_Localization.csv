@@ -6,6 +6,8 @@ cabbage,Cabbage
 cabbage_seeds,Cabbage seeds
 carrot,Carrot
 carrot_seeds,Carrot seeds
+concrete_path,Concrete path
+dirt_path,Dirt path
 eggplant,Eggplant
 eggplant_seeds,Eggplant seeds
 energy,Energy
@@ -16,5 +18,7 @@ iron_pickaxe,Iron pickaxe
 iron_showel,Iron showel
 iron_watering_can,Iron watering can
 price,Price
+stone_path,Stone path
 tomato,Tomato
 tomato_seeds,Tomato seeds
+wooden_path,Wooden path

@@ -6,6 +6,8 @@ cabbage,Кәбестә
 cabbage_seeds,Кәбестә орлыклары
 carrot,Кишер
 carrot_seeds,Кишер орлыклары
+concrete_path,Бетон сукмак
+dirt_path,Сукмак
 eggplant,Баклажан
 eggplant_seeds,Баклажан орлыклары
 energy,Энергия
@@ -16,5 +18,7 @@ iron_pickaxe,Тимер кәйлә
 iron_showel,Тимер көрәк
 iron_watering_can,Тимер лейка
 price,Бәя
+stone_path,Таш сукмак
 tomato,Помидор
 tomato_seeds,Помидор орлыклары
+wooden_path,Агач сукмак

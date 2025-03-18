@@ -521,6 +521,21 @@
 			"IsPassable": true,
 			"TilesetIndex": 2,
 			"MovementSpeefBuff": 0.2
+		},
+		{
+			"Id": 8003,
+			"Name": "concrete_path",
+			"Description": "test",
+			"IsStackable": true,
+			"Width": 1,
+			"Height": 1,
+			"GroundPattern": [
+				["E"]
+			],
+			"IsRotatable": false,
+			"IsPassable": true,
+			"TilesetIndex": 3,
+			"MovementSpeefBuff": 0.2
 		}
 	],
 	"SeedItems":[

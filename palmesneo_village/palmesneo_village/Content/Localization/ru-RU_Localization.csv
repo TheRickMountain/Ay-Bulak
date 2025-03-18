@@ -6,6 +6,8 @@ cabbage,Капуста
 cabbage_seeds,Семена капусты
 carrot,Морковь
 carrot_seeds,Семена моркови
+concrete_path,Бетонная тропинка
+dirt_path,Грунтовая тропинка
 eggplant,Баклажан
 eggplant_seeds,Семена баклажана
 energy,Энергия
@@ -16,5 +18,7 @@ iron_pickaxe,Железная кирка
 iron_showel,Железная лопата
 iron_watering_can,Железная лейка
 price,Цена
+stone_path,Каменная тропинка
 tomato,Помидор
 tomato_seeds,Семена помидора
+wooden_path,Деревянная тропинка
