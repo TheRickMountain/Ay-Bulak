@@ -9,6 +9,7 @@ namespace palmesneo_village
     public class FloorPathItem : BuildingItem
     {
         public int TilesetIndex { get; init; }
+        public float MovementSpeefBuff { get; init; }
 
         public override void Initialize(MTileset sourceTileset)
         {

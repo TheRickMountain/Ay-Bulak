@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 
 namespace palmesneo_village
@@ -36,7 +37,18 @@ namespace palmesneo_village
             if (movement != Vector2.Zero)
             {
                 movement.Normalize();
-                Vector2 newPosition = LocalPosition + movement * Speed * Engine.GameDeltaTime;
+
+                float actualSpeed = Speed;
+
+                FloorPathItem floorPathItem = currentLocation.GetTileFloorPathItem(currentLocation.WorldToMap(LocalPosition));
+                if (floorPathItem != null)
+                {
+                    actualSpeed = Speed + (Speed * floorPathItem.MovementSpeefBuff);
+
+                    Console.WriteLine("Buff");
+                }
+
+                Vector2 newPosition = LocalPosition + movement * actualSpeed * Engine.GameDeltaTime;
 
                 // Проверяем коллизии перед перемещением
                 if (IsValidMovement(newPosition))
@@ -46,8 +58,8 @@ namespace palmesneo_village
                 else
                 {
                     // Попробуем двигаться только по X или только по Y
-                    Vector2 testX = LocalPosition + new Vector2(movement.X * Speed * Engine.GameDeltaTime, 0);
-                    Vector2 testY = LocalPosition + new Vector2(0, movement.Y * Speed * Engine.GameDeltaTime);
+                    Vector2 testX = LocalPosition + new Vector2(movement.X * actualSpeed * Engine.GameDeltaTime, 0);
+                    Vector2 testY = LocalPosition + new Vector2(0, movement.Y * actualSpeed * Engine.GameDeltaTime);
 
                     if (IsValidMovement(testX))
                     {

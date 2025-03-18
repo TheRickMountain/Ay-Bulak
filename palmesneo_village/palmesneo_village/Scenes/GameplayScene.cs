@@ -67,7 +67,7 @@ namespace palmesneo_village
             timeOfDayManager = new TimeOfDayManager();
             MasterUIEntity.AddChild(timeOfDayManager);
 
-            CreatureTemplate creatureTemplate = new CreatureTemplate("Player", ResourcesManager.GetTexture("Sprites", "player"), 100);
+            CreatureTemplate creatureTemplate = new CreatureTemplate("Player", ResourcesManager.GetTexture("Sprites", "player"), 80);
 
             player = new Player(creatureTemplate, Inventory);
             player.LocalPosition = new Vector2(8 * Engine.TILE_SIZE, 6 * Engine.TILE_SIZE);

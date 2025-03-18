@@ -145,6 +145,16 @@ namespace palmesneo_village
             }       
         }
 
+        public FloorPathItem GetTileFloorPathItem(int x, int y)
+        {
+            return floorPathMap[x, y];
+        }
+
+        public FloorPathItem GetTileFloorPathItem(Vector2 tile)
+        {
+            return floorPathMap[(int)tile.X, (int)tile.Y];
+        }
+
         public void SetAirTile(int x, int y, int terrainId)
         {
             airTopTilemap.SetCell(x, y, terrainId);

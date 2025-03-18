@@ -489,7 +489,8 @@
 			],
 			"IsRotatable": false,
 			"IsPassable": true,
-			"TilesetIndex": 0
+			"TilesetIndex": 0,
+			"MovementSpeefBuff": 0.2
 		},
 		{
 			"Id": 8001,
@@ -503,7 +504,8 @@
 			],
 			"IsRotatable": false,
 			"IsPassable": true,
-			"TilesetIndex": 1
+			"TilesetIndex": 1,
+			"MovementSpeefBuff": 0.2
 		},
 		{
 			"Id": 8002,
@@ -517,7 +519,8 @@
 			],
 			"IsRotatable": false,
 			"IsPassable": true,
-			"TilesetIndex": 2
+			"TilesetIndex": 2,
+			"MovementSpeefBuff": 0.2
 		}
 	],
 	"SeedItems":[
