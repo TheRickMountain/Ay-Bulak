@@ -61,6 +61,9 @@ namespace palmesneo_village
 
         public Action<int, int> ScreenSizeChanged { get; set; }
 
+        public static MTileset ItemsIcons { get; private set; }
+        public static MTileset FloorPathTileset { get; private set; }
+
         public static ItemsDatabase ItemsDatabase { get; private set; }
 
         private static bool resizing;
@@ -185,7 +188,10 @@ namespace palmesneo_village
             ItemsDatabase = JObject.Parse(File.ReadAllText(Path.Combine(ContentDirectory, "Items", "ItemsDatabase.json")))
                 .ToObject<ItemsDatabase>();
 
-            ItemsDatabase.Initialize(new MTileset(ResourcesManager.GetTexture("Items", "items_icons"), 16, 16));
+            ItemsIcons = new MTileset(ResourcesManager.GetTexture("Items", "items_icons"), 16, 16);
+            FloorPathTileset = new MTileset(ResourcesManager.GetTexture("Tilesets", "floor_path_tileset"), 16, 16);
+
+            ItemsDatabase.Initialize(ItemsIcons);
         }
 
         protected override void Update(GameTime gameTime)

@@ -16,24 +16,28 @@ namespace palmesneo_village
         public bool IsPassable { get; init; }
         public TeleportData TeleportData { get; init; }
 
-        public Dictionary<Direction, MTexture> DirectionIcon { get; private set; }
+        public Dictionary<Direction, MTexture> DirectionIcon { get; private set; } = new()
+        {
+            {Direction.Down, RenderManager.Pixel},
+            {Direction.Up, RenderManager.Pixel},
+            {Direction.Left, RenderManager.Pixel},
+            {Direction.Right, RenderManager.Pixel}
+        };
 
         public override void Initialize(MTileset sourceTileset)
         {
-            DirectionIcon = new();
-
             if (IsRotatable)
             {
-                DirectionIcon.Add(Direction.Down, ResourcesManager.GetTexture("Items", Name + "_down"));
-                DirectionIcon.Add(Direction.Up, ResourcesManager.GetTexture("Items", Name + "_up"));
-                DirectionIcon.Add(Direction.Left, ResourcesManager.GetTexture("Items", Name + "_left"));
-                DirectionIcon.Add(Direction.Right, ResourcesManager.GetTexture("Items", Name + "_right"));
+                DirectionIcon[Direction.Down] = ResourcesManager.GetTexture("Items", Name + "_down");
+                DirectionIcon[Direction.Up] = ResourcesManager.GetTexture("Items", Name + "_up");
+                DirectionIcon[Direction.Left] = ResourcesManager.GetTexture("Items", Name + "_left");
+                DirectionIcon[Direction.Right] = ResourcesManager.GetTexture("Items", Name + "_right");
 
                 Icon = DirectionIcon[Direction.Down];
             }
             else
             {
-                DirectionIcon.Add(Direction.Down, ResourcesManager.GetTexture("Items", Name));
+                DirectionIcon[Direction.Down] = ResourcesManager.GetTexture("Items", Name);
 
                 Icon = DirectionIcon[Direction.Down];
             }

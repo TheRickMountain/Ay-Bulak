@@ -38,6 +38,7 @@ namespace palmesneo_village
 
         private Tilemap groundTilemap;
         private Tilemap groundTopTilemap;
+        private Tilemap floorPathTilemap;
         private Tilemap airTopTilemap;
         private Building[,] buildingsMap;
         private bool[,] collisionMap;
@@ -63,12 +64,15 @@ namespace palmesneo_village
 
             groundTilemap = new Tilemap(TilesetConnection.SidesAndCorners, 16, 16, mapWidth, mapHeight);
             groundTopTilemap = new Tilemap(TilesetConnection.SidesAndCorners, 16, 16, mapWidth, mapHeight);
+            floorPathTilemap = new Tilemap(TilesetConnection.Sides, 16, 16, mapWidth, mapHeight);
 
             groundTilemap.Tileset = new MTileset(ResourcesManager.GetTexture("Tilesets", "ground_summer_tileset"), 16, 16);
             groundTopTilemap.Tileset = new MTileset(ResourcesManager.GetTexture("Tilesets", "ground_top_tileset"), 16, 16);
+            floorPathTilemap.Tileset = new MTileset(ResourcesManager.GetTexture("Tilesets", "floor_path_tileset"), 16, 16);
 
             AddChild(groundTilemap);
             AddChild(groundTopTilemap);
+            AddChild(floorPathTilemap);
 
             buildingsMap = new Building[mapWidth, mapHeight];
 
@@ -372,15 +376,25 @@ namespace palmesneo_village
 
         #region Buildings
 
-        public Building TryBuild(BuildingItem buildingItem, int x, int y, Direction direction)
+        public Building GetBuilding(int x, int y)
+        {
+            return buildingsMap[x, y];
+        }
+
+        public bool TryBuild(BuildingItem buildingItem, int x, int y, Direction direction)
         {
             string[,] groundPattern = Calc.RotateMatrix(buildingItem.GroundPattern, direction);
 
             Vector2[,] tiles = Calc.GetVector2DArray(new Vector2(x, y), groundPattern.GetLength(0), groundPattern.GetLength(1));
 
-            if (CanBuildHere(tiles, groundPattern) == false) return null;
+            if (CanBuildHere(tiles, groundPattern))
+            {
+                Build(buildingItem, tiles, direction);
 
-            return Build(buildingItem, tiles, direction);
+                return true;
+            }
+
+            return false;
         }
 
         public void RemoveBuilding(Building building)
@@ -419,89 +433,96 @@ namespace palmesneo_village
             return true;
         }
 
-        private Building Build(BuildingItem buildingItem, Vector2[,] tiles, Direction direction)
+        private void Build(BuildingItem buildingItem, Vector2[,] tiles, Direction direction)
         {
-            Building building;
+            if (buildingItem is FloorPathItem floorPathItem)
+            {
+                int tilesetIndex = floorPathItem.TilesetIndex;
 
-            if(buildingItem is PlantItem plantItem)
-            {
-                building = new PlantBuilding(this, plantItem, direction, tiles);
-            }
-            else if(buildingItem is TreeItem treeItem)
-            {
-                building = new TreeBuilding(this, treeItem, direction, tiles);
-            }
-            else if (buildingItem is WaterSourceItem waterSourceItem)
-            {
-                building = new WaterSourceBuilding(this, waterSourceItem, direction, tiles);
-            }
-            else if (buildingItem is BedItem bedItem)
-            {
-                building = new BedBuilding(this, bedItem, direction, tiles);
-            }
-            else if(buildingItem is ResourceItem resourceItem)
-            {
-                building = new ResourceBuilding(this, resourceItem, direction, tiles);
+                floorPathTilemap.SetCell((int)tiles[0, 0].X, (int)tiles[0, 0].Y, tilesetIndex);
             }
             else
             {
-                building = new Building(this, buildingItem, direction, tiles);
-            }
+                Building building;
 
-            building.LocalPosition = tiles[0, 0] * Engine.TILE_SIZE;
-            buildingsList.AddChild(building);
-
-            RegisterBuildingTiles(building, tiles);
-        
-            if(buildingItem.TeleportData != null)
-            {
-                TeleportData teleportData = buildingItem.TeleportData;
-
-                int[,] teleportPattern = Calc.RotateMatrix(teleportData.TeleportPattern, direction);
-
-                for (int x = 0; x < teleportPattern.GetLength(0); x++)
+                if (buildingItem is PlantItem plantItem)
                 {
-                    for (int y = 0; y < teleportPattern.GetLength(1); y++)
+                    building = new PlantBuilding(this, plantItem, direction, tiles);
+                }
+                else if (buildingItem is TreeItem treeItem)
+                {
+                    building = new TreeBuilding(this, treeItem, direction, tiles);
+                }
+                else if (buildingItem is WaterSourceItem waterSourceItem)
+                {
+                    building = new WaterSourceBuilding(this, waterSourceItem, direction, tiles);
+                }
+                else if (buildingItem is BedItem bedItem)
+                {
+                    building = new BedBuilding(this, bedItem, direction, tiles);
+                }
+                else if (buildingItem is ResourceItem resourceItem)
+                {
+                    building = new ResourceBuilding(this, resourceItem, direction, tiles);
+                }
+                else
+                {
+                    building = new Building(this, buildingItem, direction, tiles);
+                }
+
+                building.LocalPosition = tiles[0, 0] * Engine.TILE_SIZE;
+                buildingsList.AddChild(building);
+
+                RegisterBuildingTiles(building, tiles);
+
+                if (buildingItem.TeleportData != null)
+                {
+                    TeleportData teleportData = buildingItem.TeleportData;
+
+                    int[,] teleportPattern = Calc.RotateMatrix(teleportData.TeleportPattern, direction);
+
+                    for (int x = 0; x < teleportPattern.GetLength(0); x++)
                     {
-                        if (teleportPattern[x, y] == 1)
+                        for (int y = 0; y < teleportPattern.GetLength(1); y++)
                         {
-                            Vector2 teleportEnterTile = tiles[x, y];
-
-                            string enterLocationId = teleportData.Location + "_" + building.Id;
-                            Vector2 enterLocationSpawnPosition = new Vector2(teleportData.X, teleportData.Y);
-
-                            Teleport teleport = new Teleport(enterLocationId, enterLocationSpawnPosition);
-
-                            if(buildingsTeleports.ContainsKey(building) == false)
+                            if (teleportPattern[x, y] == 1)
                             {
-                                buildingsTeleports.Add(building, new List<Teleport>());
-                            }
+                                Vector2 teleportEnterTile = tiles[x, y];
 
-                            buildingsTeleports[building].Add(teleport);
+                                string enterLocationId = teleportData.Location + "_" + building.Id;
+                                Vector2 enterLocationSpawnPosition = new Vector2(teleportData.X, teleportData.Y);
 
-                            CreateTeleport((int)teleportEnterTile.X, (int)teleportEnterTile.Y, teleport);
+                                Teleport teleport = new Teleport(enterLocationId, enterLocationSpawnPosition);
 
-                            // Создаем локацию для строения
-                            if (teleportData.Location == "house")
-                            {
-                                HouseLocation location = new HouseLocation(
-                                    enterLocationId, new Teleport(LocationId, teleportEnterTile));
+                                if (buildingsTeleports.ContainsKey(building) == false)
+                                {
+                                    buildingsTeleports.Add(building, new List<Teleport>());
+                                }
 
-                                ((GameplayScene)Engine.CurrentScene).RegisterLocation(location);
-                            }
-                            else if(teleportData.Location == "coop")
-                            {
-                                CoopLocation location = new CoopLocation(
-                                    enterLocationId, new Teleport(LocationId, teleportEnterTile));
+                                buildingsTeleports[building].Add(teleport);
 
-                                ((GameplayScene)Engine.CurrentScene).RegisterLocation(location);
+                                CreateTeleport((int)teleportEnterTile.X, (int)teleportEnterTile.Y, teleport);
+
+                                // Создаем локацию для строения
+                                if (teleportData.Location == "house")
+                                {
+                                    HouseLocation location = new HouseLocation(
+                                        enterLocationId, new Teleport(LocationId, teleportEnterTile));
+
+                                    ((GameplayScene)Engine.CurrentScene).RegisterLocation(location);
+                                }
+                                else if (teleportData.Location == "coop")
+                                {
+                                    CoopLocation location = new CoopLocation(
+                                        enterLocationId, new Teleport(LocationId, teleportEnterTile));
+
+                                    ((GameplayScene)Engine.CurrentScene).RegisterLocation(location);
+                                }
                             }
                         }
                     }
                 }
             }
-
-            return building;
         }
 
         private void RemoveBuildingTeleports(Building building)

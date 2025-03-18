@@ -476,6 +476,50 @@
 			"RequiredToolType": "Axe"
 		}	
 	],
+	"FloorPathItems": [
+		{
+			"Id": 8000,
+			"Name": "dirt_path",
+			"Description": "test",
+			"IsStackable": true,
+			"Width": 1,
+			"Height": 1,
+			"GroundPattern": [
+				["A"]
+			],
+			"IsRotatable": false,
+			"IsPassable": true,
+			"TilesetIndex": 0
+		},
+		{
+			"Id": 8001,
+			"Name": "stone_path",
+			"Description": "test",
+			"IsStackable": true,
+			"Width": 1,
+			"Height": 1,
+			"GroundPattern": [
+				["A"]
+			],
+			"IsRotatable": false,
+			"IsPassable": true,
+			"TilesetIndex": 1
+		},
+		{
+			"Id": 8002,
+			"Name": "wooden_path",
+			"Description": "test",
+			"IsStackable": true,
+			"Width": 1,
+			"Height": 1,
+			"GroundPattern": [
+				["A"]
+			],
+			"IsRotatable": false,
+			"IsPassable": true,
+			"TilesetIndex": 2
+		}
+	],
 	"SeedItems":[
 		{
 			"Id": 72,

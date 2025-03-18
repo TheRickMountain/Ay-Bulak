@@ -68,9 +68,9 @@ namespace palmesneo_village
             buildingPreview.Offset = new Vector2(0, buildingTextureHeight - buildingHeightInPixels);
         }
 
-        public Building TryPlaceBuilding(Vector2 position)
+        public bool TryPlaceBuilding(Vector2 position)
         {
-            if (currentBuildingItem == null) return null;
+            if (currentBuildingItem == null) return false;
 
             return gameLocation.TryBuild(
                 currentBuildingItem, 

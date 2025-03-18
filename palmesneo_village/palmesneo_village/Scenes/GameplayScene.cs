@@ -206,7 +206,7 @@ namespace palmesneo_village
 
                             if (MInput.Mouse.PressedLeftButton)
                             {
-                                if (buildingSystem.TryPlaceBuilding(mouseTile) != null)
+                                if (buildingSystem.TryPlaceBuilding(mouseTile))
                                 {
                                     Inventory.RemoveItem(buildingItem, 1, inventoryHotbar.CurrentSlotIndex);
                                 }

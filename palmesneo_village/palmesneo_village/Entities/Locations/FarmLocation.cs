@@ -63,7 +63,9 @@ namespace palmesneo_village
                         {
                             TreeItem birchTree = Engine.ItemsDatabase.GetItemByName<TreeItem>("birch_tree");
 
-                            TreeBuilding treeBuilding = TryBuild(birchTree, x, y, Direction.Down) as TreeBuilding;
+                            TryBuild(birchTree, x, y, Direction.Down);
+
+                            TreeBuilding treeBuilding = GetBuilding(x, y) as TreeBuilding;
 
                             treeBuilding?.SetGrowthProgress(Calc.Random.Choose(0.35f, 0.5f, 0.75f, 1.0f));
                         }
