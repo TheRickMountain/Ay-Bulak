@@ -23,6 +23,8 @@ namespace palmesneo_village
 
         private Dictionary<string, Item> nameItemPairs;
 
+        private Dictionary<int, FloorPathItem> floorPathItemsByTilesetIndex;
+
         public void Initialize(MTileset itemsIcons)
         {
             nameItemPairs = new Dictionary<string, Item>();
@@ -39,6 +41,13 @@ namespace palmesneo_village
             ReadAndInitializeCollection(BedItems, itemsIcons);
             ReadAndInitializeCollection(ResourceItems, itemsIcons);
             ReadAndInitializeCollection(FloorPathItems, itemsIcons);
+
+            floorPathItemsByTilesetIndex = new Dictionary<int, FloorPathItem>();
+
+            foreach(var floorPathItem in FloorPathItems)
+            {
+                floorPathItemsByTilesetIndex.Add(floorPathItem.TilesetIndex, floorPathItem);
+            }
         }
 
         public Item GetItemByName(string name)
@@ -61,6 +70,11 @@ namespace palmesneo_village
             return null;
         }
     
+        public FloorPathItem GetFloorPathItemByTilesetIndex(int tilesetIndex)
+        {
+            return floorPathItemsByTilesetIndex[tilesetIndex];
+        }
+
         private void ReadAndInitializeCollection(Item[] itemsArray, MTileset itemsIcons)
         {
             foreach(Item item in itemsArray)

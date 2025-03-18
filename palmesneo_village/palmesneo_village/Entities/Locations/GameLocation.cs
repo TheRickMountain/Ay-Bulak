@@ -207,6 +207,8 @@ namespace palmesneo_village
                 else if (toolItem.ToolType == ToolType.Pickaxe || toolItem.ToolType == ToolType.Axe)
                 {
                     if (building != null && building.CanInteract(toolItem)) return true;
+
+                    if (floorPathTilemap.GetCell(x, y) >= 0) return true;
                 }
             }
             else if (handItem is SeedItem seedItem)
@@ -289,6 +291,18 @@ namespace palmesneo_village
                     if (building != null)
                     {
                         building.Interact(toolItem);
+
+                        playerEnergyManager.ConsumeEnergy(1);
+                    }
+                    else if (floorPathTilemap.GetCell(x, y) >= 0)
+                    {
+                        AddItem(new Vector2(x, y) * Engine.TILE_SIZE, new ItemContainer()
+                        {
+                            Item = Engine.ItemsDatabase.GetFloorPathItemByTilesetIndex(floorPathTilemap.GetCell(x, y)),
+                            Quantity = 1
+                        });
+
+                        floorPathTilemap.SetCell(x, y, -1);
 
                         playerEnergyManager.ConsumeEnergy(1);
                     }
