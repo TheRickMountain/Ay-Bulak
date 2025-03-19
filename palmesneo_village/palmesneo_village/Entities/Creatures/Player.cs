@@ -44,8 +44,6 @@ namespace palmesneo_village
                 if (floorPathItem != null)
                 {
                     actualSpeed = Speed + (Speed * floorPathItem.MovementSpeefBuff);
-
-                    Console.WriteLine("Buff");
                 }
 
                 Vector2 newPosition = LocalPosition + movement * actualSpeed * Engine.GameDeltaTime;
