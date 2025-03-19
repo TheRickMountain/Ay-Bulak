@@ -3,32 +3,29 @@ using Microsoft.Xna.Framework;
 
 namespace palmesneo_village
 {
-    public class TradingUI : PanelUI
+    public class TradingUI : EntityUI
     {
 
         private Inventory inventory;
         private PlayerMoneyManager playerMoneyManager;
 
-        private GridContainerUI playerInventoryGrid;
+        private PanelUI playerInventoryUI;
         private List<SlotButtonUI> playerInventorySlots;
 
-        private GridContainerUI traderInventoryGrid;
-        private List<SlotButtonUI> traderInventorySlots;
+        private TraderUI traderUI;
 
         private TextUI playerMoneyText;
-
-        private List<Item> traderItems;
 
         public TradingUI(Inventory inventory, PlayerMoneyManager playerMoneyManager)
         {
             this.inventory = inventory;
             this.playerMoneyManager = playerMoneyManager;
 
-            CreateTraderInventory();
-            CreatePlayerInventory();
+            traderUI = new TraderUI();
+            traderUI.Anchor = Anchor.TopCenter;
+            AddChild(traderUI);
 
-            traderInventoryGrid.LocalPosition = new Vector2(0, 8);
-            playerInventoryGrid.LocalPosition = new Vector2(0, -8);
+            CreatePlayerInventory();
 
             playerMoneyText = new TextUI();
             playerMoneyText.Anchor = Anchor.BottomLeft;
@@ -36,18 +33,20 @@ namespace palmesneo_village
             AddChild(playerMoneyText);
 
             Size = new Vector2(
-                playerInventoryGrid.Size.X + 16,
-                playerInventoryGrid.Size.Y + 16 + 16 + traderInventoryGrid.Size.Y);
-
-            traderItems = new List<Item>();
+                playerInventoryUI.Size.X,
+                playerInventoryUI.Size.Y + 16 + traderUI.Size.Y);
         }
 
         private void CreatePlayerInventory()
         {
-            playerInventoryGrid = new GridContainerUI();
-            playerInventoryGrid.Anchor = Anchor.BottomCenter;
+            playerInventoryUI = new PanelUI();
+            playerInventoryUI.Anchor = Anchor.BottomCenter;
+            AddChild(playerInventoryUI);
+
+            GridContainerUI playerInventoryGrid = new GridContainerUI();
+            playerInventoryGrid.Anchor = Anchor.Center;
             playerInventoryGrid.Columns = inventory.Width;
-            AddChild(playerInventoryGrid);
+            playerInventoryUI.AddChild(playerInventoryGrid);
 
             playerInventorySlots = new List<SlotButtonUI>(inventory.Width * inventory.Height);
 
@@ -63,35 +62,13 @@ namespace palmesneo_village
 
                 playerInventoryGrid.AddChild(inventorySlotUI);
             }
-        }
 
-        private void CreateTraderInventory()
-        {
-            traderInventoryGrid = new GridContainerUI();
-            traderInventoryGrid.Anchor = Anchor.TopCenter;
-            traderInventoryGrid.Columns = inventory.Width;
-            AddChild(traderInventoryGrid);
-
-            traderInventorySlots = new List<SlotButtonUI>(inventory.Width * inventory.Height);
-
-            for (int i = 0; i < inventory.Width * inventory.Height; i++)
-            {
-                SlotButtonUI inventorySlotUI = new SlotButtonUI();
-
-                int slotIndex = i;
-
-                inventorySlotUI.ActionTriggered += (button) => OnTraderInventorySlotPressed(button, slotIndex);
-
-                traderInventorySlots.Add(inventorySlotUI);
-
-                traderInventoryGrid.AddChild(inventorySlotUI);
-            }
+            playerInventoryUI.Size = playerInventoryGrid.Size + new Vector2(16, 16);
         }
 
         public void Open(List<Item> items)
         {
-            traderItems.Clear();
-            traderItems.AddRange(items);
+            traderUI.Open(items);
 
             RefreshUI();
         }
@@ -99,7 +76,6 @@ namespace palmesneo_village
         private void RefreshUI()
         {
             UpdatePlayerInventory();
-            UpdateTraderInventory();
 
             playerMoneyText.Text = playerMoneyManager.MoneyAmount.ToString();
         }
@@ -136,23 +112,6 @@ namespace palmesneo_village
             }
         }
 
-        private void UpdateTraderInventory()
-        {
-            for (int slotIndex = 0; slotIndex < traderInventorySlots.Count; slotIndex++)
-            {
-                if (slotIndex < traderItems.Count)
-                {
-                    Item item = traderItems[slotIndex];
-
-                    traderInventorySlots[slotIndex].SetItem(item, 999, 0);
-                }
-                else
-                {
-                    traderInventorySlots[slotIndex].Clear();
-                }
-            }
-        }
-
         private void OnPlayerInventorySlotPressed(ButtonUI button, int slotIndex)
         {
             Item item = inventory.GetSlotItem(slotIndex);
@@ -161,24 +120,6 @@ namespace palmesneo_village
             playerMoneyManager.MoneyAmount += item.Price * quantity;
 
             inventory.RemoveItem(item, quantity, slotIndex);
-
-            RefreshUI();
-        }
-
-        private void OnTraderInventorySlotPressed(ButtonUI button, int slotIndex)
-        {
-            if (slotIndex >= traderItems.Count) return;
-
-            Item item = traderItems[slotIndex];
-
-            if (playerMoneyManager.MoneyAmount >= item.Price)
-            {
-                int quantity = 1;
-
-                inventory.TryAddItem(item, quantity, 0);
-
-                playerMoneyManager.MoneyAmount -= item.Price * quantity;
-            }
 
             RefreshUI();
         }
