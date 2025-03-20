@@ -9,11 +9,11 @@ namespace palmesneo_village
         private TextUI quantityText;
         private ProgressBarUI contentProgress;
 
-        public MTexture Texture { get; set; }
+        private MTexture texture;
 
         public SlotButtonUI()
         {
-            Texture = ResourcesManager.GetTexture("Sprites", "UI", "slot");
+            texture = ResourcesManager.GetTexture("Sprites", "UI", "slot");
             Size = new Vector2(24, 24);
             StatesColors[ButtonUIState.Normal] = Color.White;
             StatesColors[ButtonUIState.Hovered] = Color.DarkGray;
@@ -46,7 +46,7 @@ namespace palmesneo_village
 
         public override void Render()
         {
-            Texture?.Draw(GlobalPosition, Origin / (Size / Texture.Size), GlobalRotation, GlobalScale * (Size / Texture.Size), SelfColor, SpriteEffects.None);
+            texture?.Draw(GlobalPosition, Origin / (Size / texture.Size), GlobalRotation, GlobalScale * (Size / texture.Size), SelfColor, SpriteEffects.None);
 
             base.Render();
         }

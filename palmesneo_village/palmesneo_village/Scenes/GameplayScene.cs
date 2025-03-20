@@ -10,6 +10,7 @@ namespace palmesneo_village
         Game,
         Inventory,
         Trading,
+        Crafting,
         SceneTransitionIn,
         DayTransitionIn,
         TransitionOut
@@ -54,6 +55,7 @@ namespace palmesneo_village
 
         private InventoryUI inventoryUI;
         private TradingUI tradingUI;
+        private CraftingUI craftingUI;
 
         public override void Begin()
         {
@@ -121,6 +123,9 @@ namespace palmesneo_village
             tradingUI = new TradingUI(Inventory, PlayerMoneyManager);
             tradingUI.Anchor = Anchor.Center;
 
+            craftingUI = new CraftingUI(Inventory);
+            craftingUI.Anchor = Anchor.Center;
+
             transitionImage = new ImageUI();
             transitionImage.Texture = RenderManager.Pixel;
             transitionImage.SelfColor = Color.Black;
@@ -152,6 +157,21 @@ namespace palmesneo_village
 
             switch (gameState)
             {
+                case GameState.Crafting:
+                    {
+                        if (InputBindings.Exit.Pressed)
+                        {
+                            foreach (var gameUIElement in gameUIElements)
+                            {
+                                MasterUIEntity.AddChild(gameUIElement);
+                            }
+
+                            MasterUIEntity.RemoveChild(craftingUI);
+
+                            gameState = GameState.Game;
+                        }
+                    }
+                    break;
                 case GameState.Trading:
                     {
                         if (InputBindings.Exit.Pressed)
@@ -279,6 +299,56 @@ namespace palmesneo_village
                             });
 
                             gameState = GameState.Trading;
+                        }
+
+                        // TODO: Temp
+                        if (MInput.Keyboard.Pressed(Microsoft.Xna.Framework.Input.Keys.C))
+                        {
+                            foreach (var gameUIElement in gameUIElements)
+                            {
+                                MasterUIEntity.RemoveChild(gameUIElement);
+                            }
+
+                            MasterUIEntity.AddChild(craftingUI);
+
+                            // TODO: Temp
+                            craftingUI.Open(Inventory, new List<CraftingRecipe>()
+                            {
+                                new CraftingRecipe(new Ingredient(Engine.ItemsDatabase.GetItemByName("wooden_path"), 1),
+                                new List<Ingredient>() { new Ingredient(Engine.ItemsDatabase.GetItemByName("wood"), 1)}),
+
+                                new CraftingRecipe(new Ingredient(Engine.ItemsDatabase.GetItemByName("stone_path"), 1),
+                                new List<Ingredient>() { new Ingredient(Engine.ItemsDatabase.GetItemByName("stone"), 1)}),
+
+                                 new CraftingRecipe(new Ingredient(Engine.ItemsDatabase.GetItemByName("garlic_seeds"), 1),
+                                new List<Ingredient>() { new Ingredient(Engine.ItemsDatabase.GetItemByName("wood"), 5)}),
+
+                                new CraftingRecipe(new Ingredient(Engine.ItemsDatabase.GetItemByName("cabbage_seeds"), 1),
+                                new List<Ingredient>() { new Ingredient(Engine.ItemsDatabase.GetItemByName("stone"), 1)}),
+
+                                 new CraftingRecipe(new Ingredient(Engine.ItemsDatabase.GetItemByName("tomato_seeds"), 1),
+                                new List<Ingredient>() { new Ingredient(Engine.ItemsDatabase.GetItemByName("wood"), 1)}),
+
+                                new CraftingRecipe(new Ingredient(Engine.ItemsDatabase.GetItemByName("beetroot_seeds"), 1),
+                                new List<Ingredient>() { new Ingredient(Engine.ItemsDatabase.GetItemByName("stone"), 1)}),
+
+                                 new CraftingRecipe(new Ingredient(Engine.ItemsDatabase.GetItemByName("tomato"), 1),
+                                new List<Ingredient>() { new Ingredient(Engine.ItemsDatabase.GetItemByName("wood"), 1)}),
+
+                                new CraftingRecipe(new Ingredient(Engine.ItemsDatabase.GetItemByName("garlic"), 1),
+                                new List<Ingredient>() { new Ingredient(Engine.ItemsDatabase.GetItemByName("stone"), 1)}),
+
+                                 new CraftingRecipe(new Ingredient(Engine.ItemsDatabase.GetItemByName("beetroot"), 1),
+                                new List<Ingredient>() { new Ingredient(Engine.ItemsDatabase.GetItemByName("wood"), 1)}),
+
+                                new CraftingRecipe(new Ingredient(Engine.ItemsDatabase.GetItemByName("carrot"), 1),
+                                new List<Ingredient>() { new Ingredient(Engine.ItemsDatabase.GetItemByName("stone"), 1)}),
+
+                                 new CraftingRecipe(new Ingredient(Engine.ItemsDatabase.GetItemByName("cabbage"), 1),
+                                new List<Ingredient>() { new Ingredient(Engine.ItemsDatabase.GetItemByName("wood"), 1)})
+                            });
+
+                            gameState = GameState.Crafting;
                         }
                     }
                     break;

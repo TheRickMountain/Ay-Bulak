@@ -29,9 +29,8 @@ namespace palmesneo_village
             scrollBarUI = new VerticalScrollBarUI();
             scrollBarUI.GrabberPositionChanged += OnScrollBarGrabberPositionChanged;
             scrollBarUI.Anchor = Anchor.RightCenter;
-            scrollBarUI.LocalPosition = new Vector2(-8, 0);
             scrollBarUI.MinValue = 0;
-            scrollBarUI.MaxValue = SLOTS_AMOUNT;
+            scrollBarUI.LocalPosition = new Vector2(-8, 0);
             AddChild(scrollBarUI);
 
             containerUI = new VerticalContainerUI();
@@ -59,8 +58,6 @@ namespace palmesneo_village
             itemsList.Clear();
 
             itemsList.AddRange(items);
-
-            scrollBarUI.MinValue = 0;
 
             if (itemsList.Count < slotsList.Count)
             {

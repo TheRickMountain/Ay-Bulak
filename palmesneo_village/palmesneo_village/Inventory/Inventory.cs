@@ -52,6 +52,20 @@ namespace palmesneo_village
             return slotsByIndex[slotIndex].Item;
         }
 
+        public int GetItemQuantity(Item item)
+        {
+            int quantity = 0;
+
+            for (int i = 0; i < slotsByIndex.Length; i++)
+            {
+                if (slotsByIndex[i].Item != item) continue;
+
+                quantity += slotsByIndex[i].Quantity;
+            }
+
+            return quantity;
+        }
+
         public int GetSlotQuantity(int slotIndex)
         {
             return slotsByIndex[slotIndex].Quantity;
@@ -196,6 +210,28 @@ namespace palmesneo_village
             }
 
             SlotDataChanged?.Invoke(this, slotIndex);
+        }
+
+        public void RemoveItem(Item item, int quantity)
+        {
+            int leftQuantity = quantity;
+
+            for (int slotIndex = 0; slotIndex < slotsByIndex.Length; slotIndex++)
+            {
+                if (slotsByIndex[slotIndex].Item != item) continue;
+
+                if (slotsByIndex[slotIndex].Quantity < leftQuantity)
+                {
+                    leftQuantity -= slotsByIndex[slotIndex].Quantity;
+
+                    RemoveItem(item, slotsByIndex[slotIndex].Quantity, slotIndex);
+                }
+                else
+                {
+                    RemoveItem(item, leftQuantity, slotIndex);
+                    break;
+                }
+            }
         }
     }
 }

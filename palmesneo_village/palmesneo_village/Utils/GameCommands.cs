@@ -6,6 +6,25 @@ namespace palmesneo_village
     {
 #if !CONSOLE
 
+        private static bool AssertItem(string itemName, int itemAmount)
+        {
+            Item item = Engine.ItemsDatabase.GetItemByName<Item>(itemName);
+            
+            if (item == null)
+            {
+                Engine.Commands.Log($"Item '{itemName}' not found", Color.Red);
+                return false;
+            }
+
+            if (itemAmount <= 0)
+            {
+                Engine.Commands.Log("Item amount can't be lower than 1", Color.Red);
+                return false;
+            }
+
+            return true;
+        }
+
         [Command("set_time_speed", "Set time speed")]
         private static void SetTimeSpeed(int value)
         {
@@ -33,35 +52,38 @@ namespace palmesneo_village
         [Command("add_item", "Adds an item to the players inventory")]
         private static void AddItem(string itemName, int itemAmount)
         {
-            Item item = Engine.ItemsDatabase.GetItemByName<Item>(itemName);
-
-            if (item == null) 
-            {
-                Engine.Commands.Log($"Item '{itemName}' not found", Color.Red);
-
-                return;
-            }
-
-            if(itemAmount <= 0)
-            {
-                Engine.Commands.Log("Item amount can't be lower than 1", Color.Red);
-
-                return;
-            }
+            if (AssertItem(itemName, itemAmount) == false) return;
 
             if (Engine.CurrentScene is GameplayScene)
             {
+                Item item = Engine.ItemsDatabase.GetItemByName<Item>(itemName);
+
                 ((GameplayScene)Engine.CurrentScene).Inventory.TryAddItem(item, itemAmount, 0);
+            }
+        }
+
+        [Command("add_item", "Adds an item to the players inventory")]
+        private static void AddItem(string itemName, int itemAmount, int slotIndex)
+        {
+            if (AssertItem(itemName, itemAmount) == false) return;
+
+            if (Engine.CurrentScene is GameplayScene)
+            {
+                Item item = Engine.ItemsDatabase.GetItemByName<Item>(itemName);
+
+                ((GameplayScene)Engine.CurrentScene).Inventory.AddItem(item, itemAmount, 0, slotIndex);
             }
         }
 
         [Command("spawn_item", "Spawns an item in the current game location")]
         private static void SpawnItem(string itemName, int itemAmount)
         {
-            Item item = Engine.ItemsDatabase.GetItemByName<Item>(itemName);
+            if (AssertItem(itemName, itemAmount) == false) return;
 
             if (Engine.CurrentScene is GameplayScene)
             {
+                Item item = Engine.ItemsDatabase.GetItemByName<Item>(itemName);
+
                 ItemContainer itemContainer = new ItemContainer();
                 itemContainer.Item = item;
                 itemContainer.Quantity = itemAmount;
