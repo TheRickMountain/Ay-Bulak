@@ -107,6 +107,19 @@ namespace palmesneo_village
             return -1;
         }
 
+        public bool CanAddItem(Item item, int quantity)
+        {
+            if(item.IsStackable)
+            {
+                if(GetSlotIndexWithItem(item) != -1)
+                {
+                    return true;
+                }
+            }
+            
+            return GetEmptySlotIndex() != -1;
+        }
+
         public void AddItem(Item item, int quantity, int contentAmount, int slotIndex)
         {
             ItemContainer slotItemContainer = slotsByIndex[slotIndex];

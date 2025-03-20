@@ -132,13 +132,18 @@ namespace palmesneo_village
 
         private void OnTraderItemButtonPressed(ButtonUI button)
         {
-            // TODO: Помимо нехватки денег, нужно проверять наличие места в инвентаре
+            // Сначала определяем на сколько товаров хватит денег у игрока
+            // Потом проверяем на сколько предметов хватит места в инвентаре у игрока
+            
+            Item item = (button as TraderItemButtonUI).Item;
 
-            TraderItemButtonUI traderItemButton = button as TraderItemButtonUI;
+            int buyAmount = 1;
 
-            Item item = traderItemButton.Item;
-
-            int buyAmount = GetBuyAmount(Keys.LeftShift, Keys.LeftControl);
+            // Только стакаемые предметы можно купить в больших количествах
+            if(item.IsStackable)
+            {
+                buyAmount = GetBuyAmount(Keys.LeftShift, Keys.LeftControl);
+            }
 
             int totalBuyPrice = item.Price * buyAmount;
 
@@ -150,9 +155,13 @@ namespace palmesneo_village
 
             if (buyAmount == 0) return;
 
-            playerMoneyManager.MoneyAmount -= item.Price * buyAmount;
+            // Можем ли мы добавить предмет в инвентарь игрока
+            if(playerInventory.CanAddItem(item, buyAmount))
+            {
+                playerMoneyManager.MoneyAmount -= item.Price * buyAmount;
 
-            playerInventory.TryAddItem(item, buyAmount, 0);
+                playerInventory.TryAddItem(item, buyAmount, 0);
+            }
         }
 
         private int GetBuyAmount(Keys firstHotkey, Keys secondHotkey)
