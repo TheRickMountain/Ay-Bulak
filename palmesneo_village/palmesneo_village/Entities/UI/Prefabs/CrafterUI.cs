@@ -15,8 +15,8 @@ namespace palmesneo_village
         private CraftingRecipeButtonUI[,] craftingRecipeButtonsArray;
         private GridContainerUI gridContainer;
 
-        private const int COLUMNS = 3;
-        private const int ROWS = 3;
+        private const int COLUMNS = 10;
+        private const int ROWS = 4;
 
         // TODO: увеличивать размер иконки рецепта при наведении мыши
 
@@ -61,7 +61,12 @@ namespace palmesneo_village
 
             craftingRecipesList.AddRange(craftingRecipes);
 
-            scrollBarUI.MaxValue = (int)Math.Ceiling((float)craftingRecipesList.Count / (float)COLUMNS) - COLUMNS;
+            int scrollBarMaxValue = (int)Math.Ceiling((float)craftingRecipesList.Count / (float)COLUMNS) - COLUMNS;
+
+            if(scrollBarMaxValue < 0)
+            {
+                scrollBarUI.MaxValue = 0;
+            }
 
             UpdateCraftingRecipes();
         }
