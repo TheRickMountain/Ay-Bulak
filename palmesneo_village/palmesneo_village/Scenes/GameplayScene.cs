@@ -318,34 +318,7 @@ namespace palmesneo_village
                                 new List<Ingredient>() { new Ingredient(Engine.ItemsDatabase.GetItemByName("wood"), 1)}),
 
                                 new CraftingRecipe(new Ingredient(Engine.ItemsDatabase.GetItemByName("stone_path"), 1),
-                                new List<Ingredient>() { new Ingredient(Engine.ItemsDatabase.GetItemByName("stone"), 1)}),
-
-                                 new CraftingRecipe(new Ingredient(Engine.ItemsDatabase.GetItemByName("garlic_seeds"), 1),
-                                new List<Ingredient>() { new Ingredient(Engine.ItemsDatabase.GetItemByName("wood"), 5)}),
-
-                                new CraftingRecipe(new Ingredient(Engine.ItemsDatabase.GetItemByName("cabbage_seeds"), 1),
-                                new List<Ingredient>() { new Ingredient(Engine.ItemsDatabase.GetItemByName("stone"), 1)}),
-
-                                 new CraftingRecipe(new Ingredient(Engine.ItemsDatabase.GetItemByName("tomato_seeds"), 1),
-                                new List<Ingredient>() { new Ingredient(Engine.ItemsDatabase.GetItemByName("wood"), 1)}),
-
-                                new CraftingRecipe(new Ingredient(Engine.ItemsDatabase.GetItemByName("beetroot_seeds"), 1),
-                                new List<Ingredient>() { new Ingredient(Engine.ItemsDatabase.GetItemByName("stone"), 1)}),
-
-                                 new CraftingRecipe(new Ingredient(Engine.ItemsDatabase.GetItemByName("tomato"), 1),
-                                new List<Ingredient>() { new Ingredient(Engine.ItemsDatabase.GetItemByName("wood"), 1)}),
-
-                                new CraftingRecipe(new Ingredient(Engine.ItemsDatabase.GetItemByName("garlic"), 1),
-                                new List<Ingredient>() { new Ingredient(Engine.ItemsDatabase.GetItemByName("stone"), 1)}),
-
-                                 new CraftingRecipe(new Ingredient(Engine.ItemsDatabase.GetItemByName("beetroot"), 1),
-                                new List<Ingredient>() { new Ingredient(Engine.ItemsDatabase.GetItemByName("wood"), 1)}),
-
-                                new CraftingRecipe(new Ingredient(Engine.ItemsDatabase.GetItemByName("carrot"), 1),
-                                new List<Ingredient>() { new Ingredient(Engine.ItemsDatabase.GetItemByName("stone"), 1)}),
-
-                                 new CraftingRecipe(new Ingredient(Engine.ItemsDatabase.GetItemByName("cabbage"), 1),
-                                new List<Ingredient>() { new Ingredient(Engine.ItemsDatabase.GetItemByName("wood"), 1)})
+                                new List<Ingredient>() { new Ingredient(Engine.ItemsDatabase.GetItemByName("stone"), 1)})
                             });
 
                             gameState = GameState.Crafting;

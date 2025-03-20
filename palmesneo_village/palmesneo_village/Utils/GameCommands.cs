@@ -62,8 +62,8 @@ namespace palmesneo_village
             }
         }
 
-        [Command("add_item", "Adds an item to the players inventory")]
-        private static void AddItem(string itemName, int itemAmount, int slotIndex)
+        [Command("add_item_to_slot", "Adds an item to the players inventory")]
+        private static void AddItemToSlot(string itemName, int itemAmount, int slotIndex)
         {
             if (AssertItem(itemName, itemAmount) == false) return;
 
