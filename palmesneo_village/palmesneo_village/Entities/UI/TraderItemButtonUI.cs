@@ -6,6 +6,7 @@ namespace palmesneo_village
 {
     public class TraderItemButtonUI : ButtonUI
     {
+        public Item Item { get; private set; }
 
         private MTexture texture;
 
@@ -62,6 +63,8 @@ namespace palmesneo_village
 
         public void SetItem(Item item)
         {
+            Item = item;
+
             itemIcon.Texture = item.Icon;
             itemName.Text = LocalizationManager.GetText(item.Name);
             itemPrice.Text = item.Price.ToString();

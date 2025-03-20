@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 
 namespace palmesneo_village
@@ -20,6 +21,9 @@ namespace palmesneo_village
         {
             this.inventory = inventory;
             this.playerMoneyManager = playerMoneyManager;
+
+            inventory.SlotDataChanged += (x, y) => UpdatePlayerInventory();
+            playerMoneyManager.MoneyAmountChanged += (x) => playerMoneyText.Text = x.ToString();
 
             traderUI = new TraderUI();
             traderUI.Anchor = Anchor.TopCenter;
@@ -66,18 +70,9 @@ namespace palmesneo_village
             playerInventoryUI.Size = playerInventoryGrid.Size + new Vector2(16, 16);
         }
 
-        public void Open(List<Item> items)
+        public void Open(Inventory playerInventory, PlayerMoneyManager playerMoneyManager, List<Item> items)
         {
-            traderUI.Open(items);
-
-            RefreshUI();
-        }
-
-        private void RefreshUI()
-        {
-            UpdatePlayerInventory();
-
-            playerMoneyText.Text = playerMoneyManager.MoneyAmount.ToString();
+            traderUI.Open(playerInventory, playerMoneyManager, items);
         }
 
         private void UpdatePlayerInventory()
@@ -120,8 +115,6 @@ namespace palmesneo_village
             playerMoneyManager.MoneyAmount += item.Price * quantity;
 
             inventory.RemoveItem(item, quantity, slotIndex);
-
-            RefreshUI();
         }
     }
 }

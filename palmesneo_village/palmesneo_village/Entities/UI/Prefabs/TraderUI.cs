@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 
 namespace palmesneo_village
@@ -12,6 +13,9 @@ namespace palmesneo_village
         private const int SLOTS_AMOUNT = 5;
 
         private List<TraderItemButtonUI> slotsList = new List<TraderItemButtonUI>();
+
+        private Inventory playerInventory;
+        private PlayerMoneyManager playerMoneyManager;
 
         private List<Item> itemsList = new List<Item>();
 
@@ -36,9 +40,10 @@ namespace palmesneo_village
 
             for (int i = 0; i < SLOTS_AMOUNT; i++)
             {
-                TraderItemButtonUI slotButton = new TraderItemButtonUI(buttonTextureMaker.FinalTexture);
-                containerUI.AddChild(slotButton);
-                slotsList.Add(slotButton);
+                TraderItemButtonUI traderItemButton = new TraderItemButtonUI(buttonTextureMaker.FinalTexture);
+                traderItemButton.ActionTriggered += OnTraderItemButtonPressed;
+                containerUI.AddChild(traderItemButton);
+                slotsList.Add(traderItemButton);
             }
 
             scrollBarUI.Size = new Vector2(15, containerUI.Size.Y);
@@ -46,8 +51,11 @@ namespace palmesneo_village
             Size = new Vector2(buttonTextureMaker.Size.X + 5 + scrollBarUI.Size.X + 16, containerUI.Size.Y + 16);
         }
 
-        public void Open(List<Item> items)
+        public void Open(Inventory playerInventory, PlayerMoneyManager playerMoneyManager, List<Item> items)
         {
+            this.playerInventory = playerInventory;
+            this.playerMoneyManager = playerMoneyManager;
+
             itemsList.Clear();
 
             itemsList.AddRange(items);
@@ -122,5 +130,46 @@ namespace palmesneo_village
             }
         }
 
+        private void OnTraderItemButtonPressed(ButtonUI button)
+        {
+            // TODO: Помимо нехватки денег, нужно проверять наличие места в инвентаре
+
+            TraderItemButtonUI traderItemButton = button as TraderItemButtonUI;
+
+            Item item = traderItemButton.Item;
+
+            int buyAmount = GetBuyAmount(Keys.LeftShift, Keys.LeftControl);
+
+            int totalBuyPrice = item.Price * buyAmount;
+
+            if(playerMoneyManager.MoneyAmount < totalBuyPrice)
+            {
+                // Вычисляем, сколько игрок сможет купить данного товара
+                buyAmount = playerMoneyManager.MoneyAmount / item.Price;
+            }
+
+            if (buyAmount == 0) return;
+
+            playerMoneyManager.MoneyAmount -= item.Price * buyAmount;
+
+            playerInventory.TryAddItem(item, buyAmount, 0);
+        }
+
+        private int GetBuyAmount(Keys firstHotkey, Keys secondHotkey)
+        {
+            if (MInput.Keyboard.Check(firstHotkey))
+            {
+                if (MInput.Keyboard.Check(secondHotkey))
+                {
+                    return 25;
+                }
+                else
+                {
+                    return 5;
+                }
+            }
+
+            return 1;
+        }
     }
 }
