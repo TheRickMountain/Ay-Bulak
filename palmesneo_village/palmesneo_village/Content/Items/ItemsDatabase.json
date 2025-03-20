@@ -264,6 +264,18 @@
 			"IsRotatable": false,
 			"IsPassable": false
 		},
+		{
+			"Id": 1009,
+			"Name": "tire_swan",
+			"Description": "test",
+			"Width": 1,
+			"Height": 1,
+			"GroundPattern": [
+				["A"]
+			],
+			"IsRotatable": false,
+			"IsPassable": false
+		}
 	],
 	"PlantItems":[
 		{
