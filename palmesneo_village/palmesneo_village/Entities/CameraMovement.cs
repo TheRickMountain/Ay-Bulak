@@ -26,7 +26,7 @@ namespace palmesneo_village
 
         public CameraMovement()
         {
-            Engine.Camera.Zoom = new Vector2(2, 2);
+            Engine.Camera.Zoom = new Vector2(3, 3);
 
             // DANGER: При попытке начать новую игру, не выходя из игры, эта привязка останется
             Engine.Instance.ScreenSizeChanged += (x, y) =>
