@@ -58,7 +58,7 @@ namespace palmesneo_village
             playerInventoryUI.Size = playerInventoryGrid.Size + new Vector2(16, 16);
         }
 
-        public void Open(Inventory playerInventory, List<CraftingRecipe> craftingRecipes)
+        public void Open(Inventory playerInventory, IEnumerable<CraftingRecipe> craftingRecipes)
         {
             crafterUI.Open(playerInventory, craftingRecipes);
         }

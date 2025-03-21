@@ -53,7 +53,7 @@ namespace palmesneo_village
             Size = gridContainer.Size + new Vector2(5 + 16 + scrollBarUI.Size.X, 16);
         }
 
-        public void Open(Inventory playerInventory, List<CraftingRecipe> craftingRecipes)
+        public void Open(Inventory playerInventory, IEnumerable<CraftingRecipe> craftingRecipes)
         {
             this.playerInventory = playerInventory;
 
@@ -133,6 +133,8 @@ namespace palmesneo_village
             CraftingRecipeButtonUI craftingRecipeButtonUI = (CraftingRecipeButtonUI)buttonUI;
 
             CraftingRecipe craftingRecipe = craftingRecipeButtonUI.CraftingRecipe;
+
+            if (craftingRecipe == null) return;
 
             Item resultItem = craftingRecipe.Result.Item;
             int resultAmount = craftingRecipe.Result.Amount;

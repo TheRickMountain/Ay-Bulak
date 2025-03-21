@@ -20,6 +20,7 @@ namespace palmesneo_village
         public BedItem[] BedItems { get; init; }
         public ResourceItem[] ResourceItems { get; init; }
         public FloorPathItem[] FloorPathItems { get; init; }
+        public ManualCrafterItem[] ManualCrafterItems { get; init; }
 
         private Dictionary<string, Item> nameItemPairs;
 
@@ -41,6 +42,7 @@ namespace palmesneo_village
             ReadAndInitializeCollection(BedItems, itemsIcons);
             ReadAndInitializeCollection(ResourceItems, itemsIcons);
             ReadAndInitializeCollection(FloorPathItems, itemsIcons);
+            ReadAndInitializeCollection(ManualCrafterItems, itemsIcons);
 
             floorPathItemsByTilesetIndex = new Dictionary<int, FloorPathItem>();
 
@@ -83,6 +85,32 @@ namespace palmesneo_village
 
                 nameItemPairs.Add(item.Name, item);
             }
+        }
+
+        public Ingredient ConvertJsonIngredient(JsonIngredient jsonIngredient)
+        {
+            Item item = GetItemByName(jsonIngredient.Item);
+
+            if (item == null)
+            {
+                throw new Exception($"Item with name {jsonIngredient.Item} not found in the database.");
+            }
+            
+            return new Ingredient(item, jsonIngredient.Amount);
+        }
+
+        public CraftingRecipe ConvertJsonCraftingRecipe(JsonCraftingRecipe jsonCraftingRecipe)
+        {
+            Ingredient resultIngredient = ConvertJsonIngredient(jsonCraftingRecipe.Result);
+
+            List<Ingredient> requiredIngredients = new();
+
+            foreach (JsonIngredient jsonIngredient in jsonCraftingRecipe.RequiredIngredients)
+            {
+                requiredIngredients.Add(ConvertJsonIngredient(jsonIngredient));
+            }
+
+            return new CraftingRecipe(resultIngredient, requiredIngredients);
         }
     }
 }

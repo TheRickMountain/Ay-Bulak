@@ -214,6 +214,10 @@ namespace palmesneo_village
             {
                 return true;
             }
+            else if(building is ManualCrafterBuilding)
+            {
+                return true;
+            }
 
             if (handItem is ToolItem toolItem)
             {
@@ -277,6 +281,11 @@ namespace palmesneo_village
                 else if(building is BedBuilding)
                 {
                     gameplayScene.StartNextDay();
+                    return;
+                }
+                else if(building is ManualCrafterBuilding manualCrafterBuilding)
+                {
+                    gameplayScene.OpenCraftingUI(manualCrafterBuilding.CraftingRecipes);
                     return;
                 }
             }
@@ -503,6 +512,10 @@ namespace palmesneo_village
                 else if (buildingItem is ResourceItem resourceItem)
                 {
                     building = new ResourceBuilding(this, resourceItem, direction, tiles);
+                }
+                else if(buildingItem is ManualCrafterItem manualCrafterItem)
+                {
+                    building = new ManualCrafterBuilding(this, manualCrafterItem, direction, tiles);
                 }
                 else
                 {

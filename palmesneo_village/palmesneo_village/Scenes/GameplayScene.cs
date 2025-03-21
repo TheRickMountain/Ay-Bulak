@@ -304,24 +304,9 @@ namespace palmesneo_village
                         // TODO: Temp
                         if (MInput.Keyboard.Pressed(Microsoft.Xna.Framework.Input.Keys.C))
                         {
-                            foreach (var gameUIElement in gameUIElements)
-                            {
-                                MasterUIEntity.RemoveChild(gameUIElement);
-                            }
+                            // TODO: Отправлять список рецептов
 
-                            MasterUIEntity.AddChild(craftingUI);
-
-                            // TODO: Temp
-                            craftingUI.Open(Inventory, new List<CraftingRecipe>()
-                            {
-                                new CraftingRecipe(new Ingredient(Engine.ItemsDatabase.GetItemByName("wooden_path"), 1),
-                                new List<Ingredient>() { new Ingredient(Engine.ItemsDatabase.GetItemByName("wood"), 1)}),
-
-                                new CraftingRecipe(new Ingredient(Engine.ItemsDatabase.GetItemByName("stone_path"), 1),
-                                new List<Ingredient>() { new Ingredient(Engine.ItemsDatabase.GetItemByName("stone"), 1)})
-                            });
-
-                            gameState = GameState.Crafting;
+                            OpenCraftingUI(null);
                         }
                     }
                     break;
@@ -439,6 +424,20 @@ namespace palmesneo_village
         public void RegisterLocation(GameLocation gameLocation)
         {
             gameLocations.Add(gameLocation.LocationId, gameLocation);
+        }
+
+        public void OpenCraftingUI(IEnumerable<CraftingRecipe> craftingRecipes)
+        {
+            foreach (var gameUIElement in gameUIElements)
+            {
+                MasterUIEntity.RemoveChild(gameUIElement);
+            }
+
+            MasterUIEntity.AddChild(craftingUI);
+
+            craftingUI.Open(Inventory, craftingRecipes);
+
+            gameState = GameState.Crafting;
         }
 
         private bool CanShowTileSelector(Vector2 playerTile, Vector2 mouseTile, int maxDistance)

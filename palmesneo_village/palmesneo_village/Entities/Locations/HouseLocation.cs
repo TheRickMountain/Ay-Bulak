@@ -121,8 +121,11 @@ namespace palmesneo_village
             BuildingItem washBasin = Engine.ItemsDatabase.GetItemByName<BuildingItem>("wash_basin");
             TryBuild(washBasin, 20, 5, Direction.Down);
 
+            BuildingItem gasStove = Engine.ItemsDatabase.GetItemByName<BuildingItem>("gas_stove");
+            TryBuild(gasStove, 21, 5, Direction.Down);
+
             BuildingItem fridge = Engine.ItemsDatabase.GetItemByName<BuildingItem>("fridge");
-            TryBuild(fridge, 22, 5, Direction.Down);
+            TryBuild(fridge, 23, 5, Direction.Down);
         }
 
     }
