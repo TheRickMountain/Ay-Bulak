@@ -11,6 +11,13 @@
 			"Name": "stone",
 			"Description": "test",
 			"IsStackable": true
+		},
+		{
+			"Id": 36,
+			"Name": "wheat_flour",
+			"Description": "test",
+			"IsStackable": true,
+			"Price": 10
 		}
 	],
 	"ToolItems":[
@@ -53,14 +60,6 @@
 	],
 	"ConsumableItems":[
 		{
-			"Id": 26,
-			"Name": "cooked_meat",
-			"Description": "test",
-			"IsStackable": true,
-			"Price": 10,
-			"EnergyAmount": 10
-		},
-		{
 			"Id": 32,
 			"Name": "chicken_egg",
 			"Description": "test",
@@ -71,6 +70,22 @@
 		{
 			"Id": 33,
 			"Name": "fried_chicken_egg",
+			"Description": "test",
+			"IsStackable": true,
+			"Price": 10,
+			"EnergyAmount": 10
+		},
+		{
+			"Id": 34,
+			"Name": "uchpuchmak",
+			"Description": "test",
+			"IsStackable": true,
+			"Price": 10,
+			"EnergyAmount": 10
+		},
+		{
+			"Id": 35,
+			"Name": "meat",
 			"Description": "test",
 			"IsStackable": true,
 			"Price": 10,
@@ -95,6 +110,14 @@
 		{
 			"Id": 58,
 			"Name": "carrot",
+			"Description": "test",
+			"IsStackable": true,
+			"Price": 10,
+			"EnergyAmount": 10
+		},
+		{
+			"Id": 59,
+			"Name": "potato",
 			"Description": "test",
 			"IsStackable": true,
 			"Price": 10,
@@ -588,6 +611,26 @@
 					"RequiredIngredients": [
 						{
 							"Item": "chicken_egg",
+							"Amount": 1
+						}
+					]
+				},
+				{
+					"Result": {
+						"Item": "uchpuchmak",
+						"Amount": 1
+					},
+					"RequiredIngredients": [
+						{
+							"Item": "wheat_flour",
+							"Amount": 1
+						},
+						{
+							"Item": "potato",
+							"Amount": 1
+						},
+						{
+							"Item": "meat",
 							"Amount": 1
 						}
 					]
