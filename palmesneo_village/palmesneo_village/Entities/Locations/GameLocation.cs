@@ -517,6 +517,10 @@ namespace palmesneo_village
                 {
                     building = new ManualCrafterBuilding(this, manualCrafterItem, direction, tiles);
                 }
+                else if(buildingItem is WindowItem windowItem)
+                {
+                    building = new WindowBuilding(this, windowItem, direction, tiles);
+                }
                 else
                 {
                     building = new Building(this, buildingItem, direction, tiles);

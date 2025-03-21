@@ -67,7 +67,8 @@ namespace palmesneo_village
             MasterEntity.AddChild(inventoryHotbar);
 
             timeOfDayManager = new TimeOfDayManager();
-            MasterUIEntity.AddChild(timeOfDayManager);
+            timeOfDayManager.Name = "time_of_day_manager";
+            MasterEntity.AddChild(timeOfDayManager);
 
             CreatureTemplate creatureTemplate = new CreatureTemplate("Player", ResourcesManager.GetTexture("Sprites", "player"), 80);
 

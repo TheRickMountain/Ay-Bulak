@@ -638,6 +638,20 @@
 			]
 		}	
 	],
+	"WindowItems": [
+		{
+			"Id": 10000,
+			"Name": "window",
+			"Description": "test",
+			"Width": 1,
+			"Height": 2,
+			"GroundPattern": [
+				["C", "C"]
+			],
+			"IsRotatable": false,
+			"IsPassable": false
+		}
+	],
 	"SeedItems":[
 		{
 			"Id": 72,

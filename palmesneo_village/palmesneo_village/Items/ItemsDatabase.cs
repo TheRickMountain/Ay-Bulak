@@ -21,6 +21,7 @@ namespace palmesneo_village
         public ResourceItem[] ResourceItems { get; init; }
         public FloorPathItem[] FloorPathItems { get; init; }
         public ManualCrafterItem[] ManualCrafterItems { get; init; }
+        public WindowItem[] WindowItems { get; init; }
 
         private Dictionary<string, Item> nameItemPairs;
 
@@ -43,6 +44,7 @@ namespace palmesneo_village
             ReadAndInitializeCollection(ResourceItems, itemsIcons);
             ReadAndInitializeCollection(FloorPathItems, itemsIcons);
             ReadAndInitializeCollection(ManualCrafterItems, itemsIcons);
+            ReadAndInitializeCollection(WindowItems, itemsIcons);
 
             floorPathItemsByTilesetIndex = new Dictionary<int, FloorPathItem>();
 
