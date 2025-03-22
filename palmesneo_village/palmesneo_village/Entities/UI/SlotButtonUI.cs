@@ -11,6 +11,8 @@ namespace palmesneo_village
 
         private MTexture texture;
 
+        private const int ICON_SIZE = 16;
+
         public SlotButtonUI()
         {
             texture = ResourcesManager.GetTexture("Sprites", "UI", "slot");
@@ -23,7 +25,6 @@ namespace palmesneo_village
 
             iconImage = new ImageUI();
             iconImage.Name = "Icon";
-            iconImage.Size = new Vector2(16, 16);
             iconImage.Anchor = Anchor.Center;
             iconImage.IsVisible = false;
             AddChild(iconImage);
@@ -56,6 +57,19 @@ namespace palmesneo_village
             iconImage.IsVisible = true;
             quantityText.IsVisible = true;
 
+            iconImage.Texture = item.Icon;
+            quantityText.Text = $"{quantity}";
+
+            // Update icom image scale
+            if (item.Icon.Width > item.Icon.Height)
+            {
+                iconImage.Size = new Vector2(ICON_SIZE, ICON_SIZE * (item.Icon.Height / (float)item.Icon.Width));
+            }
+            else
+            {
+                iconImage.Size = new Vector2(ICON_SIZE * (item.Icon.Width / (float)item.Icon.Height), ICON_SIZE);
+            }
+
             if (item is ToolItem toolItem && toolItem.Capacity > 0)
             {
                 contentProgress.IsVisible = true;
@@ -68,9 +82,6 @@ namespace palmesneo_village
             {
                 contentProgress.IsVisible = false;
             }
-
-            iconImage.Texture = item.Icon;
-            quantityText.Text = $"{quantity}";
 
             Tooltip = item.GetTooltipInfo();
         }
