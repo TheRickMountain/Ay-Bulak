@@ -49,11 +49,11 @@ namespace palmesneo_village
                 itemContainer.Item = Engine.ItemsDatabase.GetItemByName<Item>(plantItem.HarvestItem);
                 itemContainer.Quantity = plantItem.HarvestAmount;
 
-                gameLocation.AddItem(OccupiedTiles[0, 0] * Engine.TILE_SIZE, itemContainer);
+                GameLocation.AddItem(OccupiedTiles[0, 0] * Engine.TILE_SIZE, itemContainer);
 
                 if (plantItem.RemoveAfterHarvest)
                 {
-                    gameLocation.RemoveBuilding(this);
+                    GameLocation.RemoveBuilding(this);
                 }
             }
         }

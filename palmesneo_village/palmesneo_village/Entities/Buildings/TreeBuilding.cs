@@ -70,10 +70,10 @@ namespace palmesneo_village
                         itemContainer.Item = Engine.ItemsDatabase.GetItemByName(kvp.Key);
                         itemContainer.Quantity = kvp.Value;
 
-                        gameLocation.AddItem(OccupiedTiles[0, 0] * Engine.TILE_SIZE, itemContainer);
+                        GameLocation.AddItem(OccupiedTiles[0, 0] * Engine.TILE_SIZE, itemContainer);
                     }
 
-                    gameLocation.RemoveBuilding(this);
+                    GameLocation.RemoveBuilding(this);
                 }
             }
         }

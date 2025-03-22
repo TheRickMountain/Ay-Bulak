@@ -186,6 +186,45 @@ namespace palmesneo_village
             return new Rectangle(0, 0, MapWidth * Engine.TILE_SIZE, MapHeight * Engine.TILE_SIZE);
         }
 
+        public IEnumerable<Vector2> GetNeighbourTiles(Vector2 tile, bool includeDiagonal)
+        {
+            int tileX = (int)tile.X;
+            int tileY = (int)tile.Y;
+
+            // Определяем смещения для соседних тайлов
+            var directions = new List<(int dx, int dy)>
+            {
+                (-1, 0),  // Левый
+                (1, 0),   // Правый
+                (0, -1),  // Верхний
+                (0, 1)    // Нижний
+            };
+
+            // Добавляем диагональные направления, если требуется
+            if (includeDiagonal)
+            {
+                directions.AddRange(new[]
+                {
+                    (-1, -1), // Левый верхний
+                    (1, -1),  // Правый верхний
+                    (-1, 1),  // Левый нижний
+                    (1, 1)    // Правый нижний
+                });
+            }
+
+            // Возвращаем все действительные соседние тайлы
+            foreach (var (dx, dy) in directions)
+            {
+                int newX = tileX + dx;
+                int newY = tileY + dy;
+
+                if (newX >= 0 && newX < MapWidth && newY >= 0 && newY < MapHeight)
+                {
+                    yield return new Vector2(newX, newY);
+                }
+            }
+        }
+
         public bool CanInteractWithTile(int x, int y, Item handItem)
         {
             GroundTile groundTile = GetGroundTile(x, y);
@@ -515,6 +554,10 @@ namespace palmesneo_village
                 else if(buildingItem is WindowItem windowItem)
                 {
                     building = new WindowBuilding(this, windowItem, direction, tiles);
+                }
+                else if(buildingItem is SprinklerItem sprinklerItem)
+                {
+                    building = new SprinklerBuilding(this, sprinklerItem, direction, tiles);
                 }
                 else
                 {

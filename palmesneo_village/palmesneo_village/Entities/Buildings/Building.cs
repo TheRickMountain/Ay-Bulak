@@ -6,19 +6,22 @@ namespace palmesneo_village
     public class Building : Entity
     {
         public bool IsPassable => buildingItem.IsPassable;
-        public GameLocation gameLocation { get; private set; }
+        public Vector2[,] OccupiedTiles { get; private set; }
+
+        protected GameLocation GameLocation { get; private set; }
+        protected SpriteEntity Sprite { get; private set; }
+        
         private BuildingItem buildingItem;
         private Direction direction;
-        private Vector2[,] occupiedTiles;
-        protected SpriteEntity Sprite { get; private set; }
-
+        
         public Building(GameLocation gameLocation, BuildingItem buildingItem, Direction direction, Vector2[,] occupiedTiles)
         {
-            this.gameLocation = gameLocation;
+            GameLocation = gameLocation;
+            OccupiedTiles = occupiedTiles;
+
             this.buildingItem = buildingItem;
             this.direction = direction;
-            this.occupiedTiles = occupiedTiles;
-
+            
             Sprite = new SpriteEntity();
             Sprite.Texture = buildingItem.DirectionIcon[direction];
 
@@ -36,7 +39,6 @@ namespace palmesneo_village
 
         public BuildingItem BuildingItem => buildingItem;
         public Direction Direction => direction;
-        public Vector2[,] OccupiedTiles => occupiedTiles;
 
         public virtual void OnDayChanged()
         {

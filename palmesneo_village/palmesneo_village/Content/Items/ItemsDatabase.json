@@ -652,6 +652,21 @@
 			"IsPassable": false
 		}
 	],
+	"SprinklerItems": [
+		{
+			"Id": 11000,
+			"Name": "sprinkler",
+			"Description": "test",
+			"Width": 1,
+			"Height": 1,
+			"GroundPattern": [
+				["A"]
+			],
+			"IsRotatable": false,
+			"IsPassable": false,
+			"Range": 1
+		}
+	],
 	"SeedItems":[
 		{
 			"Id": 72,

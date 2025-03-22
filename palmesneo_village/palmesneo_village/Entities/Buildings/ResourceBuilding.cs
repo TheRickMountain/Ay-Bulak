@@ -34,11 +34,11 @@ namespace palmesneo_village
                 itemContainer.Item = Engine.ItemsDatabase.GetItemByName<Item>(resourceItem.ItemName);
                 itemContainer.Quantity = resourceItem.ItemAmount;
 
-                gameLocation.AddItem(OccupiedTiles[0, 0] * Engine.TILE_SIZE, itemContainer);
+                GameLocation.AddItem(OccupiedTiles[0, 0] * Engine.TILE_SIZE, itemContainer);
 
                 if (currentStrength <= 0)
                 {
-                    gameLocation.RemoveBuilding(this);
+                    GameLocation.RemoveBuilding(this);
                 }
             }
         }
