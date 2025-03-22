@@ -269,7 +269,9 @@ namespace palmesneo_village
 
                     if (groundTile == GroundTile.FarmPlot && groundTopTile != GroundTopTile.Moisture) return true;
                 }
-                else if (toolItem.ToolType == ToolType.Pickaxe || toolItem.ToolType == ToolType.Axe)
+                else if (toolItem.ToolType == ToolType.Pickaxe || 
+                    toolItem.ToolType == ToolType.Axe ||
+                    toolItem.ToolType == ToolType.Scythe)
                 {
                     if (building != null && building.CanInteract(toolItem)) return true;
 
@@ -356,7 +358,9 @@ namespace palmesneo_village
                         }
                     }
                 }
-                else if (toolItem.ToolType == ToolType.Pickaxe || toolItem.ToolType == ToolType.Axe)
+                else if (toolItem.ToolType == ToolType.Pickaxe || 
+                    toolItem.ToolType == ToolType.Axe ||
+                    toolItem.ToolType == ToolType.Scythe)
                 {
                     if (building != null)
                     {

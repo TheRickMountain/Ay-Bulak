@@ -55,7 +55,7 @@ namespace palmesneo_village
             {
                 for (int y = 0; y < 48; y++)
                 {
-                    int generationType = Calc.Random.Range(0, 3);
+                    int generationType = Calc.Random.Range(0, 4);
 
                     if (Calc.Random.Chance(0.10f))
                     {
@@ -78,6 +78,12 @@ namespace palmesneo_village
                         else if (generationType == 2)
                         {
                             ResourceItem resourceItem = Engine.ItemsDatabase.GetItemByName<ResourceItem>("wood_resource");
+
+                            TryBuild(resourceItem, x, y, Direction.Down);
+                        }
+                        else if(generationType == 3)
+                        {
+                            ResourceItem resourceItem = Engine.ItemsDatabase.GetItemByName<ResourceItem>("grass_resource");
 
                             TryBuild(resourceItem, x, y, Direction.Down);
                         }

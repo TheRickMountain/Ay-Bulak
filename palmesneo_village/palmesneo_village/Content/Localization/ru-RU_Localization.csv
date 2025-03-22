@@ -15,6 +15,7 @@ energy,Энергия
 fried_chicken_egg,Жаренное куриное яйцо
 garlic,Чеснок
 garlic_seeds,Семена чеснока
+hay,Сено
 iron_axe,Железный топор
 iron_pickaxe,Железная кирка
 iron_scythe,Железная коса
@@ -23,9 +24,11 @@ iron_watering_can,Железная лейка
 meat,Мясо
 potato,Картофель
 price,Цена
+stone,Камень
 stone_path,Каменная тропинка
 tomato,Помидор
 tomato_seeds,Семена помидора
 uchpuchmak,Эчпочмак
 wheat_flour,Пшеничная мука
+wood,Древесина
 wooden_path,Деревянная тропинка

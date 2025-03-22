@@ -13,6 +13,12 @@
 			"IsStackable": true
 		},
 		{
+			"Id": 2,
+			"Name": "hay",
+			"Description": "test",
+			"IsStackable": true
+		},
+		{
 			"Id": 36,
 			"Name": "wheat_flour",
 			"Description": "test",
@@ -534,6 +540,23 @@
 			"ItemName": "wood",
 			"ItemAmount": 1,
 			"RequiredToolType": "Axe"
+		},
+		{
+			"Id": 7002,
+			"Name": "grass_resource",
+			"Description": "test",
+			"IsStackable": false,
+			"Width": 1,
+			"Height": 1,
+			"GroundPattern": [
+				["A"]
+			],
+			"IsRotatable": false,
+			"IsPassable": false,
+			"Strength": 1,
+			"ItemName": "hay",
+			"ItemAmount": 1,
+			"RequiredToolType": "Scythe"
 		}	
 	],
 	"FloorPathItems": [
