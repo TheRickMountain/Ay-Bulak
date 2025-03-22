@@ -31,11 +31,11 @@
 			"Efficiency": 1
 		},
 		{
-			"Id": 132,
-			"Name": "iron_showel",
+			"Id": 130,
+			"Name": "iron_axe",
 			"Description": "test",
 			"IsStackable": false,
-			"ToolType": "Showel",
+			"ToolType": "Axe",
 			"Capacity": 0,
 			"Efficiency": 1
 		},
@@ -49,11 +49,20 @@
 			"Efficiency": 1
 		},
 		{
-			"Id": 130,
-			"Name": "iron_axe",
+			"Id": 132,
+			"Name": "iron_showel",
 			"Description": "test",
 			"IsStackable": false,
-			"ToolType": "Axe",
+			"ToolType": "Showel",
+			"Capacity": 0,
+			"Efficiency": 1
+		},
+		{
+			"Id": 133,
+			"Name": "iron_scythe",
+			"Description": "test",
+			"IsStackable": false,
+			"ToolType": "Scythe",
 			"Capacity": 0,
 			"Efficiency": 1
 		}

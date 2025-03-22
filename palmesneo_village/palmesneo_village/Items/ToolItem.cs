@@ -12,7 +12,8 @@ namespace palmesneo_village
         Axe,
         Pickaxe,
         WateringCan,
-        Showel
+        Showel,
+        Scythe
     }
 
     public class ToolItem : Item

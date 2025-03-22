@@ -142,6 +142,7 @@ namespace palmesneo_village
             Inventory.TryAddItem(Engine.ItemsDatabase.GetItemByName("iron_pickaxe"), 1, 0);
             Inventory.TryAddItem(Engine.ItemsDatabase.GetItemByName("iron_axe"), 1, 0);
             Inventory.TryAddItem(Engine.ItemsDatabase.GetItemByName("iron_showel"), 1, 0);
+            Inventory.TryAddItem(Engine.ItemsDatabase.GetItemByName("iron_scythe"), 1, 0);
 
             ToolItem ironWateringCan = Engine.ItemsDatabase.GetItemByName<ToolItem>("iron_watering_can");
 
