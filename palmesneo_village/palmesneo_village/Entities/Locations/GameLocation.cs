@@ -47,9 +47,8 @@ namespace palmesneo_village
 
         private Dictionary<Building, List<Teleport>> buildingsTeleports = new();
 
-        private Entity buildingsList;
+        private Entity entitiesList;
         private Entity itemsList;
-        private Entity creaturesList;
 
         private Player _player;
 
@@ -83,17 +82,13 @@ namespace palmesneo_village
 
             teleportsMap = new Teleport[mapWidth, mapHeight];
 
-            buildingsList = new Entity();
-            buildingsList.IsDepthSortEnabled = true;
-            AddChild(buildingsList);
+            entitiesList = new Entity();
+            entitiesList.IsDepthSortEnabled = true;
+            AddChild(entitiesList);
 
             itemsList = new Entity();
             itemsList.IsDepthSortEnabled = true;
             AddChild(itemsList);
-
-            creaturesList = new Entity();
-            creaturesList.IsDepthSortEnabled = true;
-            AddChild(creaturesList);
 
             airTopTilemap = new Tilemap(TilesetConnection.Individual, 16, 16, mapWidth, mapHeight);
             airTopTilemap.Tileset = new MTileset(ResourcesManager.GetTexture("Tilesets", "air_tileset"), 16, 16);
@@ -169,7 +164,7 @@ namespace palmesneo_village
 
             _player = player;
 
-            creaturesList.AddChild(player);
+            entitiesList.AddChild(player);
             cameraMovement.Target = player;
         }
 
@@ -180,7 +175,7 @@ namespace palmesneo_village
                 throw new Exception("Incrorrect player!");
             }
 
-            creaturesList.RemoveChild(_player);
+            entitiesList.RemoveChild(_player);
             cameraMovement.Target = null;
 
             _player = null;
@@ -415,7 +410,7 @@ namespace palmesneo_village
                 }
             }
 
-            foreach (Entity entity in buildingsList.GetChildren())
+            foreach (Entity entity in entitiesList.GetChildren())
             {
                 if (entity is Building building)
                 {
@@ -449,7 +444,7 @@ namespace palmesneo_village
 
         public void RemoveBuilding(Building building)
         {
-            buildingsList.RemoveChild(building);
+            entitiesList.RemoveChild(building);
 
             Vector2[,] tiles = building.OccupiedTiles;
 
@@ -527,7 +522,8 @@ namespace palmesneo_village
                 }
 
                 building.LocalPosition = tiles[0, 0] * Engine.TILE_SIZE;
-                buildingsList.AddChild(building);
+                building.Depth = (int)tiles[0, tiles.GetLength(1) - 1].Y * Engine.TILE_SIZE;
+                entitiesList.AddChild(building);
 
                 RegisterBuildingTiles(building, tiles);
 

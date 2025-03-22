@@ -8,7 +8,7 @@ namespace palmesneo_village
     {
         private Inventory inventory;
 
-        private const float COLLISION_CHECK_OFFSET = 6f;
+        private const float COLLISION_CHECK_OFFSET = 4f;
         private GameLocation currentLocation;
 
         public Player(CreatureTemplate creatureTemplate, Inventory inventory) : base(creatureTemplate)
@@ -23,6 +23,8 @@ namespace palmesneo_village
             UpdateMovement();
 
             CheckForItemPickup();
+
+            Depth = (int)LocalPosition.Y;
         }
 
         public void SetGameLocation(GameLocation location)
