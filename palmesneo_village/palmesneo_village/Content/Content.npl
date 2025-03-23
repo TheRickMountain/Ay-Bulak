@@ -25,6 +25,18 @@
 		"localization": {
 			"path": "Localization/*.csv",
 			"action": "copy"
+		},
+		"soundEffects": 
+		{
+			"path": "SoundEffects/*.wav",
+			"recursive": "True",
+			"action": "build",
+			"importer": "WavImporter",
+			"processor": "SoundEffectProcessor",
+			"processorParam":
+			{
+				"Quality": "Best"
+			}
 		}
 	}
 }

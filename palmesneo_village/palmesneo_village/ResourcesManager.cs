@@ -15,6 +15,7 @@ namespace palmesneo_village
     public static class ResourcesManager
     {
         private static Dictionary<string, MTexture> textures = new Dictionary<string, MTexture>();
+        private static Dictionary<string, SoundEffect> soundEffects = new Dictionary<string, SoundEffect>();
 
         private static List<string> allFilesPaths = new List<string>();
 
@@ -31,6 +32,12 @@ namespace palmesneo_village
         {
             string finalPath = Path.Combine(path);
             return textures[finalPath];
+        }
+
+        public static SoundEffect GetSoundEffect(params string[] path)
+        {
+            string finalPath = Path.Combine(path);
+            return soundEffects[finalPath];
         }
 
         private static void SearchAllFiles(string rootDirectory, DirectoryInfo dir)
@@ -51,7 +58,7 @@ namespace palmesneo_village
 
         private static void LoadAllFiles(GraphicsDevice graphicsDevice, ContentManager contentManager)
         {
-            Debug.WriteLine("Loading: textures");
+            Debug.WriteLine("Loading: textures, sound effects");
             foreach (var filePath in allFilesPaths)
             {
                 object file = contentManager.Load<object>(filePath);
@@ -59,6 +66,10 @@ namespace palmesneo_village
                 if (file is Texture2D)
                 {
                     textures.Add(filePath, new MTexture(file as Texture2D));
+                }
+                else if(file is SoundEffect)
+                {
+                    soundEffects.Add(filePath, file as SoundEffect);
                 }
             }
         }

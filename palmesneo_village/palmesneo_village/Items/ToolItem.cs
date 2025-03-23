@@ -21,5 +21,17 @@ namespace palmesneo_village
         public ToolType ToolType { get; init; }
         public int Efficiency { get; init; }
         public int Capacity { get; init; }
+        public string[] SoundEffects { get; init; }
+
+        public void PlaySoundEffect()
+        {
+            if(SoundEffects == null || SoundEffects.Length == 0)
+            {
+                return;
+            }
+
+            string soundEffect = Calc.Random.Choose(SoundEffects);
+            ResourcesManager.GetSoundEffect(soundEffect).Play();
+        }
     }
 }

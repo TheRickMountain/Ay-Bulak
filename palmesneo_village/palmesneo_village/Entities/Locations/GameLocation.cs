@@ -330,6 +330,8 @@ namespace palmesneo_village
 
             if (handItem is ToolItem toolItem)
             {
+                toolItem.PlaySoundEffect();
+
                 if (toolItem.ToolType == ToolType.Showel)
                 {
                     SetGroundTile(x, y, GroundTile.FarmPlot);
