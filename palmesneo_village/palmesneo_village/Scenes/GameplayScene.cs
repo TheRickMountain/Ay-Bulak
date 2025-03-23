@@ -10,7 +10,6 @@ namespace palmesneo_village
         Game,
         Inventory,
         Trading,
-        Crafting,
         SceneTransitionIn,
         DayTransitionIn,
         TransitionOut
@@ -159,21 +158,6 @@ namespace palmesneo_village
 
             switch (gameState)
             {
-                case GameState.Crafting:
-                    {
-                        if (InputBindings.Exit.Pressed)
-                        {
-                            foreach (var gameUIElement in gameUIElements)
-                            {
-                                MasterUIEntity.AddChild(gameUIElement);
-                            }
-
-                            MasterUIEntity.RemoveChild(craftingUI);
-
-                            gameState = GameState.Game;
-                        }
-                    }
-                    break;
                 case GameState.Trading:
                     {
                         if (InputBindings.Exit.Pressed)
@@ -303,14 +287,6 @@ namespace palmesneo_village
 
                             gameState = GameState.Trading;
                         }
-
-                        // TODO: Temp
-                        if (MInput.Keyboard.Pressed(Microsoft.Xna.Framework.Input.Keys.C))
-                        {
-                            // TODO: Отправлять список рецептов
-
-                            OpenCraftingUI(null);
-                        }
                     }
                     break;
                 case GameState.SceneTransitionIn:
@@ -427,20 +403,6 @@ namespace palmesneo_village
         public void RegisterLocation(GameLocation gameLocation)
         {
             gameLocations.Add(gameLocation.LocationId, gameLocation);
-        }
-
-        public void OpenCraftingUI(IEnumerable<CraftingRecipe> craftingRecipes)
-        {
-            foreach (var gameUIElement in gameUIElements)
-            {
-                MasterUIEntity.RemoveChild(gameUIElement);
-            }
-
-            MasterUIEntity.AddChild(craftingUI);
-
-            craftingUI.Open(Inventory, craftingRecipes);
-
-            gameState = GameState.Crafting;
         }
 
         private bool CanShowTileSelector(Vector2 playerTile, Vector2 mouseTile, int maxDistance)

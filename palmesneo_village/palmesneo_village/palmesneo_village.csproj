@@ -34,6 +34,9 @@
     <None Update="Content\Fonts\silver_0.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Content\Items\CraftingRecipesDatabase.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Content\Items\ItemsDatabase.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

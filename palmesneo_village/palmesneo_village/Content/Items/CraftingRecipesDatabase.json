@@ -1,0 +1,28 @@
+{
+	"CraftingRecipes": [
+				{
+					"Result": {
+						"Item": "wooden_path",
+						"Amount": 1
+					},
+					"RequiredIngredients": [
+						{
+							"Item": "wood",
+							"Amount": 1
+						}
+					]
+				},
+				{
+					"Result": {
+						"Item": "stone_path",
+						"Amount": 1
+					},
+					"RequiredIngredients": [
+						{
+							"Item": "stone",
+							"Amount": 1
+						}
+					]
+				}
+			]
+}

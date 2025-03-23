@@ -65,6 +65,7 @@ namespace palmesneo_village
         public static MTileset FloorPathTileset { get; private set; }
 
         public static ItemsDatabase ItemsDatabase { get; private set; }
+        public static CraftingRecipesDatabase CraftingRecipesDatabase { get; private set; }
 
         private static bool resizing;
 
@@ -192,6 +193,11 @@ namespace palmesneo_village
             FloorPathTileset = new MTileset(ResourcesManager.GetTexture("Tilesets", "floor_path_tileset"), 16, 16);
 
             ItemsDatabase.Initialize(ItemsIcons);
+
+            CraftingRecipesDatabase = JObject.Parse(File.ReadAllText(Path.Combine(ContentDirectory, "Items", "CraftingRecipesDatabase.json")))
+                .ToObject<CraftingRecipesDatabase>();
+
+            CraftingRecipesDatabase.Initialize(ItemsDatabase);
         }
 
         protected override void Update(GameTime gameTime)

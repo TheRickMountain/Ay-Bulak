@@ -13,7 +13,7 @@ namespace palmesneo_village
         {
             foreach (JsonCraftingRecipe jsonCraftingRecipe in item.CraftingRecipes)
             {
-                CraftingRecipe craftingRecipe = Engine.ItemsDatabase.ConvertJsonCraftingRecipe(jsonCraftingRecipe);
+                CraftingRecipe craftingRecipe = Engine.CraftingRecipesDatabase.ConvertJsonCraftingRecipe(jsonCraftingRecipe);
                 craftingRecipes.Add(craftingRecipe);
             }
         }

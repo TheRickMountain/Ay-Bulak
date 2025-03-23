@@ -91,30 +91,6 @@ namespace palmesneo_village
             }
         }
 
-        public Ingredient ConvertJsonIngredient(JsonIngredient jsonIngredient)
-        {
-            Item item = GetItemByName(jsonIngredient.Item);
-
-            if (item == null)
-            {
-                throw new Exception($"Item with name {jsonIngredient.Item} not found in the database.");
-            }
-            
-            return new Ingredient(item, jsonIngredient.Amount);
-        }
-
-        public CraftingRecipe ConvertJsonCraftingRecipe(JsonCraftingRecipe jsonCraftingRecipe)
-        {
-            Ingredient resultIngredient = ConvertJsonIngredient(jsonCraftingRecipe.Result);
-
-            List<Ingredient> requiredIngredients = new();
-
-            foreach (JsonIngredient jsonIngredient in jsonCraftingRecipe.RequiredIngredients)
-            {
-                requiredIngredients.Add(ConvertJsonIngredient(jsonIngredient));
-            }
-
-            return new CraftingRecipe(resultIngredient, requiredIngredients);
-        }
+        
     }
 }
