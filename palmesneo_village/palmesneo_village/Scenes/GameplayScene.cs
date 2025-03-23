@@ -231,14 +231,11 @@ namespace palmesneo_village
 
                         if (MInput.Mouse.PressedRightButton)
                         {
-                            if (currentPlayerItem != null)
+                            if (currentPlayerItem is ConsumableItem consumableItem)
                             {
-                                if (currentPlayerItem is ConsumableItem consumableItem)
-                                {
-                                    PlayerEnergyManager.AddEnergy(consumableItem.EnergyAmount);
+                                PlayerEnergyManager.AddEnergy(consumableItem.EnergyAmount);
 
-                                    Inventory.RemoveItem(consumableItem, 1, inventoryHotbar.CurrentSlotIndex);
-                                }
+                                Inventory.RemoveItem(consumableItem, 1, inventoryHotbar.CurrentSlotIndex);
                             }
                         }
 
@@ -249,7 +246,7 @@ namespace palmesneo_village
                     
                         if(InputBindings.Exit.Pressed)
                         {
-                            OpenPlayerInventory(Engine.CraftingRecipesDatabase.GetCraftingRecipes());
+                            OpenPlayerInventoryUI(Engine.CraftingRecipesDatabase.GetCraftingRecipes());
                         }
 
                         // TODO: temp
@@ -393,7 +390,7 @@ namespace palmesneo_village
             gameLocations.Add(gameLocation.LocationId, gameLocation);
         }
 
-        public void OpenPlayerInventory(IEnumerable<CraftingRecipe> craftingRecipes)
+        public void OpenPlayerInventoryUI(IEnumerable<CraftingRecipe> craftingRecipes)
         {
             foreach (var gameUIElement in gameUIElements)
             {
