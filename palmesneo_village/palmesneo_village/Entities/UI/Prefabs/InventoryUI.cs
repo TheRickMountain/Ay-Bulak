@@ -21,6 +21,7 @@ namespace palmesneo_village
         public InventoryUI(Inventory inventory)
         {
             this.inventory = inventory;
+            inventory.SlotDataChanged += (inventory, slotIndex) => RefreshInventory();
 
             grabbedItemContainer = new ItemContainer();
 
@@ -61,25 +62,6 @@ namespace palmesneo_village
                 LocalPosition = new Vector2(4, 4)
             });
             grabbedItemContainerVisualiser.LocalPosition = new Vector2(10, 10);
-        }
-
-        public void Open()
-        {
-            for (int slotIndex = 0; slotIndex < inventory.Width * inventory.Height; slotIndex++)
-            {
-                Item item = inventory.GetSlotItem(slotIndex);
-                int quantity = inventory.GetSlotQuantity(slotIndex);
-                int contentAmount = inventory.GetSlotContentAmount(slotIndex);
-
-                if (item == null)
-                {
-                    inventorySlots[slotIndex].Clear();
-                }
-                else
-                {
-                    inventorySlots[slotIndex].SetItem(item, quantity, contentAmount);
-                }
-            }
         }
 
         private void OnInventorySlotPressed(ButtonUI button, int slotIndex)
@@ -140,14 +122,12 @@ namespace palmesneo_village
                     inventory.RemoveItem(grabbedItemContainer.Item, grabbedItemContainer.Quantity, slotIndex);
                 }
             }
-
-            Open();
         }
 
         private void ClearGrabbedItem()
         {
             grabbedItemContainer.Clear();
-            Parent.GetChildByName<ImageUI>("Cursor").RemoveChild(grabbedItemContainerVisualiser);
+            Parent.Parent.GetChildByName<ImageUI>("Cursor").RemoveChild(grabbedItemContainerVisualiser);
         }
 
         private void GrabItem(Item item, int quantity, int contentAmount)
@@ -159,9 +139,28 @@ namespace palmesneo_village
             grabbedItemContainerVisualiser.GetChildByName<ImageUI>("Icon").Texture = item.Icon;
             grabbedItemContainerVisualiser.GetChildByName<TextUI>("Quantity").Text = quantity.ToString();
 
-            if (Parent.GetChildByName<ImageUI>("Cursor").ContainsChild(grabbedItemContainerVisualiser) == false)
+            if (Parent.Parent.GetChildByName<ImageUI>("Cursor").ContainsChild(grabbedItemContainerVisualiser) == false)
             {
-                Parent.GetChildByName<ImageUI>("Cursor").AddChild(grabbedItemContainerVisualiser);
+                Parent.Parent.GetChildByName<ImageUI>("Cursor").AddChild(grabbedItemContainerVisualiser);
+            }
+        }
+    
+        private void RefreshInventory()
+        {
+            for (int slotIndex = 0; slotIndex < inventory.Width * inventory.Height; slotIndex++)
+            {
+                Item item = inventory.GetSlotItem(slotIndex);
+                int quantity = inventory.GetSlotQuantity(slotIndex);
+                int contentAmount = inventory.GetSlotContentAmount(slotIndex);
+
+                if (item == null)
+                {
+                    inventorySlots[slotIndex].Clear();
+                }
+                else
+                {
+                    inventorySlots[slotIndex].SetItem(item, quantity, contentAmount);
+                }
             }
         }
     }

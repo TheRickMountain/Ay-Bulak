@@ -25,7 +25,6 @@ namespace palmesneo_village
 
         public void Open(IEnumerable<CraftingRecipe> craftingRecipes)
         {
-            inventoryUI.Open();
             crafterUI.Open(craftingRecipes);
         }
 
