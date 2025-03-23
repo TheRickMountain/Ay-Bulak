@@ -9,19 +9,21 @@ namespace palmesneo_village
     {
         private VerticalScrollBarUI scrollBarUI;
 
-        private Inventory playerInventory;
+        private Inventory inventory;
         private List<CraftingRecipe> craftingRecipesList = new();
 
         private CraftingRecipeButtonUI[,] craftingRecipeButtonsArray;
         private GridContainerUI gridContainer;
 
-        private const int COLUMNS = 10;
+        private const int COLUMNS = 6;
         private const int ROWS = 4;
 
         // TODO: увеличивать размер иконки рецепта при наведении мыши
 
-        public CrafterUI()
+        public CrafterUI(Inventory inventory)
         {
+            this.inventory = inventory;
+
             scrollBarUI = new VerticalScrollBarUI();
             scrollBarUI.GrabberPositionChanged += OnScrollBarGrabberPositionChanged;
             scrollBarUI.Anchor = Anchor.RightCenter;
@@ -53,10 +55,8 @@ namespace palmesneo_village
             Size = gridContainer.Size + new Vector2(5 + 16 + scrollBarUI.Size.X, 16);
         }
 
-        public void Open(Inventory playerInventory, IEnumerable<CraftingRecipe> craftingRecipes)
+        public void Open(IEnumerable<CraftingRecipe> craftingRecipes)
         {
-            this.playerInventory = playerInventory;
-
             craftingRecipesList.Clear();
 
             craftingRecipesList.AddRange(craftingRecipes);
@@ -144,16 +144,16 @@ namespace palmesneo_village
                 return;
             }
 
-            if(playerInventory.CanAddItem(resultItem, resultAmount) == false)
+            if(inventory.CanAddItem(resultItem, resultAmount) == false)
             {
                 return;
             }
 
-            playerInventory.TryAddItem(resultItem, resultAmount, 0);
+            inventory.TryAddItem(resultItem, resultAmount, 0);
 
             foreach (Ingredient ingredient in craftingRecipe.GetRequiredIngredients())
             {
-                playerInventory.RemoveItem(ingredient.Item, ingredient.Amount);
+                inventory.RemoveItem(ingredient.Item, ingredient.Amount);
             }
 
             UpdateCraftingRecipes();
@@ -168,7 +168,7 @@ namespace palmesneo_village
         {
             foreach(Ingredient ingredient in craftingRecipe.GetRequiredIngredients())
             {
-                if (playerInventory.GetItemQuantity(ingredient.Item) < ingredient.Amount)
+                if (inventory.GetItemQuantity(ingredient.Item) < ingredient.Amount)
                 {
                     return false;
                 }

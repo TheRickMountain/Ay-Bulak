@@ -8,7 +8,7 @@ namespace palmesneo_village
     public enum GameState
     {
         Game,
-        Inventory,
+        PlayerInventory,
         Trading,
         SceneTransitionIn,
         DayTransitionIn,
@@ -52,9 +52,8 @@ namespace palmesneo_village
 
         private List<EntityUI> gameUIElements = new();
 
-        private InventoryUI inventoryUI;
+        private PlayerInventoryUI playerInventoryUI;
         private TradingUI tradingUI;
-        private CraftingUI craftingUI;
 
         public override void Begin()
         {
@@ -117,14 +116,11 @@ namespace palmesneo_village
             gameUIElements.Add(playerMoneyUI);
             gameUIElements.Add(timeText);
 
-            inventoryUI = new InventoryUI(Inventory);
-            inventoryUI.Anchor = Anchor.Center;
+            playerInventoryUI = new PlayerInventoryUI(Inventory);
+            playerInventoryUI.Anchor = Anchor.Center;
 
             tradingUI = new TradingUI(Inventory, PlayerMoneyManager);
             tradingUI.Anchor = Anchor.Center;
-
-            craftingUI = new CraftingUI(Inventory);
-            craftingUI.Anchor = Anchor.Center;
 
             transitionImage = new ImageUI();
             transitionImage.Texture = RenderManager.Pixel;
@@ -173,7 +169,7 @@ namespace palmesneo_village
                         }
                     }
                     break;
-                case GameState.Inventory:
+                case GameState.PlayerInventory:
                     {
                         if (InputBindings.Exit.Pressed)
                         {
@@ -182,7 +178,7 @@ namespace palmesneo_village
                                 MasterUIEntity.AddChild(gameUIElement);
                             }
 
-                            MasterUIEntity.RemoveChild(inventoryUI);
+                            MasterUIEntity.RemoveChild(playerInventoryUI);
 
                             gameState = GameState.Game;
                         }
@@ -253,15 +249,7 @@ namespace palmesneo_village
                     
                         if(InputBindings.Exit.Pressed)
                         {
-                            foreach(var gameUIElement in gameUIElements)
-                            {
-                                MasterUIEntity.RemoveChild(gameUIElement);
-                            }
-
-                            MasterUIEntity.AddChild(inventoryUI);
-                            inventoryUI.Open();
-
-                            gameState = GameState.Inventory;
+                            OpenPlayerInventory(Engine.CraftingRecipesDatabase.GetCraftingRecipes());
                         }
 
                         // TODO: temp
@@ -403,6 +391,19 @@ namespace palmesneo_village
         public void RegisterLocation(GameLocation gameLocation)
         {
             gameLocations.Add(gameLocation.LocationId, gameLocation);
+        }
+
+        public void OpenPlayerInventory(IEnumerable<CraftingRecipe> craftingRecipes)
+        {
+            foreach (var gameUIElement in gameUIElements)
+            {
+                MasterUIEntity.RemoveChild(gameUIElement);
+            }
+
+            MasterUIEntity.AddChild(playerInventoryUI);
+            playerInventoryUI.Open(craftingRecipes);
+
+            gameState = GameState.PlayerInventory;
         }
 
         private bool CanShowTileSelector(Vector2 playerTile, Vector2 mouseTile, int maxDistance)

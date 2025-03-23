@@ -321,7 +321,7 @@ namespace palmesneo_village
                 }
                 else if(building is ManualCrafterBuilding manualCrafterBuilding)
                 {
-                    gameplayScene.OpenCraftingUI(manualCrafterBuilding.CraftingRecipes);
+                    gameplayScene.OpenPlayerInventory(manualCrafterBuilding.CraftingRecipes);
                     return;
                 }
             }
