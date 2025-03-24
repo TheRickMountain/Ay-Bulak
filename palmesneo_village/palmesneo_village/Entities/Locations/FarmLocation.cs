@@ -34,8 +34,13 @@ namespace palmesneo_village
             SetGroundTile(57, 35, GroundTile.Water);
             SetGroundTile(58, 35, GroundTile.Water);
 
+            TryBuild(Engine.ItemsDatabase.GetItemByName<BuildingItem>("small_main_gate"), 27, 48, Direction.Down);
+
             for (int x = 0; x < MapWidth; x++)
             {
+                // Тут будут стоять ворота
+                if (x == 27 || x == 28) continue;
+
                 SetGroundTopTile(x, 48, GroundTopTile.Gate);
             }
 

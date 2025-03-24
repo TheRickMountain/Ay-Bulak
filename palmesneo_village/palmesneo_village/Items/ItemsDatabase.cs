@@ -23,6 +23,7 @@ namespace palmesneo_village
         public ManualCrafterItem[] ManualCrafterItems { get; init; }
         public WindowItem[] WindowItems { get; init; }
         public SprinklerItem[] SprinklerItems { get; init; }
+        public GateItem[] GateItems { get; init; }
 
         private Dictionary<string, Item> nameItemPairs;
 
@@ -47,6 +48,7 @@ namespace palmesneo_village
             ReadAndInitializeCollection(ManualCrafterItems, itemsIcons);
             ReadAndInitializeCollection(WindowItems, itemsIcons);
             ReadAndInitializeCollection(SprinklerItems, itemsIcons);
+            ReadAndInitializeCollection(GateItems, itemsIcons);
 
             floorPathItemsByTilesetIndex = new Dictionary<int, FloorPathItem>();
 

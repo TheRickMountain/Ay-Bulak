@@ -252,6 +252,10 @@ namespace palmesneo_village
             {
                 return true;
             }
+            else if(building is GateBuilding)
+            {
+                return true;
+            }
 
             if (handItem is ToolItem toolItem)
             {
@@ -269,7 +273,7 @@ namespace palmesneo_village
 
                     if (groundTile == GroundTile.FarmPlot && groundTopTile != GroundTopTile.Moisture) return true;
                 }
-                else if (toolItem.ToolType == ToolType.Pickaxe || 
+                else if (toolItem.ToolType == ToolType.Pickaxe ||
                     toolItem.ToolType == ToolType.Axe ||
                     toolItem.ToolType == ToolType.Scythe)
                 {
@@ -322,6 +326,11 @@ namespace palmesneo_village
                 else if(building is ManualCrafterBuilding manualCrafterBuilding)
                 {
                     gameplayScene.OpenPlayerInventoryUI(manualCrafterBuilding.CraftingRecipes);
+                    return;
+                }
+                else if(building is GateBuilding gateBuilding)
+                {
+                    gateBuilding.Interact(null);
                     return;
                 }
             }
@@ -565,6 +574,10 @@ namespace palmesneo_village
                 {
                     building = new SprinklerBuilding(this, sprinklerItem, direction, tiles);
                 }
+                else if(buildingItem is GateItem gateItem)
+                {
+                    building = new GateBuilding(this, gateItem, direction, tiles);
+                }
                 else
                 {
                     building = new Building(this, buildingItem, direction, tiles);
@@ -760,7 +773,7 @@ namespace palmesneo_village
             }
         }
 
-        private void UpdateTilePassability(int x, int y)
+        public void UpdateTilePassability(int x, int y)
         {
             collisionMap[x, y] = true;
 
@@ -780,9 +793,16 @@ namespace palmesneo_village
                     break;
             }
 
-            if (buildingsMap[x, y] != null && buildingsMap[x, y].IsPassable == false)
+            if (buildingsMap[x, y] != null)
             {
-                collisionMap[x, y] = false;
+                if (buildingsMap[x, y] is GateBuilding gateBuilding)
+                {
+                    collisionMap[x, y] = gateBuilding.IsOpen;
+                }
+                else if(buildingsMap[x, y].IsPassable == false)
+                {
+                    collisionMap[x, y] = false;
+                }
             }
         }
     }
