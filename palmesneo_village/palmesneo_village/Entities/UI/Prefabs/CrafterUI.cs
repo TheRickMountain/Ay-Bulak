@@ -23,6 +23,7 @@ namespace palmesneo_village
         public CrafterUI(Inventory inventory)
         {
             this.inventory = inventory;
+            inventory.SlotDataChanged += (inventory, slotIndex) => UpdateCraftingRecipes();
 
             scrollBarUI = new VerticalScrollBarUI();
             scrollBarUI.GrabberPositionChanged += OnScrollBarGrabberPositionChanged;
