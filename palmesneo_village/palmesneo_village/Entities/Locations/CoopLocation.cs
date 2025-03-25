@@ -11,7 +11,7 @@ namespace palmesneo_village
 
         public CoopLocation(string id, Teleport exitTeleport) : base(id, 32, 16)
         {
-            CreateTeleport(21, 9, exitTeleport);
+            CreateTeleport(20, 10, exitTeleport);
 
             CreateCoopFirstLayer();
         }
@@ -28,7 +28,7 @@ namespace palmesneo_village
                          "*********66666666666666*********\n" +
                          "*********66666666666666*********\n" +
                          "*********66666666666666*********\n" +
-                         "********************************\n" +
+                         "********************6***********\n" +
                          "********************************\n" +
                          "********************************\n" +
                          "********************************\n" +

@@ -71,7 +71,6 @@ namespace palmesneo_village
             CreatureTemplate creatureTemplate = new CreatureTemplate("Player", ResourcesManager.GetTexture("Sprites", "player"), 80);
 
             player = new Player(creatureTemplate, Inventory);
-            player.LocalPosition = new Vector2(8 * Engine.TILE_SIZE, 6 * Engine.TILE_SIZE);
 
             RegisterLocation(new FarmLocation("farm"));
 
@@ -187,7 +186,7 @@ namespace palmesneo_village
                 case GameState.Game:
                     {
                         Vector2 mouseTile = CurrentGameLocation.MouseTile;
-                        Vector2 playerTile = CurrentGameLocation.WorldToMap(player.LocalPosition);
+                        Vector2 playerTile = player.GetTilePosition();
 
                         tileSelector.IsVisible = false;
 
@@ -306,7 +305,7 @@ namespace palmesneo_village
                                 player.SetGameLocation(currentGameLocation);
                                 buildingSystem.SetGameLocation(currentGameLocation);
 
-                                player.LocalPosition = nextGameLocationTile * Engine.TILE_SIZE;
+                                player.SetTilePosition(nextGameLocationTile);
 
                                 gameState = GameState.TransitionOut;
                             }

@@ -9,7 +9,6 @@ namespace palmesneo_village
         private Inventory inventory;
 
         private const float COLLISION_CHECK_OFFSET = 4f;
-        private GameLocation currentLocation;
 
         public Player(CreatureTemplate creatureTemplate, Inventory inventory) : base(creatureTemplate)
         {
@@ -27,11 +26,6 @@ namespace palmesneo_village
             Depth = (int)LocalPosition.Y;
         }
 
-        public void SetGameLocation(GameLocation location)
-        {
-            currentLocation = location;
-        }
-
         private void UpdateMovement()
         {
             Vector2 movement = new Vector2(InputBindings.MoveHorizontally.Value, InputBindings.MoveVertically.Value);
@@ -42,7 +36,7 @@ namespace palmesneo_village
 
                 float actualSpeed = Speed;
 
-                FloorPathItem floorPathItem = currentLocation.GetTileFloorPathItem(currentLocation.WorldToMap(LocalPosition));
+                FloorPathItem floorPathItem = CurrentLocation.GetTileFloorPathItem(CurrentLocation.WorldToMap(LocalPosition));
                 if (floorPathItem != null)
                 {
                     actualSpeed = Speed + (Speed * floorPathItem.MovementSpeefBuff);
@@ -76,7 +70,7 @@ namespace palmesneo_village
         private bool IsValidMovement(Vector2 newPosition)
         {
             // Преобразуем мировые координаты в координаты тайлов
-            Vector2 mapPos = currentLocation.WorldToMap(newPosition);
+            Vector2 mapPos = CurrentLocation.WorldToMap(newPosition);
 
             // Проверяем 4 точки вокруг игрока (предполагаем, что размер игрока примерно равен тайлу)
             Vector2[] checkPoints = new Vector2[]
@@ -87,7 +81,7 @@ namespace palmesneo_village
                 new Vector2(newPosition.X + COLLISION_CHECK_OFFSET, newPosition.Y + COLLISION_CHECK_OFFSET)
             };
 
-            Rectangle boundaries = currentLocation.GetBoundaries();
+            Rectangle boundaries = CurrentLocation.GetBoundaries();
 
             foreach (Vector2 point in checkPoints)
             {
@@ -95,12 +89,12 @@ namespace palmesneo_village
                 if (!boundaries.Contains(point))
                     return false;
 
-                Vector2 tilePos = currentLocation.WorldToMap(point);
+                Vector2 tilePos = CurrentLocation.WorldToMap(point);
                 int x = (int)tilePos.X;
                 int y = (int)tilePos.Y;
 
                 // Проверяем, является ли тайл непроходимым
-                if (currentLocation.IsTilePassable(x, y) == false)
+                if (CurrentLocation.IsTilePassable(x, y) == false)
                     return false;
             }
 
@@ -111,7 +105,7 @@ namespace palmesneo_village
         {
             // TODO: check if inventory has enough space for pickup
 
-            foreach (LocationItem locationItem in currentLocation.GetLocationItems(GlobalPosition))
+            foreach (LocationItem locationItem in CurrentLocation.GetLocationItems(GlobalPosition))
             {
                 if (locationItem.IsActive && locationItem.CanBePickedUp(GlobalPosition))
                 {
@@ -121,7 +115,7 @@ namespace palmesneo_village
                 {
                     PickupItem(locationItem);
 
-                    currentLocation.RemoveItem(locationItem);
+                    CurrentLocation.RemoveItem(locationItem);
                 }
             }
         }

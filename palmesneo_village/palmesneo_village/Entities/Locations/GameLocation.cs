@@ -620,14 +620,14 @@ namespace palmesneo_village
                                 if (teleportData.Location == "house")
                                 {
                                     HouseLocation location = new HouseLocation(
-                                        enterLocationId, new Teleport(LocationId, teleportEnterTile));
+                                        enterLocationId, new Teleport(LocationId, teleportEnterTile + new Vector2(0, 1)));
 
                                     ((GameplayScene)Engine.CurrentScene).RegisterLocation(location);
                                 }
                                 else if (teleportData.Location == "coop")
                                 {
                                     CoopLocation location = new CoopLocation(
-                                        enterLocationId, new Teleport(LocationId, teleportEnterTile));
+                                        enterLocationId, new Teleport(LocationId, teleportEnterTile + new Vector2(0, 1)));
 
                                     ((GameplayScene)Engine.CurrentScene).RegisterLocation(location);
                                 }
