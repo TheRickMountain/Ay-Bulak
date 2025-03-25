@@ -23,12 +23,19 @@ namespace palmesneo_village
             AddChild(BodyImage);
         }
 
+        public override void Update()
+        {
+            Depth = (int)LocalPosition.Y;
+
+            base.Update();
+        }
+
         public void SetGameLocation(GameLocation gameLocation)
         {
             CurrentLocation = gameLocation;
         }
 
-        public void SetTilePosition(Vector2 tile)
+        public virtual void SetTilePosition(Vector2 tile)
         {
             LocalPosition = CurrentLocation.MapToWorld(tile) + new Vector2(Engine.TILE_SIZE / 2);
         }

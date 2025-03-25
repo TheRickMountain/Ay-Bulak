@@ -33,6 +33,8 @@ namespace palmesneo_village
         public int MapWidth { get; private set; }
         public int MapHeight { get; private set; }
 
+        private PathNodeMap pathNodeMap;
+
         private CameraMovement cameraMovement;
 
         private Tilemap groundTilemap;
@@ -56,6 +58,8 @@ namespace palmesneo_village
             LocationId = locationId;
             MapWidth = mapWidth;
             MapHeight = mapHeight;
+
+            pathNodeMap = new PathNodeMap(mapWidth, mapHeight);
 
             cameraMovement = new CameraMovement();
             cameraMovement.Bounds = GetBoundaries();
@@ -127,7 +131,7 @@ namespace palmesneo_village
 
         public void SetTileFloorPathItem(int x, int y, FloorPathItem floorPathItem)
         {
-            if(floorPathItem == null)
+            if (floorPathItem == null)
             {
                 floorPathMap[x, y] = null;
                 floorPathTilemap.SetCell(x, y, -1);
@@ -136,7 +140,7 @@ namespace palmesneo_village
             {
                 floorPathMap[x, y] = floorPathItem;
                 floorPathTilemap.SetCell(x, y, floorPathItem.TilesetIndex);
-            }       
+            }
         }
 
         public FloorPathItem GetTileFloorPathItem(int x, int y)
@@ -168,7 +172,7 @@ namespace palmesneo_village
 
         public void SetPlayer(Player player)
         {
-            if(_player != null)
+            if (_player != null)
             {
                 throw new Exception("Player is already set!");
             }
@@ -259,11 +263,11 @@ namespace palmesneo_village
             {
                 return true;
             }
-            else if(building is ManualCrafterBuilding)
+            else if (building is ManualCrafterBuilding)
             {
                 return true;
             }
-            else if(building is GateBuilding)
+            else if (building is GateBuilding)
             {
                 return true;
             }
@@ -329,17 +333,17 @@ namespace palmesneo_village
                         return;
                     }
                 }
-                else if(building is BedBuilding)
+                else if (building is BedBuilding)
                 {
                     gameplayScene.StartNextDay();
                     return;
                 }
-                else if(building is ManualCrafterBuilding manualCrafterBuilding)
+                else if (building is ManualCrafterBuilding manualCrafterBuilding)
                 {
                     gameplayScene.OpenPlayerInventoryUI(manualCrafterBuilding.CraftingRecipes);
                     return;
                 }
-                else if(building is GateBuilding gateBuilding)
+                else if (building is GateBuilding gateBuilding)
                 {
                     gateBuilding.Interact(null);
                     return;
@@ -380,7 +384,7 @@ namespace palmesneo_village
                         }
                     }
                 }
-                else if (toolItem.ToolType == ToolType.Pickaxe || 
+                else if (toolItem.ToolType == ToolType.Pickaxe ||
                     toolItem.ToolType == ToolType.Axe ||
                     toolItem.ToolType == ToolType.Scythe)
                 {
@@ -404,7 +408,7 @@ namespace palmesneo_village
                     }
                 }
             }
-            else if(handItem is SeedItem seedItem)
+            else if (handItem is SeedItem seedItem)
             {
                 PlantItem plantItem = Engine.ItemsDatabase.GetItemByName<PlantItem>(seedItem.PlantName);
 
@@ -415,7 +419,7 @@ namespace palmesneo_village
 
                 inventory.RemoveItem(handItem, 1, slotIndex);
             }
-            else if(handItem is TreeSeedItem treeSeedItem)
+            else if (handItem is TreeSeedItem treeSeedItem)
             {
                 TreeItem treeItem = Engine.ItemsDatabase.GetItemByName<TreeItem>(treeSeedItem.TreeName);
 
@@ -453,7 +457,7 @@ namespace palmesneo_village
                     {
                         GroundTile groundTile = GetGroundTile(x, y);
 
-                        if(groundTile == GroundTile.FarmPlot)
+                        if (groundTile == GroundTile.FarmPlot)
                         {
                             SetGroundTopTile(x, y, GroundTopTile.Moisture);
                         }
@@ -573,19 +577,19 @@ namespace palmesneo_village
                 {
                     building = new ResourceBuilding(this, resourceItem, direction, tiles);
                 }
-                else if(buildingItem is ManualCrafterItem manualCrafterItem)
+                else if (buildingItem is ManualCrafterItem manualCrafterItem)
                 {
                     building = new ManualCrafterBuilding(this, manualCrafterItem, direction, tiles);
                 }
-                else if(buildingItem is WindowItem windowItem)
+                else if (buildingItem is WindowItem windowItem)
                 {
                     building = new WindowBuilding(this, windowItem, direction, tiles);
                 }
-                else if(buildingItem is SprinklerItem sprinklerItem)
+                else if (buildingItem is SprinklerItem sprinklerItem)
                 {
                     building = new SprinklerBuilding(this, sprinklerItem, direction, tiles);
                 }
-                else if(buildingItem is GateItem gateItem)
+                else if (buildingItem is GateItem gateItem)
                 {
                     building = new GateBuilding(this, gateItem, direction, tiles);
                 }
@@ -695,7 +699,7 @@ namespace palmesneo_village
                 }
             }
         }
-        
+
         public bool CheckGroundPattern(int x, int y, string groundPatternId)
         {
             if (buildingsMap[x, y] != null) return false;
@@ -788,7 +792,7 @@ namespace palmesneo_village
         {
             collisionMap[x, y] = true;
 
-            switch(GetGroundTile(x, y))
+            switch (GetGroundTile(x, y))
             {
                 case GroundTile.AnimalHouseWall:
                 case GroundTile.HouseWall:
@@ -803,11 +807,25 @@ namespace palmesneo_village
                 {
                     collisionMap[x, y] = gateBuilding.IsOpen;
                 }
-                else if(buildingsMap[x, y].IsPassable == false)
+                else if (buildingsMap[x, y].IsPassable == false)
                 {
                     collisionMap[x, y] = false;
                 }
             }
+
+            pathNodeMap.TryGetNode(x, y).IsWalkable = collisionMap[x, y];
+        }
+
+        public List<PathNode> FindPath(Vector2 startTile, Vector2 targetTile, bool adjacent)
+        {
+            PathNode startNode = pathNodeMap.TryGetNode((int)startTile.X, (int)startTile.Y);
+            PathNode targetNode = pathNodeMap.TryGetNode((int)targetTile.X, (int)targetTile.Y);
+            return pathNodeMap.FindPath(startNode, targetNode, adjacent);
+        }
+
+        public PathNode GetPathNode(int x, int y)
+        {
+            return pathNodeMap.TryGetNode(x, y);
         }
     }
 }

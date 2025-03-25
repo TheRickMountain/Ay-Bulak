@@ -18,13 +18,13 @@ namespace palmesneo_village
 
         private float idleTime = 0;
 
-        private Vector2 targetTile;
-
         private Dictionary<Direction, MTexture> directionTextures = new();
 
         private Direction movementDirection = Direction.Down;
 
-        private float[] idleTimeSet = new float[] { 0.0f, 1.0f, 2.0f, 3.0f };
+        private float[] idleTimeSet = { 0.0f, 1.0f, 2.0f, 3.0f };
+
+        private CreatureMovement creatureMovement;
 
         public Animal(string name, MTexture texture, float speed) 
             : base(name, texture, speed)
@@ -44,6 +44,12 @@ namespace palmesneo_village
             }
 
             BodyImage.Texture = directionTextures[movementDirection];
+
+            BodyImage.Centered = true;
+            BodyImage.Offset = new Vector2(0, directionTextureHeight / 2 - Engine.TILE_SIZE / 2);
+            BodyImage.LocalPosition = new Vector2(Engine.TILE_SIZE / 2, Engine.TILE_SIZE / 2);
+
+            AddChild(creatureMovement = new CreatureMovement(speed));
         }
 
         public override void Update()
@@ -59,7 +65,11 @@ namespace palmesneo_village
                     break;
                 case AnimalState.Moving:
                     {
-                        UpdateMovement();
+                        if(creatureMovement.State == MovementState.Success)
+                        {
+                            animalState = AnimalState.Idle;
+                            idleTime = Calc.Random.Choose(idleTimeSet);
+                        }
                     }
                     break;
             }
@@ -73,11 +83,31 @@ namespace palmesneo_village
 
             if(idleTime <= 0)
             {
-                Vector2 newTargetTile = GetRandomTargetTile();
+                Vector2 targetTile = GetRandomTargetTile();
 
-                if (CurrentLocation.IsTilePassable((int)newTargetTile.X, (int)newTargetTile.Y))
+                if (CurrentLocation.IsTilePassable((int)targetTile.X, (int)targetTile.Y))
                 {
-                    targetTile = newTargetTile;
+                    Vector2 currentTile = GetTilePosition();
+
+                    creatureMovement.SetPath(CurrentLocation.FindPath(currentTile, targetTile, false));
+
+                    // Set the direction of the animal
+                    if (targetTile.X < currentTile.X)
+                    {
+                        movementDirection = Direction.Left;
+                    }
+                    else if (targetTile.X > currentTile.X)
+                    {
+                        movementDirection = Direction.Right;
+                    }
+                    else if (targetTile.Y < currentTile.Y)
+                    {
+                        movementDirection = Direction.Up;
+                    }
+                    else if (targetTile.Y > currentTile.Y)
+                    {
+                        movementDirection = Direction.Down;
+                    }
 
                     animalState = AnimalState.Moving;
                 }
@@ -88,37 +118,10 @@ namespace palmesneo_village
             }
         }
 
-        private void UpdateMovement()
+        public override void SetTilePosition(Vector2 tile)
         {
-            Vector2 movement = targetTile - GetTilePosition();
-            if (movement == Vector2.Zero)
-            {
-                animalState = AnimalState.Idle;
-                idleTime = Calc.Random.Choose(idleTimeSet);
-            }
-            else
-            {
-                movement.Normalize();
-
-                LocalPosition = LocalPosition + movement * Speed * Engine.GameDeltaTime;
-            }
-
-            if (movement.X > 0)
-            {
-                movementDirection = Direction.Right;
-            }
-            else if (movement.X < 0)
-            {
-                movementDirection = Direction.Left;
-            }
-            else if (movement.Y > 0)
-            {
-                movementDirection = Direction.Down;
-            }
-            else if (movement.Y < 0)
-            {
-                movementDirection = Direction.Up;
-            }
+            PathNode pathNode = CurrentLocation.GetPathNode((int)tile.X, (int)tile.Y);
+            creatureMovement.TeleportTo(pathNode);
         }
 
         private Vector2 GetRandomTargetTile()

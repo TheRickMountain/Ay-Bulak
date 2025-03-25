@@ -23,8 +23,6 @@ namespace palmesneo_village
             UpdateMovement();
 
             CheckForItemPickup();
-
-            Depth = (int)LocalPosition.Y;
         }
 
         protected void UpdateMovement()

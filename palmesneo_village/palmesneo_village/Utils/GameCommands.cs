@@ -32,7 +32,7 @@ namespace palmesneo_village
             {
                 MTexture texture = ResourcesManager.GetTexture("Sprites", "hen");
 
-                Animal animal = new Animal("chicken", texture, 50.0f);
+                Animal animal = new Animal("chicken", texture, 3.0f);
                 
                 GameLocation currentGameLocation = ((GameplayScene)Engine.CurrentScene).CurrentGameLocation;
                 
