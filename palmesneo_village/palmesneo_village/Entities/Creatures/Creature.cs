@@ -10,15 +10,15 @@ namespace palmesneo_village
 
         private ImageEntity bodyImage;
 
-        public Creature(CreatureTemplate creatureTemplate)
+        public Creature(string name, MTexture texture, float speed)
         {
-            Name = creatureTemplate.Name;
-            Speed = creatureTemplate.MovementSpeed;
+            Name = name;
+            Speed = speed;
 
             bodyImage = new ImageEntity();
-            bodyImage.Texture = creatureTemplate.Texture;
+            bodyImage.Texture = texture;
             bodyImage.Centered = true;
-            bodyImage.Offset = new Vector2(0, creatureTemplate.Texture.Height / 2 - Engine.TILE_SIZE / 2);
+            bodyImage.Offset = new Vector2(0, texture.Height / 2 - Engine.TILE_SIZE / 2);
 
             AddChild(bodyImage);
         }
@@ -36,6 +36,11 @@ namespace palmesneo_village
         public Vector2 GetTilePosition()
         {
             return CurrentLocation.WorldToMap(LocalPosition);
+        }
+
+        protected virtual Direction UpdateMovement()
+        {
+            return Direction.Down;
         }
     }
 }

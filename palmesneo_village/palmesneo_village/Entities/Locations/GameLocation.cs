@@ -154,6 +154,18 @@ namespace palmesneo_village
             airTopTilemap.SetCell(x, y, terrainId);
         }
 
+        public void AddAnimal(Animal animal)
+        {
+            entitiesList.AddChild(animal);
+            animal.SetGameLocation(this);
+        }
+
+        public void RemoveAnimal(Animal animal)
+        {
+            entitiesList.RemoveChild(animal);
+            animal.SetGameLocation(null);
+        }
+
         public void SetPlayer(Player player)
         {
             if(_player != null)

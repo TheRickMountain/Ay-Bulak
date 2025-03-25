@@ -68,9 +68,7 @@ namespace palmesneo_village
             timeOfDayManager.Name = "time_of_day_manager";
             MasterEntity.AddChild(timeOfDayManager);
 
-            CreatureTemplate creatureTemplate = new CreatureTemplate("Player", ResourcesManager.GetTexture("Sprites", "player"), 80);
-
-            player = new Player(creatureTemplate, Inventory);
+            player = new Player("Player", ResourcesManager.GetTexture("Sprites", "player"), 80, Inventory);
 
             RegisterLocation(new FarmLocation("farm"));
 

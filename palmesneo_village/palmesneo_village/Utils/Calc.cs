@@ -426,6 +426,18 @@ namespace palmesneo_village
         }
 
         /// <summary>
+        /// Returns a random float between min (inclusive) and max (inclusive)
+        /// </summary>
+        /// <param name="random"></param>
+        /// <param name="min"></param>
+        /// <param name="max"></param>
+        /// <returns></returns>
+        public static float Range(this Random random, Range<float> range)
+        {
+            return range.Min + random.NextFloat((range.Max + 1) - range.Min);
+        }
+
+        /// <summary>
         /// Returns a random integer between min (inclusive) and max (exclusive)
         /// </summary>
         /// <param name="random"></param>

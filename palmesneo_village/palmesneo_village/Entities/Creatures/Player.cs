@@ -10,7 +10,8 @@ namespace palmesneo_village
 
         private const float COLLISION_CHECK_OFFSET = 4f;
 
-        public Player(CreatureTemplate creatureTemplate, Inventory inventory) : base(creatureTemplate)
+        public Player(string name, MTexture texture, float speed, Inventory inventory) : 
+            base(name, texture, speed)
         {
             this.inventory = inventory;
         }
@@ -26,7 +27,7 @@ namespace palmesneo_village
             Depth = (int)LocalPosition.Y;
         }
 
-        private void UpdateMovement()
+        protected override Direction UpdateMovement()
         {
             Vector2 movement = new Vector2(InputBindings.MoveHorizontally.Value, InputBindings.MoveVertically.Value);
 
@@ -65,6 +66,8 @@ namespace palmesneo_village
                     }
                 }
             }
+
+            return Direction.Down;
         }
 
         private bool IsValidMovement(Vector2 newPosition)
