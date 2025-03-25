@@ -27,7 +27,7 @@ namespace palmesneo_village
             Depth = (int)LocalPosition.Y;
         }
 
-        protected override Direction UpdateMovement()
+        protected void UpdateMovement()
         {
             Vector2 movement = new Vector2(InputBindings.MoveHorizontally.Value, InputBindings.MoveVertically.Value);
 
@@ -66,8 +66,6 @@ namespace palmesneo_village
                     }
                 }
             }
-
-            return Direction.Down;
         }
 
         private bool IsValidMovement(Vector2 newPosition)

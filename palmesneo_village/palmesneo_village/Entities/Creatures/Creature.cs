@@ -8,19 +8,19 @@ namespace palmesneo_village
         protected float Speed { get; private set; }
         protected GameLocation CurrentLocation { get; private set; }
 
-        private ImageEntity bodyImage;
+        protected ImageEntity BodyImage { get; private set; }
 
         public Creature(string name, MTexture texture, float speed)
         {
             Name = name;
             Speed = speed;
 
-            bodyImage = new ImageEntity();
-            bodyImage.Texture = texture;
-            bodyImage.Centered = true;
-            bodyImage.Offset = new Vector2(0, texture.Height / 2 - Engine.TILE_SIZE / 2);
+            BodyImage = new ImageEntity();
+            BodyImage.Texture = texture;
+            BodyImage.Centered = true;
+            BodyImage.Offset = new Vector2(0, texture.Height / 2 - Engine.TILE_SIZE / 2);
 
-            AddChild(bodyImage);
+            AddChild(BodyImage);
         }
 
         public void SetGameLocation(GameLocation gameLocation)
@@ -36,11 +36,6 @@ namespace palmesneo_village
         public Vector2 GetTilePosition()
         {
             return CurrentLocation.WorldToMap(LocalPosition);
-        }
-
-        protected virtual Direction UpdateMovement()
-        {
-            return Direction.Down;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using MonoGame.Extended;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -19,17 +20,37 @@ namespace palmesneo_village
 
         private Vector2 targetTile;
 
-        private Range<float> idleTimeRange = new Range<float>(2.0f, 4.0f);
+        private Dictionary<Direction, MTexture> directionTextures = new();
+
+        private Direction movementDirection = Direction.Down;
+
+        private float[] idleTimeSet = new float[] { 0.0f, 1.0f, 2.0f, 3.0f };
 
         public Animal(string name, MTexture texture, float speed) 
             : base(name, texture, speed)
         {
-            
+            int directionTextureWidth = texture.Width / 4;
+            int directionTextureHeight = texture.Height;
+
+            foreach(Direction direction in Enum.GetValues<Direction>())
+            {
+                MTexture directionTexture = new MTexture(texture, new Rectangle(
+                    directionTextureWidth * (int)direction, 
+                    0, 
+                    directionTextureWidth, 
+                    directionTextureHeight));
+
+                directionTextures.Add(direction, directionTexture);
+            }
+
+            BodyImage.Texture = directionTextures[movementDirection];
         }
 
         public override void Update()
         {
-            switch(animalState)
+            BodyImage.Texture = directionTextures[movementDirection];
+
+            switch (animalState)
             {
                 case AnimalState.Idle:
                     {
@@ -62,18 +83,18 @@ namespace palmesneo_village
                 }
                 else
                 {
-                    idleTime = Calc.Random.Range(idleTimeRange);
+                    idleTime = Calc.Random.Choose(idleTimeSet);
                 }
             }
         }
 
-        protected override Direction UpdateMovement()
+        private void UpdateMovement()
         {
             Vector2 movement = targetTile - GetTilePosition();
             if (movement == Vector2.Zero)
             {
                 animalState = AnimalState.Idle;
-                idleTime = Calc.Random.Range(idleTimeRange);
+                idleTime = Calc.Random.Choose(idleTimeSet);
             }
             else
             {
@@ -82,7 +103,22 @@ namespace palmesneo_village
                 LocalPosition = LocalPosition + movement * Speed * Engine.GameDeltaTime;
             }
 
-            return Direction.Down;
+            if (movement.X > 0)
+            {
+                movementDirection = Direction.Right;
+            }
+            else if (movement.X < 0)
+            {
+                movementDirection = Direction.Left;
+            }
+            else if (movement.Y > 0)
+            {
+                movementDirection = Direction.Down;
+            }
+            else if (movement.Y < 0)
+            {
+                movementDirection = Direction.Up;
+            }
         }
 
         private Vector2 GetRandomTargetTile()
