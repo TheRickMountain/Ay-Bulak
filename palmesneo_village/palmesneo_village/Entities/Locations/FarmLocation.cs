@@ -37,6 +37,8 @@ namespace palmesneo_village
             TryBuild(Engine.ItemsDatabase.GetItemByName<BuildingItem>("small_main_gate"), 28, 48, Direction.Down);
             TryBuild(Engine.ItemsDatabase.GetItemByName<BuildingItem>("big_left_main_gate"), 30, 48, Direction.Down);
             TryBuild(Engine.ItemsDatabase.GetItemByName<BuildingItem>("big_right_main_gate"), 32, 48, Direction.Down);
+            
+            TryBuild(Engine.ItemsDatabase.GetItemByName<BuildingItem>("bench"), 25, 49, Direction.Down);
 
             for(int x = 0; x < MapWidth; x += 2)
             {

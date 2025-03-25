@@ -358,6 +358,19 @@
 			],
 			"IsRotatable": false,
 			"IsPassable": false
+		},
+		{
+			"Id": 1011,
+			"Name": "bench",
+			"Description": "test",
+			"Width": 2,
+			"Height": 1,
+			"GroundPattern": [
+				["A"],
+				["A"]
+			],
+			"IsRotatable": false,
+			"IsPassable": false
 		}
 	],
 	"PlantItems":[
