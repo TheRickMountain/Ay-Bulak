@@ -22,8 +22,7 @@ namespace palmesneo_village
     public enum GroundTopTile
     {
         None = -1,
-        Moisture = 0,
-        Gate = 3
+        Moisture = 0
     }
 
     public class GameLocation : Entity
@@ -782,13 +781,6 @@ namespace palmesneo_village
                 case GroundTile.AnimalHouseWall:
                 case GroundTile.HouseWall:
                 case GroundTile.Water:
-                    collisionMap[x, y] = false;
-                    break;
-            }
-
-            switch(GetGroundTopTile(x, y))
-            {
-                case GroundTopTile.Gate:
                     collisionMap[x, y] = false;
                     break;
             }
