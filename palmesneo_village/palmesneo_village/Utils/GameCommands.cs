@@ -25,25 +25,6 @@ namespace palmesneo_village
             return true;
         }
 
-        [Command("spawn_animal", "Spawns an animal in the current game location")]
-        private static void SpawnAnimal()
-        {
-            if (Engine.CurrentScene is GameplayScene)
-            {
-                MTexture texture = ResourcesManager.GetTexture("Sprites", "hen");
-
-                Animal animal = new Animal("chicken", texture, 3.0f);
-                
-                GameLocation currentGameLocation = ((GameplayScene)Engine.CurrentScene).CurrentGameLocation;
-                
-                currentGameLocation.AddAnimal(animal);
-
-                Vector2 spawnTile = currentGameLocation.WorldToMap(MInput.Mouse.GlobalPosition);
-
-                animal.SetTilePosition(spawnTile);
-            }
-        }
-
         [Command("set_time_speed", "Set time speed")]
         private static void SetTimeSpeed(int value)
         {

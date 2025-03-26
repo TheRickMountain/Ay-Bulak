@@ -19,6 +19,8 @@ namespace palmesneo_village
 
         public override bool CanInteract(Item item)
         {
+            if (resourceItem.RequiredToolType == ToolType.None) return true;
+
             return item is ToolItem toolItem && toolItem.ToolType == resourceItem.RequiredToolType;
         }
 
@@ -26,9 +28,14 @@ namespace palmesneo_village
         {
             if (CanInteract(item))
             {
-                ToolItem toolItem = (ToolItem)item;
+                int interactionEfficiency = 1;
 
-                currentStrength -= toolItem.Efficiency;
+                if(resourceItem.RequiredToolType != ToolType.None && item is ToolItem toolItem)
+                {
+                    interactionEfficiency = toolItem.Efficiency;
+                }
+
+                currentStrength -= interactionEfficiency;
 
                 ItemContainer itemContainer = new ItemContainer();
                 itemContainer.Item = Engine.ItemsDatabase.GetItemByName<Item>(resourceItem.ItemName);

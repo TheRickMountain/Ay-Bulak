@@ -89,25 +89,9 @@ namespace palmesneo_village
                 {
                     Vector2 currentTile = GetTilePosition();
 
-                    creatureMovement.SetPath(CurrentLocation.FindPath(currentTile, targetTile, false));
+                    movementDirection = GetMovementDirection(currentTile, targetTile);
 
-                    // Set the direction of the animal
-                    if (targetTile.X < currentTile.X)
-                    {
-                        movementDirection = Direction.Left;
-                    }
-                    else if (targetTile.X > currentTile.X)
-                    {
-                        movementDirection = Direction.Right;
-                    }
-                    else if (targetTile.Y < currentTile.Y)
-                    {
-                        movementDirection = Direction.Up;
-                    }
-                    else if (targetTile.Y > currentTile.Y)
-                    {
-                        movementDirection = Direction.Down;
-                    }
+                    creatureMovement.SetPath(CurrentLocation.FindPath(currentTile, targetTile, false));
 
                     animalState = AnimalState.Moving;
                 }
@@ -122,6 +106,31 @@ namespace palmesneo_village
         {
             PathNode pathNode = CurrentLocation.GetPathNode((int)tile.X, (int)tile.Y);
             creatureMovement.TeleportTo(pathNode);
+        }
+
+        private Direction GetMovementDirection(Vector2 startTile, Vector2 finishTile)
+        {
+            if (finishTile.X < startTile.X)
+            {
+                return Direction.Left;
+            }
+            
+            if (finishTile.X > startTile.X)
+            {
+                return Direction.Right;
+            }
+            
+            if (finishTile.Y < startTile.Y)
+            {
+                return Direction.Up;
+            }
+            
+            if (finishTile.Y > startTile.Y)
+            {
+                return Direction.Down;
+            }
+
+            return Direction.Down;
         }
 
         private Vector2 GetRandomTargetTile()

@@ -196,6 +196,17 @@ namespace palmesneo_village
             _player = null;
         }
 
+        public IEnumerable<Animal> GetAnimals()
+        {
+            foreach(Entity entity in entitiesList.GetChildren())
+            {
+                if (entity is Animal animal)
+                {
+                    yield return animal;
+                }
+            }
+        }
+
         public Rectangle GetBoundaries()
         {
             return new Rectangle(0, 0, MapWidth * Engine.TILE_SIZE, MapHeight * Engine.TILE_SIZE);
@@ -245,12 +256,12 @@ namespace palmesneo_village
             GroundTile groundTile = GetGroundTile(x, y);
             GroundTopTile groundTopTile = GetGroundTopTile(x, y);
 
-            Building building = buildingsMap[x, y];
-
             if (teleportsMap[x, y] != null)
             {
                 return true;
             }
+
+            Building building = buildingsMap[x, y];
 
             if (building is PlantBuilding plantBuilding)
             {
@@ -270,6 +281,10 @@ namespace palmesneo_village
             else if (building is GateBuilding)
             {
                 return true;
+            }
+            else if(building is ResourceBuilding)
+            {
+                if (building.CanInteract(handItem)) return true;
             }
 
             if (handItem is ToolItem toolItem)
@@ -321,6 +336,8 @@ namespace palmesneo_village
                 return;
             }
 
+            Item handItem = inventory.GetSlotItem(slotIndex);
+
             Building building = buildingsMap[x, y];
 
             if (building != null)
@@ -348,9 +365,12 @@ namespace palmesneo_village
                     gateBuilding.Interact(null);
                     return;
                 }
+                else if(building is ResourceBuilding resourceBuilding)
+                {
+                    building.Interact(handItem);
+                    return;
+                }
             }
-
-            Item handItem = inventory.GetSlotItem(slotIndex);
 
             if (handItem is ToolItem toolItem)
             {
@@ -447,7 +467,7 @@ namespace palmesneo_village
             return groundTilemap.MapToWorld(vector);
         }
 
-        public void StartNextDay(TimeOfDayManager timeOfDayManager)
+        public virtual void StartNextDay(TimeOfDayManager timeOfDayManager)
         {
             if (timeOfDayManager.CurrentWeather == Weather.Rainy)
             {

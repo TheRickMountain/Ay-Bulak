@@ -1,8 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace palmesneo_village
 {
@@ -62,6 +59,44 @@ namespace palmesneo_village
             }
         }
 
+        public override void StartNextDay(TimeOfDayManager timeOfDayManager)
+        {
+            base.StartNextDay(timeOfDayManager);
 
+            int animalsAmount = 0;
+
+            foreach(Animal animal in GetAnimals())
+            {
+                animalsAmount++;
+            }
+
+            for (int i = 0; i < animalsAmount; i++)
+            {
+                Vector2 spawnTile = GetTileForResourceSpawning();
+
+                ResourceItem resourceItem = Engine.ItemsDatabase.GetItemByName<ResourceItem>("chicken_egg_resource");
+
+                TryBuild(resourceItem, (int)spawnTile.X, (int)spawnTile.Y, Direction.Down);
+            }
+        }
+
+        public Vector2 GetTileForResourceSpawning()
+        {
+            List<Vector2> freeTiles = new List<Vector2>();
+
+            for (int x = 0; x < MapWidth; x++)
+            {
+                for (int y = 0; y < MapHeight; y++)
+                {
+                    if(GetGroundTile(x, y) != GroundTile.CoopHouseFloor) continue;
+
+                    if (GetBuilding(x, y) != null) continue;
+
+                    freeTiles.Add(new Vector2(x, y));
+                }
+            }
+
+            return Calc.Random.Choose(freeTiles);
+        }
     }
 }
