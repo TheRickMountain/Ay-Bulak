@@ -788,6 +788,21 @@
 			"CloseSoundEffect": "SoundEffects\\Minifantasy_Dungeon_SFX\\06_door_close_1"
 		}
 	],
+	"AnimalSpawnerItems": [
+		{
+			"Id": 13000,
+			"Name": "hen_spawner",
+			"Description": "test",
+			"Width": 1,
+			"Height": 1,
+			"GroundPattern": [
+				["F"]
+			],
+			"IsRotatable": false,
+			"IsPassable": true,
+			"AnimalName": "hen"
+		}
+	],
 	"SeedItems":[
 		{
 			"Id": 72,

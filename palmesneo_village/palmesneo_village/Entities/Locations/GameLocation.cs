@@ -15,7 +15,7 @@ namespace palmesneo_village
         FarmPlot = 3,
         HouseFloor = 4,
         HouseWall = 5,
-        AnimalHouseFloor = 6,
+        CoopHouseFloor = 6,
         AnimalHouseWall = 7
     }
 
@@ -593,6 +593,10 @@ namespace palmesneo_village
                 {
                     building = new GateBuilding(this, gateItem, direction, tiles);
                 }
+                else if(buildingItem is AnimalSpawnerItem animalSpawnerItem)
+                {
+                    building = new AnimalSpawnerBuilding(this, animalSpawnerItem, direction, tiles);
+                }
                 else
                 {
                     building = new Building(this, buildingItem, direction, tiles);
@@ -728,6 +732,10 @@ namespace palmesneo_village
                     {
                         return (groundTile == GroundTile.Grass || groundTile == GroundTile.Ground) &&
                             floorPathMap[x, y] == null;
+                    }
+                case "F":
+                    {
+                        return groundTile == GroundTile.CoopHouseFloor;
                     }
             }
 
