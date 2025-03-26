@@ -820,6 +820,20 @@
 			"AnimalName": "hen"
 		}
 	],
+	"AnimalFeederItems": [
+		{
+			"Id": 14000,
+			"Name": "animal_feeder",
+			"Description": "test",
+			"Width": 1,
+			"Height": 1,
+			"GroundPattern": [
+				["F"]
+			],
+			"IsRotatable": false,
+			"IsPassable": false
+		}
+	],
 	"SeedItems":[
 		{
 			"Id": 72,

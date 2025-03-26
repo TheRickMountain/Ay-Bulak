@@ -5,12 +5,16 @@ namespace palmesneo_village
 {
     public class CoopLocation : GameLocation
     {
-
         public CoopLocation(string id, Teleport exitTeleport) : base(id, 32, 16)
         {
             CreateTeleport(20, 10, exitTeleport);
 
             CreateCoopFirstLayer();
+
+            for (int i = 0; i < 6; i++)
+            {
+                TryBuild(Engine.ItemsDatabase.GetItemByName<BuildingItem>("animal_feeder"), 13 + i, 5, Direction.Down);
+            }
         }
 
         private void CreateCoopFirstLayer()
@@ -63,9 +67,16 @@ namespace palmesneo_village
         {
             base.StartNextDay(timeOfDayManager);
 
+            SpawnResources();
+
+            EmptyAnimalFeeders();
+        }
+
+        private void SpawnResources()
+        {
             int animalsAmount = 0;
 
-            foreach(Animal animal in GetAnimals())
+            foreach (Animal animal in GetAnimals())
             {
                 animalsAmount++;
             }
@@ -77,6 +88,31 @@ namespace palmesneo_village
                 ResourceItem resourceItem = Engine.ItemsDatabase.GetItemByName<ResourceItem>("chicken_egg_resource");
 
                 TryBuild(resourceItem, (int)spawnTile.X, (int)spawnTile.Y, Direction.Down);
+            }
+        }
+
+        private void EmptyAnimalFeeders()
+        {
+            int animalsAmount = 0;
+
+            foreach (Animal animal in GetAnimals())
+            {
+                animalsAmount++;
+            }
+
+            foreach (Building building in GetBuildings())
+            {
+                if (building is AnimalFeederBuilding animalFeeder)
+                {
+                    animalFeeder.Empty();
+
+                    animalsAmount--;
+
+                    if (animalsAmount == 0)
+                    {
+                        break;
+                    }
+                }
             }
         }
 

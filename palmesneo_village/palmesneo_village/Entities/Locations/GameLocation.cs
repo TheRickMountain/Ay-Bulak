@@ -418,6 +418,17 @@ namespace palmesneo_village
             return buildingsMap[x, y];
         }
 
+        public IEnumerable<Building> GetBuildings()
+        {
+            foreach (Entity entity in entitiesList.GetChildren())
+            {
+                if (entity is Building building)
+                {
+                    yield return building;
+                }
+            }
+        }
+
         public bool TryBuild(BuildingItem buildingItem, int x, int y, Direction direction)
         {
             string[,] groundPattern = Calc.RotateMatrix(buildingItem.GroundPattern, direction);
@@ -519,6 +530,10 @@ namespace palmesneo_village
                 else if(buildingItem is AnimalSpawnerItem animalSpawnerItem)
                 {
                     building = new AnimalSpawnerBuilding(this, animalSpawnerItem, direction, tiles);
+                }
+                else if(buildingItem is AnimalFeederItem animalFeederItem)
+                {
+                    building = new AnimalFeederBuilding(this, animalFeederItem, direction, tiles);
                 }
                 else
                 {
