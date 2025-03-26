@@ -26,11 +26,11 @@ namespace palmesneo_village
             {
                 if (timeOfDayManager.CurrentHour >= 18)
                 {
-                    Sprite.Texture = ((WindowItem)BuildingItem).NightTexture;
+                    Sprite.Texture = windowItem.NightTexture;
                 }
                 else
                 {
-                    Sprite.Texture = ((WindowItem)BuildingItem).DayTexture;
+                    Sprite.Texture = windowItem.DayTexture;
                 }
             }
 

@@ -45,14 +45,12 @@ namespace palmesneo_village
 
         }
 
-        public virtual void Interact(Item item)
+        public virtual void Interact(Item item, PlayerEnergyManager playerEnergyManager)
         {
-
         }
 
-        public virtual bool CanInteract(Item item)
+        public virtual void InteractAlternatively(Item item, PlayerEnergyManager playerEnergyManager)
         {
-            return false;
         }
     }
 }

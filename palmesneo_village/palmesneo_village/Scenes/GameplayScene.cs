@@ -213,17 +213,22 @@ namespace palmesneo_village
                         }
                         else if (CanShowTileSelector(playerTile, mouseTile, 4))
                         {
-                            if (CurrentGameLocation.CanInteractWithTile(tileX, tileY, currentPlayerItem))
-                            {
+                            //if (CurrentGameLocation.CanInteractWithTile(tileX, tileY, currentPlayerItem))
+                            //{
                                 tileSelector.IsVisible = true;
                                 tileSelector.LocalPosition = CurrentGameLocation.MapToWorld(mouseTile);
 
                                 if (MInput.Mouse.PressedLeftButton)
                                 {
                                     CurrentGameLocation.InteractWithTile(tileX, tileY, Inventory, 
-                                        inventoryHotbar.CurrentSlotIndex, PlayerEnergyManager, this);
+                                        inventoryHotbar.CurrentSlotIndex, PlayerEnergyManager, this, false);
                                 }
-                            }
+                                else if(MInput.Mouse.PressedRightButton)
+                                {
+                                    CurrentGameLocation.InteractWithTile(tileX, tileY, Inventory,
+                                        inventoryHotbar.CurrentSlotIndex, PlayerEnergyManager, this, true);
+                                }
+                            //}
                         }
 
                         if (MInput.Mouse.PressedRightButton)

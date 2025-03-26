@@ -17,39 +17,56 @@ namespace palmesneo_village
             currentStrength = resourceItem.Strength;
         }
 
-        public override bool CanInteract(Item item)
+        public override void Interact(Item item, PlayerEnergyManager playerEnergyManager)
         {
-            if (resourceItem.RequiredToolType == ToolType.None) return true;
-
-            return item is ToolItem toolItem && toolItem.ToolType == resourceItem.RequiredToolType;
-        }
-
-        public override void Interact(Item item)
-        {
-            if (CanInteract(item))
+            if (resourceItem.RequiredToolType == ToolType.None)
             {
-                int interactionEfficiency = 1;
-
-                if(resourceItem.RequiredToolType != ToolType.None && item is ToolItem toolItem)
-                {
-                    interactionEfficiency = toolItem.Efficiency;
-                }
-
-                currentStrength -= interactionEfficiency;
-
-                ItemContainer itemContainer = new ItemContainer();
-                itemContainer.Item = Engine.ItemsDatabase.GetItemByName<Item>(resourceItem.ItemName);
-                itemContainer.Quantity = resourceItem.ItemAmount;
-
-                GameLocation.AddItem(OccupiedTiles[0, 0] * Engine.TILE_SIZE, itemContainer);
+                currentStrength--;
 
                 if (currentStrength <= 0)
                 {
-                    GameLocation.RemoveBuilding(this);
+                    GatherResource();
+                }
+            }
+            else
+            {
+                if(item is ToolItem toolItem && toolItem.ToolType == resourceItem.RequiredToolType)
+                {
+                    toolItem.PlaySoundEffect();
+
+                    playerEnergyManager.ConsumeEnergy(1);
+
+                    currentStrength -= toolItem.Efficiency;
+
+                    if (currentStrength <= 0)
+                    {
+                        GatherResource();
+                    }
                 }
             }
         }
-    
-        
+
+        public override void InteractAlternatively(Item item, PlayerEnergyManager playerEnergyManager)
+        {
+            if(resourceItem.RequiredToolType == ToolType.None)
+            {
+                currentStrength--;
+
+                if(currentStrength <= 0)
+                {
+                    GatherResource();
+                }
+            }
+        }
+
+        private void GatherResource()
+        {
+            ItemContainer itemContainer = new ItemContainer();
+            itemContainer.Item = Engine.ItemsDatabase.GetItemByName<Item>(resourceItem.ItemName);
+            itemContainer.Quantity = resourceItem.ItemAmount;
+            GameLocation.AddItem(OccupiedTiles[0, 0] * Engine.TILE_SIZE, itemContainer);
+            GameLocation.RemoveBuilding(this);
+        }
+
     }
 }

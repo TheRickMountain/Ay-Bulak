@@ -10,5 +10,10 @@ namespace palmesneo_village
         {
             
         }
+
+        public override void InteractAlternatively(Item item, PlayerEnergyManager playerEnergyManager)
+        {
+            ((GameplayScene)Engine.CurrentScene).StartNextDay();
+        }
     }
 }

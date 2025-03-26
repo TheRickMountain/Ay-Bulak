@@ -20,5 +20,9 @@ namespace palmesneo_village
 
         public IEnumerable<CraftingRecipe> CraftingRecipes => craftingRecipes;
 
+        public override void InteractAlternatively(Item item, PlayerEnergyManager playerEnergyManager)
+        {
+            ((GameplayScene)Engine.CurrentScene).OpenPlayerInventoryUI(CraftingRecipes);
+        }
     }
 }

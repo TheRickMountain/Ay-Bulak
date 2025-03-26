@@ -41,20 +41,42 @@ namespace palmesneo_village
             Sprite.Texture = plantItem.GrowthStagesTextures[currentGrowthStage];
         }
 
-        public override void Interact(Item item)
+        public override void Interact(Item item, PlayerEnergyManager playerEnergyManager)
         {
             if (IsRipe)
             {
-                ItemContainer itemContainer = new ItemContainer();
-                itemContainer.Item = Engine.ItemsDatabase.GetItemByName<Item>(plantItem.HarvestItem);
-                itemContainer.Quantity = plantItem.HarvestAmount;
-
-                GameLocation.AddItem(OccupiedTiles[0, 0] * Engine.TILE_SIZE, itemContainer);
-
-                if (plantItem.RemoveAfterHarvest)
+                Harvest();
+            }
+            else if(item is ToolItem toolItem)
+            {
+                if(toolItem.ToolType == ToolType.Axe || toolItem.ToolType == ToolType.Pickaxe)
                 {
+                    playerEnergyManager.ConsumeEnergy(1);
+                    
                     GameLocation.RemoveBuilding(this);
                 }
+            }
+        }
+
+        public override void InteractAlternatively(Item item, PlayerEnergyManager playerEnergyManager)
+        {
+            if(IsRipe)
+            {
+                Harvest();
+            }
+        }
+
+        private void Harvest()
+        {
+            ItemContainer itemContainer = new ItemContainer();
+            itemContainer.Item = Engine.ItemsDatabase.GetItemByName<Item>(plantItem.HarvestItem);
+            itemContainer.Quantity = plantItem.HarvestAmount;
+
+            GameLocation.AddItem(OccupiedTiles[0, 0] * Engine.TILE_SIZE, itemContainer);
+
+            if (plantItem.RemoveAfterHarvest)
+            {
+                GameLocation.RemoveBuilding(this);
             }
         }
     }

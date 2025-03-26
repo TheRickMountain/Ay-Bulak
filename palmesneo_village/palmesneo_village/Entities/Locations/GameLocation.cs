@@ -251,89 +251,17 @@ namespace palmesneo_village
             }
         }
 
-        public bool CanInteractWithTile(int x, int y, Item handItem)
-        {
-            GroundTile groundTile = GetGroundTile(x, y);
-            GroundTopTile groundTopTile = GetGroundTopTile(x, y);
-
-            if (teleportsMap[x, y] != null)
-            {
-                return true;
-            }
-
-            Building building = buildingsMap[x, y];
-
-            if (building is PlantBuilding plantBuilding)
-            {
-                if (plantBuilding.IsRipe)
-                {
-                    return true;
-                }
-            }
-            else if (building is BedBuilding)
-            {
-                return true;
-            }
-            else if (building is ManualCrafterBuilding)
-            {
-                return true;
-            }
-            else if (building is GateBuilding)
-            {
-                return true;
-            }
-            else if(building is ResourceBuilding)
-            {
-                if (building.CanInteract(handItem)) return true;
-            }
-
-            if (handItem is ToolItem toolItem)
-            {
-                if (toolItem.ToolType == ToolType.Showel)
-                {
-                    if (building != null) return false;
-
-                    if (groundTile == GroundTile.Grass || groundTile == GroundTile.Ground) return true;
-                }
-                else if (toolItem.ToolType == ToolType.WateringCan)
-                {
-                    if (building is WaterSourceBuilding) return true;
-
-                    if (groundTile == GroundTile.Water) return true;
-
-                    if (groundTile == GroundTile.FarmPlot && groundTopTile != GroundTopTile.Moisture) return true;
-                }
-                else if (toolItem.ToolType == ToolType.Pickaxe ||
-                    toolItem.ToolType == ToolType.Axe ||
-                    toolItem.ToolType == ToolType.Scythe)
-                {
-                    if (building != null && building.CanInteract(toolItem)) return true;
-
-                    if (floorPathTilemap.GetCell(x, y) >= 0) return true;
-                }
-            }
-            else if (handItem is SeedItem seedItem)
-            {
-                if (groundTile == GroundTile.FarmPlot && building == null) return true;
-            }
-            else if (handItem is TreeSeedItem treeSeedItem)
-            {
-                if (building != null) return false;
-
-                if (groundTile == GroundTile.Ground || groundTile == GroundTile.Grass) return true;
-            }
-
-            return false;
-        }
-
         public void InteractWithTile(int x, int y, Inventory inventory, int slotIndex, PlayerEnergyManager playerEnergyManager,
-            GameplayScene gameplayScene)
+            GameplayScene gameplayScene, bool isAlternativeInteraction)
         {
-            if (teleportsMap[x, y] != null)
+            if (isAlternativeInteraction)
             {
-                Teleport teleport = teleportsMap[x, y];
-                gameplayScene.GoToLocation(teleport.Location, teleport.Tile);
-                return;
+                if (teleportsMap[x, y] != null)
+                {
+                    Teleport teleport = teleportsMap[x, y];
+                    gameplayScene.GoToLocation(teleport.Location, teleport.Tile);
+                    return;
+                }
             }
 
             Item handItem = inventory.GetSlotItem(slotIndex);
@@ -342,113 +270,88 @@ namespace palmesneo_village
 
             if (building != null)
             {
-                if (building is PlantBuilding plantBuilding)
+                if (isAlternativeInteraction)
                 {
-                    if (plantBuilding.IsRipe)
-                    {
-                        plantBuilding.Interact(null);
-                        return;
-                    }
+                    building.InteractAlternatively(handItem, playerEnergyManager);
                 }
-                else if (building is BedBuilding)
+                else
                 {
-                    gameplayScene.StartNextDay();
-                    return;
-                }
-                else if (building is ManualCrafterBuilding manualCrafterBuilding)
-                {
-                    gameplayScene.OpenPlayerInventoryUI(manualCrafterBuilding.CraftingRecipes);
-                    return;
-                }
-                else if (building is GateBuilding gateBuilding)
-                {
-                    gateBuilding.Interact(null);
-                    return;
-                }
-                else if(building is ResourceBuilding resourceBuilding)
-                {
-                    building.Interact(handItem);
-                    return;
+                    building.Interact(handItem, playerEnergyManager);
                 }
             }
-
-            if (handItem is ToolItem toolItem)
+            else
             {
-                toolItem.PlaySoundEffect();
-
-                if (toolItem.ToolType == ToolType.Showel)
+                if (handItem is ToolItem toolItem)
                 {
-                    SetGroundTile(x, y, GroundTile.FarmPlot);
+                    switch (toolItem.ToolType)
+                    {
+                        case ToolType.Showel:
+                            {
+                                if((GetGroundTile(x, y) == GroundTile.Grass || GetGroundTile(x, y) == GroundTile.Ground)
+                                    && GetTileFloorPathItem(x, y) == null)
+                                {
+                                    toolItem.PlaySoundEffect();
+                                    playerEnergyManager.ConsumeEnergy(1);
+                                    SetGroundTile(x, y, GroundTile.FarmPlot);
+                                }
+                            }
+                            break;
+                        case ToolType.WateringCan:
+                            {
+                                if(GetGroundTile(x, y) == GroundTile.Water || building is WaterSourceBuilding)
+                                {
+                                    toolItem.PlaySoundEffect();
+                                    inventory.AddSlotItemContentAmount(slotIndex, toolItem.Capacity);
+                                }
+                                else
+                                {
+                                    if (inventory.GetSlotContentAmount(slotIndex) > 0)
+                                    {
+                                        toolItem.PlaySoundEffect();
+                                        inventory.SubSlotItemContentAmount(slotIndex, 1);
+                                        SetGroundTopTile(x, y, GroundTopTile.Moisture);
+                                        playerEnergyManager.ConsumeEnergy(1);
+                                    }
+                                }
+                            }
+                            break;
+                        case ToolType.Pickaxe:
+                        case ToolType.Axe:
+                            {
+                                if (floorPathTilemap.GetCell(x, y) >= 0)
+                                {
+                                    AddItem(new Vector2(x, y) * Engine.TILE_SIZE, new ItemContainer()
+                                    {
+                                        Item = Engine.ItemsDatabase.GetFloorPathItemByTilesetIndex(floorPathTilemap.GetCell(x, y)),
+                                        Quantity = 1
+                                    });
 
-                    playerEnergyManager.ConsumeEnergy(1);
+                                    SetTileFloorPathItem(x, y, null);
+
+                                    playerEnergyManager.ConsumeEnergy(1);
+                                }
+                            }
+                            break;
+                    }
                 }
-                else if (toolItem.ToolType == ToolType.WateringCan)
+                else if (handItem is SeedItem seedItem)
                 {
-                    if (GetGroundTile(x, y) == GroundTile.Water || building is WaterSourceBuilding)
-                    {
-                        inventory.AddSlotItemContentAmount(slotIndex, toolItem.Capacity);
-                    }
-                    else
-                    {
-                        if (inventory.GetSlotContentAmount(slotIndex) > 0)
-                        {
-                            inventory.SubSlotItemContentAmount(slotIndex, 1);
+                    PlantItem plantItem = Engine.ItemsDatabase.GetItemByName<PlantItem>(seedItem.PlantName);
 
-                            SetGroundTopTile(x, y, GroundTopTile.Moisture);
-
-                            playerEnergyManager.ConsumeEnergy(1);
-                        }
-                        else
-                        {
-                            //TODO: дать знать игроку, что лейка пуста
-                        }
+                    if(TryBuild(plantItem, x, y, Direction.Down))
+                    {
+                        inventory.RemoveItem(handItem, 1, slotIndex);
                     }
                 }
-                else if (toolItem.ToolType == ToolType.Pickaxe ||
-                    toolItem.ToolType == ToolType.Axe ||
-                    toolItem.ToolType == ToolType.Scythe)
+                else if(handItem is TreeSeedItem treeSeedItem)
                 {
-                    if (building != null)
+                    TreeItem treeItem = Engine.ItemsDatabase.GetItemByName<TreeItem>(treeSeedItem.TreeName);
+
+                    if (TryBuild(treeItem, x, y, Direction.Down))
                     {
-                        building.Interact(toolItem);
-
-                        playerEnergyManager.ConsumeEnergy(1);
-                    }
-                    else if (floorPathTilemap.GetCell(x, y) >= 0)
-                    {
-                        AddItem(new Vector2(x, y) * Engine.TILE_SIZE, new ItemContainer()
-                        {
-                            Item = Engine.ItemsDatabase.GetFloorPathItemByTilesetIndex(floorPathTilemap.GetCell(x, y)),
-                            Quantity = 1
-                        });
-
-                        SetTileFloorPathItem(x, y, null);
-
-                        playerEnergyManager.ConsumeEnergy(1);
+                        inventory.RemoveItem(handItem, 1, slotIndex);
                     }
                 }
-            }
-            else if (handItem is SeedItem seedItem)
-            {
-                PlantItem plantItem = Engine.ItemsDatabase.GetItemByName<PlantItem>(seedItem.PlantName);
-
-                Vector2[,] tiles = new Vector2[1, 1];
-                tiles[0, 0] = new Vector2(x, y);
-
-                Build(plantItem, tiles, Direction.Down);
-
-                inventory.RemoveItem(handItem, 1, slotIndex);
-            }
-            else if (handItem is TreeSeedItem treeSeedItem)
-            {
-                TreeItem treeItem = Engine.ItemsDatabase.GetItemByName<TreeItem>(treeSeedItem.TreeName);
-
-                Vector2[,] tiles = new Vector2[1, 1];
-                tiles[0, 0] = new Vector2(x, y);
-
-                Build(treeItem, tiles, Direction.Down);
-
-                inventory.RemoveItem(handItem, 1, slotIndex);
             }
         }
 

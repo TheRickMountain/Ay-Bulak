@@ -17,7 +17,7 @@ namespace palmesneo_village
             gateItem = item;
         }
 
-        public override void Interact(Item item)
+        public override void InteractAlternatively(Item item, PlayerEnergyManager playerEnergyManager)
         {
             IsOpen = !IsOpen;
 
