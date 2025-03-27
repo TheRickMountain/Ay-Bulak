@@ -304,7 +304,7 @@ namespace palmesneo_village
                                     toolItem.PlaySoundEffect();
                                     inventory.AddSlotItemContentAmount(slotIndex, toolItem.Capacity);
                                 }
-                                else
+                                else if(GetGroundTile(x, y) == GroundTile.FarmPlot)
                                 {
                                     if (inventory.GetSlotContentAmount(slotIndex) > 0)
                                     {

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using MonoGame.Extended;
 using System;
 using System.Collections.Generic;
@@ -26,6 +27,12 @@ namespace palmesneo_village
 
         private CreatureMovement creatureMovement;
 
+        private SoundEffect[] soundEffects;
+
+        private float soundEffectTimer = 0;
+
+        private Range<float> soundEffectTimeRange = new Range<float>(5.0f, 20.0f);
+
         public Animal(string name, MTexture texture, float speed) 
             : base(name, texture, speed)
         {
@@ -50,6 +57,15 @@ namespace palmesneo_village
             BodyImage.LocalPosition = new Vector2(Engine.TILE_SIZE / 2, Engine.TILE_SIZE / 2);
 
             AddChild(creatureMovement = new CreatureMovement(speed));
+
+            soundEffects = new SoundEffect[5];
+            soundEffects[0] = ResourcesManager.GetSoundEffect("SoundEffects", "Chicken", "chicken_1");
+            soundEffects[1] = ResourcesManager.GetSoundEffect("SoundEffects", "Chicken", "chicken_2");
+            soundEffects[2] = ResourcesManager.GetSoundEffect("SoundEffects", "Chicken", "chicken_3");
+            soundEffects[3] = ResourcesManager.GetSoundEffect("SoundEffects", "Chicken", "chicken_4");
+            soundEffects[4] = ResourcesManager.GetSoundEffect("SoundEffects", "Chicken", "chicken_5");
+
+            soundEffectTimer = Calc.Random.Range(soundEffectTimeRange);
         }
 
         public override void Update()
@@ -72,6 +88,15 @@ namespace palmesneo_village
                         }
                     }
                     break;
+            }
+
+            soundEffectTimer -= Engine.GameDeltaTime;
+
+            if(soundEffectTimer <= 0)
+            {
+                soundEffects[Calc.Random.Next(soundEffects.Length)].Play();
+
+                soundEffectTimer = Calc.Random.Range(soundEffectTimeRange);
             }
 
             base.Update();
