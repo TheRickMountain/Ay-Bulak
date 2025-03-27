@@ -307,7 +307,7 @@
 				],
 				"Location": "coop",
 				"X": 20,
-				"Y": 10
+				"Y": 9
 			}
 		},
 		{
@@ -599,23 +599,6 @@
 			"ItemName": "hay",
 			"ItemAmount": 1,
 			"RequiredToolType": "Scythe"
-		},
-		{
-			"Id": 7003,
-			"Name": "chicken_egg_resource",
-			"Description": "test",
-			"IsStackable": false,
-			"Width": 1,
-			"Height": 1,
-			"GroundPattern": [
-				["F"]
-			],
-			"IsRotatable": false,
-			"IsPassable": true,
-			"Strength": 1,
-			"ItemName": "chicken_egg",
-			"ItemAmount": 1,
-			"RequiredToolType": "None"
 		}
 	],
 	"FloorPathItems": [
@@ -832,6 +815,20 @@
 			],
 			"IsRotatable": false,
 			"IsPassable": false
+		}
+	],
+	"BirdNestItems": [
+		{
+			"Id": 15000,
+			"Name": "bird_nest",
+			"Description": "test",
+			"Width": 1,
+			"Height": 1,
+			"GroundPattern": [
+				["F"]
+			],
+			"IsRotatable": false,
+			"IsPassable": true
 		}
 	],
 	"SeedItems":[

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Particles;
 using System;
 using System.Collections.Generic;
@@ -534,6 +535,10 @@ namespace palmesneo_village
                 else if(buildingItem is AnimalFeederItem animalFeederItem)
                 {
                     building = new AnimalFeederBuilding(this, animalFeederItem, direction, tiles);
+                }
+                else if(buildingItem is BirdNestItem birdNestItem)
+                {
+                    building = new BirdNestBuilding(this, birdNestItem, direction, tiles);
                 }
                 else
                 {
