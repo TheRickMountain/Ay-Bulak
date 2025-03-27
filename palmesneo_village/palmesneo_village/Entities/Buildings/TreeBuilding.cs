@@ -29,7 +29,7 @@ namespace palmesneo_village
             Sprite.Texture = treeItem.GrowthStagesTextures[0];
         }
 
-        public override void OnDayChanged()
+        public override void OnAfterDayChanged()
         {
             if (IsRipe) return;
 

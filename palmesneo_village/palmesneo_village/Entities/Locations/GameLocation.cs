@@ -380,6 +380,14 @@ namespace palmesneo_village
 
         public virtual void StartNextDay(TimeOfDayManager timeOfDayManager)
         {
+            foreach (Entity entity in entitiesList.GetChildren())
+            {
+                if (entity is Building building)
+                {
+                    building.OnBeforeDayChanged();
+                }
+            }
+
             if (timeOfDayManager.CurrentWeather == Weather.Rainy)
             {
                 for (int x = 0; x < MapWidth; x++)
@@ -414,7 +422,7 @@ namespace palmesneo_village
             {
                 if (entity is Building building)
                 {
-                    building.OnDayChanged();
+                    building.OnAfterDayChanged();
                 }
             }
         }

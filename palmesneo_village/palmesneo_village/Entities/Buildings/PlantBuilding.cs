@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using System;
 
 namespace palmesneo_village
 {
@@ -15,6 +16,8 @@ namespace palmesneo_village
 
         private int currentGrowthStage = 0;
 
+        private bool tileWasWatered = false;
+
         public PlantBuilding(GameLocation gameLocation, PlantItem plantItem, Direction direction, Vector2[,] occupiedTiles) 
             : base(gameLocation, plantItem, direction, occupiedTiles)
         {
@@ -23,9 +26,19 @@ namespace palmesneo_village
             Sprite.Texture = plantItem.GrowthStagesTextures[0];
         }
 
-        public override void OnDayChanged()
+        public override void OnBeforeDayChanged()
+        {
+            Vector2 plantTile = OccupiedTiles[0, 0];
+            GroundTopTile groundTopTile = GameLocation.GetGroundTopTile((int)plantTile.X, (int)plantTile.Y);
+
+            tileWasWatered = groundTopTile == GroundTopTile.Moisture;
+        }
+
+        public override void OnAfterDayChanged()
         {
             if (IsRipe) return;
+
+            if (tileWasWatered == false) return;
 
             float progressPerDay = 1.0f / plantItem.GrowthRateInDays;
 

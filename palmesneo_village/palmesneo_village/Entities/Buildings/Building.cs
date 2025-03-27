@@ -40,7 +40,12 @@ namespace palmesneo_village
         public BuildingItem BuildingItem => buildingItem;
         public Direction Direction => direction;
 
-        public virtual void OnDayChanged()
+        public virtual void OnBeforeDayChanged()
+        {
+
+        }
+
+        public virtual void OnAfterDayChanged()
         {
 
         }
