@@ -280,78 +280,85 @@ namespace palmesneo_village
                     building.Interact(handItem, playerEnergyManager);
                 }
             }
-            else
+
+            if (handItem is ToolItem toolItem)
             {
-                if (handItem is ToolItem toolItem)
+                switch (toolItem.ToolType)
                 {
-                    switch (toolItem.ToolType)
-                    {
-                        case ToolType.Showel:
+                    case ToolType.Showel:
+                        {
+                            if ((GetGroundTile(x, y) == GroundTile.Grass || GetGroundTile(x, y) == GroundTile.Ground)
+                                && GetTileFloorPathItem(x, y) == null
+                                && building == null)
                             {
-                                if((GetGroundTile(x, y) == GroundTile.Grass || GetGroundTile(x, y) == GroundTile.Ground)
-                                    && GetTileFloorPathItem(x, y) == null)
+                                toolItem.PlaySoundEffect();
+                                playerEnergyManager.ConsumeEnergy(1);
+                                SetGroundTile(x, y, GroundTile.FarmPlot);
+                            }
+                        }
+                        break;
+                    case ToolType.WateringCan:
+                        {
+                            if (GetGroundTile(x, y) == GroundTile.Water || building is WaterSourceBuilding)
+                            {
+                                toolItem.PlaySoundEffect();
+                                inventory.AddSlotItemContentAmount(slotIndex, toolItem.Capacity);
+                            }
+                            else if (GetGroundTile(x, y) == GroundTile.FarmPlot)
+                            {
+                                if (inventory.GetSlotContentAmount(slotIndex) > 0)
                                 {
                                     toolItem.PlaySoundEffect();
-                                    playerEnergyManager.ConsumeEnergy(1);
-                                    SetGroundTile(x, y, GroundTile.FarmPlot);
-                                }
-                            }
-                            break;
-                        case ToolType.WateringCan:
-                            {
-                                if(GetGroundTile(x, y) == GroundTile.Water || building is WaterSourceBuilding)
-                                {
-                                    toolItem.PlaySoundEffect();
-                                    inventory.AddSlotItemContentAmount(slotIndex, toolItem.Capacity);
-                                }
-                                else if(GetGroundTile(x, y) == GroundTile.FarmPlot)
-                                {
-                                    if (inventory.GetSlotContentAmount(slotIndex) > 0)
-                                    {
-                                        toolItem.PlaySoundEffect();
-                                        inventory.SubSlotItemContentAmount(slotIndex, 1);
-                                        SetGroundTopTile(x, y, GroundTopTile.Moisture);
-                                        playerEnergyManager.ConsumeEnergy(1);
-                                    }
-                                }
-                            }
-                            break;
-                        case ToolType.Pickaxe:
-                        case ToolType.Axe:
-                            {
-                                if (floorPathTilemap.GetCell(x, y) >= 0)
-                                {
-                                    AddItem(new Vector2(x, y) * Engine.TILE_SIZE, new ItemContainer()
-                                    {
-                                        Item = Engine.ItemsDatabase.GetFloorPathItemByTilesetIndex(floorPathTilemap.GetCell(x, y)),
-                                        Quantity = 1
-                                    });
-
-                                    SetTileFloorPathItem(x, y, null);
-
+                                    inventory.SubSlotItemContentAmount(slotIndex, 1);
+                                    SetGroundTopTile(x, y, GroundTopTile.Moisture);
                                     playerEnergyManager.ConsumeEnergy(1);
                                 }
                             }
-                            break;
-                    }
-                }
-                else if (handItem is SeedItem seedItem)
-                {
-                    PlantItem plantItem = Engine.ItemsDatabase.GetItemByName<PlantItem>(seedItem.PlantName);
+                        }
+                        break;
+                    case ToolType.Pickaxe:
+                    case ToolType.Axe:
+                        {
+                            if(building == null && GetGroundTile(x, y) == GroundTile.FarmPlot)
+                            {
+                                SetGroundTile(x, y, GroundTile.Ground);
 
-                    if(TryBuild(plantItem, x, y, Direction.Down))
-                    {
-                        inventory.RemoveItem(handItem, 1, slotIndex);
-                    }
-                }
-                else if(handItem is TreeSeedItem treeSeedItem)
-                {
-                    TreeItem treeItem = Engine.ItemsDatabase.GetItemByName<TreeItem>(treeSeedItem.TreeName);
+                                SetGroundTopTile(x, y, GroundTopTile.None);
 
-                    if (TryBuild(treeItem, x, y, Direction.Down))
-                    {
-                        inventory.RemoveItem(handItem, 1, slotIndex);
-                    }
+                                playerEnergyManager.ConsumeEnergy(1);
+                            }
+                            else if (floorPathTilemap.GetCell(x, y) >= 0)
+                            {
+                                AddItem(new Vector2(x, y) * Engine.TILE_SIZE, new ItemContainer()
+                                {
+                                    Item = Engine.ItemsDatabase.GetFloorPathItemByTilesetIndex(floorPathTilemap.GetCell(x, y)),
+                                    Quantity = 1
+                                });
+
+                                SetTileFloorPathItem(x, y, null);
+
+                                playerEnergyManager.ConsumeEnergy(1);
+                            }
+                        }
+                        break;
+                }
+            }
+            else if (handItem is SeedItem seedItem)
+            {
+                PlantItem plantItem = Engine.ItemsDatabase.GetItemByName<PlantItem>(seedItem.PlantName);
+
+                if (TryBuild(plantItem, x, y, Direction.Down))
+                {
+                    inventory.RemoveItem(handItem, 1, slotIndex);
+                }
+            }
+            else if (handItem is TreeSeedItem treeSeedItem)
+            {
+                TreeItem treeItem = Engine.ItemsDatabase.GetItemByName<TreeItem>(treeSeedItem.TreeName);
+
+                if (TryBuild(treeItem, x, y, Direction.Down))
+                {
+                    inventory.RemoveItem(handItem, 1, slotIndex);
                 }
             }
         }

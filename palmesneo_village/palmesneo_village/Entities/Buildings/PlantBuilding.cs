@@ -78,6 +78,14 @@ namespace palmesneo_village
             {
                 GameLocation.RemoveBuilding(this);
             }
+            else
+            {
+                int penultimateGrowthStage = plantItem.GrowthStages - 1;
+
+                float newGrowthProgress = penultimateGrowthStage / (float)plantItem.GrowthStages;
+
+                SetGrowthProgress(newGrowthProgress);
+            }
         }
     }
 }

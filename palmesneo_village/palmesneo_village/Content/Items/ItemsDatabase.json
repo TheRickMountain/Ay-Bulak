@@ -1,906 +1,1198 @@
 {
-	"Items":[
-		{
-			"Id": 0,
-			"Name": "wood",
-			"Description": "test",
-			"IsStackable": true
-		},
-		{
-			"Id": 1,
-			"Name": "stone",
-			"Description": "test",
-			"IsStackable": true
-		},
-		{
-			"Id": 2,
-			"Name": "hay",
-			"Description": "test",
-			"IsStackable": true
-		},
-		{
-			"Id": 36,
-			"Name": "wheat_flour",
-			"Description": "test",
-			"IsStackable": true,
-			"Price": 10
-		}
-	],
-	"ToolItems":[
-		{
-			"Id": 129,
-			"Name": "iron_watering_can",
-			"Description": "test",
-			"IsStackable": false,
-			"ToolType": "WateringCan",
-			"Capacity": 20,
-			"Efficiency": 1
-		},
-		{
-			"Id": 130,
-			"Name": "iron_axe",
-			"Description": "test",
-			"IsStackable": false,
-			"ToolType": "Axe",
-			"Capacity": 0,
-			"Efficiency": 1,
-			"SoundEffects": [
-				"SoundEffects\\Minifantasy_Forgotten_Plains_SFX\\15_Hit_on_wood_1",
-				"SoundEffects\\Minifantasy_Forgotten_Plains_SFX\\15_Hit_on_wood_2",
-			]
-		},
-		{
-			"Id": 131,
-			"Name": "iron_pickaxe",
-			"Description": "test",
-			"IsStackable": false,
-			"ToolType": "Pickaxe",
-			"Capacity": 0,
-			"Efficiency": 1,
-			"SoundEffects": [
-				"SoundEffects\\Minifantasy_Forgotten_Plains_SFX\\16_Hit_on_brick_1",
-				"SoundEffects\\Minifantasy_Forgotten_Plains_SFX\\16_Hit_on_brick_2",
-			]
-		},
-		{
-			"Id": 132,
-			"Name": "iron_showel",
-			"Description": "test",
-			"IsStackable": false,
-			"ToolType": "Showel",
-			"Capacity": 0,
-			"Efficiency": 1,
-			"SoundEffects": [
-				"SoundEffects\\Minifantasy_Forgotten_Plains_SFX\\08_landing_on_stone_1",
-				"SoundEffects\\Minifantasy_Forgotten_Plains_SFX\\08_landing_on_stone_2",
-			]
-		},
-		{
-			"Id": 133,
-			"Name": "iron_scythe",
-			"Description": "test",
-			"IsStackable": false,
-			"ToolType": "Scythe",
-			"Capacity": 0,
-			"Efficiency": 1,
-			"SoundEffects": [
-				"SoundEffects\\Minifantasy_Forgotten_Plains_SFX\\07_landing_on_grass_1",
-				"SoundEffects\\Minifantasy_Forgotten_Plains_SFX\\07_landing_on_grass_2",
-			]
-		}
-	],
-	"ConsumableItems":[
-		{
-			"Id": 32,
-			"Name": "chicken_egg",
-			"Description": "test",
-			"IsStackable": true,
-			"Price": 10,
-			"EnergyAmount": 10
-		},
-		{
-			"Id": 33,
-			"Name": "fried_chicken_egg",
-			"Description": "test",
-			"IsStackable": true,
-			"Price": 10,
-			"EnergyAmount": 10
-		},
-		{
-			"Id": 34,
-			"Name": "uchpuchmak",
-			"Description": "test",
-			"IsStackable": true,
-			"Price": 10,
-			"EnergyAmount": 10
-		},
-		{
-			"Id": 35,
-			"Name": "meat",
-			"Description": "test",
-			"IsStackable": true,
-			"Price": 10,
-			"EnergyAmount": 10
-		},
-		{
-			"Id": 56,
-			"Name": "cabbage",
-			"Description": "test",
-			"IsStackable": true,
-			"Price": 10,
-			"EnergyAmount": 10
-		},
-		{
-			"Id": 57,
-			"Name": "tomato",
-			"Description": "test",
-			"IsStackable": true,
-			"Price": 10,
-			"EnergyAmount": 10
-		},
-		{
-			"Id": 58,
-			"Name": "carrot",
-			"Description": "test",
-			"IsStackable": true,
-			"Price": 10,
-			"EnergyAmount": 10
-		},
-		{
-			"Id": 59,
-			"Name": "potato",
-			"Description": "test",
-			"IsStackable": true,
-			"Price": 10,
-			"EnergyAmount": 10
-		},
-		{
-			"Id": 89,
-			"Name": "eggplant",
-			"Description": "test",
-			"IsStackable": true,
-			"Price": 10,
-			"EnergyAmount": 10
-		},
-		{
-			"Id": 90,
-			"Name": "garlic",
-			"Description": "test",
-			"IsStackable": true,
-			"Price": 10,
-			"EnergyAmount": 10
-		},
-		{
-			"Id": 88,
-			"Name": "beetroot",
-			"Description": "test",
-			"IsStackable": true,
-			"Price": 10,
-			"EnergyAmount": 10
-		}
-	],
-	"BuildingItems":[
-		{
-			"Id": 1000,
-			"Name": "toilet",
-			"Description": "test",
-			"IsStackable": false,
-			"Width": 2,
-			"Height": 2,
-			"GroundPattern": [
-				["A", "A"],
-				["A", "A"]
-			],
-			"IsRotatable": false,
-			"IsPassable": false
-		},
-		{
-			"Id": 1001,
-			"Name": "player_house",
-			"Description": "test",
-			"IsStackable": false,
-			"Width": 9,
-			"Height": 5,
-			"GroundPattern": [
-				["A","A","A","A","A"],
-				["A","A","A","A","A"],
-				["A","A","A","A","A"],
-				["A","A","A","A","A"],
-				["A","A","A","A","A"],
-				["A","A","A","A","A"],
-				["A","A","A","A","A"],
-				["A","A","A","A","A"],
-				["A","A","A","A","A"]
-			],
-			"IsRotatable": false,
-			"IsPassable": false,
-			"TeleportData":{
-				"TeleportPattern": [
-					[0,0,0,0,0],
-					[0,0,0,0,0],
-					[0,0,0,0,0],
-					[0,0,0,0,0],
-					[0,0,0,0,0],
-					[0,0,0,0,0],
-					[0,0,0,0,0],
-					[0,0,0,0,1],
-					[0,0,0,0,0],
-				],
-				"Location": "house",
-				"X": 24,
-				"Y": 10
-			}
-		},
-		{
-			"Id": 1002,
-			"Name": "carpet",
-			"Description": "test",
-			"Width": 3,
-			"Height": 2,
-			"GroundPattern": [
-				["C","C"],
-				["C","C"],
-				["C","C"]
-			],
-			"IsRotatable": false,
-			"IsPassable": false
-		},
-		{
-			"Id": 1003,
-			"Name": "fridge",
-			"Description": "test",
-			"Width": 1,
-			"Height": 1,
-			"GroundPattern": [
-				["D"]
-			],
-			"IsRotatable": false,
-			"IsPassable": false
-		},
-		{
-			"Id": 1004,
-			"Name": "gas_pipe_pole",
-			"Description": "test",
-			"Width": 1,
-			"Height": 1,
-			"GroundPattern": [
-				["A"]
-			],
-			"IsRotatable": false,
-			"IsPassable": false
-		},
-		{
-			"Id": 1005,
-			"Name": "wall_clock",
-			"Description": "test",
-			"Width": 1,
-			"Height": 2,
-			"GroundPattern": [
-				["C","C"]
-			],
-			"IsRotatable": false,
-			"IsPassable": false
-		},
-		{
-			"Id": 1006,
-			"Name": "coop",
-			"Description": "test",
-			"IsStackable": false,
-			"Width": 5,
-			"Height": 3,
-			"GroundPattern": [
-				["A","A","A"],
-				["A","A","A"],
-				["A","A","A"],
-				["A","A","A"],
-				["A","A","A"]
-			],
-			"IsRotatable": false,
-			"IsPassable": false,
-			"TeleportData":{
-				"TeleportPattern": [
-					[0,0,0],
-					[0,0,0],
-					[0,0,0],
-					[0,0,1],
-					[0,0,0]
-				],
-				"Location": "coop",
-				"X": 20,
-				"Y": 9
-			}
-		},
-		{
-			"Id": 1007,
-			"Name": "electric_pole",
-			"Description": "test",
-			"Width": 1,
-			"Height": 1,
-			"GroundPattern": [
-				["A"]
-			],
-			"IsRotatable": false,
-			"IsPassable": false
-		},
-		{
-			"Id": 1008,
-			"Name": "wash_basin",
-			"Description": "test",
-			"Width": 1,
-			"Height": 1,
-			"GroundPattern": [
-				["D"]
-			],
-			"IsRotatable": false,
-			"IsPassable": false
-		},
-		{
-			"Id": 1009,
-			"Name": "tire_swan",
-			"Description": "test",
-			"Width": 1,
-			"Height": 1,
-			"GroundPattern": [
-				["A"]
-			],
-			"IsRotatable": false,
-			"IsPassable": false
-		},
-		{
-			"Id": 1010,
-			"Name": "fence",
-			"Description": "test",
-			"Width": 2,
-			"Height": 1,
-			"GroundPattern": [
-				["A"],
-				["A"]
-			],
-			"IsRotatable": false,
-			"IsPassable": false
-		},
-		{
-			"Id": 1011,
-			"Name": "bench",
-			"Description": "test",
-			"Width": 2,
-			"Height": 1,
-			"GroundPattern": [
-				["A"],
-				["A"]
-			],
-			"IsRotatable": false,
-			"IsPassable": false
-		}
-	],
-	"PlantItems":[
-		{
-			"Id": 2000,
-			"Name": "tomato_plant",
-			"Description": "test",
-			"IsStackable": false,
-			"Width": 1,
-			"Height": 1,
-			"GroundPattern": [
-				["B"]
-			],
-			"IsRotatable": false,
-			"IsPassable": true,
-			"GrowthStages": 5,
-			"GrowthRateInDays": 6,
-			"RemoveAfterHarvest": true,
-			"HarvestItem": "tomato",
-			"HarvestAmount": 1
-		},
-		{
-			"Id": 2001,
-			"Name": "eggplant_plant",
-			"Description": "test",
-			"IsStackable": false,
-			"Width": 1,
-			"Height": 1,
-			"GroundPattern": [
-				["B"]
-			],
-			"IsRotatable": false,
-			"IsPassable": true,
-			"GrowthStages": 5,
-			"GrowthRateInDays": 6,
-			"RemoveAfterHarvest": true,
-			"HarvestItem": "eggplant",
-			"HarvestAmount": 1
-		},
-		{
-			"Id": 2002,
-			"Name": "garlic_plant",
-			"Description": "test",
-			"IsStackable": false,
-			"Width": 1,
-			"Height": 1,
-			"GroundPattern": [
-				["B"]
-			],
-			"IsRotatable": false,
-			"IsPassable": true,
-			"GrowthStages": 5,
-			"GrowthRateInDays": 6,
-			"RemoveAfterHarvest": true,
-			"HarvestItem": "garlic",
-			"HarvestAmount": 1
-		},
-		{
-			"Id": 2003,
-			"Name": "carrot_plant",
-			"Description": "test",
-			"IsStackable": false,
-			"Width": 1,
-			"Height": 1,
-			"GroundPattern": [
-				["B"]
-			],
-			"IsRotatable": false,
-			"IsPassable": true,
-			"GrowthStages": 5,
-			"GrowthRateInDays": 6,
-			"RemoveAfterHarvest": true,
-			"HarvestItem": "carrot",
-			"HarvestAmount": 1
-		},
-		{
-			"Id": 2004,
-			"Name": "cabbage_plant",
-			"Description": "test",
-			"IsStackable": false,
-			"Width": 1,
-			"Height": 1,
-			"GroundPattern": [
-				["B"]
-			],
-			"IsRotatable": false,
-			"IsPassable": true,
-			"GrowthStages": 5,
-			"GrowthRateInDays": 6,
-			"RemoveAfterHarvest": true,
-			"HarvestItem": "cabbage",
-			"HarvestAmount": 1
-		},
-		{
-			"Id": 2005,
-			"Name": "beetroot_plant",
-			"Description": "test",
-			"IsStackable": false,
-			"Width": 1,
-			"Height": 1,
-			"GroundPattern": [
-				["B"]
-			],
-			"IsRotatable": false,
-			"IsPassable": true,
-			"GrowthStages": 5,
-			"GrowthRateInDays": 6,
-			"RemoveAfterHarvest": true,
-			"HarvestItem": "beetroot",
-			"HarvestAmount": 1
-		}
-	],
-	"WaterSourceItems": [
-		{
-			"Id": 3000,
-			"Name": "standpipe",
-			"Description": "test",
-			"IsStackable": false,
-			"Width": 1,
-			"Height": 1,
-			"GroundPattern": [
-				["A"]
-			],
-			"IsRotatable": false,
-			"IsPassable": false
-		}
-	],
-	"BedItems": [
-		{
-			"Id": 5000,
-			"Name": "single_bed",
-			"Description": "test",
-			"IsStackable": false,
-			"Width": 2,
-			"Height": 3,
-			"GroundPattern": [
-				["D","D","D"],
-				["D","D","D"]
-			],
-			"IsRotatable": false,
-			"IsPassable": false
-		}
-	],
-	"TreeItems": [
-		{
-			"Id": 6000,
-			"Name": "birch_tree",
-			"Description": "test",
-			"IsStackable": false,
-			"Width": 1,
-			"Height": 1,
-			"GroundPattern": [
-				["A"]
-			],
-			"IsRotatable": false,
-			"IsPassable": false,
-			"GrowthStagesData": [
-				{
-					"Strength": 1,
-					"Loot": {}
-				},
-				{
-					"Strength": 4,
-					"Loot": { "wood": 5 }
-				},
-				{
-					"Strength": 6,
-					"Loot": { "wood": 10 }
-				},
-				{
-					"Strength": 10,
-					"Loot": { "wood": 25, "birch_seeds": 2 }
-				}
-			],
-			"GrowthRateInDays": 14
-		}	
-	],
-	"ResourceItems": [
-		{
-			"Id": 7000,
-			"Name": "stone_resource",
-			"Description": "test",
-			"IsStackable": false,
-			"Width": 1,
-			"Height": 1,
-			"GroundPattern": [
-				["A"]
-			],
-			"IsRotatable": false,
-			"IsPassable": false,
-			"Strength": 1,
-			"ItemName": "stone",
-			"ItemAmount": 1,
-			"RequiredToolType": "Pickaxe"
-		},
-		{
-			"Id": 7001,
-			"Name": "wood_resource",
-			"Description": "test",
-			"IsStackable": false,
-			"Width": 1,
-			"Height": 1,
-			"GroundPattern": [
-				["A"]
-			],
-			"IsRotatable": false,
-			"IsPassable": false,
-			"Strength": 1,
-			"ItemName": "wood",
-			"ItemAmount": 1,
-			"RequiredToolType": "Axe"
-		},
-		{
-			"Id": 7002,
-			"Name": "grass_resource",
-			"Description": "test",
-			"IsStackable": false,
-			"Width": 1,
-			"Height": 1,
-			"GroundPattern": [
-				["A"]
-			],
-			"IsRotatable": false,
-			"IsPassable": false,
-			"Strength": 1,
-			"ItemName": "hay",
-			"ItemAmount": 1,
-			"RequiredToolType": "Scythe"
-		}
-	],
-	"FloorPathItems": [
-		{
-			"Id": 8000,
-			"Name": "dirt_path",
-			"Description": "test",
-			"IsStackable": true,
-			"Width": 1,
-			"Height": 1,
-			"GroundPattern": [
-				["E"]
-			],
-			"IsRotatable": false,
-			"IsPassable": true,
-			"TilesetIndex": 0,
-			"MovementSpeefBuff": 0.2
-		},
-		{
-			"Id": 8001,
-			"Name": "stone_path",
-			"Description": "test",
-			"IsStackable": true,
-			"Width": 1,
-			"Height": 1,
-			"GroundPattern": [
-				["E"]
-			],
-			"IsRotatable": false,
-			"IsPassable": true,
-			"TilesetIndex": 1,
-			"MovementSpeefBuff": 0.2
-		},
-		{
-			"Id": 8002,
-			"Name": "wooden_path",
-			"Description": "test",
-			"IsStackable": true,
-			"Width": 1,
-			"Height": 1,
-			"GroundPattern": [
-				["E"]
-			],
-			"IsRotatable": false,
-			"IsPassable": true,
-			"TilesetIndex": 2,
-			"MovementSpeefBuff": 0.2
-		},
-		{
-			"Id": 8003,
-			"Name": "concrete_path",
-			"Description": "test",
-			"IsStackable": true,
-			"Width": 1,
-			"Height": 1,
-			"GroundPattern": [
-				["E"]
-			],
-			"IsRotatable": false,
-			"IsPassable": true,
-			"TilesetIndex": 3,
-			"MovementSpeefBuff": 0.2
-		}
-	],
-	"ManualCrafterItems":[
-		{
-			"Id": 9000,
-			"Name": "gas_stove",
-			"Description": "test",
-			"IsStackable": false,
-			"Width": 1,
-			"Height": 1,
-			"GroundPattern": [
-				["D"]
-			],
-			"IsRotatable": false,
-			"IsPassable": false,
-			"CraftingRecipes": [
-				{
-					"Result": {
-						"Item": "fried_chicken_egg",
-						"Amount": 1
-					},
-					"RequiredIngredients": [
-						{
-							"Item": "chicken_egg",
-							"Amount": 1
-						}
-					]
-				},
-				{
-					"Result": {
-						"Item": "uchpuchmak",
-						"Amount": 1
-					},
-					"RequiredIngredients": [
-						{
-							"Item": "wheat_flour",
-							"Amount": 1
-						},
-						{
-							"Item": "potato",
-							"Amount": 1
-						},
-						{
-							"Item": "meat",
-							"Amount": 1
-						}
-					]
-				}
-			]
-		}	
-	],
-	"WindowItems": [
-		{
-			"Id": 10000,
-			"Name": "window",
-			"Description": "test",
-			"Width": 1,
-			"Height": 2,
-			"GroundPattern": [
-				["C", "C"]
-			],
-			"IsRotatable": false,
-			"IsPassable": false
-		},
-		{
-			"Id": 10001,
-			"Name": "small_window",
-			"Description": "test",
-			"Width": 1,
-			"Height": 1,
-			"GroundPattern": [
-				["G"]
-			],
-			"IsRotatable": false,
-			"IsPassable": false
-		}
-	],
-	"SprinklerItems": [
-		{
-			"Id": 11000,
-			"Name": "sprinkler",
-			"Description": "test",
-			"Width": 1,
-			"Height": 1,
-			"GroundPattern": [
-				["A"]
-			],
-			"IsRotatable": false,
-			"IsPassable": false,
-			"Range": 1
-		}
-	],
-	"GateItems": [
-		{
-			"Id": 12000,
-			"Name": "small_main_gate",
-			"Description": "test",
-			"Width": 2,
-			"Height": 1,
-			"GroundPattern": [
-				["A"],
-				["A"]
-			],
-			"IsRotatable": false,
-			"IsPassable": false,
-			"OpenSoundEffect": "SoundEffects\\Minifantasy_Dungeon_SFX\\05_door_open_1",
-			"CloseSoundEffect": "SoundEffects\\Minifantasy_Dungeon_SFX\\06_door_close_1"
-		},
-		{
-			"Id": 12001,
-			"Name": "big_left_main_gate",
-			"Description": "test",
-			"Width": 2,
-			"Height": 1,
-			"GroundPattern": [
-				["A"],
-				["A"]
-			],
-			"IsRotatable": false,
-			"IsPassable": false,
-			"OpenSoundEffect": "SoundEffects\\Minifantasy_Dungeon_SFX\\05_door_open_1",
-			"CloseSoundEffect": "SoundEffects\\Minifantasy_Dungeon_SFX\\06_door_close_1"
-		},
-		{
-			"Id": 12002,
-			"Name": "big_right_main_gate",
-			"Description": "test",
-			"Width": 2,
-			"Height": 1,
-			"GroundPattern": [
-				["A"],
-				["A"]
-			],
-			"IsRotatable": false,
-			"IsPassable": false,
-			"OpenSoundEffect": "SoundEffects\\Minifantasy_Dungeon_SFX\\05_door_open_1",
-			"CloseSoundEffect": "SoundEffects\\Minifantasy_Dungeon_SFX\\06_door_close_1"
-		}
-	],
-	"AnimalSpawnerItems": [
-		{
-			"Id": 13000,
-			"Name": "hen_spawner",
-			"Description": "test",
-			"Width": 1,
-			"Height": 1,
-			"GroundPattern": [
-				["F"]
-			],
-			"IsRotatable": false,
-			"IsPassable": true,
-			"AnimalName": "hen"
-		}
-	],
-	"AnimalFeederItems": [
-		{
-			"Id": 14000,
-			"Name": "animal_feeder",
-			"Description": "test",
-			"Width": 1,
-			"Height": 1,
-			"GroundPattern": [
-				["F"]
-			],
-			"IsRotatable": false,
-			"IsPassable": false
-		}
-	],
-	"BirdNestItems": [
-		{
-			"Id": 15000,
-			"Name": "bird_nest",
-			"Description": "test",
-			"Width": 1,
-			"Height": 1,
-			"GroundPattern": [
-				["F"]
-			],
-			"IsRotatable": false,
-			"IsPassable": true
-		}
-	],
-	"SeedItems":[
-		{
-			"Id": 72,
-			"Name": "cabbage_seeds",
-			"Description": "test",
-			"IsStackable": true,
-			"Price": 10,
-			"PlantName": "cabbage_plant"
-		},
-		{
-			"Id": 73,
-			"Name": "tomato_seeds",
-			"Description": "test",
-			"IsStackable": true,
-			"Price": 10,
-			"PlantName": "tomato_plant"
-		},
-		{
-			"Id": 105,
-			"Name": "eggplant_seeds",
-			"Description": "test",
-			"IsStackable": true,
-			"Price": 10,
-			"PlantName": "eggplant_plant"
-		},
-		{
-			"Id": 106,
-			"Name": "garlic_seeds",
-			"Description": "test",
-			"IsStackable": true,
-			"Price": 10,
-			"PlantName": "garlic_plant"
-		},
-		{
-			"Id": 74,
-			"Name": "carrot_seeds",
-			"Description": "test",
-			"IsStackable": true,
-			"Price": 10,
-			"PlantName": "carrot_plant"
-		},
-		{
-			"Id": 104,
-			"Name": "beetroot_seeds",
-			"Description": "test",
-			"IsStackable": true,
-			"Price": 10,
-			"PlantName": "beetroot_plant"
-		}
-	],
-	"TreeSeedItems": [
-		{
-			"Id": 16,
-			"Name": "birch_seeds",
-			"Description": "test",
-			"IsStackable": true,
-			"Price": 0,
-			"TreeName": "birch_tree"
-		},
-	]
+  "Items": [
+    {
+      "Id": 0,
+      "Name": "wood",
+      "Description": "test",
+      "IsStackable": true
+    },
+    {
+      "Id": 1,
+      "Name": "stone",
+      "Description": "test",
+      "IsStackable": true
+    },
+    {
+      "Id": 2,
+      "Name": "hay",
+      "Description": "test",
+      "IsStackable": true
+    },
+    {
+      "Id": 36,
+      "Name": "wheat_flour",
+      "Description": "test",
+      "IsStackable": true,
+      "Price": 10
+    }
+  ],
+  "ToolItems": [
+    {
+      "Id": 129,
+      "Name": "iron_watering_can",
+      "Description": "test",
+      "IsStackable": false,
+      "ToolType": "WateringCan",
+      "Capacity": 20,
+      "Efficiency": 1
+    },
+    {
+      "Id": 130,
+      "Name": "iron_axe",
+      "Description": "test",
+      "IsStackable": false,
+      "ToolType": "Axe",
+      "Capacity": 0,
+      "Efficiency": 1,
+      "SoundEffects": [
+        "SoundEffects\\Minifantasy_Forgotten_Plains_SFX\\15_Hit_on_wood_1",
+        "SoundEffects\\Minifantasy_Forgotten_Plains_SFX\\15_Hit_on_wood_2"
+      ]
+    },
+    {
+      "Id": 131,
+      "Name": "iron_pickaxe",
+      "Description": "test",
+      "IsStackable": false,
+      "ToolType": "Pickaxe",
+      "Capacity": 0,
+      "Efficiency": 1,
+      "SoundEffects": [
+        "SoundEffects\\Minifantasy_Forgotten_Plains_SFX\\16_Hit_on_brick_1",
+        "SoundEffects\\Minifantasy_Forgotten_Plains_SFX\\16_Hit_on_brick_2"
+      ]
+    },
+    {
+      "Id": 132,
+      "Name": "iron_showel",
+      "Description": "test",
+      "IsStackable": false,
+      "ToolType": "Showel",
+      "Capacity": 0,
+      "Efficiency": 1,
+      "SoundEffects": [
+        "SoundEffects\\Minifantasy_Forgotten_Plains_SFX\\08_landing_on_stone_1",
+        "SoundEffects\\Minifantasy_Forgotten_Plains_SFX\\08_landing_on_stone_2"
+      ]
+    },
+    {
+      "Id": 133,
+      "Name": "iron_scythe",
+      "Description": "test",
+      "IsStackable": false,
+      "ToolType": "Scythe",
+      "Capacity": 0,
+      "Efficiency": 1,
+      "SoundEffects": [
+        "SoundEffects\\Minifantasy_Forgotten_Plains_SFX\\07_landing_on_grass_1",
+        "SoundEffects\\Minifantasy_Forgotten_Plains_SFX\\07_landing_on_grass_2"
+      ]
+    }
+  ],
+  "ConsumableItems": [
+    {
+      "Id": 32,
+      "Name": "chicken_egg",
+      "Description": "test",
+      "IsStackable": true,
+      "Price": 10,
+      "EnergyAmount": 10
+    },
+    {
+      "Id": 33,
+      "Name": "fried_chicken_egg",
+      "Description": "test",
+      "IsStackable": true,
+      "Price": 10,
+      "EnergyAmount": 10
+    },
+    {
+      "Id": 34,
+      "Name": "uchpuchmak",
+      "Description": "test",
+      "IsStackable": true,
+      "Price": 10,
+      "EnergyAmount": 10
+    },
+    {
+      "Id": 35,
+      "Name": "meat",
+      "Description": "test",
+      "IsStackable": true,
+      "Price": 10,
+      "EnergyAmount": 10
+    },
+    {
+      "Id": 56,
+      "Name": "cabbage",
+      "Description": "test",
+      "IsStackable": true,
+      "Price": 10,
+      "EnergyAmount": 10
+    },
+    {
+      "Id": 57,
+      "Name": "tomato",
+      "Description": "test",
+      "IsStackable": true,
+      "Price": 10,
+      "EnergyAmount": 10
+    },
+    {
+      "Id": 58,
+      "Name": "carrot",
+      "Description": "test",
+      "IsStackable": true,
+      "Price": 10,
+      "EnergyAmount": 10
+    },
+    {
+      "Id": 59,
+      "Name": "potato",
+      "Description": "test",
+      "IsStackable": true,
+      "Price": 10,
+      "EnergyAmount": 10
+    },
+    {
+      "Id": 60,
+      "Name": "strawberry",
+      "Description": "test",
+      "IsStackable": true,
+      "Price": 10,
+      "EnergyAmount": 10
+    },
+    {
+      "Id": 89,
+      "Name": "eggplant",
+      "Description": "test",
+      "IsStackable": true,
+      "Price": 10,
+      "EnergyAmount": 10
+    },
+    {
+      "Id": 90,
+      "Name": "garlic",
+      "Description": "test",
+      "IsStackable": true,
+      "Price": 10,
+      "EnergyAmount": 10
+    },
+    {
+      "Id": 88,
+      "Name": "beetroot",
+      "Description": "test",
+      "IsStackable": true,
+      "Price": 10,
+      "EnergyAmount": 10
+    }
+  ],
+  "BuildingItems": [
+    {
+      "Id": 1000,
+      "Name": "toilet",
+      "Description": "test",
+      "IsStackable": false,
+      "Width": 2,
+      "Height": 2,
+      "GroundPattern": [
+        [
+          "A",
+          "A"
+        ],
+        [
+          "A",
+          "A"
+        ]
+      ],
+      "IsRotatable": false,
+      "IsPassable": false
+    },
+    {
+      "Id": 1001,
+      "Name": "player_house",
+      "Description": "test",
+      "IsStackable": false,
+      "Width": 9,
+      "Height": 5,
+      "GroundPattern": [
+        [
+          "A",
+          "A",
+          "A",
+          "A",
+          "A"
+        ],
+        [
+          "A",
+          "A",
+          "A",
+          "A",
+          "A"
+        ],
+        [
+          "A",
+          "A",
+          "A",
+          "A",
+          "A"
+        ],
+        [
+          "A",
+          "A",
+          "A",
+          "A",
+          "A"
+        ],
+        [
+          "A",
+          "A",
+          "A",
+          "A",
+          "A"
+        ],
+        [
+          "A",
+          "A",
+          "A",
+          "A",
+          "A"
+        ],
+        [
+          "A",
+          "A",
+          "A",
+          "A",
+          "A"
+        ],
+        [
+          "A",
+          "A",
+          "A",
+          "A",
+          "A"
+        ],
+        [
+          "A",
+          "A",
+          "A",
+          "A",
+          "A"
+        ]
+      ],
+      "IsRotatable": false,
+      "IsPassable": false,
+      "TeleportData": {
+        "TeleportPattern": [
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "Location": "house",
+        "X": 24,
+        "Y": 10
+      }
+    },
+    {
+      "Id": 1002,
+      "Name": "carpet",
+      "Description": "test",
+      "Width": 3,
+      "Height": 2,
+      "GroundPattern": [
+        [
+          "C",
+          "C"
+        ],
+        [
+          "C",
+          "C"
+        ],
+        [
+          "C",
+          "C"
+        ]
+      ],
+      "IsRotatable": false,
+      "IsPassable": false
+    },
+    {
+      "Id": 1003,
+      "Name": "fridge",
+      "Description": "test",
+      "Width": 1,
+      "Height": 1,
+      "GroundPattern": [
+        [
+          "D"
+        ]
+      ],
+      "IsRotatable": false,
+      "IsPassable": false
+    },
+    {
+      "Id": 1004,
+      "Name": "gas_pipe_pole",
+      "Description": "test",
+      "Width": 1,
+      "Height": 1,
+      "GroundPattern": [
+        [
+          "A"
+        ]
+      ],
+      "IsRotatable": false,
+      "IsPassable": false
+    },
+    {
+      "Id": 1005,
+      "Name": "wall_clock",
+      "Description": "test",
+      "Width": 1,
+      "Height": 2,
+      "GroundPattern": [
+        [
+          "C",
+          "C"
+        ]
+      ],
+      "IsRotatable": false,
+      "IsPassable": false
+    },
+    {
+      "Id": 1006,
+      "Name": "coop",
+      "Description": "test",
+      "IsStackable": false,
+      "Width": 5,
+      "Height": 3,
+      "GroundPattern": [
+        [
+          "A",
+          "A",
+          "A"
+        ],
+        [
+          "A",
+          "A",
+          "A"
+        ],
+        [
+          "A",
+          "A",
+          "A"
+        ],
+        [
+          "A",
+          "A",
+          "A"
+        ],
+        [
+          "A",
+          "A",
+          "A"
+        ]
+      ],
+      "IsRotatable": false,
+      "IsPassable": false,
+      "TeleportData": {
+        "TeleportPattern": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "Location": "coop",
+        "X": 20,
+        "Y": 9
+      }
+    },
+    {
+      "Id": 1007,
+      "Name": "electric_pole",
+      "Description": "test",
+      "Width": 1,
+      "Height": 1,
+      "GroundPattern": [
+        [
+          "A"
+        ]
+      ],
+      "IsRotatable": false,
+      "IsPassable": false
+    },
+    {
+      "Id": 1008,
+      "Name": "wash_basin",
+      "Description": "test",
+      "Width": 1,
+      "Height": 1,
+      "GroundPattern": [
+        [
+          "D"
+        ]
+      ],
+      "IsRotatable": false,
+      "IsPassable": false
+    },
+    {
+      "Id": 1009,
+      "Name": "tire_swan",
+      "Description": "test",
+      "Width": 1,
+      "Height": 1,
+      "GroundPattern": [
+        [
+          "A"
+        ]
+      ],
+      "IsRotatable": false,
+      "IsPassable": false
+    },
+    {
+      "Id": 1010,
+      "Name": "fence",
+      "Description": "test",
+      "Width": 2,
+      "Height": 1,
+      "GroundPattern": [
+        [
+          "A"
+        ],
+        [
+          "A"
+        ]
+      ],
+      "IsRotatable": false,
+      "IsPassable": false
+    },
+    {
+      "Id": 1011,
+      "Name": "bench",
+      "Description": "test",
+      "Width": 2,
+      "Height": 1,
+      "GroundPattern": [
+        [
+          "A"
+        ],
+        [
+          "A"
+        ]
+      ],
+      "IsRotatable": false,
+      "IsPassable": false
+    }
+  ],
+  "PlantItems": [
+    {
+      "Id": 2000,
+      "Name": "tomato_plant",
+      "Description": "test",
+      "IsStackable": false,
+      "Width": 1,
+      "Height": 1,
+      "GroundPattern": [
+        [
+          "B"
+        ]
+      ],
+      "IsRotatable": false,
+      "IsPassable": true,
+      "GrowthStages": 5,
+      "GrowthRateInDays": 6,
+      "RemoveAfterHarvest": true,
+      "HarvestItem": "tomato",
+      "HarvestAmount": 1
+    },
+    {
+      "Id": 2001,
+      "Name": "eggplant_plant",
+      "Description": "test",
+      "IsStackable": false,
+      "Width": 1,
+      "Height": 1,
+      "GroundPattern": [
+        [
+          "B"
+        ]
+      ],
+      "IsRotatable": false,
+      "IsPassable": true,
+      "GrowthStages": 5,
+      "GrowthRateInDays": 6,
+      "RemoveAfterHarvest": true,
+      "HarvestItem": "eggplant",
+      "HarvestAmount": 1
+    },
+    {
+      "Id": 2002,
+      "Name": "garlic_plant",
+      "Description": "test",
+      "IsStackable": false,
+      "Width": 1,
+      "Height": 1,
+      "GroundPattern": [
+        [
+          "B"
+        ]
+      ],
+      "IsRotatable": false,
+      "IsPassable": true,
+      "GrowthStages": 5,
+      "GrowthRateInDays": 6,
+      "RemoveAfterHarvest": true,
+      "HarvestItem": "garlic",
+      "HarvestAmount": 1
+    },
+    {
+      "Id": 2003,
+      "Name": "carrot_plant",
+      "Description": "test",
+      "IsStackable": false,
+      "Width": 1,
+      "Height": 1,
+      "GroundPattern": [
+        [
+          "B"
+        ]
+      ],
+      "IsRotatable": false,
+      "IsPassable": true,
+      "GrowthStages": 5,
+      "GrowthRateInDays": 6,
+      "RemoveAfterHarvest": true,
+      "HarvestItem": "carrot",
+      "HarvestAmount": 1
+    },
+    {
+      "Id": 2004,
+      "Name": "cabbage_plant",
+      "Description": "test",
+      "IsStackable": false,
+      "Width": 1,
+      "Height": 1,
+      "GroundPattern": [
+        [
+          "B"
+        ]
+      ],
+      "IsRotatable": false,
+      "IsPassable": true,
+      "GrowthStages": 5,
+      "GrowthRateInDays": 6,
+      "RemoveAfterHarvest": true,
+      "HarvestItem": "cabbage",
+      "HarvestAmount": 1
+    },
+    {
+      "Id": 2005,
+      "Name": "beetroot_plant",
+      "Description": "test",
+      "IsStackable": false,
+      "Width": 1,
+      "Height": 1,
+      "GroundPattern": [
+        [
+          "B"
+        ]
+      ],
+      "IsRotatable": false,
+      "IsPassable": true,
+      "GrowthStages": 5,
+      "GrowthRateInDays": 6,
+      "RemoveAfterHarvest": true,
+      "HarvestItem": "beetroot",
+      "HarvestAmount": 1
+    },
+    {
+      "Id": 2006,
+      "Name": "strawberry_plant",
+      "Description": "test",
+      "IsStackable": false,
+      "Width": 1,
+      "Height": 1,
+      "GroundPattern": [
+        [
+          "B"
+        ]
+      ],
+      "IsRotatable": false,
+      "IsPassable": true,
+      "GrowthStages": 5,
+      "GrowthRateInDays": 6,
+      "RemoveAfterHarvest": false,
+      "HarvestItem": "strawberry",
+      "HarvestAmount": 3
+    }
+  ],
+  "WaterSourceItems": [
+    {
+      "Id": 3000,
+      "Name": "standpipe",
+      "Description": "test",
+      "IsStackable": false,
+      "Width": 1,
+      "Height": 1,
+      "GroundPattern": [
+        [
+          "A"
+        ]
+      ],
+      "IsRotatable": false,
+      "IsPassable": false
+    }
+  ],
+  "BedItems": [
+    {
+      "Id": 5000,
+      "Name": "single_bed",
+      "Description": "test",
+      "IsStackable": false,
+      "Width": 2,
+      "Height": 3,
+      "GroundPattern": [
+        [
+          "D",
+          "D",
+          "D"
+        ],
+        [
+          "D",
+          "D",
+          "D"
+        ]
+      ],
+      "IsRotatable": false,
+      "IsPassable": false
+    }
+  ],
+  "TreeItems": [
+    {
+      "Id": 6000,
+      "Name": "birch_tree",
+      "Description": "test",
+      "IsStackable": false,
+      "Width": 1,
+      "Height": 1,
+      "GroundPattern": [
+        [
+          "A"
+        ]
+      ],
+      "IsRotatable": false,
+      "IsPassable": false,
+      "GrowthStagesData": [
+        {
+          "Strength": 1,
+          "Loot": {}
+        },
+        {
+          "Strength": 4,
+          "Loot": {
+            "wood": 5
+          }
+        },
+        {
+          "Strength": 6,
+          "Loot": {
+            "wood": 10
+          }
+        },
+        {
+          "Strength": 10,
+          "Loot": {
+            "wood": 25,
+            "birch_seeds": 2
+          }
+        }
+      ],
+      "GrowthRateInDays": 14
+    }
+  ],
+  "ResourceItems": [
+    {
+      "Id": 7000,
+      "Name": "stone_resource",
+      "Description": "test",
+      "IsStackable": false,
+      "Width": 1,
+      "Height": 1,
+      "GroundPattern": [
+        [
+          "A"
+        ]
+      ],
+      "IsRotatable": false,
+      "IsPassable": false,
+      "Strength": 1,
+      "ItemName": "stone",
+      "ItemAmount": 1,
+      "RequiredToolType": "Pickaxe"
+    },
+    {
+      "Id": 7001,
+      "Name": "wood_resource",
+      "Description": "test",
+      "IsStackable": false,
+      "Width": 1,
+      "Height": 1,
+      "GroundPattern": [
+        [
+          "A"
+        ]
+      ],
+      "IsRotatable": false,
+      "IsPassable": false,
+      "Strength": 1,
+      "ItemName": "wood",
+      "ItemAmount": 1,
+      "RequiredToolType": "Axe"
+    },
+    {
+      "Id": 7002,
+      "Name": "grass_resource",
+      "Description": "test",
+      "IsStackable": false,
+      "Width": 1,
+      "Height": 1,
+      "GroundPattern": [
+        [
+          "A"
+        ]
+      ],
+      "IsRotatable": false,
+      "IsPassable": false,
+      "Strength": 1,
+      "ItemName": "hay",
+      "ItemAmount": 1,
+      "RequiredToolType": "Scythe"
+    }
+  ],
+  "FloorPathItems": [
+    {
+      "Id": 8000,
+      "Name": "dirt_path",
+      "Description": "test",
+      "IsStackable": true,
+      "Width": 1,
+      "Height": 1,
+      "GroundPattern": [
+        [
+          "E"
+        ]
+      ],
+      "IsRotatable": false,
+      "IsPassable": true,
+      "TilesetIndex": 0,
+      "MovementSpeefBuff": 0.2
+    },
+    {
+      "Id": 8001,
+      "Name": "stone_path",
+      "Description": "test",
+      "IsStackable": true,
+      "Width": 1,
+      "Height": 1,
+      "GroundPattern": [
+        [
+          "E"
+        ]
+      ],
+      "IsRotatable": false,
+      "IsPassable": true,
+      "TilesetIndex": 1,
+      "MovementSpeefBuff": 0.2
+    },
+    {
+      "Id": 8002,
+      "Name": "wooden_path",
+      "Description": "test",
+      "IsStackable": true,
+      "Width": 1,
+      "Height": 1,
+      "GroundPattern": [
+        [
+          "E"
+        ]
+      ],
+      "IsRotatable": false,
+      "IsPassable": true,
+      "TilesetIndex": 2,
+      "MovementSpeefBuff": 0.2
+    },
+    {
+      "Id": 8003,
+      "Name": "concrete_path",
+      "Description": "test",
+      "IsStackable": true,
+      "Width": 1,
+      "Height": 1,
+      "GroundPattern": [
+        [
+          "E"
+        ]
+      ],
+      "IsRotatable": false,
+      "IsPassable": true,
+      "TilesetIndex": 3,
+      "MovementSpeefBuff": 0.2
+    }
+  ],
+  "ManualCrafterItems": [
+    {
+      "Id": 9000,
+      "Name": "gas_stove",
+      "Description": "test",
+      "IsStackable": false,
+      "Width": 1,
+      "Height": 1,
+      "GroundPattern": [
+        [
+          "D"
+        ]
+      ],
+      "IsRotatable": false,
+      "IsPassable": false,
+      "CraftingRecipes": [
+        {
+          "Result": {
+            "Item": "fried_chicken_egg",
+            "Amount": 1
+          },
+          "RequiredIngredients": [
+            {
+              "Item": "chicken_egg",
+              "Amount": 1
+            }
+          ]
+        },
+        {
+          "Result": {
+            "Item": "uchpuchmak",
+            "Amount": 1
+          },
+          "RequiredIngredients": [
+            {
+              "Item": "wheat_flour",
+              "Amount": 1
+            },
+            {
+              "Item": "potato",
+              "Amount": 1
+            },
+            {
+              "Item": "meat",
+              "Amount": 1
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "WindowItems": [
+    {
+      "Id": 10000,
+      "Name": "window",
+      "Description": "test",
+      "Width": 1,
+      "Height": 2,
+      "GroundPattern": [
+        [
+          "C",
+          "C"
+        ]
+      ],
+      "IsRotatable": false,
+      "IsPassable": false
+    },
+    {
+      "Id": 10001,
+      "Name": "small_window",
+      "Description": "test",
+      "Width": 1,
+      "Height": 1,
+      "GroundPattern": [
+        [
+          "G"
+        ]
+      ],
+      "IsRotatable": false,
+      "IsPassable": false
+    }
+  ],
+  "SprinklerItems": [
+    {
+      "Id": 11000,
+      "Name": "sprinkler",
+      "Description": "test",
+      "Width": 1,
+      "Height": 1,
+      "GroundPattern": [
+        [
+          "A"
+        ]
+      ],
+      "IsRotatable": false,
+      "IsPassable": false,
+      "Range": 1
+    }
+  ],
+  "GateItems": [
+    {
+      "Id": 12000,
+      "Name": "small_main_gate",
+      "Description": "test",
+      "Width": 2,
+      "Height": 1,
+      "GroundPattern": [
+        [
+          "A"
+        ],
+        [
+          "A"
+        ]
+      ],
+      "IsRotatable": false,
+      "IsPassable": false,
+      "OpenSoundEffect": "SoundEffects\\Minifantasy_Dungeon_SFX\\05_door_open_1",
+      "CloseSoundEffect": "SoundEffects\\Minifantasy_Dungeon_SFX\\06_door_close_1"
+    },
+    {
+      "Id": 12001,
+      "Name": "big_left_main_gate",
+      "Description": "test",
+      "Width": 2,
+      "Height": 1,
+      "GroundPattern": [
+        [
+          "A"
+        ],
+        [
+          "A"
+        ]
+      ],
+      "IsRotatable": false,
+      "IsPassable": false,
+      "OpenSoundEffect": "SoundEffects\\Minifantasy_Dungeon_SFX\\05_door_open_1",
+      "CloseSoundEffect": "SoundEffects\\Minifantasy_Dungeon_SFX\\06_door_close_1"
+    },
+    {
+      "Id": 12002,
+      "Name": "big_right_main_gate",
+      "Description": "test",
+      "Width": 2,
+      "Height": 1,
+      "GroundPattern": [
+        [
+          "A"
+        ],
+        [
+          "A"
+        ]
+      ],
+      "IsRotatable": false,
+      "IsPassable": false,
+      "OpenSoundEffect": "SoundEffects\\Minifantasy_Dungeon_SFX\\05_door_open_1",
+      "CloseSoundEffect": "SoundEffects\\Minifantasy_Dungeon_SFX\\06_door_close_1"
+    }
+  ],
+  "AnimalSpawnerItems": [
+    {
+      "Id": 13000,
+      "Name": "hen_spawner",
+      "Description": "test",
+      "Width": 1,
+      "Height": 1,
+      "GroundPattern": [
+        [
+          "F"
+        ]
+      ],
+      "IsRotatable": false,
+      "IsPassable": true,
+      "AnimalName": "hen"
+    }
+  ],
+  "AnimalFeederItems": [
+    {
+      "Id": 14000,
+      "Name": "animal_feeder",
+      "Description": "test",
+      "Width": 1,
+      "Height": 1,
+      "GroundPattern": [
+        [
+          "F"
+        ]
+      ],
+      "IsRotatable": false,
+      "IsPassable": false
+    }
+  ],
+  "BirdNestItems": [
+    {
+      "Id": 15000,
+      "Name": "bird_nest",
+      "Description": "test",
+      "Width": 1,
+      "Height": 1,
+      "GroundPattern": [
+        [
+          "F"
+        ]
+      ],
+      "IsRotatable": false,
+      "IsPassable": true
+    }
+  ],
+  "SeedItems": [
+    {
+      "Id": 72,
+      "Name": "cabbage_seeds",
+      "Description": "test",
+      "IsStackable": true,
+      "Price": 10,
+      "PlantName": "cabbage_plant"
+    },
+    {
+      "Id": 73,
+      "Name": "tomato_seeds",
+      "Description": "test",
+      "IsStackable": true,
+      "Price": 10,
+      "PlantName": "tomato_plant"
+    },
+    {
+      "Id": 105,
+      "Name": "eggplant_seeds",
+      "Description": "test",
+      "IsStackable": true,
+      "Price": 10,
+      "PlantName": "eggplant_plant"
+    },
+    {
+      "Id": 106,
+      "Name": "garlic_seeds",
+      "Description": "test",
+      "IsStackable": true,
+      "Price": 10,
+      "PlantName": "garlic_plant"
+    },
+    {
+      "Id": 74,
+      "Name": "carrot_seeds",
+      "Description": "test",
+      "IsStackable": true,
+      "Price": 10,
+      "PlantName": "carrot_plant"
+    },
+    {
+      "Id": 76,
+      "Name": "strawberry_seeds",
+      "Description": "test",
+      "IsStackable": true,
+      "Price": 10,
+      "PlantName": "strawberry_plant"
+    },
+    {
+      "Id": 104,
+      "Name": "beetroot_seeds",
+      "Description": "test",
+      "IsStackable": true,
+      "Price": 10,
+      "PlantName": "beetroot_plant"
+    }
+  ],
+  "TreeSeedItems": [
+    {
+      "Id": 16,
+      "Name": "birch_seeds",
+      "Description": "test",
+      "IsStackable": true,
+      "Price": 0,
+      "TreeName": "birch_tree"
+    }
+  ]
 }
