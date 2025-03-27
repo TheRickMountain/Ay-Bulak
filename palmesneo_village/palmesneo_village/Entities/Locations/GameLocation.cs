@@ -680,6 +680,10 @@ namespace palmesneo_village
                     {
                         return groundTile == GroundTile.CoopHouseFloor;
                     }
+                case "G":
+                    {
+                        return groundTile == GroundTile.AnimalHouseWall;
+                    }
             }
 
             return false;

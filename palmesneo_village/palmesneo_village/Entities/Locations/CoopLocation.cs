@@ -11,6 +11,8 @@ namespace palmesneo_village
 
             CreateCoopFirstLayer();
 
+            TryBuild(Engine.ItemsDatabase.GetItemByName<BuildingItem>("small_window"), 16, 3, Direction.Down);
+
             for (int i = 0; i < Capacity; i++)
             {
                 TryBuild(Engine.ItemsDatabase.GetItemByName<BuildingItem>("animal_feeder"), 13 + i, 5, Direction.Down);

@@ -724,6 +724,18 @@
 			],
 			"IsRotatable": false,
 			"IsPassable": false
+		},
+		{
+			"Id": 10001,
+			"Name": "small_window",
+			"Description": "test",
+			"Width": 1,
+			"Height": 1,
+			"GroundPattern": [
+				["G"]
+			],
+			"IsRotatable": false,
+			"IsPassable": false
 		}
 	],
 	"SprinklerItems": [
