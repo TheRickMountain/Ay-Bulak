@@ -28,7 +28,9 @@ namespace palmesneo_village
             TryBuild(Engine.ItemsDatabase.GetItemByName<BuildingItem>("window"), 14, 2, Direction.Down);
             TryBuild(Engine.ItemsDatabase.GetItemByName<BuildingItem>("window"), 22, 2, Direction.Down);
 
-            CreateTeleport(24, 10, exitTeleport);
+            TryBuild(Engine.ItemsDatabase.GetItemByName<BuildingItem>("table"), 24, 7, Direction.Down);
+
+            CreateTeleport(23, 10, exitTeleport);
         }
 
         private void CreateHouseFirstLayer()
@@ -43,7 +45,7 @@ namespace palmesneo_village
                          "******44444444444444444444******\n" +
                          "******44444444444444444444******\n" +
                          "******444444444444**444444******\n" +
-                         "************************4*******\n" +
+                         "***********************4********\n" +
                          "********************************\n" +
                          "********************************\n" +
                          "********************************\n" +

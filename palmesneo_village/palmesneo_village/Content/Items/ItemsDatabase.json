@@ -349,7 +349,7 @@
           ]
         ],
         "Location": "house",
-        "X": 24,
+        "X": 23,
         "Y": 10
       }
     },
@@ -559,6 +559,23 @@
         ],
         [
           "A"
+        ]
+      ],
+      "IsRotatable": false,
+      "IsPassable": false
+    },
+    {
+      "Id": 1012,
+      "Name": "table",
+      "Description": "test",
+      "Width": 2,
+      "Height": 2,
+      "GroundPattern": [
+        [
+          "D", "D"
+        ],
+        [
+          "D", "D"
         ]
       ],
       "IsRotatable": false,
