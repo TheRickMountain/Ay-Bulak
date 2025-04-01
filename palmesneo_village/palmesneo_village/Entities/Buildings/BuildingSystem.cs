@@ -60,10 +60,10 @@ namespace palmesneo_village
 
         private void UpdatePreviewTexture()
         {
-            buildingPreview.Texture = currentBuildingItem.DirectionIcon[currentDirection];
+            buildingPreview.Texture = currentBuildingItem.DirectionTexture[currentDirection];
 
             int buildingHeightInPixels = currentBuildingItem.Height * Engine.TILE_SIZE;
-            int buildingTextureHeight = currentBuildingItem.DirectionIcon[currentDirection].Height;
+            int buildingTextureHeight = currentBuildingItem.DirectionTexture[currentDirection].Height;
 
             buildingPreview.Offset = new Vector2(0, buildingTextureHeight - buildingHeightInPixels);
         }

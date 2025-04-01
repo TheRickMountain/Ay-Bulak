@@ -104,7 +104,7 @@ namespace palmesneo_village
         {
             // TODO: check if inventory has enough space for pickup
 
-            foreach (LocationItem locationItem in CurrentLocation.GetLocationItems(GlobalPosition))
+            foreach (ItemEntity locationItem in CurrentLocation.GetLocationItems(GlobalPosition))
             {
                 if (locationItem.IsActive && locationItem.CanBePickedUp(GlobalPosition))
                 {
@@ -119,7 +119,7 @@ namespace palmesneo_village
             }
         }
 
-        private void PickupItem(LocationItem locationItem)
+        private void PickupItem(ItemEntity locationItem)
         {
             // TODO: play pickup sound
             ItemContainer itemContainer = locationItem.ItemContainer;

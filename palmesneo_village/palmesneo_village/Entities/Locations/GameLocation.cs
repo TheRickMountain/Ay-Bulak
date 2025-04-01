@@ -710,22 +710,22 @@ namespace palmesneo_village
 
         public void AddItem(Vector2 position, ItemContainer itemContainer)
         {
-            LocationItem locationItem = new LocationItem(itemContainer);
+            ItemEntity locationItem = new ItemEntity(itemContainer);
             locationItem.LocalPosition = position;
             locationItem.Depth = (int)position.Y;
             itemsList.AddChild(locationItem);
         }
 
-        public void RemoveItem(LocationItem item)
+        public void RemoveItem(ItemEntity item)
         {
             itemsList.RemoveChild(item);
         }
 
-        public IEnumerable<LocationItem> GetLocationItems(Vector2 position)
+        public IEnumerable<ItemEntity> GetLocationItems(Vector2 position)
         {
-            List<LocationItem> items = itemsList.GetChildren<LocationItem>().ToList();
+            List<ItemEntity> items = itemsList.GetChildren<ItemEntity>().ToList();
 
-            foreach (LocationItem item in items)
+            foreach (ItemEntity item in items)
             {
                 yield return item;
             }

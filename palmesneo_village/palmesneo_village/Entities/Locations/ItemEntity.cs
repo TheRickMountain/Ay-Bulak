@@ -2,7 +2,7 @@
 
 namespace palmesneo_village
 {
-    public class LocationItem : ImageEntity
+    public class ItemEntity : ImageEntity
     {
         public ItemContainer ItemContainer { get; }
 
@@ -11,7 +11,7 @@ namespace palmesneo_village
         private Vector2 targetPosition;
         private float pickupSpeed = 300f;
 
-        public LocationItem(ItemContainer itemContainer)
+        public ItemEntity(ItemContainer itemContainer)
         {
             ItemContainer = itemContainer;
 

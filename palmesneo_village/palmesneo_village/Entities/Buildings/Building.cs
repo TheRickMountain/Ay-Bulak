@@ -23,13 +23,13 @@ namespace palmesneo_village
             this.direction = direction;
             
             Sprite = new SpriteEntity();
-            Sprite.Texture = buildingItem.DirectionIcon[direction];
+            Sprite.Texture = buildingItem.DirectionTexture[direction];
 
             int buildingWidthInPixels = buildingItem.Width * Engine.TILE_SIZE;
-            int buildingTextureWidth = buildingItem.DirectionIcon[direction].Width;
+            int buildingTextureWidth = buildingItem.DirectionTexture[direction].Width;
 
             int buildingHeightInPixels = buildingItem.Height * Engine.TILE_SIZE;
-            int buildingTextureHeight = buildingItem.DirectionIcon[direction].Height;
+            int buildingTextureHeight = buildingItem.DirectionTexture[direction].Height;
 
             Sprite.Offset = new Vector2(-(buildingWidthInPixels / 2 - buildingTextureWidth / 2), 
                 buildingTextureHeight - buildingHeightInPixels);

@@ -13,9 +13,9 @@ namespace palmesneo_village
 
         public override void Initialize(MTileset sourceTileset)
         {
-            DirectionIcon[Direction.Down] = Engine.FloorPathTileset[TilesetIndex * 16];
+            DirectionTexture[Direction.Down] = Engine.FloorPathTileset[TilesetIndex * 16];
 
-            Icon = DirectionIcon[Direction.Down];
+            Icon = DirectionTexture[Direction.Down];
         }
     }
 }

@@ -43,9 +43,9 @@ namespace palmesneo_village
 
             TrunkTexture = new MTexture(texture, (textureSpritesAmount - 1) * textureWidth, 0, textureWidth, textureHeight);
 
-            DirectionIcon[Direction.Down] = GrowthStagesTextures[0];
+            DirectionTexture[Direction.Down] = GrowthStagesTextures[0];
 
-            Icon = DirectionIcon[Direction.Down];
+            Icon = DirectionTexture[Direction.Down];
         }
     }
 }
