@@ -10,6 +10,10 @@ namespace palmesneo_village
 
         private const float COLLISION_CHECK_OFFSET = 4f;
 
+        private const float ITEM_PICKUP_SPEED = 300f;
+        private const float ITEM_ATTRACTION_DISTANCE = 48f;
+        private const float ITEM_PICKUP_DISTANCE = 5f;
+
         public Player(string name, MTexture texture, float speed, Inventory inventory) : 
             base(name, texture, speed)
         {
@@ -22,7 +26,7 @@ namespace palmesneo_village
 
             UpdateMovement();
 
-            CheckForItemPickup();
+            UpdateItemsPickup();
         }
 
         protected void UpdateMovement()
@@ -100,31 +104,57 @@ namespace palmesneo_village
             return true;
         }
 
-        private void CheckForItemPickup()
+        private void UpdateItemsPickup()
         {
-            // TODO: check if inventory has enough space for pickup
-
-            foreach (ItemEntity locationItem in CurrentLocation.GetLocationItems(GlobalPosition))
+            foreach(ItemEntity itemEntity in CurrentLocation.GetItemEntities())
             {
-                if (locationItem.IsActive && locationItem.CanBePickedUp(GlobalPosition))
-                {
-                    locationItem.StartPickup(GlobalPosition);
-                }
-                else if (!locationItem.IsActive)
-                {
-                    PickupItem(locationItem);
+                ItemContainer itemContainer = itemEntity.ItemContainer;
 
-                    CurrentLocation.RemoveItem(locationItem);
+                if (inventory.CanAddItem(itemContainer.Item, itemContainer.Quantity))
+                {
+                    UpdateItemEntityAttraction(itemEntity);
                 }
             }
         }
 
-        private void PickupItem(ItemEntity locationItem)
+        private void UpdateItemEntityAttraction(ItemEntity itemEntity)
         {
-            // TODO: play pickup sound
-            ItemContainer itemContainer = locationItem.ItemContainer;
+            Vector2 direction = LocalPosition - itemEntity.LocalPosition;
+            float distance = direction.Length();
+
+            if (distance < ITEM_ATTRACTION_DISTANCE)
+            {
+                direction.Normalize();
+                itemEntity.LocalPosition += direction * ITEM_PICKUP_SPEED * Engine.GameDeltaTime;
+
+                if(distance <= ITEM_PICKUP_DISTANCE)
+                {
+                    PickupItem(itemEntity);
+
+                    PlayItemPickupSoundEffect();
+
+                    CurrentLocation.RemoveItemEntity(itemEntity);
+                }
+            }
+        }
+
+        private void PickupItem(ItemEntity itemEntity)
+        {
+            ItemContainer itemContainer = itemEntity.ItemContainer;
 
             inventory.TryAddItem(itemContainer.Item, itemContainer.Quantity, itemContainer.ContentAmount);
+        }
+
+        private void PlayItemPickupSoundEffect()
+        {
+            Calc.Random.Choose(
+                ResourcesManager.GetSoundEffect("SoundEffects", "pop_0"),
+                ResourcesManager.GetSoundEffect("SoundEffects", "pop_1"),
+                ResourcesManager.GetSoundEffect("SoundEffects", "pop_2"),
+                ResourcesManager.GetSoundEffect("SoundEffects", "pop_3"),
+                ResourcesManager.GetSoundEffect("SoundEffects", "pop_4"),
+                ResourcesManager.GetSoundEffect("SoundEffects", "pop_5")
+                ).Play();
         }
     }
 }

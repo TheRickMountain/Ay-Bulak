@@ -712,16 +712,15 @@ namespace palmesneo_village
         {
             ItemEntity locationItem = new ItemEntity(itemContainer);
             locationItem.LocalPosition = position;
-            locationItem.Depth = (int)position.Y;
             itemsList.AddChild(locationItem);
         }
 
-        public void RemoveItem(ItemEntity item)
+        public void RemoveItemEntity(ItemEntity item)
         {
             itemsList.RemoveChild(item);
         }
 
-        public IEnumerable<ItemEntity> GetLocationItems(Vector2 position)
+        public IEnumerable<ItemEntity> GetItemEntities()
         {
             List<ItemEntity> items = itemsList.GetChildren<ItemEntity>().ToList();
 
