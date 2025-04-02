@@ -16,7 +16,6 @@ namespace palmesneo_village
         public TreeItem[] TreeItems { get; init; }
         public SeedItem[] SeedItems { get; init; }
         public TreeSeedItem[] TreeSeedItems { get; init; }
-        public WaterSourceItem[] WaterSourceItems { get; init; }
         public BedItem[] BedItems { get; init; }
         public ResourceItem[] ResourceItems { get; init; }
         public FloorPathItem[] FloorPathItems { get; init; }
@@ -44,7 +43,6 @@ namespace palmesneo_village
             ReadAndInitializeCollection(TreeItems, itemsIcons);
             ReadAndInitializeCollection(SeedItems, itemsIcons);
             ReadAndInitializeCollection(TreeSeedItems, itemsIcons);
-            ReadAndInitializeCollection(WaterSourceItems, itemsIcons);
             ReadAndInitializeCollection(BedItems, itemsIcons);
             ReadAndInitializeCollection(ResourceItems, itemsIcons);
             ReadAndInitializeCollection(FloorPathItems, itemsIcons);

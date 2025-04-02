@@ -299,7 +299,7 @@ namespace palmesneo_village
                         break;
                     case ToolType.WateringCan:
                         {
-                            if (GetGroundTile(x, y) == GroundTile.Water || building is WaterSourceBuilding)
+                            if (GetGroundTile(x, y) == GroundTile.Water)
                             {
                                 toolItem.PlaySoundEffect();
                                 inventory.AddSlotItemContentAmount(slotIndex, toolItem.Capacity);
@@ -514,10 +514,6 @@ namespace palmesneo_village
                 else if (buildingItem is TreeItem treeItem)
                 {
                     building = new TreeBuilding(this, treeItem, direction, tiles);
-                }
-                else if (buildingItem is WaterSourceItem waterSourceItem)
-                {
-                    building = new WaterSourceBuilding(this, waterSourceItem, direction, tiles);
                 }
                 else if (buildingItem is BedItem bedItem)
                 {

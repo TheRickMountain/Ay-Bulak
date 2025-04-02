@@ -724,23 +724,6 @@
       "HarvestAmount": 3
     }
   ],
-  "WaterSourceItems": [
-    {
-      "Id": 3000,
-      "Name": "standpipe",
-      "Description": "test",
-      "IsStackable": false,
-      "Width": 1,
-      "Height": 1,
-      "GroundPattern": [
-        [
-          "A"
-        ]
-      ],
-      "IsRotatable": false,
-      "IsPassable": false
-    }
-  ],
   "BedItems": [
     {
       "Id": 5000,
