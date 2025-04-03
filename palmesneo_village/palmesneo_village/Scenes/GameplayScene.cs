@@ -333,6 +333,11 @@ namespace palmesneo_village
                                 gameLocation.StartNextDay(timeOfDayManager);
                             }
 
+                            if (timeOfDayManager.CurrentWeather == Weather.Sunny)
+                            {
+                                ResourcesManager.GetSoundEffect("SoundEffects", "rooster_crow").Play();
+                            }
+
                             gameState = GameState.TransitionOut;
                         }
                     }
