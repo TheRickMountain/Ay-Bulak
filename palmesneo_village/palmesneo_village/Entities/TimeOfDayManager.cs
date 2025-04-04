@@ -26,8 +26,10 @@ namespace palmesneo_village
 
         public Season CurrentSeason { get; private set; } = Season.Spring;
         public Weather CurrentWeather { get; private set; } = Weather.Sunny;
-        public int CurrentHour { get => hour; }
 
+        public int CurrentDay { get => day; }
+        public int CurrentHour { get => hour; }
+     
         private GradientTexture1D currentDayGradient;
 
         public Action<int> DayChanged { get; set; }

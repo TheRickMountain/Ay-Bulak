@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace palmesneo_village
 {
@@ -39,6 +40,8 @@ namespace palmesneo_village
         private TileSelector tileSelector;
 
         private TextUI timeText;
+
+        private CalendarUI calendarUI;
 
         private Dictionary<string, GameLocation> gameLocations = new();
         private GameLocation currentGameLocation;
@@ -103,9 +106,14 @@ namespace palmesneo_village
             playerMoneyUI.LocalPosition = new Vector2(5, -5);
             MasterUIEntity.AddChild(playerMoneyUI);
 
+            calendarUI = new CalendarUI(timeOfDayManager);
+            calendarUI.Anchor = Anchor.TopRight;
+            calendarUI.LocalPosition = new Vector2(-5, 5);
+            MasterUIEntity.AddChild(calendarUI);
+
             timeText = new TextUI();
-            timeText.Anchor = Anchor.TopLeft;
-            timeText.LocalPosition = new Vector2(5, 32);
+            timeText.Anchor = Anchor.TopRight;
+            timeText.LocalPosition = new Vector2(-5, 55);
             MasterUIEntity.AddChild(timeText);
 
             gameUIElements.Add(inventoryHotbarUI);
