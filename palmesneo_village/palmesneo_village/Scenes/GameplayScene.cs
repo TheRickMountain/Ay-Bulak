@@ -119,6 +119,7 @@ namespace palmesneo_village
             gameUIElements.Add(inventoryHotbarUI);
             gameUIElements.Add(playerEnergyBarUI);
             gameUIElements.Add(playerMoneyUI);
+            gameUIElements.Add(calendarUI);
             gameUIElements.Add(timeText);
 
             playerInventoryUI = new PlayerInventoryUI(Inventory);
