@@ -22,7 +22,7 @@ namespace palmesneo_village
                 stagesTextures[i] = new MTexture(texture, new Rectangle(textureWidth * i, 0, textureWidth, textureHeight));
             }
 
-            DirectionIcon[Direction.Down] = stagesTextures[0];
+            DirectionTexture[Direction.Down] = stagesTextures[0];
 
             Icon = stagesTextures[0];
         }

@@ -13,6 +13,9 @@ namespace palmesneo_village
     {
         public int GrowthRateInDays { get; init; }
         public GrowthStageData[] GrowthStagesData { get; init; }
+        public string StumpName { get; init; }
+
+        public MTexture TrunkTexture { get; private set; }
 
         [JsonIgnore]
         public MTexture[] GrowthStagesTextures { get; private set; }
@@ -25,7 +28,10 @@ namespace palmesneo_village
 
             int growthStages = GrowthStagesData.Length;
 
-            int textureWidth = texture.Width / growthStages;
+            // Нужно брать на +1 больше, так как последний спрайт в текстуре - это ствол дерева
+            int textureSpritesAmount = growthStages + 1;
+
+            int textureWidth = texture.Width / textureSpritesAmount;
             int textureHeight = texture.Height;
 
             GrowthStagesTextures = new MTexture[growthStages];
@@ -35,9 +41,11 @@ namespace palmesneo_village
                 GrowthStagesTextures[i] = new MTexture(texture, i * textureWidth, 0, textureWidth, textureHeight);
             }
 
-            DirectionIcon[Direction.Down] = GrowthStagesTextures[0];
+            TrunkTexture = new MTexture(texture, (textureSpritesAmount - 1) * textureWidth, 0, textureWidth, textureHeight);
 
-            Icon = DirectionIcon[Direction.Down];
+            DirectionTexture[Direction.Down] = GrowthStagesTextures[0];
+
+            Icon = DirectionTexture[Direction.Down];
         }
     }
 }

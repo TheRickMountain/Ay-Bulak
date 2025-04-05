@@ -31,6 +31,13 @@ strawberry_seeds,Strawberry seeds
 tomato,Tomato
 tomato_seeds,Tomato seeds
 uchpuchmak,Uchpuchmak
+weekday_0_short,sun
+weekday_1_short,mon
+weekday_2_short,tue
+weekday_3_short,wed
+weekday_4_short,thu
+weekday_5_short,fri
+weekday_6_short,sat
 wheat_flour,Wheat_flour
 wood,Wood
 wooden_path,Wooden path

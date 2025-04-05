@@ -34,9 +34,9 @@ namespace palmesneo_village
                 GrowthStagesTextures[i] = new MTexture(texture, i * textureWidth, 0, textureWidth, textureHeight);
             }
 
-            DirectionIcon[Direction.Down] = GrowthStagesTextures[0];
+            DirectionTexture[Direction.Down] = GrowthStagesTextures[0];
 
-            Icon = DirectionIcon[Direction.Down];
+            Icon = DirectionTexture[Direction.Down];
         }
 
     }

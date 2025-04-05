@@ -34,6 +34,8 @@ namespace palmesneo_village
         public int MapWidth { get; private set; }
         public int MapHeight { get; private set; }
 
+        private bool isOutdoor;
+
         private PathNodeMap pathNodeMap;
 
         private CameraMovement cameraMovement;
@@ -51,14 +53,16 @@ namespace palmesneo_village
 
         private Entity entitiesList;
         private Entity itemsList;
+        private RainEffectEntity rainEffect;
 
         private Player _player;
 
-        public GameLocation(string locationId, int mapWidth, int mapHeight)
+        public GameLocation(string locationId, int mapWidth, int mapHeight, bool isOutdoor)
         {
             LocationId = locationId;
             MapWidth = mapWidth;
             MapHeight = mapHeight;
+            this.isOutdoor = isOutdoor;
 
             pathNodeMap = new PathNodeMap(mapWidth, mapHeight);
 
@@ -97,13 +101,28 @@ namespace palmesneo_village
             airTopTilemap = new Tilemap(TilesetConnection.Individual, 16, 16, mapWidth, mapHeight);
             airTopTilemap.Tileset = new MTileset(ResourcesManager.GetTexture("Tilesets", "air_tileset"), 16, 16);
             AddChild(airTopTilemap);
+
+            if (isOutdoor)
+            {
+                // TODO: включать/выключать дождь в зависимости от начальной погоды
+                rainEffect = new RainEffectEntity();
+                rainEffect.Emitting = false;
+                AddChild(rainEffect);
+            }
         }
 
         public override void Update()
         {
-            base.Update();
-
             MouseTile = Vector2.Clamp(WorldToMap(MInput.Mouse.GlobalPosition), Vector2.Zero, new Vector2(MapWidth - 1, MapHeight - 1));
+
+            if (isOutdoor)
+            {
+                Vector2 viewportSize = cameraMovement.GetViewportZoomedSize();
+                rainEffect.LocalPosition = _player.LocalPosition + new Vector2(0, -(viewportSize.Y / 2));
+                rainEffect.EmitterLineLength = (int)viewportSize.X;
+            }
+
+            base.Update();
         }
 
         public void SetGroundTile(int x, int y, GroundTile groundTile)
@@ -299,7 +318,7 @@ namespace palmesneo_village
                         break;
                     case ToolType.WateringCan:
                         {
-                            if (GetGroundTile(x, y) == GroundTile.Water || building is WaterSourceBuilding)
+                            if (GetGroundTile(x, y) == GroundTile.Water)
                             {
                                 toolItem.PlaySoundEffect();
                                 inventory.AddSlotItemContentAmount(slotIndex, toolItem.Capacity);
@@ -418,6 +437,11 @@ namespace palmesneo_village
                 }
             }
 
+            if (isOutdoor)
+            {
+                rainEffect.Emitting = timeOfDayManager.CurrentWeather == Weather.Rainy;
+            }
+
             foreach (Entity entity in entitiesList.GetChildren())
             {
                 if (entity is Building building)
@@ -514,10 +538,6 @@ namespace palmesneo_village
                 else if (buildingItem is TreeItem treeItem)
                 {
                     building = new TreeBuilding(this, treeItem, direction, tiles);
-                }
-                else if (buildingItem is WaterSourceItem waterSourceItem)
-                {
-                    building = new WaterSourceBuilding(this, waterSourceItem, direction, tiles);
                 }
                 else if (buildingItem is BedItem bedItem)
                 {
@@ -710,22 +730,21 @@ namespace palmesneo_village
 
         public void AddItem(Vector2 position, ItemContainer itemContainer)
         {
-            LocationItem locationItem = new LocationItem(itemContainer);
+            ItemEntity locationItem = new ItemEntity(itemContainer);
             locationItem.LocalPosition = position;
-            locationItem.Depth = (int)position.Y;
             itemsList.AddChild(locationItem);
         }
 
-        public void RemoveItem(LocationItem item)
+        public void RemoveItemEntity(ItemEntity item)
         {
             itemsList.RemoveChild(item);
         }
 
-        public IEnumerable<LocationItem> GetLocationItems(Vector2 position)
+        public IEnumerable<ItemEntity> GetItemEntities()
         {
-            List<LocationItem> items = itemsList.GetChildren<LocationItem>().ToList();
+            List<ItemEntity> items = itemsList.GetChildren<ItemEntity>().ToList();
 
-            foreach (LocationItem item in items)
+            foreach (ItemEntity item in items)
             {
                 yield return item;
             }

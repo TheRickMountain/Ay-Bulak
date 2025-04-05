@@ -21,7 +21,7 @@ namespace palmesneo_village
             CloseTexture = new MTexture(texture, 0, 0, texture.Width / 2, texture.Height);
             OpenTexture = new MTexture(texture, texture.Width / 2, 0, texture.Width / 2, texture.Height);
 
-            DirectionIcon[Direction.Down] = CloseTexture;
+            DirectionTexture[Direction.Down] = CloseTexture;
 
             Icon = CloseTexture;
         }

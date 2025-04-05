@@ -16,7 +16,7 @@ namespace palmesneo_village
         public bool IsPassable { get; init; }
         public TeleportData TeleportData { get; init; }
 
-        public Dictionary<Direction, MTexture> DirectionIcon { get; private set; } = new()
+        public Dictionary<Direction, MTexture> DirectionTexture { get; private set; } = new()
         {
             {Direction.Down, RenderManager.Pixel},
             {Direction.Up, RenderManager.Pixel},
@@ -28,19 +28,17 @@ namespace palmesneo_village
         {
             if (IsRotatable)
             {
-                DirectionIcon[Direction.Down] = ResourcesManager.GetTexture("Items", Name + "_down");
-                DirectionIcon[Direction.Up] = ResourcesManager.GetTexture("Items", Name + "_up");
-                DirectionIcon[Direction.Left] = ResourcesManager.GetTexture("Items", Name + "_left");
-                DirectionIcon[Direction.Right] = ResourcesManager.GetTexture("Items", Name + "_right");
-
-                Icon = DirectionIcon[Direction.Down];
+                DirectionTexture[Direction.Down] = ResourcesManager.GetTexture("Items", Name + "_down");
+                DirectionTexture[Direction.Up] = ResourcesManager.GetTexture("Items", Name + "_up");
+                DirectionTexture[Direction.Left] = ResourcesManager.GetTexture("Items", Name + "_left");
+                DirectionTexture[Direction.Right] = ResourcesManager.GetTexture("Items", Name + "_right");
             }
             else
             {
-                DirectionIcon[Direction.Down] = ResourcesManager.GetTexture("Items", Name);
-
-                Icon = DirectionIcon[Direction.Down];
+                DirectionTexture[Direction.Down] = ResourcesManager.GetTexture("Items", Name);
             }
+
+            Icon = DirectionTexture[Direction.Down];
         }
     }
 }

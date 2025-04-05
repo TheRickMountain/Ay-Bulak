@@ -18,7 +18,7 @@ namespace palmesneo_village
             EmptyTexture = new MTexture(texture, 0, 0, texture.Width / 2, texture.Height);
             FullTexture = new MTexture(texture, texture.Width / 2, 0, texture.Width / 2, texture.Height);
 
-            DirectionIcon[Direction.Down] = EmptyTexture;
+            DirectionTexture[Direction.Down] = EmptyTexture;
 
             Icon = EmptyTexture;
         }

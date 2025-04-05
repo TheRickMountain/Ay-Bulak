@@ -1,9 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
+using MonoGame.Extended.Tweening;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace palmesneo_village
 {
@@ -21,12 +18,37 @@ namespace palmesneo_village
 
         private int currentGrowthStage = 0;
 
+        private ImageEntity trunkImage;
+
+        private Tweener rotationTweener;
+        private Tweener fadeTweener;
+
+        private bool isFalling = false;
+
         public TreeBuilding(GameLocation gameLocation, TreeItem treeItem, Direction direction, Vector2[,] occupiedTiles)
             : base(gameLocation, treeItem, direction, occupiedTiles)
         {
             this.treeItem = treeItem;
 
             Sprite.Texture = treeItem.GrowthStagesTextures[0];
+
+            trunkImage = new ImageEntity();
+            trunkImage.Texture = treeItem.TrunkTexture;
+            trunkImage.Centered = true;
+            // TODO: продумать как это вычислить автоматически
+            trunkImage.Offset = new Vector2(0, 30);
+            trunkImage.LocalPosition = new Vector2(8, 14);
+
+            rotationTweener = new Tweener();
+            fadeTweener = new Tweener();
+        }
+
+        public override void Update()
+        {
+            rotationTweener.Update(Engine.GameDeltaTime);
+            fadeTweener.Update(Engine.GameDeltaTime);
+
+            base.Update();
         }
 
         public override void OnAfterDayChanged()
@@ -47,10 +69,17 @@ namespace palmesneo_village
             Sprite.Texture = treeItem.GrowthStagesTextures[currentGrowthStage];
 
             currentStrength = treeItem.GrowthStagesData[currentGrowthStage].Strength;
+
+            if (IsRipe)
+            {
+                AddChild(trunkImage);
+            }
         }
 
         public override void Interact(Item item, PlayerEnergyManager playerEnergyManager)
         {
+            if(isFalling) return;
+
             if(item is ToolItem toolItem)
             {
                 if (toolItem.ToolType == ToolType.Axe)
@@ -61,21 +90,113 @@ namespace palmesneo_village
 
                     currentStrength -= toolItem.Efficiency;
 
+                    // Ствол срублен
                     if (currentStrength <= 0)
                     {
-                        foreach (var kvp in treeItem.GrowthStagesData[currentGrowthStage].Loot)
+                        if (IsRipe)
                         {
-                            ItemContainer itemContainer = new ItemContainer();
-                            itemContainer.Item = Engine.ItemsDatabase.GetItemByName(kvp.Key);
-                            itemContainer.Quantity = kvp.Value;
+                            ResourcesManager.GetSoundEffect("SoundEffects", "tree_falling").Play();
 
-                            GameLocation.AddItem(OccupiedTiles[0, 0] * Engine.TILE_SIZE, itemContainer);
+                            PlayTrunkFallingAnimation((x) =>
+                            {
+                                SpawnLootForStage(currentGrowthStage);
+
+                                GameLocation.RemoveBuilding(this);
+
+                                BuildTreeStump();
+                            });
+
+                            isFalling = true;
                         }
+                        else
+                        {
+                            SpawnLootForStage(currentGrowthStage);
 
-                        GameLocation.RemoveBuilding(this);
+                            GameLocation.RemoveBuilding(this);
+                        }
+                    }
+                    else
+                    {
+                        // Только зрелое дерево может покачиваться
+                        if (IsRipe)
+                        {
+                            ResourcesManager.GetSoundEffect("SoundEffects", "tree_shaking").Play();
+
+                            PlayTrunkShakeAnimation();
+                        }
                     }
                 }
             }
+        }
+
+        private void PlayTrunkShakeAnimation()
+        {
+            rotationTweener.TweenTo(
+                    target: trunkImage,
+                    expression: trunk => trunkImage.LocalRotation,
+                    toValue: 0.04f,
+                    duration: 0.06f)
+                    .Easing(EasingFunctions.CubicOut)
+                    .OnEnd(tween1 =>
+                    {
+                        rotationTweener.TweenTo(
+                            target: trunkImage,
+                            expression: trunk => trunkImage.LocalRotation,
+                            toValue: -0.03f,
+                            duration: 0.08f)
+                            .Easing(EasingFunctions.Linear)
+                            .OnEnd(tween1 =>
+                            {
+                                rotationTweener.TweenTo(
+                                    target: trunkImage,
+                                    expression: trunk => trunkImage.LocalRotation,
+                                    toValue: 0,
+                                    duration: 0.08f)
+                                    .Easing(EasingFunctions.Linear);
+                            });
+                    });
+        }
+
+        private void PlayTrunkFallingAnimation(Action<Tween> onEnd)
+        {
+            rotationTweener.CancelAndCompleteAll();
+
+            rotationTweener.TweenTo(
+                    target: trunkImage,
+                    expression: trunk => trunkImage.LocalRotation,
+                    toValue: 1.5f,
+                    duration: 2)
+                    .Easing(EasingFunctions.CubicIn)
+                    .OnEnd(onEnd);
+
+            fadeTweener.TweenTo(
+                target: trunkImage,
+                expression: trunk => trunkImage.SelfColor,
+                toValue: Color.White * 0,
+                duration: 0.5f,
+                delay: 1.5f)
+                .Easing(EasingFunctions.Linear);
+        }
+
+        private void SpawnLootForStage(int growthStage)
+        {
+            foreach (var kvp in treeItem.GrowthStagesData[growthStage].Loot)
+            {
+                ItemContainer itemContainer = new ItemContainer();
+                itemContainer.Item = Engine.ItemsDatabase.GetItemByName(kvp.Key);
+                itemContainer.Quantity = kvp.Value;
+
+                GameLocation.AddItem(OccupiedTiles[0, 0] * Engine.TILE_SIZE, itemContainer);
+            }
+        }
+    
+        private void BuildTreeStump()
+        {
+            Vector2 position = OccupiedTiles[0, 0];
+
+            ResourceItem stumpItem = Engine.ItemsDatabase.GetItemByName<ResourceItem>(treeItem.StumpName);
+
+            GameLocation.TryBuild(stumpItem, (int)position.X, (int)position.Y, Direction.Down);
         }
     }
 }

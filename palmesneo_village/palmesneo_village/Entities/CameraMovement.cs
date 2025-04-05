@@ -1,5 +1,6 @@
 ﻿using FontStashSharp;
 using Microsoft.Xna.Framework;
+using MonoGame.Extended;
 using MonoGame.Extended.Tiled;
 namespace palmesneo_village
 {
@@ -41,7 +42,7 @@ namespace palmesneo_village
 
             if(isDirty)
             {
-                UpdateBounds(Engine.ViewportWidth, Engine.ViewportHeight);
+                UpdateBounds();
 
                 isDirty = false;
             }
@@ -60,18 +61,24 @@ namespace palmesneo_village
             Engine.Camera.Position = LocalPosition;
         }
 
-        private void UpdateBounds(int screenWidth, int screenHeight)
+        public Vector2 GetViewportZoomedSize()
         {
             float zoom = Engine.Camera.Zoom.X;
 
-            int visibleWidthInWorld = (int)(screenWidth / zoom);
-            int visibleHeightInWorld = (int)(screenHeight / zoom);
+            Vector2 viewportSize = new Vector2(Engine.ViewportWidth, Engine.ViewportHeight);
 
-            int halfVisibleWidth = visibleWidthInWorld / 2;
-            int halfVisibleHeight = visibleHeightInWorld / 2;
+            return viewportSize / zoom;
+        }
 
-            bool centerInX = Bounds.Width < visibleWidthInWorld;
-            bool centerInY = Bounds.Height < visibleHeightInWorld;
+        private void UpdateBounds()
+        {
+            Vector2 viewportZoomedSize = GetViewportZoomedSize();
+
+            int halfVisibleWidth = (int)viewportZoomedSize.X / 2;
+            int halfVisibleHeight = (int)viewportZoomedSize.Y / 2;
+
+            bool centerInX = Bounds.Width < (int)viewportZoomedSize.X;
+            bool centerInY = Bounds.Height < (int)viewportZoomedSize.Y;
 
             if(centerInX)
             {

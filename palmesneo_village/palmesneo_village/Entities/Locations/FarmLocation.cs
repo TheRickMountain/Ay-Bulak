@@ -9,7 +9,7 @@ namespace palmesneo_village
     public class FarmLocation : GameLocation
     {
 
-        public FarmLocation(string id) : base(id, 64, 64)
+        public FarmLocation(string id) : base(id, 64, 64, true)
         {
             for (int x = 0; x < MapWidth; x++)
             {

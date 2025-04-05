@@ -11,7 +11,6 @@ namespace palmesneo_village
 
         public string Name { get; set; } = "";
 
-        public bool IsActive { get; set; } = true;
         public bool IsVisible { get; set; } = true;
 
         public virtual Vector2 LocalPosition { get; set; } = Vector2.Zero;
