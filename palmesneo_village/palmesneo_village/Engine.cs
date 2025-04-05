@@ -13,8 +13,8 @@ namespace palmesneo_village
     // I love Ermek <3
     public class Engine : Game
     {
-        public string Title = "Palmesneo village";
-        public GameVersion Version = new GameVersion(0, 0, 0);
+        public string Title = "Palmesneo village (alpha)";
+        public GameVersion Version = new GameVersion(0, 1, 0);
 
         public const int TILE_SIZE = 16;
 
