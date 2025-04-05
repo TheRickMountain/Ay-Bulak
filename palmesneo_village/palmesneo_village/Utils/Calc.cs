@@ -8,6 +8,18 @@ namespace palmesneo_village
 {
     public static class Calc
     {
+        public static Direction GetDirection(Vector2 vector)
+        {
+            if (Math.Abs(vector.X) > Math.Abs(vector.Y))
+            {
+                return vector.X > 0 ? Direction.Right : Direction.Left;
+            }
+            else
+            {
+                return vector.Y > 0 ? Direction.Down : Direction.Up;
+            }
+        }
+
         public static Vector2[,] GetVector2DArray(Vector2 position, int width, int height)
         {
             int tileX = (int)position.X;

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 
@@ -14,10 +15,44 @@ namespace palmesneo_village
         private const float ITEM_ATTRACTION_DISTANCE = 48f;
         private const float ITEM_PICKUP_DISTANCE = 5f;
 
+        private SpriteEntity bodySprite;
+
+        private Direction movementDirection = Direction.Down;
+
         public Player(string name, MTexture texture, float speed, Inventory inventory) : 
             base(name, texture, speed)
         {
             this.inventory = inventory;
+
+            // TODO: перестать использовать BodyImage
+            BodyImage.IsVisible = false;
+
+            CreateAndInitializeBodySprite(texture);
+        }
+
+        private void CreateAndInitializeBodySprite(MTexture spritesheet)
+        {
+            int framesColumns = 4;
+            int framesRows = 4;
+
+            int frameWidth = spritesheet.Width / framesColumns;
+            int frameHeight = spritesheet.Height / framesRows;
+
+            bodySprite = new SpriteEntity();
+            bodySprite.AddAnimation("idle_down", new Animation(spritesheet, 1, 0, frameWidth, frameHeight, 0, 0));
+            bodySprite.AddAnimation("idle_left", new Animation(spritesheet, 1, 0, frameWidth, frameHeight, 0, frameHeight));
+            bodySprite.AddAnimation("idle_up", new Animation(spritesheet, 1, 0, frameWidth, frameHeight, 0, frameHeight * 2));
+            bodySprite.AddAnimation("idle_right", new Animation(spritesheet, 1, 0, frameWidth, frameHeight, 0, frameHeight * 3));
+
+            bodySprite.AddAnimation("walk_down", new Animation(spritesheet, 4, 0, frameWidth, frameHeight, 0, 0));
+            bodySprite.AddAnimation("walk_left", new Animation(spritesheet, 4, 0, frameWidth, frameHeight, 0, frameHeight));
+            bodySprite.AddAnimation("walk_up", new Animation(spritesheet, 4, 0, frameWidth, frameHeight, 0, frameHeight * 2));
+            bodySprite.AddAnimation("walk_right", new Animation(spritesheet, 4, 0, frameWidth, frameHeight, 0, frameHeight * 3));
+            AddChild(bodySprite);
+
+            bodySprite.LocalPosition = new Vector2(-frameWidth / 2, -(frameHeight - (Engine.TILE_SIZE / 2)));
+
+            bodySprite.Play("idle_down");
         }
 
         public override void Update()
@@ -36,6 +71,8 @@ namespace palmesneo_village
             if (movement != Vector2.Zero)
             {
                 movement.Normalize();
+
+                movementDirection = Calc.GetDirection(movement);
 
                 float actualSpeed = Speed;
 
@@ -68,6 +105,15 @@ namespace palmesneo_village
                     }
                 }
             }
+
+            if(movement != Vector2.Zero)
+            {
+                bodySprite.Play($"walk_{movementDirection.ToString().ToLower()}");
+            }
+            else
+            {
+                bodySprite.Play($"idle_{movementDirection.ToString().ToLower()}");
+            }
         }
 
         private bool IsValidMovement(Vector2 newPosition)
@@ -76,7 +122,7 @@ namespace palmesneo_village
             Vector2 mapPos = CurrentLocation.WorldToMap(newPosition);
 
             // Проверяем 4 точки вокруг игрока (предполагаем, что размер игрока примерно равен тайлу)
-            Vector2[] checkPoints = new Vector2[]
+            Vector2[] checkPoints =
             {
                 new Vector2(newPosition.X - COLLISION_CHECK_OFFSET, newPosition.Y - COLLISION_CHECK_OFFSET),
                 new Vector2(newPosition.X + COLLISION_CHECK_OFFSET, newPosition.Y - COLLISION_CHECK_OFFSET),
@@ -155,6 +201,24 @@ namespace palmesneo_village
                 ResourcesManager.GetSoundEffect("SoundEffects", "pop_4"),
                 ResourcesManager.GetSoundEffect("SoundEffects", "pop_5")
                 ).Play();
+        }
+
+        public override void DebugRender()
+        {
+            base.DebugRender();
+
+            Vector2[] checkPoints =
+            {
+                new Vector2(LocalPosition.X - COLLISION_CHECK_OFFSET, LocalPosition.Y - COLLISION_CHECK_OFFSET),
+                new Vector2(LocalPosition.X + COLLISION_CHECK_OFFSET, LocalPosition.Y - COLLISION_CHECK_OFFSET),
+                new Vector2(LocalPosition.X - COLLISION_CHECK_OFFSET, LocalPosition.Y + COLLISION_CHECK_OFFSET),
+                new Vector2(LocalPosition.X + COLLISION_CHECK_OFFSET, LocalPosition.Y + COLLISION_CHECK_OFFSET)
+            };
+
+            RenderManager.Line(checkPoints[0], checkPoints[1], Color.YellowGreen);
+            RenderManager.Line(checkPoints[1], checkPoints[3], Color.YellowGreen);
+            RenderManager.Line(checkPoints[3], checkPoints[2], Color.YellowGreen);
+            RenderManager.Line(checkPoints[2], checkPoints[0], Color.YellowGreen);
         }
     }
 }
