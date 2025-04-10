@@ -11,6 +11,7 @@ namespace palmesneo_village
         Game,
         PlayerInventory,
         Trading,
+        Quests,
         SceneTransitionIn,
         DayTransitionIn,
         TransitionOut
@@ -34,6 +35,7 @@ namespace palmesneo_village
         private InventoryHotbar inventoryHotbar;
 
         private TimeOfDayManager timeOfDayManager;
+        private QuestManager questManager;
 
         private Player player;
 
@@ -57,6 +59,7 @@ namespace palmesneo_village
 
         private PlayerInventoryUI playerInventoryUI;
         private TradingUI tradingUI;
+        private QuestsUI questsUI;
 
         public override void Begin()
         {
@@ -70,6 +73,8 @@ namespace palmesneo_village
             timeOfDayManager = new TimeOfDayManager();
             timeOfDayManager.Name = "time_of_day_manager";
             MasterEntity.AddChild(timeOfDayManager);
+
+            questManager = new QuestManager();
 
             player = new Player("Player", ResourcesManager.GetTexture("Sprites", "player"), 80, Inventory);
 
@@ -128,6 +133,9 @@ namespace palmesneo_village
             tradingUI = new TradingUI(Inventory, PlayerMoneyManager);
             tradingUI.Anchor = Anchor.Center;
 
+            questsUI = new QuestsUI(questManager);
+            questsUI.Anchor = Anchor.Center;
+
             transitionImage = new ImageUI();
             transitionImage.Texture = RenderManager.Pixel;
             transitionImage.SelfColor = Color.Black;
@@ -160,6 +168,21 @@ namespace palmesneo_village
 
             switch (gameState)
             {
+                case GameState.Quests:
+                    {
+                        if (InputBindings.Exit.Pressed)
+                        {
+                            foreach (var gameUIElement in gameUIElements)
+                            {
+                                MasterUIEntity.AddChild(gameUIElement);
+                            }
+
+                            MasterUIEntity.RemoveChild(questsUI);
+
+                            gameState = GameState.Game;
+                        }
+                    }
+                    break;
                 case GameState.Trading:
                     {
                         if (InputBindings.Exit.Pressed)
@@ -280,6 +303,21 @@ namespace palmesneo_village
                             });
 
                             gameState = GameState.Trading;
+                        }
+
+                        // TODO: temp
+                        if(MInput.Keyboard.Pressed(Microsoft.Xna.Framework.Input.Keys.Q))
+                        {
+                            foreach (var gameUIElement in gameUIElements)
+                            {
+                                MasterUIEntity.RemoveChild(gameUIElement);
+                            }
+
+                            MasterUIEntity.AddChild(questsUI);
+
+                            questsUI.Open();
+
+                            gameState = GameState.Quests;
                         }
                     }
                     break;
