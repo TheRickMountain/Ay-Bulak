@@ -315,12 +315,6 @@ namespace palmesneo_village
 
                             gameState = GameState.Trading;
                         }
-
-                        // TODO: temp
-                        if(MInput.Keyboard.Pressed(Microsoft.Xna.Framework.Input.Keys.Q))
-                        {
-                            OpenQuestsUI();
-                        }
                     }
                     break;
                 case GameState.SceneTransitionIn:
@@ -386,6 +380,8 @@ namespace palmesneo_village
                             {
                                 ResourcesManager.GetSoundEffect("SoundEffects", "rooster_crow").Play();
                             }
+
+                            PlayerEnergyManager.RefillEnergy();
 
                             gameState = GameState.TransitionOut;
                         }
