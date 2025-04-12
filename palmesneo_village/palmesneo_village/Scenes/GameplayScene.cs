@@ -30,13 +30,14 @@ namespace palmesneo_village
 
         public PlayerEnergyManager PlayerEnergyManager { get; private set; }
 
+        public static QuestManager QuestManager { get; private set; }
+
         private GameState gameState = GameState.Game;
 
         private InventoryHotbar inventoryHotbar;
 
         private TimeOfDayManager timeOfDayManager;
-        private QuestManager questManager;
-
+        
         private Player player;
 
         private TileSelector tileSelector;
@@ -61,6 +62,8 @@ namespace palmesneo_village
         private TradingUI tradingUI;
         private QuestsUI questsUI;
 
+        private MiddleButtonUI openQuestsButtonUI;
+
         public override void Begin()
         {
             MasterEntity.IsDepthSortEnabled = true;
@@ -74,7 +77,7 @@ namespace palmesneo_village
             timeOfDayManager.Name = "time_of_day_manager";
             MasterEntity.AddChild(timeOfDayManager);
 
-            questManager = new QuestManager();
+            QuestManager = new QuestManager();
 
             player = new Player("Player", ResourcesManager.GetTexture("Sprites", "player"), 80, Inventory);
 
@@ -119,13 +122,21 @@ namespace palmesneo_village
             timeText = new TextUI();
             timeText.Anchor = Anchor.TopRight;
             timeText.LocalPosition = new Vector2(-5, 55);
+            timeText.Text = "Test";
             MasterUIEntity.AddChild(timeText);
+
+            openQuestsButtonUI = new OpenQuestsButtonUI(QuestManager);
+            openQuestsButtonUI.Anchor = Anchor.TopRight;
+            openQuestsButtonUI.LocalPosition = new Vector2(-5, timeText.LocalPosition.Y + timeText.Size.Y + 5);
+            openQuestsButtonUI.ActionTriggered += (x) => { OpenQuestsUI(); };
+            MasterUIEntity.AddChild(openQuestsButtonUI);
 
             gameUIElements.Add(inventoryHotbarUI);
             gameUIElements.Add(playerEnergyBarUI);
             gameUIElements.Add(playerMoneyUI);
             gameUIElements.Add(calendarUI);
             gameUIElements.Add(timeText);
+            gameUIElements.Add(openQuestsButtonUI);
 
             playerInventoryUI = new PlayerInventoryUI(Inventory);
             playerInventoryUI.Anchor = Anchor.Center;
@@ -133,7 +144,7 @@ namespace palmesneo_village
             tradingUI = new TradingUI(Inventory, PlayerMoneyManager);
             tradingUI.Anchor = Anchor.Center;
 
-            questsUI = new QuestsUI(questManager);
+            questsUI = new QuestsUI(QuestManager);
             questsUI.Anchor = Anchor.Center;
 
             transitionImage = new ImageUI();
@@ -308,16 +319,7 @@ namespace palmesneo_village
                         // TODO: temp
                         if(MInput.Keyboard.Pressed(Microsoft.Xna.Framework.Input.Keys.Q))
                         {
-                            foreach (var gameUIElement in gameUIElements)
-                            {
-                                MasterUIEntity.RemoveChild(gameUIElement);
-                            }
-
-                            MasterUIEntity.AddChild(questsUI);
-
-                            questsUI.Open();
-
-                            gameState = GameState.Quests;
+                            OpenQuestsUI();
                         }
                     }
                     break;
@@ -453,6 +455,19 @@ namespace palmesneo_village
             playerInventoryUI.Open(craftingRecipes);
 
             gameState = GameState.PlayerInventory;
+        }
+
+        public void OpenQuestsUI()
+        {
+            foreach (var gameUIElement in gameUIElements)
+            {
+                MasterUIEntity.RemoveChild(gameUIElement);
+            }
+
+            MasterUIEntity.AddChild(questsUI);
+            questsUI.Open();
+
+            gameState = GameState.Quests;
         }
 
         private bool CanShowTileSelector(Vector2 playerTile, Vector2 mouseTile, int maxDistance)

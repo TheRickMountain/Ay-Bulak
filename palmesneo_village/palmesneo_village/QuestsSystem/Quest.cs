@@ -11,11 +11,25 @@ namespace palmesneo_village
         HARVEST
     }
 
-    public abstract class Quest
+    public enum QuestState
+    {
+        NONE,
+        NEW,
+        COMPLETED
+    }
+
+    public class Quest
     {
 
-        public string Name { get; init; }
-        public string Description { get; init; }
-        public QuestType Type { get; init; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public QuestType QuestType { get; set; }
+        public QuestState QuestState { get; set; } = QuestState.NONE;
+
+        public string HarvestPlantName { get; set; }
+
+        public Quest()
+        {
+        }
     }
 }

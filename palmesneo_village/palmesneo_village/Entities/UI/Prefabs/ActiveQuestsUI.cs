@@ -157,7 +157,18 @@ namespace palmesneo_village
 
         private void OnQuestButtonPressed(ButtonUI buttonUI)
         {
-            QuestSelected?.Invoke((buttonUI as QuestButtonUI).Quest);
+            QuestButtonUI questButtonUI = (buttonUI as QuestButtonUI);
+
+            Quest selectedQuest = questButtonUI.Quest;
+
+            if(selectedQuest.QuestState == QuestState.NEW)
+            {
+                selectedQuest.QuestState = QuestState.NONE;
+            }
+
+            questButtonUI.SetQuest(selectedQuest);
+
+            QuestSelected?.Invoke(selectedQuest);
         }
 
     }
