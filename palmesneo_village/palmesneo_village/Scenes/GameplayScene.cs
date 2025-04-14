@@ -144,7 +144,7 @@ namespace palmesneo_village
             tradingUI = new TradingUI(Inventory, PlayerMoneyManager);
             tradingUI.Anchor = Anchor.Center;
 
-            questsUI = new QuestsUI(QuestManager);
+            questsUI = new QuestsUI(QuestManager, PlayerMoneyManager);
             questsUI.Anchor = Anchor.Center;
 
             transitionImage = new ImageUI();

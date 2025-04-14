@@ -26,6 +26,8 @@ namespace palmesneo_village
         public QuestType QuestType { get; set; }
         public QuestState QuestState { get; set; } = QuestState.NONE;
 
+        public int RewardMoney { get; set; } = 0;
+
         public string HarvestPlantName { get; set; }
 
         public Quest()

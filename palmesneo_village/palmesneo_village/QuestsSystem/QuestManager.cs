@@ -24,7 +24,8 @@ namespace palmesneo_village
             quest.Name = "First steps";
             quest.Description = "Plant and harvest your first plant";
             quest.HarvestPlantName = "tomato_plant";
-            quest.QuestState = QuestState.NEW;
+            quest.QuestState = QuestState.COMPLETED;
+            quest.RewardMoney = 50;
             activeQuests.Add(quest);
 
         }
@@ -72,6 +73,11 @@ namespace palmesneo_village
                 }
             }
             return false;
+        }
+
+        public void RemoveQuest(Quest quest)
+        {
+            activeQuests.Remove(quest);
         }
 
     }
