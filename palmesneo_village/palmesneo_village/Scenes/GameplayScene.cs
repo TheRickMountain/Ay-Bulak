@@ -211,7 +211,7 @@ namespace palmesneo_village
                     break;
                 case GameState.PlayerInventory:
                     {
-                        if (InputBindings.Exit.Pressed)
+                        if (InputBindings.Exit.Pressed && playerInventoryUI.IsItemGrabbed() == false)
                         {
                             foreach (var gameUIElement in gameUIElements)
                             {

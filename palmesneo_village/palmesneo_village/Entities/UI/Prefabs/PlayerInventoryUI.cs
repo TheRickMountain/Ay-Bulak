@@ -28,5 +28,7 @@ namespace palmesneo_village
             crafterUI.Open(craftingRecipes);
         }
 
+        public bool IsItemGrabbed() => inventoryUI.IsItemGrabbed();
+
     }
 }

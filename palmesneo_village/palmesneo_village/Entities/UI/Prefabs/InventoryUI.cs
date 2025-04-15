@@ -91,6 +91,8 @@ namespace palmesneo_village
             }
         }
 
+        public bool IsItemGrabbed() => grabbedItemContainer.Item != null;
+
         private void OnInventorySlotPressed(ButtonUI button, int slotIndex)
         {
             // Кладем предмет в пустой слот
