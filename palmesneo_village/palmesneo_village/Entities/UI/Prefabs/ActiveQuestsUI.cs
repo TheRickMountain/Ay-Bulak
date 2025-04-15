@@ -6,6 +6,8 @@ namespace palmesneo_village
 {
     public class ActiveQuestsUI : PanelUI
     {
+        public Action<Quest> QuestSelected { get; set; }
+
         private QuestManager questManager;
 
         private VerticalScrollBarUI scrollBarUI;
@@ -18,7 +20,7 @@ namespace palmesneo_village
 
         private List<Quest> questsList = new List<Quest>();
 
-        public Action<Quest> QuestSelected { get; set; }
+        private TextUI noQuestsText;
 
         public ActiveQuestsUI(QuestManager questManager)
         {
@@ -50,6 +52,13 @@ namespace palmesneo_village
 
             scrollBarUI.Size = new Vector2(15, containerUI.Size.Y);
 
+            noQuestsText = new TextUI();
+            noQuestsText.Text = "No quests available"; // TODO: localization
+            noQuestsText.Anchor = Anchor.Center;
+            noQuestsText.SelfColor = Color.White * 0.5f;
+            noQuestsText.IsVisible = false;
+            AddChild(noQuestsText);
+
             Size = new Vector2(buttonTextureMaker.Size.X + 5 + scrollBarUI.Size.X + 16, containerUI.Size.Y + 16);
         }
 
@@ -58,6 +67,8 @@ namespace palmesneo_village
             questsList.Clear();
 
             questsList.AddRange(questManager.GetQuests());
+
+            noQuestsText.IsVisible = questsList.Count == 0;
 
             if (questsList.Count < slotsList.Count)
             {

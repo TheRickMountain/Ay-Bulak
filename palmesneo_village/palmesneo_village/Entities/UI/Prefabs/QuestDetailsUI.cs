@@ -92,6 +92,8 @@ namespace palmesneo_village
             completeQuestButton.IsVisible = false;
             completeQuestButton.IsDisabled = true;
 
+            ResourcesManager.GetSoundEffect("SoundEffects", "UI Soundpack", "African4").Play();
+
             QuestCompleted?.Invoke(quest);
         }
 
