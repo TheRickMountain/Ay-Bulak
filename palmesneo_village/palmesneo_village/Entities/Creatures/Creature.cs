@@ -6,7 +6,7 @@ namespace palmesneo_village
     public abstract class Creature : Entity
     {
         protected float Speed { get; private set; }
-        protected GameLocation CurrentLocation { get; private set; }
+        public GameLocation CurrentLocation { get; private set; }
 
         protected ImageEntity BodyImage { get; private set; }
 

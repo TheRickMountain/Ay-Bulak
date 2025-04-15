@@ -138,7 +138,7 @@ namespace palmesneo_village
             gameUIElements.Add(timeText);
             gameUIElements.Add(openQuestsButtonUI);
 
-            playerInventoryUI = new PlayerInventoryUI(Inventory);
+            playerInventoryUI = new PlayerInventoryUI(Inventory, player);
             playerInventoryUI.Anchor = Anchor.Center;
 
             tradingUI = new TradingUI(Inventory, PlayerMoneyManager);

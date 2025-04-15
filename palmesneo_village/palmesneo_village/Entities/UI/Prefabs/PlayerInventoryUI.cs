@@ -10,13 +10,13 @@ namespace palmesneo_village
         private InventoryUI inventoryUI;
         private CrafterUI crafterUI;
 
-        public PlayerInventoryUI(Inventory inventory)
+        public PlayerInventoryUI(Inventory inventory, Player player)
         {
             crafterUI = new CrafterUI(inventory);
             crafterUI.Anchor = Anchor.LeftCenter;
             AddChild(crafterUI);
 
-            inventoryUI = new InventoryUI(inventory);
+            inventoryUI = new InventoryUI(inventory, player);
             inventoryUI.Anchor = Anchor.RightCenter;
             AddChild(inventoryUI);
 

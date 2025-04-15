@@ -9,6 +9,7 @@ namespace palmesneo_village
     public class InventoryUI : PanelUI
     {
         private Inventory inventory;
+        private Player player;
 
         private GridContainerUI grid;
 
@@ -18,9 +19,11 @@ namespace palmesneo_village
 
         private EntityUI grabbedItemContainerVisualiser;
 
-        public InventoryUI(Inventory inventory)
+        public InventoryUI(Inventory inventory, Player player)
         {
             this.inventory = inventory;
+            this.player = player;
+
             inventory.SlotDataChanged += (inventory, slotIndex) => RefreshInventory();
 
             grabbedItemContainer = new ItemContainer();
@@ -62,6 +65,30 @@ namespace palmesneo_village
                 LocalPosition = new Vector2(4, 4)
             });
             grabbedItemContainerVisualiser.LocalPosition = new Vector2(10, 10);
+        }
+
+        public override void Update()
+        {
+            base.Update();
+
+            if (Contains(MInput.Mouse.UIPosition))
+            {
+                Engine.IsMouseOnUI = true;
+            }
+            else
+            {
+                if(grabbedItemContainer.Item != null && MInput.Mouse.PressedLeftButton)
+                {
+                    ItemContainer itemContainer = new ItemContainer();
+                    itemContainer.Item = grabbedItemContainer.Item;
+                    itemContainer.Quantity = grabbedItemContainer.Quantity;
+                    itemContainer.ContentAmount = grabbedItemContainer.ContentAmount;
+
+                    player.CurrentLocation.AddItem(player.LocalPosition, itemContainer);
+
+                    ClearGrabbedItem();
+                }
+            }
         }
 
         private void OnInventorySlotPressed(ButtonUI button, int slotIndex)
