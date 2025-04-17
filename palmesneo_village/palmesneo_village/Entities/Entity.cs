@@ -173,12 +173,20 @@ namespace palmesneo_village
         {
             for (int i = 0; i < childrenToAdd.Count; i++)
             {
-                if (childrenToAdd[i].Name == name) return (T)childrenToAdd[i];
+                Entity child = childrenToAdd[i];
+
+                if (child.Parent != this) continue;
+
+                if (child.Name == name) return (T)child;
             }
 
             for (int i = 0; i < children.Count; i++)
             {
-                if (children[i].Name == name) return (T)children[i];
+                Entity child = children[i];
+
+                if (child.Parent != this) continue;
+
+                if (child.Name == name) return (T)child;
             }
 
             return null;
@@ -217,11 +225,15 @@ namespace palmesneo_village
         {
             foreach(var child in children)
             {
+                if (child.Parent != this) continue;
+
                 yield return child;
             }
 
             foreach(var child in childrenToAdd)
             {
+                if (child.Parent != this) continue;
+
                 yield return child;
             }
         }
@@ -230,6 +242,8 @@ namespace palmesneo_village
         {
             foreach (var child in children)
             {
+                if (child.Parent != this) continue;
+
                 if (child is T)
                 {
                     yield return (T)child;
@@ -238,6 +252,8 @@ namespace palmesneo_village
 
             foreach (var child in childrenToAdd)
             {
+                if (child.Parent != this) continue;
+
                 if (child is T)
                 {
                     yield return (T)child;
