@@ -1,5 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace palmesneo_village
 {
@@ -77,24 +79,14 @@ namespace palmesneo_village
         {
             base.StartNextDay(timeOfDayManager);
 
-            int animalsAmount = GetAnimalsAmount();
+            List<Animal> fedAnimals = GetAnimals().Where(animal => animal.IsFed).ToList();
 
-            if (animalsAmount > 0)
+            var nests = GetBuildings().OfType<BirdNestBuilding>().ToList();
+            int eggsToProduce = Math.Min(fedAnimals.Count, nests.Count);
+
+            for (int i = 0; i < eggsToProduce; i++)
             {
-                foreach (Building building in GetBuildings())
-                {
-                    if (building is BirdNestBuilding birdNestBuilding)
-                    {
-                        birdNestBuilding.Upgrade();
-
-                        animalsAmount--;
-
-                        if (animalsAmount == 0)
-                        {
-                            break;
-                        }
-                    }
-                }
+                nests[i].Upgrade();
             }
         }
     }

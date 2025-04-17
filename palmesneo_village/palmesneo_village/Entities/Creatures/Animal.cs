@@ -15,6 +15,8 @@ namespace palmesneo_village
 
     public class Animal : Creature
     {
+        public bool IsFed { get; set; } = false;
+
         private AnimalState animalState = AnimalState.Idle;
 
         private float idleTime = 0;
