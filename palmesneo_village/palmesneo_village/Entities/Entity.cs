@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace palmesneo_village
 {
@@ -61,6 +62,7 @@ namespace palmesneo_village
 
         private List<Entity> children;
         private List<Entity> childrenToAdd;
+        private List<Entity> childrenToRemove;
 
         private Dictionary<string, object> metadata;
 
@@ -74,6 +76,7 @@ namespace palmesneo_village
 
             children = new List<Entity>();
             childrenToAdd = new List<Entity>();
+            childrenToRemove = new List<Entity>();
 
             metadata = new Dictionary<string, object>();
         }
@@ -104,17 +107,32 @@ namespace palmesneo_village
                 }
             }
 
-            for (int i = children.Count - 1; i >= 0; i--)
+            for(int i = 0; i < children.Count; i++)
             {
-                children[i].Update();
+                Entity child = children[i];
+
+                if (child.Parent != this) continue;
+
+                child.Update();
             }
 
-            if(unsorted)
+            if (childrenToRemove.Count > 0)
+            {
+                for (int i = 0; i < childrenToRemove.Count; i++)
+                {
+                    Entity child = childrenToRemove[i];
+                    children.Remove(child);
+                }
+
+                childrenToRemove.Clear();
+            }
+
+            if (unsorted)
             {
                 unsorted = false;
                 children.Sort(CompareDepth);
 
-                Console.WriteLine("Sorted in: " + this);
+                Debug.WriteLine("Sorted in: " + this);
             }
         }
 
@@ -192,7 +210,7 @@ namespace palmesneo_village
 
             child.Parent = null;
             childrenToAdd.Remove(child);
-            children.Remove(child);
+            childrenToRemove.Add(child);
         }
 
         public IEnumerable<Entity> GetChildren()
@@ -224,26 +242,6 @@ namespace palmesneo_village
                 {
                     yield return (T)child;
                 }
-            }
-        }
-
-        public int GetChildrenAmount()
-        {
-            return children.Count + childrenToAdd.Count;
-        }
-
-        public void ClearChildren()
-        {
-            for (int i = childrenToAdd.Count - 1; i >= 0; i--)
-            {
-                Entity child = childrenToAdd[i];
-                RemoveChild(child);
-            }
-
-            for (int i = children.Count - 1; i >= 0; i--)
-            {
-                Entity child = children[i];
-                RemoveChild(child);
             }
         }
 

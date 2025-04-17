@@ -59,6 +59,8 @@ namespace palmesneo_village
             if (IsRipe)
             {
                 Harvest();
+
+                GameplayScene.QuestManager.OnHarvestPlant(plantItem.Name);
             }
             else if(item is ToolItem toolItem)
             {
