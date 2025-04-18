@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 
 namespace palmesneo_village
@@ -12,18 +13,19 @@ namespace palmesneo_village
 
         public BaseInventoryUI(Inventory inventory)
         {
-            this.Inventory = inventory;
+            Inventory = inventory;
 
             inventory.SlotDataChanged += (inventory, slotIndex) => RefreshInventory();
+            inventory.InventoryExpanded += OnInventoryExpanded;
 
             grid = new GridContainerUI();
             grid.Anchor = Anchor.Center;
-            grid.Columns = inventory.Width;
+            grid.Columns = inventory.Columns;
             AddChild(grid);
 
-            InventorySlots = new List<SlotButtonUI>(inventory.Width * inventory.Height);
+            InventorySlots = new List<SlotButtonUI>();
 
-            for (int i = 0; i < inventory.Width * inventory.Height; i++)
+            for (int i = 0; i < inventory.Columns * inventory.Rows; i++)
             {
                 SlotButtonUI inventorySlotUI = new SlotButtonUI();
 
@@ -43,7 +45,7 @@ namespace palmesneo_village
 
         private void RefreshInventory()
         {
-            for (int slotIndex = 0; slotIndex < Inventory.Width * Inventory.Height; slotIndex++)
+            for (int slotIndex = 0; slotIndex < Inventory.Columns * Inventory.Rows; slotIndex++)
             {
                 Item item = Inventory.GetSlotItem(slotIndex);
                 int quantity = Inventory.GetSlotQuantity(slotIndex);
@@ -63,6 +65,33 @@ namespace palmesneo_village
 
         protected virtual void ModifySlotAppearance(int slotIndex, Item item)
         {
+        }
+    
+        private void OnInventoryExpanded(Inventory inventory)
+        {
+            foreach(var slot in InventorySlots)
+            {
+                grid.RemoveChild(slot);
+            }
+
+            InventorySlots.Clear();
+
+            for (int i = 0; i < inventory.Columns * inventory.Rows; i++)
+            {
+                SlotButtonUI inventorySlotUI = new SlotButtonUI();
+
+                int slotIndex = i;
+
+                inventorySlotUI.ActionTriggered += (button) => OnInventorySlotPressed(button, slotIndex);
+
+                InventorySlots.Add(inventorySlotUI);
+
+                grid.AddChild(inventorySlotUI);
+            }
+
+
+            Size = grid.Size + new Vector2(16, 16);
+            RefreshInventory();
         }
     }
 }

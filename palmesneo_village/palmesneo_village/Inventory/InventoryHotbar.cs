@@ -12,7 +12,7 @@ namespace palmesneo_village
 
         public InventoryHotbar(Inventory inventory)
         {
-            slotsCount = inventory.Width;
+            slotsCount = inventory.Columns;
         }
 
         public override void Update()

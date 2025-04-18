@@ -68,7 +68,7 @@ namespace palmesneo_village
         {
             MasterEntity.IsDepthSortEnabled = true;
 
-            Inventory = new Inventory(10, 4);
+            Inventory = new Inventory(10, 2, 4);
 
             inventoryHotbar = new InventoryHotbar(Inventory);
             MasterEntity.AddChild(inventoryHotbar);

@@ -5,7 +5,7 @@ using palmesneo_village.Entities;
 
 namespace palmesneo_village
 {
-    public class TradingUI : EntityUI
+    public class TradingUI : VerticalContainerUI
     {
 
         private TraderUI traderUI;
@@ -17,16 +17,13 @@ namespace palmesneo_village
             playerMoneyManager.MoneyAmountChanged += (x) => playerMoneyText.Text = x.ToString();
 
             traderUI = new TraderUI();
-            traderUI.Anchor = Anchor.TopCenter;
             AddChild(traderUI);
 
             playerInventoryUI = new TradingInventoryUI(inventory, playerMoneyManager);
-            playerInventoryUI.Anchor = Anchor.BottomCenter;
             AddChild(playerInventoryUI);
 
             playerMoneyText = new TextUI();
-            playerMoneyText.Anchor = Anchor.BottomLeft;
-            playerMoneyText.LocalPosition = new Vector2(0, 16);
+            playerMoneyText.Text = "Test";
             AddChild(playerMoneyText);
 
             Size = new Vector2(
