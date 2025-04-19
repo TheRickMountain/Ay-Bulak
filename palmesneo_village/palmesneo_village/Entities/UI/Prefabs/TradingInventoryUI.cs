@@ -15,7 +15,7 @@ namespace palmesneo_village.Entities
         {
             Item item = Inventory.GetSlotItem(slotIndex);
 
-            if (item == null || item.Price == 0)
+            if (item == null || item.IsTradable == false)
                 return;
 
             int quantity = Inventory.GetSlotQuantity(slotIndex);
@@ -27,17 +27,17 @@ namespace palmesneo_village.Entities
 
         protected override void ModifySlotAppearance(int slotIndex, Item item)
         {
-            if (item.Price == 0)
-            {
-                InventorySlots[slotIndex].IsDisabled = true;
-                InventorySlots[slotIndex].GetChildByName<ImageUI>("Icon").SelfColor = Color.White * 0.5f;
-                InventorySlots[slotIndex].GetChildByName<TextUI>("Quantity").SelfColor = Color.White * 0.5f;
-            }
-            else
+            if (item.IsTradable)
             {
                 InventorySlots[slotIndex].IsDisabled = false;
                 InventorySlots[slotIndex].GetChildByName<ImageUI>("Icon").SelfColor = Color.White;
                 InventorySlots[slotIndex].GetChildByName<TextUI>("Quantity").SelfColor = Color.White;
+            }
+            else
+            {
+                InventorySlots[slotIndex].IsDisabled = true;
+                InventorySlots[slotIndex].GetChildByName<ImageUI>("Icon").SelfColor = Color.White * 0.5f;
+                InventorySlots[slotIndex].GetChildByName<TextUI>("Quantity").SelfColor = Color.White * 0.5f;
             }
         }
     }

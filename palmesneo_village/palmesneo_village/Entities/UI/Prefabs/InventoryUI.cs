@@ -46,7 +46,9 @@ namespace palmesneo_village
             }
             else
             {
-                if(grabbedItemContainer.Item != null && MInput.Mouse.PressedLeftButton)
+                if(grabbedItemContainer.Item != null && 
+                    grabbedItemContainer.Item.IsDroppable && 
+                    MInput.Mouse.PressedLeftButton)
                 {
                     ItemContainer itemContainer = new ItemContainer();
                     itemContainer.Item = grabbedItemContainer.Item;

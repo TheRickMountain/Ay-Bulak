@@ -4,25 +4,36 @@
       "Id": 0,
       "Name": "wood",
       "Description": "test",
-      "IsStackable": true
+      "IsStackable": true,
+      "IsTradable": true,
+      "IsDroppable": true,
+      "Price": 10
     },
     {
       "Id": 1,
       "Name": "stone",
       "Description": "test",
-      "IsStackable": true
+      "IsStackable": true,
+      "IsTradable": true,
+      "IsDroppable": true,
+      "Price": 10
     },
     {
       "Id": 2,
       "Name": "hay",
+      "IsTradable": true,
       "Description": "test",
-      "IsStackable": true
+      "IsStackable": true,
+      "IsDroppable": true,
+      "Price": 10
     },
     {
       "Id": 36,
       "Name": "wheat_flour",
       "Description": "test",
       "IsStackable": true,
+      "IsTradable": true,
+      "IsDroppable": true,
       "Price": 10
     }
   ],
@@ -32,6 +43,8 @@
       "Name": "iron_watering_can",
       "Description": "test",
       "IsStackable": false,
+      "IsTradable": false,
+      "IsDroppable": false,
       "ToolType": "WateringCan",
       "Capacity": 20,
       "Efficiency": 1
@@ -41,6 +54,8 @@
       "Name": "iron_axe",
       "Description": "test",
       "IsStackable": false,
+      "IsTradable": false,
+      "IsDroppable": false,
       "ToolType": "Axe",
       "Capacity": 0,
       "Efficiency": 1,
@@ -54,6 +69,8 @@
       "Name": "iron_pickaxe",
       "Description": "test",
       "IsStackable": false,
+      "IsTradable": false,
+      "IsDroppable": false,
       "ToolType": "Pickaxe",
       "Capacity": 0,
       "Efficiency": 1,
@@ -67,6 +84,8 @@
       "Name": "iron_showel",
       "Description": "test",
       "IsStackable": false,
+      "IsTradable": false,
+      "IsDroppable": false,
       "ToolType": "Showel",
       "Capacity": 0,
       "Efficiency": 1,
@@ -80,6 +99,8 @@
       "Name": "iron_scythe",
       "Description": "test",
       "IsStackable": false,
+      "IsTradable": false,
+      "IsDroppable": false,
       "ToolType": "Scythe",
       "Capacity": 0,
       "Efficiency": 1,
@@ -95,6 +116,8 @@
       "Name": "chicken_egg",
       "Description": "test",
       "IsStackable": true,
+      "IsTradable": true,
+      "IsDroppable": true,
       "Price": 10,
       "EnergyAmount": 10
     },
@@ -103,6 +126,8 @@
       "Name": "fried_chicken_egg",
       "Description": "test",
       "IsStackable": true,
+      "IsTradable": true,
+      "IsDroppable": true,
       "Price": 10,
       "EnergyAmount": 10
     },
@@ -111,6 +136,8 @@
       "Name": "uchpuchmak",
       "Description": "test",
       "IsStackable": true,
+      "IsTradable": true,
+      "IsDroppable": true,
       "Price": 10,
       "EnergyAmount": 10
     },
@@ -119,6 +146,8 @@
       "Name": "meat",
       "Description": "test",
       "IsStackable": true,
+      "IsTradable": true,
+      "IsDroppable": true,
       "Price": 10,
       "EnergyAmount": 10
     },
@@ -127,6 +156,8 @@
       "Name": "cabbage",
       "Description": "test",
       "IsStackable": true,
+      "IsTradable": true,
+      "IsDroppable": true,
       "Price": 10,
       "EnergyAmount": 10
     },
@@ -135,6 +166,8 @@
       "Name": "tomato",
       "Description": "test",
       "IsStackable": true,
+      "IsTradable": true,
+      "IsDroppable": true,
       "Price": 10,
       "EnergyAmount": 10
     },
@@ -143,6 +176,8 @@
       "Name": "carrot",
       "Description": "test",
       "IsStackable": true,
+      "IsTradable": true,
+      "IsDroppable": true,
       "Price": 10,
       "EnergyAmount": 10
     },
@@ -151,6 +186,8 @@
       "Name": "potato",
       "Description": "test",
       "IsStackable": true,
+      "IsTradable": true,
+      "IsDroppable": true,
       "Price": 10,
       "EnergyAmount": 10
     },
@@ -159,6 +196,8 @@
       "Name": "strawberry",
       "Description": "test",
       "IsStackable": true,
+      "IsTradable": true,
+      "IsDroppable": true,
       "Price": 10,
       "EnergyAmount": 10
     },
@@ -167,6 +206,8 @@
       "Name": "eggplant",
       "Description": "test",
       "IsStackable": true,
+      "IsTradable": true,
+      "IsDroppable": true,
       "Price": 10,
       "EnergyAmount": 10
     },
@@ -175,6 +216,8 @@
       "Name": "garlic",
       "Description": "test",
       "IsStackable": true,
+      "IsTradable": true,
+      "IsDroppable": true,
       "Price": 10,
       "EnergyAmount": 10
     },
@@ -183,6 +226,8 @@
       "Name": "beetroot",
       "Description": "test",
       "IsStackable": true,
+      "IsTradable": true,
+      "IsDroppable": true,
       "Price": 10,
       "EnergyAmount": 10
     }
@@ -1153,6 +1198,8 @@
       "Name": "cabbage_seeds",
       "Description": "test",
       "IsStackable": true,
+      "IsTradable": true,
+      "IsDroppable": true,
       "Price": 10,
       "PlantName": "cabbage_plant"
     },
@@ -1161,6 +1208,8 @@
       "Name": "tomato_seeds",
       "Description": "test",
       "IsStackable": true,
+      "IsTradable": true,
+      "IsDroppable": true,
       "Price": 10,
       "PlantName": "tomato_plant"
     },
@@ -1169,6 +1218,8 @@
       "Name": "eggplant_seeds",
       "Description": "test",
       "IsStackable": true,
+      "IsTradable": true,
+      "IsDroppable": true,
       "Price": 10,
       "PlantName": "eggplant_plant"
     },
@@ -1177,6 +1228,8 @@
       "Name": "garlic_seeds",
       "Description": "test",
       "IsStackable": true,
+      "IsTradable": true,
+      "IsDroppable": true,
       "Price": 10,
       "PlantName": "garlic_plant"
     },
@@ -1185,6 +1238,8 @@
       "Name": "carrot_seeds",
       "Description": "test",
       "IsStackable": true,
+      "IsTradable": true,
+      "IsDroppable": true,
       "Price": 10,
       "PlantName": "carrot_plant"
     },
@@ -1193,6 +1248,8 @@
       "Name": "strawberry_seeds",
       "Description": "test",
       "IsStackable": true,
+      "IsTradable": true,
+      "IsDroppable": true,
       "Price": 10,
       "PlantName": "strawberry_plant"
     },
@@ -1201,6 +1258,8 @@
       "Name": "beetroot_seeds",
       "Description": "test",
       "IsStackable": true,
+      "IsTradable": true,
+      "IsDroppable": true,
       "Price": 10,
       "PlantName": "beetroot_plant"
     }
@@ -1211,8 +1270,21 @@
       "Name": "birch_seeds",
       "Description": "test",
       "IsStackable": true,
+      "IsTradable": true,
+      "IsDroppable": true,
       "Price": 0,
       "TreeName": "birch_tree"
+    }
+  ],
+  "BackpackItems": [
+    {
+      "Id": 48,
+      "Name": "small_backpack",
+      "Description": "test",
+      "IsStackable": false,
+      "IsTradable": false,
+      "IsDroppable": false,
+      "Price": 1500
     }
   ]
 }

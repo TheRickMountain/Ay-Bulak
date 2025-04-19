@@ -277,7 +277,13 @@ namespace palmesneo_village
                             {
                                 PlayerEnergyManager.AddEnergy(consumableItem.EnergyAmount);
 
-                                Inventory.RemoveItem(consumableItem, 1, inventoryHotbar.CurrentSlotIndex);
+                                Inventory.RemoveItem(currentPlayerItem, 1, inventoryHotbar.CurrentSlotIndex);
+                            }
+                            else if(currentPlayerItem is BackpackItem)
+                            {
+                                Inventory.Expand();
+
+                                Inventory.RemoveItem(currentPlayerItem, 1, inventoryHotbar.CurrentSlotIndex);
                             }
                         }
 
@@ -303,6 +309,7 @@ namespace palmesneo_village
                             // TODO: Temp
                             tradingUI.Open(Inventory, PlayerMoneyManager, new List<Item>() 
                             {
+                                Engine.ItemsDatabase.GetItemByName("small_backpack"),
                                 Engine.ItemsDatabase.GetItemByName("wheat_flour"),
                                 Engine.ItemsDatabase.GetItemByName("tomato_seeds"),
                                 Engine.ItemsDatabase.GetItemByName("garlic_seeds"),
