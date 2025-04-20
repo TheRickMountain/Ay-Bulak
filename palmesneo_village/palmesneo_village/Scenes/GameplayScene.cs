@@ -284,6 +284,8 @@ namespace palmesneo_village
                                 Inventory.Expand();
 
                                 Inventory.RemoveItem(currentPlayerItem, 1, inventoryHotbar.CurrentSlotIndex);
+
+                                ResourcesManager.GetSoundEffect("SoundEffects", "Minifantasy_Dungeon_SFX", "04_sack_open_3").Play();
                             }
                         }
 
