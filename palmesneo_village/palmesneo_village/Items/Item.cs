@@ -21,6 +21,11 @@
         {
             string tooltip = $"{LocalizationManager.GetText(Name)}";
 
+            if (string.IsNullOrEmpty(Description) == false)
+            {
+                tooltip += $"\n/c[{ColorUtils.GRAY_HEX}]{LocalizationManager.GetText(Description)}/cd";
+            }
+
             if (Price > 0)
             {
                 tooltip += $"\n/c[{ColorUtils.YELLOW_HEX}]{LocalizationManager.GetText("price")}: {Price}/cd";

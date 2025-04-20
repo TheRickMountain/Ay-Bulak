@@ -1280,7 +1280,7 @@
     {
       "Id": 48,
       "Name": "small_backpack",
-      "Description": "test",
+      "Description": "backpack_description",
       "IsStackable": false,
       "IsTradable": false,
       "IsDroppable": false,
