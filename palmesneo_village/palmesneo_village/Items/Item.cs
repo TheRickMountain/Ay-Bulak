@@ -6,6 +6,8 @@
         public string Name { get; init; }
         public string Description { get; init; }
         public bool IsStackable { get; init; }
+        public bool IsTradable { get; init; }
+        public bool IsDroppable { get; init; }
         public int Price { get; init; }
 
         public MTexture Icon { get; protected set; }
@@ -18,6 +20,11 @@
         public virtual string GetTooltipInfo()
         {
             string tooltip = $"{LocalizationManager.GetText(Name)}";
+
+            if (string.IsNullOrEmpty(Description) == false)
+            {
+                tooltip += $"\n/c[{ColorUtils.GRAY_HEX}]{LocalizationManager.GetText(Description)}/cd";
+            }
 
             if (Price > 0)
             {

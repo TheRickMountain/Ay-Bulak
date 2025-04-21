@@ -6,50 +6,19 @@ using System.Runtime.CompilerServices;
 
 namespace palmesneo_village
 {
-    public class InventoryUI : PanelUI
+    public class InventoryUI : BaseInventoryUI
     {
-        private Inventory inventory;
         private Player player;
-
-        private GridContainerUI grid;
-
-        private List<SlotButtonUI> inventorySlots;
 
         private ItemContainer grabbedItemContainer;
 
         private EntityUI grabbedItemContainerVisualiser;
 
-        public InventoryUI(Inventory inventory, Player player)
+        public InventoryUI(Inventory inventory, Player player) : base(inventory)
         {
-            this.inventory = inventory;
             this.player = player;
 
-            inventory.SlotDataChanged += (inventory, slotIndex) => RefreshInventory();
-
             grabbedItemContainer = new ItemContainer();
-
-            grid = new GridContainerUI();
-            grid.Anchor = Anchor.Center;
-            grid.Columns = inventory.Width;
-            AddChild(grid);
-
-            inventorySlots = new List<SlotButtonUI>(inventory.Width * inventory.Height);
-
-            for (int i = 0; i < inventory.Width * inventory.Height; i++)
-            {
-                SlotButtonUI inventorySlotUI = new SlotButtonUI();
-
-                int slotIndex = i;
-
-                inventorySlotUI.ActionTriggered += (button) => OnInventorySlotPressed(button, slotIndex);
-
-                inventorySlots.Add(inventorySlotUI);
-
-                grid.AddChild(inventorySlotUI);
-
-            }
-
-            Size = grid.Size + new Vector2(16, 16);
 
             grabbedItemContainerVisualiser = new EntityUI();
             grabbedItemContainerVisualiser.Size = new Vector2(16, 16);
@@ -77,7 +46,9 @@ namespace palmesneo_village
             }
             else
             {
-                if(grabbedItemContainer.Item != null && MInput.Mouse.PressedLeftButton)
+                if(grabbedItemContainer.Item != null && 
+                    grabbedItemContainer.Item.IsDroppable && 
+                    MInput.Mouse.PressedLeftButton)
                 {
                     ItemContainer itemContainer = new ItemContainer();
                     itemContainer.Item = grabbedItemContainer.Item;
@@ -93,14 +64,14 @@ namespace palmesneo_village
 
         public bool IsItemGrabbed() => grabbedItemContainer.Item != null;
 
-        private void OnInventorySlotPressed(ButtonUI button, int slotIndex)
+        protected override void OnInventorySlotPressed(ButtonUI button, int slotIndex)
         {
             // Кладем предмет в пустой слот
-            if(inventory.IsSlotEmpty(slotIndex))
+            if(Inventory.IsSlotEmpty(slotIndex))
             {
                 if (grabbedItemContainer.Item != null)
                 {
-                    inventory.AddItem(
+                    Inventory.AddItem(
                         grabbedItemContainer.Item,
                         grabbedItemContainer.Quantity,
                         grabbedItemContainer.ContentAmount,
@@ -113,14 +84,14 @@ namespace palmesneo_village
             {
                 if (grabbedItemContainer.Item != null) // Свапаем предметы
                 {
-                    Item tempItem = inventory.GetSlotItem(slotIndex);
-                    int tempQuantity = inventory.GetSlotQuantity(slotIndex);
-                    int tempContentAmount = inventory.GetSlotContentAmount(slotIndex);
+                    Item tempItem = Inventory.GetSlotItem(slotIndex);
+                    int tempQuantity = Inventory.GetSlotQuantity(slotIndex);
+                    int tempContentAmount = Inventory.GetSlotContentAmount(slotIndex);
 
                     // Объединяем стакаемые предметы
                     if (tempItem == grabbedItemContainer.Item && tempItem.IsStackable)
                     {
-                        inventory.AddItem(
+                        Inventory.AddItem(
                             grabbedItemContainer.Item, 
                             grabbedItemContainer.Quantity,
                             grabbedItemContainer.ContentAmount, 
@@ -130,9 +101,9 @@ namespace palmesneo_village
                     }
                     else
                     {
-                        inventory.RemoveItem(tempItem, tempQuantity, slotIndex);
+                        Inventory.RemoveItem(tempItem, tempQuantity, slotIndex);
 
-                        inventory.AddItem(
+                        Inventory.AddItem(
                             grabbedItemContainer.Item,
                             grabbedItemContainer.Quantity,
                             grabbedItemContainer.ContentAmount,
@@ -144,11 +115,11 @@ namespace palmesneo_village
                 else // Берем предмет из слота
                 {
                     GrabItem(
-                        inventory.GetSlotItem(slotIndex),
-                        inventory.GetSlotQuantity(slotIndex),
-                        inventory.GetSlotContentAmount(slotIndex));
+                        Inventory.GetSlotItem(slotIndex),
+                        Inventory.GetSlotQuantity(slotIndex),
+                        Inventory.GetSlotContentAmount(slotIndex));
 
-                    inventory.RemoveItem(grabbedItemContainer.Item, grabbedItemContainer.Quantity, slotIndex);
+                    Inventory.RemoveItem(grabbedItemContainer.Item, grabbedItemContainer.Quantity, slotIndex);
                 }
             }
         }
@@ -171,25 +142,6 @@ namespace palmesneo_village
             if (Parent.Parent.GetChildByName<ImageUI>("Cursor").ContainsChild(grabbedItemContainerVisualiser) == false)
             {
                 Parent.Parent.GetChildByName<ImageUI>("Cursor").AddChild(grabbedItemContainerVisualiser);
-            }
-        }
-    
-        private void RefreshInventory()
-        {
-            for (int slotIndex = 0; slotIndex < inventory.Width * inventory.Height; slotIndex++)
-            {
-                Item item = inventory.GetSlotItem(slotIndex);
-                int quantity = inventory.GetSlotQuantity(slotIndex);
-                int contentAmount = inventory.GetSlotContentAmount(slotIndex);
-
-                if (item == null)
-                {
-                    inventorySlots[slotIndex].Clear();
-                }
-                else
-                {
-                    inventorySlots[slotIndex].SetItem(item, quantity, contentAmount);
-                }
             }
         }
     }

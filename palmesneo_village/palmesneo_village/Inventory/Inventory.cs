@@ -4,32 +4,36 @@ namespace palmesneo_village
 {
     public class Inventory
     {
-        public int Width { get; private set; }
-        public int Height { get; private set; }
+        public int Columns { get; private set; }
+        public int Rows { get; private set; }
 
         public Action<Inventory, int> SlotDataChanged { get; set; }
+        public Action<Inventory> InventoryExpanded { get; set; }
+
+        private int maxRows;
 
         private ItemContainer[,] slotsByGrid;
         private ItemContainer[] slotsByIndex;
 
-        public Inventory(int width, int height)
+        public Inventory(int columns, int rows, int maxRows)
         {
-            Width = width;
-            Height = height;
+            Columns = columns;
+            Rows = rows;
+            this.maxRows = maxRows;
 
             InitializeAndPopulateCollections();
         }
 
         private void InitializeAndPopulateCollections()
         {
-            slotsByGrid = new ItemContainer[Width, Height];
-            slotsByIndex = new ItemContainer[Width * Height];
+            slotsByGrid = new ItemContainer[Columns, Rows];
+            slotsByIndex = new ItemContainer[Columns * Rows];
 
             int slotIndex = 0;
 
-            for (int x = 0; x < Width; x++)
+            for (int x = 0; x < Columns; x++)
             {
-                for (int y = 0; y < Height; y++)
+                for (int y = 0; y < Rows; y++)
                 {
                     ItemContainer itemContainer = new ItemContainer();
 
@@ -232,6 +236,48 @@ namespace palmesneo_village
                     break;
                 }
             }
+        }
+
+        public void Expand()
+        {
+            if(Rows >= maxRows)
+            {
+                return;
+            }
+
+            Rows++;
+
+            ItemContainer[,] newSlotsByGrid = new ItemContainer[Columns, Rows];
+            ItemContainer[] newSlotsByIndex = new ItemContainer[Columns * Rows];
+
+            // Копируем старые слоты в новые
+            for (int x = 0; x < Columns; x++)
+            {
+                for (int y = 0; y < Rows - 1; y++)
+                {
+                    newSlotsByGrid[x, y] = slotsByGrid[x, y];
+                }
+            }
+
+            for (int i = 0; i < slotsByIndex.Length; i++)
+            {
+                newSlotsByIndex[i] = slotsByIndex[i];
+            }
+
+            // Создаем новые слоты
+            int slotIndex = Columns * (Rows - 1);
+            for (int x = 0; x < Columns; x++)
+            {
+                ItemContainer itemContainer = new ItemContainer();
+                newSlotsByGrid[x, Rows - 1] = itemContainer;
+                newSlotsByIndex[slotIndex] = itemContainer;
+                slotIndex++;
+            }
+
+            slotsByGrid = newSlotsByGrid;
+            slotsByIndex = newSlotsByIndex;
+
+            InventoryExpanded?.Invoke(this);
         }
     }
 }

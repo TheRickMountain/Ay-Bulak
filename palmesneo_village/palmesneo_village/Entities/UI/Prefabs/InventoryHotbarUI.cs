@@ -19,7 +19,7 @@ namespace palmesneo_village
 
             slots = new List<SlotButtonUI>();
 
-            for (int i = 0; i < inventory.Width; i++)
+            for (int i = 0; i < inventory.Columns; i++)
             {
                 SlotButtonUI slot = new SlotButtonUI();
 

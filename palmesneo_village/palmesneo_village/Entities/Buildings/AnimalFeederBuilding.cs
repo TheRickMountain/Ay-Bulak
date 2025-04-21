@@ -4,9 +4,9 @@ namespace palmesneo_village
 {
     public class AnimalFeederBuilding : Building
     {
-        private AnimalFeederItem animalFeederItem;
+        public bool IsFull { get; private set; } = false;
 
-        private bool isFull = false;
+        private AnimalFeederItem animalFeederItem;
 
         public AnimalFeederBuilding(GameLocation gameLocation, AnimalFeederItem item, Direction direction, Vector2[,] occupiedTiles) 
             : base(gameLocation, item, direction, occupiedTiles)
@@ -18,19 +18,19 @@ namespace palmesneo_village
         {
             if(item.Name == "hay")
             {
-                if (isFull)
+                if (IsFull)
                 {
                     return;
                 }
 
-                isFull = true;
+                IsFull = true;
                 Sprite.Texture = animalFeederItem.FullTexture;
             }
         }
 
         public void Empty()
         {
-            isFull = false;
+            IsFull = false;
             Sprite.Texture = animalFeederItem.EmptyTexture;
         }
 

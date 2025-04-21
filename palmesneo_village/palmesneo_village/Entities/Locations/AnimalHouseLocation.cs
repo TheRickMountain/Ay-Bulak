@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,26 +21,47 @@ namespace palmesneo_village
         {
             base.StartNextDay(timeOfDayManager);
 
-            EmptyAnimalFeeders();
+            ResetAnimalsSatiety();
+
+            FeedAnimals();
         }
 
-        private void EmptyAnimalFeeders()
+        private void ResetAnimalsSatiety()
         {
-            int animalsAmount = GetAnimalsAmount();
-
-            foreach (Building building in GetBuildings())
+            foreach(Animal animal in GetAnimals())
             {
-                if (building is AnimalFeederBuilding animalFeeder)
-                {
-                    animalFeeder.Empty();
+                animal.IsFed = false;
+            }
+        }
 
-                    animalsAmount--;
+        private void FeedAnimals()
+        {
+            List<Animal> animals = GetAnimals().ToList();
+            List<AnimalFeederBuilding> fullFeeders = GetBuildings()
+                .OfType<AnimalFeederBuilding>()
+                .Where(f => f.IsFull)
+                .ToList();
 
-                    if (animalsAmount == 0)
-                    {
-                        break;
-                    }
-                }
+            int hayAmount = fullFeeders.Count;
+
+            if (hayAmount == 0 || animals.Count == 0)
+                return;
+
+            // Выбираем животных, которых покормим
+            List<Animal> animalsToFeed = animals
+                //.OrderBy(_ => Guid.NewGuid()) // Раскомментировать, если нужно рандомно выбирать животных
+                .Take(hayAmount)
+                .ToList();
+
+            foreach (var animal in animalsToFeed)
+            {
+                animal.IsFed = true;
+            }
+
+            // Очищаем ровно то количество кормушек, сколько сена было использовано
+            for (int i = 0; i < animalsToFeed.Count && i < fullFeeders.Count; i++)
+            {
+                fullFeeders[i].Empty();
             }
         }
 

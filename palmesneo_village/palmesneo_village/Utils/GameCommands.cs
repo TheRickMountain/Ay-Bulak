@@ -49,6 +49,15 @@ namespace palmesneo_village
             }
         }
 
+        [Command("expand_inventory", "Expand inventory to next expansion level")]
+        private static void ExpandInventory()
+        {
+            if (Engine.CurrentScene is GameplayScene)
+            {
+                ((GameplayScene)Engine.CurrentScene).Inventory.Expand();
+            }
+        }
+
         [Command("add_item", "Adds an item to the players inventory")]
         private static void AddItem(string itemName, int itemAmount)
         {

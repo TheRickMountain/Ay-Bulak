@@ -68,7 +68,7 @@ namespace palmesneo_village
         {
             MasterEntity.IsDepthSortEnabled = true;
 
-            Inventory = new Inventory(10, 4);
+            Inventory = new Inventory(10, 2, 4);
 
             inventoryHotbar = new InventoryHotbar(Inventory);
             MasterEntity.AddChild(inventoryHotbar);
@@ -277,7 +277,15 @@ namespace palmesneo_village
                             {
                                 PlayerEnergyManager.AddEnergy(consumableItem.EnergyAmount);
 
-                                Inventory.RemoveItem(consumableItem, 1, inventoryHotbar.CurrentSlotIndex);
+                                Inventory.RemoveItem(currentPlayerItem, 1, inventoryHotbar.CurrentSlotIndex);
+                            }
+                            else if(currentPlayerItem is BackpackItem)
+                            {
+                                Inventory.Expand();
+
+                                Inventory.RemoveItem(currentPlayerItem, 1, inventoryHotbar.CurrentSlotIndex);
+
+                                ResourcesManager.GetSoundEffect("SoundEffects", "Minifantasy_Dungeon_SFX", "04_sack_open_3").Play();
                             }
                         }
 
@@ -303,6 +311,7 @@ namespace palmesneo_village
                             // TODO: Temp
                             tradingUI.Open(Inventory, PlayerMoneyManager, new List<Item>() 
                             {
+                                Engine.ItemsDatabase.GetItemByName("small_backpack"),
                                 Engine.ItemsDatabase.GetItemByName("wheat_flour"),
                                 Engine.ItemsDatabase.GetItemByName("tomato_seeds"),
                                 Engine.ItemsDatabase.GetItemByName("garlic_seeds"),

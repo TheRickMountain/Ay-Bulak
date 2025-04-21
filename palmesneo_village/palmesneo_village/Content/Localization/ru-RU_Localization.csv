@@ -1,4 +1,5 @@
 key,translation
+backpack_description,Навсегда увеличивает вместительность вашего инвентаря
 beetroot,Свекла
 beetroot_seeds,Семена свеклы
 birch_seeds,Семена березы
@@ -25,6 +26,7 @@ meat,Мясо
 potato,Картофель
 price,Цена
 quests,Задачи
+small_backpack,Маленький рюкзак
 stone,Камень
 stone_path,Каменная тропинка
 strawberry,Клубника
