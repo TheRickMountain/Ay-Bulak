@@ -122,6 +122,13 @@ namespace palmesneo_village
                 SetAirTile(x, 51, 12);
                 SetAirTile(x, 52, 13);
             }
+
+            // Следы от колес
+            for (int x = 0; x < MapWidth; x++)
+            {
+                SetGroundTile(x, 58, GroundTile.Ground);
+                SetGroundTile(x, 60, GroundTile.Ground);
+            }
         }
 
     }
