@@ -575,6 +575,10 @@ namespace palmesneo_village
                 {
                     building = new BirdNestBuilding(this, birdNestItem, direction, tiles);
                 }
+                else if(buildingItem is GrassItem grassItem)
+                {
+                    building = new GrassBuilding(this, grassItem, direction, tiles);
+                }
                 else
                 {
                     building = new Building(this, buildingItem, direction, tiles);

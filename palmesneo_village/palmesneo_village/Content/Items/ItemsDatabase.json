@@ -1286,5 +1286,22 @@
       "IsDroppable": false,
       "Price": 1500
     }
+  ],
+  "GrassItems": [
+    {
+      "Id": 16000,
+      "Name": "blade_grass",
+      "Description": "test",
+      "Width": 1,
+      "Height": 1,
+      "GroundPattern": [
+        [
+          "A"
+        ]
+      ],
+      "IsRotatable": false,
+      "IsPassable": true,
+      "Variations": 3
+    }
   ]
 }
