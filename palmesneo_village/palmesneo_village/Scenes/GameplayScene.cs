@@ -312,6 +312,7 @@ namespace palmesneo_village
                             tradingUI.Open(Inventory, PlayerMoneyManager, new List<Item>() 
                             {
                                 Engine.ItemsDatabase.GetItemByName("small_backpack"),
+                                Engine.ItemsDatabase.GetItemByName("sprinkler"),
                                 Engine.ItemsDatabase.GetItemByName("wheat_flour"),
                                 Engine.ItemsDatabase.GetItemByName("tomato_seeds"),
                                 Engine.ItemsDatabase.GetItemByName("garlic_seeds"),

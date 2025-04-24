@@ -1081,7 +1081,10 @@
       ],
       "IsRotatable": false,
       "IsPassable": false,
-      "Range": 1
+      "Range": 1,
+      "Price": 350,
+      "IsTradable": false,
+      "IsDroppable": true,
     }
   ],
   "GateItems": [
