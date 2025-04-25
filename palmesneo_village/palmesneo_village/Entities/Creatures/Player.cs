@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -19,6 +20,12 @@ namespace palmesneo_village
 
         private Direction movementDirection = Direction.Down;
 
+        private bool isMoving = false;
+
+        private SoundEffectInstance currentSFX;
+
+        private List<SoundEffectInstance> grassShakeSFXs = new();
+
         public Player(string name, MTexture texture, float speed, Inventory inventory) : 
             base(name, texture, speed)
         {
@@ -28,6 +35,19 @@ namespace palmesneo_village
             BodyImage.IsVisible = false;
 
             CreateAndInitializeBodySprite(texture);
+
+            // TODO: создать отдельный класс для воспроизведения звуков
+            grassShakeSFXs = new List<SoundEffectInstance>();
+
+            for (int i = 1; i <= 3; i++)
+            {
+                SoundEffectInstance sfxInstance = ResourcesManager.GetSoundEffect(
+                    "SoundEffects", 
+                    "Minifantasy_Forgotten_Plains_SFX", 
+                    $"01_bush_rustling_{i}").CreateInstance();
+
+                grassShakeSFXs.Add(sfxInstance);
+            }
         }
 
         private void CreateAndInitializeBodySprite(MTexture spritesheet)
@@ -62,11 +82,20 @@ namespace palmesneo_village
             UpdateMovement();
 
             UpdateItemsPickup();
+
+            ShakeGrass();
+
+            if(currentSFX != null && currentSFX.State == SoundState.Stopped)
+            {
+                currentSFX = null;
+            }
         }
 
         protected void UpdateMovement()
         {
             Vector2 movement = new Vector2(InputBindings.MoveHorizontally.Value, InputBindings.MoveVertically.Value);
+            
+            isMoving = movement != Vector2.Zero;
 
             if (movement != Vector2.Zero)
             {
@@ -191,6 +220,22 @@ namespace palmesneo_village
             inventory.TryAddItem(itemContainer.Item, itemContainer.Quantity, itemContainer.ContentAmount);
         }
 
+        private void ShakeGrass()
+        {
+            if (isMoving == false) return;
+        
+            Vector2 playerTile = CurrentLocation.WorldToMap(LocalPosition);
+
+            Building building = CurrentLocation.GetBuilding((int)playerTile.X, (int)playerTile.Y);
+
+            if(building != null && building is GrassBuilding grassBuilding)
+            {
+                grassBuilding.Shake(movementDirection);
+
+                PlayGrassShakeSoundEffect();
+            }
+        }
+
         private void PlayItemPickupSoundEffect()
         {
             Calc.Random.Choose(
@@ -201,6 +246,14 @@ namespace palmesneo_village
                 ResourcesManager.GetSoundEffect("SoundEffects", "pop_4"),
                 ResourcesManager.GetSoundEffect("SoundEffects", "pop_5")
                 ).Play();
+        }
+
+        private void PlayGrassShakeSoundEffect()
+        {
+            if (currentSFX != null) return;
+
+            currentSFX = Calc.Random.Choose(grassShakeSFXs);
+            currentSFX.Play();
         }
 
         public override void DebugRender()

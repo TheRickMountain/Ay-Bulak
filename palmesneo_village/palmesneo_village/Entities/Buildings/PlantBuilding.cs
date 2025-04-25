@@ -1,4 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended.Graphics;
+using MonoGame.Extended.Tweening;
 using System;
 
 namespace palmesneo_village
@@ -18,12 +21,27 @@ namespace palmesneo_village
 
         private bool tileWasWatered = false;
 
+        private Tweener tweener;
+
+        private bool isRemoved = false;
+
         public PlantBuilding(GameLocation gameLocation, PlantItem plantItem, Direction direction, Vector2[,] occupiedTiles) 
             : base(gameLocation, plantItem, direction, occupiedTiles)
         {
             this.plantItem = plantItem;
 
             Sprite.Texture = plantItem.GrowthStagesTextures[0];
+            Sprite.Centered = true;
+            Sprite.LocalPosition = new Vector2(Engine.TILE_SIZE / 2, Engine.TILE_SIZE / 2);
+
+            tweener = new Tweener();
+        }
+
+        public override void Update()
+        {
+            base.Update();
+
+            tweener.Update(Engine.GameDeltaTime);
         }
 
         public override void OnBeforeDayChanged()
@@ -83,6 +101,8 @@ namespace palmesneo_village
 
         private void Harvest()
         {
+            if (isRemoved) return;
+
             ItemContainer itemContainer = new ItemContainer();
             itemContainer.Item = Engine.ItemsDatabase.GetItemByName<Item>(plantItem.HarvestItem);
             itemContainer.Quantity = plantItem.HarvestAmount;
@@ -91,7 +111,22 @@ namespace palmesneo_village
 
             if (plantItem.RemoveAfterHarvest)
             {
-                GameLocation.RemoveBuilding(this);
+                isRemoved = true;
+
+                tweener.TweenTo(
+                    target: Sprite,
+                    expression: sprite => Sprite.LocalScale,
+                    toValue: new Vector2(0.7f, 1.2f),
+                    duration: 0.2f)
+                    .Easing(EasingFunctions.Linear)
+                    .OnEnd(tween => { GameLocation.RemoveBuilding(this); });
+
+                tweener.TweenTo(
+                    target: Sprite,
+                    expression: sprite => Sprite.LocalPosition,
+                    toValue: Sprite.LocalPosition + new Vector2(0, -10),
+                    duration: 0.2f)
+                    .Easing(EasingFunctions.CubicIn);
             }
             else
             {

@@ -15,6 +15,7 @@ namespace palmesneo_village
         public bool IsRotatable { get; init; }
         public bool IsPassable { get; init; }
         public TeleportData TeleportData { get; init; }
+        public SmokeSpawnData SmokeSpawnData { get; init; }
 
         public Dictionary<Direction, MTexture> DirectionTexture { get; private set; } = new()
         {

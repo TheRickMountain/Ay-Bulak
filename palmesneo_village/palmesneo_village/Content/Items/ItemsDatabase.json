@@ -396,6 +396,10 @@
         "Location": "house",
         "X": 23,
         "Y": 10
+      },
+      "SmokeSpawnData": {
+        "X": 106,
+        "Y": -8
       }
     },
     {
@@ -1081,7 +1085,10 @@
       ],
       "IsRotatable": false,
       "IsPassable": false,
-      "Range": 1
+      "Range": 1,
+      "Price": 350,
+      "IsTradable": false,
+      "IsDroppable": true,
     }
   ],
   "GateItems": [
@@ -1285,6 +1292,23 @@
       "IsTradable": false,
       "IsDroppable": false,
       "Price": 1500
+    }
+  ],
+  "GrassItems": [
+    {
+      "Id": 16000,
+      "Name": "blade_grass",
+      "Description": "test",
+      "Width": 1,
+      "Height": 1,
+      "GroundPattern": [
+        [
+          "A"
+        ]
+      ],
+      "IsRotatable": false,
+      "IsPassable": true,
+      "Variations": 3
     }
   ]
 }
