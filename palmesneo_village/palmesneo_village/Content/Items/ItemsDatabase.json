@@ -396,6 +396,10 @@
         "Location": "house",
         "X": 23,
         "Y": 10
+      },
+      "SmokeSpawnData": {
+        "X": 106,
+        "Y": -8
       }
     },
     {

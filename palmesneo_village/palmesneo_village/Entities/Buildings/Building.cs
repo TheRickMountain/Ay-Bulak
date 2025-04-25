@@ -35,6 +35,13 @@ namespace palmesneo_village
                 buildingTextureHeight - buildingHeightInPixels);
 
             AddChild(Sprite);
+
+            if (buildingItem.SmokeSpawnData != null)
+            {
+                SmokeEffectEntity smokeEffect = new SmokeEffectEntity();
+                smokeEffect.LocalPosition = buildingItem.SmokeSpawnData.GetPosition();
+                AddChild(smokeEffect);
+            }
         }
 
         public BuildingItem BuildingItem => buildingItem;
