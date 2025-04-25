@@ -47,7 +47,13 @@
       "IsDroppable": false,
       "ToolType": "WateringCan",
       "Capacity": 20,
-      "Efficiency": 1
+      "Efficiency": 1,
+      "SoundEffects": [
+        "SoundEffects\\watering_1",
+        "SoundEffects\\watering_2",
+        "SoundEffects\\watering_3",
+        "SoundEffects\\watering_4"
+      ]
     },
     {
       "Id": 130,
@@ -1309,6 +1315,25 @@
       "IsRotatable": false,
       "IsPassable": true,
       "Variations": 3
+    }
+  ],
+  "WaterSourceItems": [
+    {
+      "Id": 17000,
+      "Name": "well",
+      "Description": "test",
+      "Width": 2,
+      "Height": 2,
+      "GroundPattern": [
+        [
+          "A", "A"
+        ],
+        [
+          "A", "A"
+        ]
+      ],
+      "IsRotatable": false,
+      "IsPassable": false
     }
   ]
 }
