@@ -635,7 +635,26 @@
       ],
       "IsRotatable": false,
       "IsPassable": false
-    }
+    },
+    {
+      "Id": 1013,
+      "Name": "round_rug",
+      "Description": "test",
+      "Width": 2,
+      "Height": 2,
+      "GroundPattern": [
+        [
+          "D",
+          "D"
+        ],
+        [
+          "D",
+          "D"
+        ]
+      ],
+      "IsRotatable": false,
+      "IsPassable": true
+    },
   ],
   "PlantItems": [
     {
