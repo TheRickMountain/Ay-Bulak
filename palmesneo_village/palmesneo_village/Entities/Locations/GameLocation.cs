@@ -589,7 +589,16 @@ namespace palmesneo_village
                 }
 
                 building.LocalPosition = tiles[0, 0] * Engine.TILE_SIZE;
-                building.Depth = (int)tiles[0, tiles.GetLength(1) - 1].Y * Engine.TILE_SIZE;
+
+                if (buildingItem.IsFlat)
+                {
+                    building.Depth = 0;
+                }
+                else
+                {
+                    building.Depth = (int)tiles[0, tiles.GetLength(1) - 1].Y * Engine.TILE_SIZE;
+                }
+                
                 entitiesList.AddChild(building);
 
                 RegisterBuildingTiles(building, tiles);

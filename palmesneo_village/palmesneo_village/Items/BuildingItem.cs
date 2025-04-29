@@ -14,6 +14,11 @@ namespace palmesneo_village
         public string[,] GroundPattern { get; init; }
         public bool IsRotatable { get; init; }
         public bool IsPassable { get; init; }
+
+        /// <summary>
+        /// This building's sprite has no height and should not participate in DepthSorting
+        /// </summary>
+        public bool IsFlat { get; init; }
         public TeleportData TeleportData { get; init; }
         public SmokeSpawnData SmokeSpawnData { get; init; }
 
