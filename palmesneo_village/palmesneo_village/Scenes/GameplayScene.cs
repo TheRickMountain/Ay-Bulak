@@ -9,7 +9,8 @@ namespace palmesneo_village
     public enum GameState
     {
         Game,
-        PlayerInventory,
+        CraftingInventory,
+        StorageInventory,
         Trading,
         Quests,
         SceneTransitionIn,
@@ -58,7 +59,8 @@ namespace palmesneo_village
 
         private List<EntityUI> gameUIElements = new();
 
-        private PlayerInventoryUI playerInventoryUI;
+        private CrafringInventoryUI craftingInventoryUI;
+        private StorageInventoryUI storageInventoryUI;
         private TradingUI tradingUI;
         private QuestsUI questsUI;
 
@@ -138,8 +140,11 @@ namespace palmesneo_village
             gameUIElements.Add(timeText);
             gameUIElements.Add(openQuestsButtonUI);
 
-            playerInventoryUI = new PlayerInventoryUI(Inventory, player);
-            playerInventoryUI.Anchor = Anchor.Center;
+            craftingInventoryUI = new CrafringInventoryUI(Inventory, player);
+            craftingInventoryUI.Anchor = Anchor.Center;
+
+            storageInventoryUI = new StorageInventoryUI();
+            storageInventoryUI.Anchor = Anchor.Center;
 
             tradingUI = new TradingUI(Inventory, PlayerMoneyManager);
             tradingUI.Anchor = Anchor.Center;
@@ -209,16 +214,33 @@ namespace palmesneo_village
                         }
                     }
                     break;
-                case GameState.PlayerInventory:
+                case GameState.CraftingInventory:
                     {
-                        if (InputBindings.Exit.Pressed && playerInventoryUI.IsItemGrabbed() == false)
+                        if (InputBindings.Exit.Pressed && craftingInventoryUI.IsItemGrabbed() == false)
                         {
                             foreach (var gameUIElement in gameUIElements)
                             {
                                 MasterUIEntity.AddChild(gameUIElement);
                             }
 
-                            MasterUIEntity.RemoveChild(playerInventoryUI);
+                            craftingInventoryUI.Close();
+                            MasterUIEntity.RemoveChild(craftingInventoryUI);
+
+                            gameState = GameState.Game;
+                        }
+                    }
+                    break;
+                case GameState.StorageInventory:
+                    {
+                        if (InputBindings.Exit.Pressed)
+                        {
+                            foreach (var gameUIElement in gameUIElements)
+                            {
+                                MasterUIEntity.AddChild(gameUIElement);
+                            }
+
+                            storageInventoryUI.Close();
+                            MasterUIEntity.RemoveChild(storageInventoryUI);
 
                             gameState = GameState.Game;
                         }
@@ -296,7 +318,7 @@ namespace palmesneo_village
                     
                         if(InputBindings.Exit.Pressed)
                         {
-                            OpenPlayerInventoryUI(Engine.CraftingRecipesDatabase.GetCraftingRecipes());
+                            OpenCraftingInventoryUI(Engine.CraftingRecipesDatabase.GetCraftingRecipes());
                         }
 
                         // TODO: temp
@@ -450,17 +472,30 @@ namespace palmesneo_village
             gameLocations.Add(gameLocation.LocationId, gameLocation);
         }
 
-        public void OpenPlayerInventoryUI(IEnumerable<CraftingRecipe> craftingRecipes)
+        public void OpenCraftingInventoryUI(IEnumerable<CraftingRecipe> craftingRecipes)
         {
             foreach (var gameUIElement in gameUIElements)
             {
                 MasterUIEntity.RemoveChild(gameUIElement);
             }
 
-            MasterUIEntity.AddChild(playerInventoryUI);
-            playerInventoryUI.Open(craftingRecipes);
+            MasterUIEntity.AddChild(craftingInventoryUI);
+            craftingInventoryUI.Open(craftingRecipes);
 
-            gameState = GameState.PlayerInventory;
+            gameState = GameState.CraftingInventory;
+        }
+
+        public void OpenStorageInventoryUI(Inventory storageInventory)
+        {
+            foreach (var gameUIElement in gameUIElements)
+            {
+                MasterUIEntity.RemoveChild(gameUIElement);
+            }
+
+            MasterUIEntity.AddChild(storageInventoryUI);
+            storageInventoryUI.Open(storageInventory, Inventory);
+            
+            gameState = GameState.StorageInventory;
         }
 
         public void OpenQuestsUI()

@@ -2,6 +2,18 @@
 	"CraftingRecipes": [
 				{
 					"Result": {
+						"Item": "chest",
+						"Amount": 1
+					},
+					"RequiredIngredients": [
+						{
+							"Item": "wood",
+							"Amount": 50
+						}
+					]
+				},
+				{
+					"Result": {
 						"Item": "wooden_path",
 						"Amount": 1
 					},

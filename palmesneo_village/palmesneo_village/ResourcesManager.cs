@@ -31,12 +31,26 @@ namespace palmesneo_village
         public static MTexture GetTexture(params string[] path)
         {
             string finalPath = Path.Combine(path);
+
+            if (!textures.ContainsKey(finalPath))
+            {
+                Debug.WriteLine($"Texture not found: {finalPath}");
+                return null;
+            }
+
             return textures[finalPath];
         }
 
         public static SoundEffect GetSoundEffect(params string[] path)
         {
             string finalPath = Path.Combine(path);
+
+            if(!soundEffects.ContainsKey(finalPath))
+            {
+                Debug.WriteLine($"Sound effect not found: {finalPath}");
+                return null;
+            }
+
             return soundEffects[finalPath];
         }
 

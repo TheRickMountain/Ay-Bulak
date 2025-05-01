@@ -432,20 +432,6 @@
       "IsPassable": false
     },
     {
-      "Id": 1003,
-      "Name": "fridge",
-      "Description": "test",
-      "Width": 1,
-      "Height": 1,
-      "GroundPattern": [
-        [
-          "D"
-        ]
-      ],
-      "IsRotatable": false,
-      "IsPassable": false
-    },
-    {
       "Id": 1004,
       "Name": "gas_pipe_pole",
       "Description": "test",
@@ -655,7 +641,7 @@
       "IsRotatable": false,
       "IsPassable": true,
       "IsFlat": true
-    },
+    }
   ],
   "PlantItems": [
     {
@@ -926,7 +912,7 @@
       "RequiredToolType": "Scythe"
     },
     {
-      "Id": 7002,
+      "Id": 7003,
       "Name": "birch_stump",
       "Description": "test",
       "IsStackable": false,
@@ -961,7 +947,7 @@
       "IsRotatable": false,
       "IsPassable": true,
       "TilesetIndex": 0,
-      "MovementSpeefBuff": 0.2
+      "MovementSpeedBuff": 0.2
     },
     {
       "Id": 8001,
@@ -978,7 +964,7 @@
       "IsRotatable": false,
       "IsPassable": true,
       "TilesetIndex": 1,
-      "MovementSpeefBuff": 0.2
+      "MovementSpeedBuff": 0.2
     },
     {
       "Id": 8002,
@@ -995,7 +981,7 @@
       "IsRotatable": false,
       "IsPassable": true,
       "TilesetIndex": 2,
-      "MovementSpeefBuff": 0.2
+      "MovementSpeedBuff": 0.2
     },
     {
       "Id": 8003,
@@ -1012,7 +998,7 @@
       "IsRotatable": false,
       "IsPassable": true,
       "TilesetIndex": 3,
-      "MovementSpeefBuff": 0.2
+      "MovementSpeedBuff": 0.2
     }
   ],
   "ManualCrafterItems": [
@@ -1114,7 +1100,7 @@
       "Range": 1,
       "Price": 350,
       "IsTradable": false,
-      "IsDroppable": true,
+      "IsDroppable": true
     }
   ],
   "GateItems": [
@@ -1355,6 +1341,38 @@
       ],
       "IsRotatable": false,
       "IsPassable": false
+    }
+  ],
+  "StorageItems": [
+    {
+      "Id": 18000,
+      "Name": "fridge",
+      "Description": "test",
+      "Width": 1,
+      "Height": 1,
+      "GroundPattern": [
+        [
+          "D"
+        ]
+      ],
+      "IsRotatable": false,
+      "IsPassable": false,
+      "OpenSoundEffect": ""
+    },
+    {
+      "Id": 18001,
+      "Name": "chest",
+      "Description": "chest_description",
+      "Width": 1,
+      "Height": 1,
+      "GroundPattern": [
+        [
+          "H"
+        ]
+      ],
+      "IsRotatable": false,
+      "IsPassable": false,
+      "OpenSoundEffect": "SoundEffects\\Minifantasy_Dungeon_SFX\\01_chest_open_1"
     }
   ]
 }

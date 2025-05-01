@@ -166,7 +166,16 @@ namespace palmesneo_village
             }
 
             child.Parent = this;
-            childrenToAdd.Add(child);
+
+            // Если ребёнок уже добавлен в список на удаление, значит он есть в списке children
+            if (childrenToRemove.Contains(child))
+            {
+                childrenToRemove.Remove(child);
+            }
+            else
+            {
+                childrenToAdd.Add(child);
+            }
         }
 
         public T GetChildByName<T>(string name) where T : Entity

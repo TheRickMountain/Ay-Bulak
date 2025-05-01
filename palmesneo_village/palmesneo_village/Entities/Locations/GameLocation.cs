@@ -583,6 +583,10 @@ namespace palmesneo_village
                 {
                     building = new WaterSourceBuilding(this, waterSourceItem, direction, tiles);
                 }
+                else if(buildingItem is StorageItem storageItem)
+                {
+                    building = new StorageBuilding(this, storageItem, direction, tiles);
+                }
                 else
                 {
                     building = new Building(this, buildingItem, direction, tiles);
@@ -735,6 +739,12 @@ namespace palmesneo_village
                 case "G":
                     {
                         return groundTile == GroundTile.AnimalHouseWall;
+                    }
+                case "H":
+                    {
+                        return groundTile == GroundTile.Grass || 
+                            groundTile == GroundTile.Ground ||
+                            groundTile == GroundTile.HouseFloor;
                     }
             }
 
