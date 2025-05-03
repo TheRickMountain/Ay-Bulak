@@ -43,8 +43,8 @@ namespace palmesneo_village
             }
         }
 
-        private int depth = 0;
-        public int Depth
+        private float depth = 0;
+        public float Depth
         {
             get => depth;
             set

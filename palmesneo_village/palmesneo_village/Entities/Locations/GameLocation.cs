@@ -600,7 +600,9 @@ namespace palmesneo_village
                 }
                 else
                 {
-                    building.Depth = (int)tiles[0, tiles.GetLength(1) - 1].Y * Engine.TILE_SIZE;
+                    // Добавляем случайное смещение по Y, чтобы спрайты строений не сражались за порядок отрисовки
+                    float randomOffset = Calc.Random.Range(0.0f, 0.9f);
+                    building.Depth = (tiles[0, tiles.GetLength(1) - 1].Y * Engine.TILE_SIZE) + randomOffset;
                 }
                 
                 entitiesList.AddChild(building);
