@@ -182,6 +182,17 @@ namespace palmesneo_village
 
             timeText.Text = timeOfDayManager.GetTimeString();
 
+            switch(gameState)
+            {
+                case GameState.Game:
+                    Engine.CurrentTimeRate = Engine.DefaultTimeRate;
+                    Console.WriteLine(Engine.CurrentTimeRate);
+                    break;
+                default:
+                    Engine.CurrentTimeRate = 0.0f;
+                    break;
+            }
+
             switch (gameState)
             {
                 case GameState.Quests:
@@ -351,8 +362,6 @@ namespace palmesneo_village
                     break;
                 case GameState.SceneTransitionIn:
                     {
-                        Engine.TimeRate = 0;
-
                         transitionTimer += Engine.DeltaTime;
 
                         transitionImage.SelfColor = Color.Black * transitionTimer;
@@ -390,8 +399,6 @@ namespace palmesneo_village
                     break;
                 case GameState.DayTransitionIn:
                     {
-                        Engine.TimeRate = 0;
-
                         transitionTimer += Engine.DeltaTime;
 
                         transitionImage.SelfColor = Color.Black * transitionTimer;
@@ -428,8 +435,6 @@ namespace palmesneo_village
                         if (transitionTimer >= 1.0f)
                         {
                             transitionTimer = 0.0f;
-
-                            Engine.TimeRate = 1.0f;
 
                             transitionImage.IsVisible = false;
 

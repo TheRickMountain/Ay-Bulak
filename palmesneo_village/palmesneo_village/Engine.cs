@@ -14,7 +14,7 @@ namespace palmesneo_village
     public class Engine : Game
     {
         public string Title = "Palmesneo village (alpha)";
-        public GameVersion Version = new GameVersion(0, 1, 0);
+        public GameVersion Version = new GameVersion(0, 5, 0);
 
         public const int TILE_SIZE = 16;
 
@@ -26,7 +26,27 @@ namespace palmesneo_village
 
         public static float DeltaTime { get; private set; }
         public static float GameDeltaTime { get; private set; }
-        public static float TimeRate { get; set; } = 1.0f;
+        
+        // Time rate
+        private  static float defaultTimeRate = 1.0f;
+        public static float DefaultTimeRate 
+        {
+            get => defaultTimeRate; 
+            set
+            {
+                defaultTimeRate = Math.Clamp(value, 0, int.MaxValue);
+            }
+        }
+
+        private static float currentTimeRate = 1.0f;
+        public static float CurrentTimeRate
+        {
+            get => currentTimeRate;
+            set
+            {
+                currentTimeRate = Math.Clamp(value, 0, int.MaxValue);
+            }
+        }
 
         public static float GlobalUIScale { get; set; } = 2.0f;
 
@@ -203,7 +223,7 @@ namespace palmesneo_village
         protected override void Update(GameTime gameTime)
         {
             DeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            GameDeltaTime = DeltaTime * TimeRate;
+            GameDeltaTime = DeltaTime * CurrentTimeRate;
 
             IsMouseOnUI = false;
 
