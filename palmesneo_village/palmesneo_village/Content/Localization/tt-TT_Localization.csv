@@ -7,6 +7,8 @@ cabbage,Кәбестә
 cabbage_seeds,Кәбестә орлыклары
 carrot,Кишер
 carrot_seeds,Кишер орлыклары
+chest,Сандык
+chest_description,Әйберләр саклау өчен кулланыла
 chicken_egg,Тавык йомыркасы
 concrete_path,Бетон сукмак
 dirt_path,Сукмак
@@ -26,6 +28,7 @@ meat,Ит
 potato,Бәрәңге
 price,Бәя
 quests,Бурычлар
+round_rug,Түгәрәк келәм
 small_backpack,Кечкенә рюкзак
 sprinkler,Сиптергеч
 stone,Таш
@@ -42,6 +45,7 @@ weekday_3_short,чәр
 weekday_4_short,пән
 weekday_5_short,җом
 weekday_6_short,шим
+well,Кое
 wheat_flour,Бодай оны
 wood,Агач
 wooden_path,Агач сукмак

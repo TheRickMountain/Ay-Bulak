@@ -7,6 +7,8 @@ cabbage,Cabbage
 cabbage_seeds,Cabbage seeds
 carrot,Carrot
 carrot_seeds,Carrot seeds
+chest,Chest
+chest_description,Used to store items
 chicken_egg,Chicken egg
 concrete_path,Concrete path
 dirt_path,Dirt path
@@ -26,6 +28,7 @@ meat,Meat
 potato,Potato
 price,Price
 quests,Quests
+round_rug,Round rug
 small_backpack,Small backpack
 sprinkler,Sprinkler
 stone,Stone
@@ -42,6 +45,7 @@ weekday_3_short,wed
 weekday_4_short,thu
 weekday_5_short,fri
 weekday_6_short,sat
+well,Well
 wheat_flour,Wheat_flour
 wood,Wood
 wooden_path,Wooden path

@@ -5,10 +5,12 @@ namespace palmesneo_village
 {
     public class CraftingRecipeButtonUI : ButtonUI
     {
+        public CraftingRecipe CraftingRecipe { get; private set; }
+
         private ImageUI resultItemIcon;
         private TextUI resultItemAmount;
 
-        public CraftingRecipe CraftingRecipe { get; private set; }
+        private const int ICON_SIZE = 16;
 
         public CraftingRecipeButtonUI()
         {
@@ -35,9 +37,21 @@ namespace palmesneo_village
         {
             CraftingRecipe = craftingRecipe;
 
+            Item item = craftingRecipe.Result.Item;
+
             resultItemIcon.IsVisible = true;
-            resultItemIcon.Texture = craftingRecipe.Result.Item.Icon;
+            resultItemIcon.Texture = item.Icon;
             resultItemIcon.SelfColor = canCraft ? Color.White : Color.White * 0.4f;
+
+            // Update icom image scale
+            if (item.Icon.Width > item.Icon.Height)
+            {
+                resultItemIcon.Size = new Vector2(ICON_SIZE, ICON_SIZE * (item.Icon.Height / (float)item.Icon.Width));
+            }
+            else
+            {
+                resultItemIcon.Size = new Vector2(ICON_SIZE * (item.Icon.Width / (float)item.Icon.Height), ICON_SIZE);
+            }
 
             resultItemAmount.IsVisible = craftingRecipe.Result.Amount > 1;
             resultItemAmount.Text = craftingRecipe.Result.Amount.ToString();

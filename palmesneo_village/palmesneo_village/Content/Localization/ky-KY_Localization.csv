@@ -7,6 +7,8 @@ cabbage,
 cabbage_seeds,
 carrot,Сабиз
 carrot_seeds,Сабиз уруктары
+chest,Сандык
+chest_description,Буюмдарды сактоо үчүн колдонулат
 chicken_egg,Тоок жумурткасы
 concrete_path,Бетон жол
 dirt_path,
@@ -26,6 +28,7 @@ meat,Эт
 potato,Картөшкө
 price,Баасы
 quests,Тапшырмалар
+round_rug,Тегерек килем
 small_backpack,Кичинекей рюкзак
 sprinkler,Сепкич
 stone,Таш
@@ -42,6 +45,7 @@ weekday_3_short,шар
 weekday_4_short,бей
 weekday_5_short,жум
 weekday_6_short,ише
+well,Кудук
 wheat_flour,Буудай уну
 wood,Жыгач
 wooden_path,

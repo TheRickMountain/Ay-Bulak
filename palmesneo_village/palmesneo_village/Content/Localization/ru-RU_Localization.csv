@@ -7,6 +7,8 @@ cabbage,Капуста
 cabbage_seeds,Семена капусты
 carrot,Морковь
 carrot_seeds,Семена моркови
+chest,Сундук
+chest_description,Используется для хранения вещей
 chicken_egg,Куриное яйцо
 concrete_path,Бетонная тропинка
 dirt_path,Грунтовая тропинка
@@ -26,6 +28,7 @@ meat,Мясо
 potato,Картофель
 price,Цена
 quests,Задачи
+round_rug,Круглый ковер
 small_backpack,Маленький рюкзак
 sprinkler,Поливалка
 stone,Камень
@@ -42,6 +45,7 @@ weekday_3_short,срд
 weekday_4_short,чтв
 weekday_5_short,птн
 weekday_6_short,сбт
+well,Колодец
 wheat_flour,Пшеничная мука
 wood,Древесина
 wooden_path,Деревянная тропинка

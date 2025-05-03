@@ -108,7 +108,7 @@ namespace palmesneo_village
                 FloorPathItem floorPathItem = CurrentLocation.GetTileFloorPathItem(CurrentLocation.WorldToMap(LocalPosition));
                 if (floorPathItem != null)
                 {
-                    actualSpeed = Speed + (Speed * floorPathItem.MovementSpeefBuff);
+                    actualSpeed = Speed + (Speed * floorPathItem.MovementSpeedBuff);
                 }
 
                 Vector2 newPosition = LocalPosition + movement * actualSpeed * Engine.GameDeltaTime;

@@ -318,7 +318,7 @@ namespace palmesneo_village
                         break;
                     case ToolType.WateringCan:
                         {
-                            if (GetGroundTile(x, y) == GroundTile.Water)
+                            if (GetGroundTile(x, y) == GroundTile.Water || building is WaterSourceBuilding)
                             {
                                 toolItem.PlaySoundEffect();
                                 inventory.AddSlotItemContentAmount(slotIndex, toolItem.Capacity);
@@ -579,13 +579,32 @@ namespace palmesneo_village
                 {
                     building = new GrassBuilding(this, grassItem, direction, tiles);
                 }
+                else if(buildingItem is WaterSourceItem waterSourceItem)
+                {
+                    building = new WaterSourceBuilding(this, waterSourceItem, direction, tiles);
+                }
+                else if(buildingItem is StorageItem storageItem)
+                {
+                    building = new StorageBuilding(this, storageItem, direction, tiles);
+                }
                 else
                 {
                     building = new Building(this, buildingItem, direction, tiles);
                 }
 
                 building.LocalPosition = tiles[0, 0] * Engine.TILE_SIZE;
-                building.Depth = (int)tiles[0, tiles.GetLength(1) - 1].Y * Engine.TILE_SIZE;
+
+                if (buildingItem.IsFlat)
+                {
+                    building.Depth = 0;
+                }
+                else
+                {
+                    // Добавляем случайное смещение по Y, чтобы спрайты строений не сражались за порядок отрисовки
+                    float randomOffset = Calc.Random.Range(0.0f, 0.9f);
+                    building.Depth = (tiles[0, tiles.GetLength(1) - 1].Y * Engine.TILE_SIZE) + randomOffset;
+                }
+                
                 entitiesList.AddChild(building);
 
                 RegisterBuildingTiles(building, tiles);
@@ -722,6 +741,12 @@ namespace palmesneo_village
                 case "G":
                     {
                         return groundTile == GroundTile.AnimalHouseWall;
+                    }
+                case "H":
+                    {
+                        return groundTile == GroundTile.Grass || 
+                            groundTile == GroundTile.Ground ||
+                            groundTile == GroundTile.HouseFloor;
                     }
             }
 

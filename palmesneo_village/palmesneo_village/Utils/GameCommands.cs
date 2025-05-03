@@ -28,7 +28,7 @@ namespace palmesneo_village
         [Command("set_time_speed", "Set time speed")]
         private static void SetTimeSpeed(int value)
         {
-            Engine.TimeRate = value;
+            Engine.DefaultTimeRate = value;
         }
 
         [Command("start_next_day", "Start next day")]

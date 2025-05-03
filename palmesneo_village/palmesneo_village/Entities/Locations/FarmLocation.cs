@@ -59,6 +59,9 @@ namespace palmesneo_village
             BuildingItem coop = Engine.ItemsDatabase.GetItemByName<BuildingItem>("coop");
             TryBuild(coop, 40, 28, Direction.Down);
 
+            BuildingItem well = Engine.ItemsDatabase.GetItemByName<BuildingItem>("well");
+            TryBuild(well, 40, 42, Direction.Down);
+
             // Выделяем участок, в пределах которого можно генерировать строения
             for (int x = 0; x < MapWidth; x++)
             {

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 namespace palmesneo_village
 {
+    [Obsolete("This class is deprecated and will be removed soon. Use NewBaseInventoryUI instead.")]
     public abstract class BaseInventoryUI : PanelUI
     {
         protected Inventory Inventory { get; private set; }
