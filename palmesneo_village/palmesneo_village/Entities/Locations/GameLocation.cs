@@ -178,18 +178,6 @@ namespace palmesneo_village
             airTopTilemap.SetCell(x, y, terrainId);
         }
 
-        public void AddAnimal(Animal animal)
-        {
-            entitiesList.AddChild(animal);
-            animal.SetGameLocation(this);
-        }
-
-        public void RemoveAnimal(Animal animal)
-        {
-            entitiesList.RemoveChild(animal);
-            animal.SetGameLocation(null);
-        }
-
         public void SetPlayer(Player player)
         {
             if (_player != null)
@@ -216,16 +204,7 @@ namespace palmesneo_village
             _player = null;
         }
 
-        public IEnumerable<Animal> GetAnimals()
-        {
-            foreach(Entity entity in entitiesList.GetChildren())
-            {
-                if (entity is Animal animal)
-                {
-                    yield return animal;
-                }
-            }
-        }
+        
 
         public Rectangle GetBoundaries()
         {
@@ -451,6 +430,33 @@ namespace palmesneo_village
             }
         }
 
+        #region Animals
+
+        public bool TrySpawnAnimal(AnimalItem animalItem, int x, int y)
+        {
+            if (IsTilePassable(x, y) == false) return false;
+
+            Animal animal = new Animal(animalItem);
+            animal.SetGameLocation(this);
+            animal.SetTilePosition(new Vector2(x, y));
+            entitiesList.AddChild(animal);
+
+            return true;
+        }
+
+        public IEnumerable<Animal> GetAnimals()
+        {
+            foreach (Entity entity in entitiesList.GetChildren())
+            {
+                if (entity is Animal animal)
+                {
+                    yield return animal;
+                }
+            }
+        }
+
+        #endregion
+
         #region Buildings
 
         public Building GetBuilding(int x, int y)
@@ -562,10 +568,6 @@ namespace palmesneo_village
                 else if (buildingItem is GateItem gateItem)
                 {
                     building = new GateBuilding(this, gateItem, direction, tiles);
-                }
-                else if(buildingItem is AnimalSpawnerItem animalSpawnerItem)
-                {
-                    building = new AnimalSpawnerBuilding(this, animalSpawnerItem, direction, tiles);
                 }
                 else if(buildingItem is AnimalFeederItem animalFeederItem)
                 {
