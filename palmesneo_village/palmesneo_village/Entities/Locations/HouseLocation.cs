@@ -15,18 +15,21 @@ namespace palmesneo_village
             BuildingItem singleBed = Engine.ItemsDatabase.GetItemByName<BuildingItem>("single_bed");
             TryBuild(singleBed, 6, 5, Direction.Down);
 
+            BuildingItem stove = Engine.ItemsDatabase.GetItemByName<BuildingItem>("stove");
+            TryBuild(stove, 20, 5, Direction.Down);
+
             BuildingItem washBasin = Engine.ItemsDatabase.GetItemByName<BuildingItem>("wash_basin");
-            TryBuild(washBasin, 20, 5, Direction.Down);
+            TryBuild(washBasin, 23, 5, Direction.Down);
 
             BuildingItem gasStove = Engine.ItemsDatabase.GetItemByName<BuildingItem>("gas_stove");
-            TryBuild(gasStove, 21, 5, Direction.Down);
+            TryBuild(gasStove, 24, 5, Direction.Down);
 
             BuildingItem fridge = Engine.ItemsDatabase.GetItemByName<BuildingItem>("fridge");
-            TryBuild(fridge, 23, 5, Direction.Down);
+            TryBuild(fridge, 25, 5, Direction.Down);
 
             TryBuild(Engine.ItemsDatabase.GetItemByName<BuildingItem>("window"), 9, 2, Direction.Down);
             TryBuild(Engine.ItemsDatabase.GetItemByName<BuildingItem>("window"), 14, 2, Direction.Down);
-            TryBuild(Engine.ItemsDatabase.GetItemByName<BuildingItem>("window"), 22, 2, Direction.Down);
+            TryBuild(Engine.ItemsDatabase.GetItemByName<BuildingItem>("window"), 23, 2, Direction.Down);
 
             TryBuild(Engine.ItemsDatabase.GetItemByName<BuildingItem>("table"), 24, 7, Direction.Down);
 

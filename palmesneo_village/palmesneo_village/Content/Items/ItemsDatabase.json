@@ -641,6 +641,30 @@
       "IsRotatable": false,
       "IsPassable": true,
       "IsFlat": true
+    },
+    {
+      "Id": 1014,
+      "Name": "stove",
+      "Description": "test",
+      "Width": 3,
+      "Height": 2,
+      "GroundPattern": [
+        [
+          "D",
+          "D"
+        ],
+        [
+          "D",
+          "D"
+        ],
+        [
+          "D",
+          "D"
+        ]
+      ],
+      "IsRotatable": false,
+      "IsPassable": false,
+      "IsFlat": false
     }
   ],
   "PlantItems": [
