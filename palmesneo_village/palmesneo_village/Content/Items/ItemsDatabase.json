@@ -53,7 +53,9 @@
         "SoundEffects\\watering_2",
         "SoundEffects\\watering_3",
         "SoundEffects\\watering_4"
-      ]
+      ],
+      "OffsetX": 2,
+      "OffsetY": 10
     },
     {
       "Id": 130,
@@ -68,7 +70,9 @@
       "SoundEffects": [
         "SoundEffects\\Minifantasy_Forgotten_Plains_SFX\\15_Hit_on_wood_1",
         "SoundEffects\\Minifantasy_Forgotten_Plains_SFX\\15_Hit_on_wood_2"
-      ]
+      ],
+      "OffsetX": 3,
+      "OffsetY": 8
     },
     {
       "Id": 131,
@@ -83,7 +87,9 @@
       "SoundEffects": [
         "SoundEffects\\Minifantasy_Forgotten_Plains_SFX\\16_Hit_on_brick_1",
         "SoundEffects\\Minifantasy_Forgotten_Plains_SFX\\16_Hit_on_brick_2"
-      ]
+      ],
+      "OffsetX": 4,
+      "OffsetY": 8
     },
     {
       "Id": 132,
@@ -98,7 +104,9 @@
       "SoundEffects": [
         "SoundEffects\\Minifantasy_Forgotten_Plains_SFX\\08_landing_on_stone_1",
         "SoundEffects\\Minifantasy_Forgotten_Plains_SFX\\08_landing_on_stone_2"
-      ]
+      ],
+      "OffsetX": 8,
+      "OffsetY": 4
     },
     {
       "Id": 133,
@@ -113,7 +121,9 @@
       "SoundEffects": [
         "SoundEffects\\Minifantasy_Forgotten_Plains_SFX\\07_landing_on_grass_1",
         "SoundEffects\\Minifantasy_Forgotten_Plains_SFX\\07_landing_on_grass_2"
-      ]
+      ],
+      "OffsetX": 3,
+      "OffsetY": 8
     }
   ],
   "ConsumableItems": [

@@ -550,6 +550,8 @@ namespace palmesneo_village
             {
                 buildingSystem.SetCurrentBuildingItem(null);
             }
+
+            player.SetHandItem(item);
         }
     }
 }
