@@ -19,8 +19,9 @@ namespace palmesneo_village
         private int currentGrowthStage = 0;
 
         private ImageEntity trunkImage;
+        private ImageEntity shadowImage;
 
-        private Tweener rotationTweener;
+        private Tweener trunkAnimationTweener;
         private Tweener fadeTweener;
 
         private bool isFalling = false;
@@ -39,13 +40,20 @@ namespace palmesneo_village
             trunkImage.Offset = new Vector2(0, 30);
             trunkImage.LocalPosition = new Vector2(8, 14);
 
-            rotationTweener = new Tweener();
+            shadowImage = new ImageEntity();
+            shadowImage.Texture = ResourcesManager.GetTexture("Sprites", "big_tree_shadow");
+            shadowImage.Centered = true;
+            // TODO: продумать как это вычислить автоматически
+            shadowImage.Offset = new Vector2(0, 30);
+            shadowImage.LocalPosition = new Vector2(8, 14);
+
+            trunkAnimationTweener = new Tweener();
             fadeTweener = new Tweener();
         }
 
         public override void Update()
         {
-            rotationTweener.Update(Engine.GameDeltaTime);
+            trunkAnimationTweener.Update(Engine.GameDeltaTime);
             fadeTweener.Update(Engine.GameDeltaTime);
 
             base.Update();
@@ -72,6 +80,7 @@ namespace palmesneo_village
 
             if (IsRipe)
             {
+                AddChild(shadowImage);
                 AddChild(trunkImage);
             }
         }
@@ -131,7 +140,7 @@ namespace palmesneo_village
 
         private void PlayTrunkShakeAnimation()
         {
-            rotationTweener.TweenTo(
+            trunkAnimationTweener.TweenTo(
                     target: trunkImage,
                     expression: trunk => trunkImage.LocalRotation,
                     toValue: 0.04f,
@@ -139,7 +148,7 @@ namespace palmesneo_village
                     .Easing(EasingFunctions.CubicOut)
                     .OnEnd(tween1 =>
                     {
-                        rotationTweener.TweenTo(
+                        trunkAnimationTweener.TweenTo(
                             target: trunkImage,
                             expression: trunk => trunkImage.LocalRotation,
                             toValue: -0.03f,
@@ -147,7 +156,7 @@ namespace palmesneo_village
                             .Easing(EasingFunctions.Linear)
                             .OnEnd(tween1 =>
                             {
-                                rotationTweener.TweenTo(
+                                trunkAnimationTweener.TweenTo(
                                     target: trunkImage,
                                     expression: trunk => trunkImage.LocalRotation,
                                     toValue: 0,
@@ -159,15 +168,22 @@ namespace palmesneo_village
 
         private void PlayTrunkFallingAnimation(Action<Tween> onEnd)
         {
-            rotationTweener.CancelAndCompleteAll();
+            trunkAnimationTweener.CancelAndCompleteAll();
 
-            rotationTweener.TweenTo(
+            trunkAnimationTweener.TweenTo(
                     target: trunkImage,
                     expression: trunk => trunkImage.LocalRotation,
                     toValue: 1.5f,
                     duration: 2)
                     .Easing(EasingFunctions.CubicIn)
                     .OnEnd(onEnd);
+
+            trunkAnimationTweener.TweenTo(
+                target: shadowImage,
+                expression: shadow => shadowImage.SelfColor,
+                toValue: Color.Transparent,
+                duration: 1.5f)
+                .Easing(EasingFunctions.CubicIn);
 
             fadeTweener.TweenTo(
                 target: trunkImage,
