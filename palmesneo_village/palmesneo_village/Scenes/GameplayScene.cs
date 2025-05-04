@@ -186,7 +186,6 @@ namespace palmesneo_village
             {
                 case GameState.Game:
                     Engine.CurrentTimeRate = Engine.DefaultTimeRate;
-                    Console.WriteLine(Engine.CurrentTimeRate);
                     break;
                 default:
                     Engine.CurrentTimeRate = 0.0f;

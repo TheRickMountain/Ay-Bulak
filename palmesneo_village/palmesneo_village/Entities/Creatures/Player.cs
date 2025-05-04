@@ -81,6 +81,8 @@ namespace palmesneo_village
 
             UpdateMovement();
 
+            UpdateSprite();
+
             UpdateItemsPickup();
 
             ShakeGrass();
@@ -134,15 +136,6 @@ namespace palmesneo_village
                     }
                 }
             }
-
-            if(movement != Vector2.Zero)
-            {
-                bodySprite.Play($"walk_{movementDirection.ToString().ToLower()}");
-            }
-            else
-            {
-                bodySprite.Play($"idle_{movementDirection.ToString().ToLower()}");
-            }
         }
 
         private bool IsValidMovement(Vector2 newPosition)
@@ -177,6 +170,40 @@ namespace palmesneo_village
             }
 
             return true;
+        }
+
+        private void UpdateSprite()
+        {
+            float radianAngle = Calc.Angle(GlobalPosition, MInput.Mouse.GlobalPosition);
+            float degreeAngle = MathHelper.ToDegrees(radianAngle) + 180;
+
+            Direction viewDirection;
+
+            if (degreeAngle >= 45 && degreeAngle < 135)
+            {
+                viewDirection = Direction.Up;
+            }
+            else if (degreeAngle >= 135 && degreeAngle < 225)
+            {
+                viewDirection = Direction.Right;
+            }
+            else if (degreeAngle >= 225 && degreeAngle < 315)
+            {
+                viewDirection = Direction.Down;
+            }
+            else
+            {
+                viewDirection = Direction.Left;
+            }
+
+            if (isMoving)
+            {
+                bodySprite.Play($"walk_{viewDirection.ToString().ToLower()}");
+            }
+            else
+            {
+                bodySprite.Play($"idle_{viewDirection.ToString().ToLower()}");
+            }
         }
 
         private void UpdateItemsPickup()
