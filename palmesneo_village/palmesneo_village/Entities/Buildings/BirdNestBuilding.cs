@@ -35,6 +35,11 @@ namespace palmesneo_village
 
         private void Gather()
         {
+            if(currentStage == 0)
+            {
+                return;
+            }
+
             ItemContainer itemContainer = new ItemContainer();
             itemContainer.Item = Engine.ItemsDatabase.GetItemByName<Item>("chicken_egg");
             itemContainer.Quantity = currentStage;
