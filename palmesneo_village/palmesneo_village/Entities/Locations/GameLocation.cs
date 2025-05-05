@@ -777,6 +777,13 @@ namespace palmesneo_village
                             groundTile == GroundTile.Ground ||
                             groundTile == GroundTile.HouseFloor;
                     }
+                case "I":
+                    {
+                        return (groundTile == GroundTile.Grass || 
+                            groundTile == GroundTile.Ground || 
+                            groundTile == GroundTile.CoopHouseFloor) &&
+                            floorPathMap[x, y] == null;
+                    }
             }
 
             return false;

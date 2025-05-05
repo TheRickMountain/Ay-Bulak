@@ -1033,6 +1033,23 @@
       "IsPassable": true,
       "TilesetIndex": 3,
       "MovementSpeedBuff": 0.2
+    },
+    {
+      "Id": 8004,
+      "Name": "hay_path",
+      "Description": "test",
+      "IsStackable": true,
+      "Width": 1,
+      "Height": 1,
+      "GroundPattern": [
+        [
+          "I"
+        ]
+      ],
+      "IsRotatable": false,
+      "IsPassable": true,
+      "TilesetIndex": 4,
+      "MovementSpeedBuff": 0.1
     }
   ],
   "ManualCrafterItems": [
