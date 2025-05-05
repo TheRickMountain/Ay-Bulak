@@ -436,12 +436,31 @@ namespace palmesneo_village
         {
             if (IsTilePassable(x, y) == false) return false;
 
-            Animal animal = new Animal(animalItem);
+            Animal animal;
+
+            if (animalItem is BabyAnimalItem babyAnimalItem)
+            {
+                animal = new BabyAnimal(babyAnimalItem);
+            }
+            else if (animalItem is AdultAnimalItem adultAnimalItem)
+            {
+                animal = new AdultAnimal(adultAnimalItem);
+            }
+            else
+            {
+                throw new Exception("Animal item is not valid!");
+            }
+
             animal.SetGameLocation(this);
             animal.SetTilePosition(new Vector2(x, y));
             entitiesList.AddChild(animal);
 
             return true;
+        }
+
+        public void RemoveAnimal(Animal animal)
+        {
+            entitiesList.RemoveChild(animal);
         }
 
         public IEnumerable<Animal> GetAnimals()
@@ -452,6 +471,14 @@ namespace palmesneo_village
                 {
                     yield return animal;
                 }
+            }
+        }
+
+        public IEnumerable<T> GetAnimals<T>() where T : Animal
+        {
+            foreach (T animal in entitiesList.GetChildren<T>())
+            {
+                yield return animal;
             }
         }
 

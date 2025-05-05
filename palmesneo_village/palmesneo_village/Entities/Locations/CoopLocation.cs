@@ -79,7 +79,17 @@ namespace palmesneo_village
         {
             base.StartNextDay(timeOfDayManager);
 
-            List<Animal> fedAnimals = GetAnimals().Where(animal => animal.IsFed).ToList();
+            ProduceResources();
+
+            UpdateBabyAnimalsAging();
+        }
+
+        private void ProduceResources()
+        {
+            // Only adult animals can produce resources
+            List<AdultAnimal> fedAnimals = GetAnimals<AdultAnimal>()
+                .Where(animal => animal.IsFed)
+                .ToList();
 
             var nests = GetBuildings().OfType<BirdNestBuilding>().ToList();
             int eggsToProduce = Math.Min(fedAnimals.Count, nests.Count);
@@ -87,6 +97,18 @@ namespace palmesneo_village
             for (int i = 0; i < eggsToProduce; i++)
             {
                 nests[i].Upgrade();
+            }
+        }
+
+        private void UpdateBabyAnimalsAging()
+        {
+            List<BabyAnimal> babyAnimals = GetAnimals<BabyAnimal>()
+                .ToList();
+
+            // Only baby animals can grow up
+            foreach (var animal in babyAnimals)
+            {
+                animal.IncrementAge();
             }
         }
     }

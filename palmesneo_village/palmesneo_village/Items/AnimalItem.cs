@@ -8,6 +8,7 @@ namespace palmesneo_village
     public class AnimalItem : Item
     {
         public float MovementSpeed { get; init; }
+        public string[] SoundEffects { get; init; } = Array.Empty<string>();
 
         public Dictionary<Direction, MTexture> DirectionTexture { get; private set; } = new();
 

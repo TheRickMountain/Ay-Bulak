@@ -1392,7 +1392,8 @@
       "OpenSoundEffect": "SoundEffects\\Minifantasy_Dungeon_SFX\\01_chest_open_1"
     }
   ],
-  "AnimalItems": [
+  "AnimalItems": [],
+  "AdultAnimalItems": [
     {
       "Id": 19000,
       "Name": "hen",
@@ -1401,7 +1402,13 @@
       "IsTradable": false,
       "IsDroppable": false,
       "Price": 500,
-      "MovementSpeed": 3
+      "MovementSpeed": 3,
+      "SoundEffects": [
+        "SoundEffects\\Hen\\hen_1",
+        "SoundEffects\\Hen\\hen_2",
+        "SoundEffects\\Hen\\hen_3",
+        "SoundEffects\\Hen\\hen_4"
+      ]
     },
     {
       "Id": 19001,
@@ -1411,7 +1418,38 @@
       "IsTradable": false,
       "IsDroppable": false,
       "Price": 750,
-      "MovementSpeed": 3
+      "MovementSpeed": 3,
+      "SoundEffects": [
+        "SoundEffects\\Goose\\goose_1",
+        "SoundEffects\\Goose\\goose_2",
+        "SoundEffects\\Goose\\goose_3"
+      ]
+    }
+  ],
+  "BabyAnimalItems": [
+    {
+      "Id": 20000,
+      "Name": "chick",
+      "Description": "test",
+      "IsStackable": false,
+      "IsTradable": false,
+      "IsDroppable": false,
+      "Price": 500,
+      "MovementSpeed": 3,
+      "AdultAnimalName": "hen",
+      "DaysUntilAging": 4
+    },
+    {
+      "Id": 20001,
+      "Name": "gosling",
+      "Description": "test",
+      "IsStackable": false,
+      "IsTradable": false,
+      "IsDroppable": false,
+      "Price": 500,
+      "MovementSpeed": 3,
+      "AdultAnimalName": "goose",
+      "DaysUntilAging": 5
     }
   ]
 }

@@ -49,13 +49,19 @@ namespace palmesneo_village
 
             AddChild(creatureMovement = new CreatureMovement(animalItem.MovementSpeed));
 
-            // TODO: Каждое животное должно иметь свою звуквовое сопровождение
-            soundEffects = new SoundEffect[5];
-            soundEffects[0] = ResourcesManager.GetSoundEffect("SoundEffects", "Chicken", "chicken_1");
-            soundEffects[1] = ResourcesManager.GetSoundEffect("SoundEffects", "Chicken", "chicken_2");
-            soundEffects[2] = ResourcesManager.GetSoundEffect("SoundEffects", "Chicken", "chicken_3");
-            soundEffects[3] = ResourcesManager.GetSoundEffect("SoundEffects", "Chicken", "chicken_4");
-            soundEffects[4] = ResourcesManager.GetSoundEffect("SoundEffects", "Chicken", "chicken_5");
+            InitializeSoundEffects();
+        }
+
+        private void InitializeSoundEffects()
+        {
+            soundEffects = new SoundEffect[animalItem.SoundEffects.Length];
+
+            for (int i = 0; i < animalItem.SoundEffects.Length; i++)
+            {
+                string soundEffectPath = animalItem.SoundEffects[i];
+
+                soundEffects[i] = ResourcesManager.GetSoundEffect(soundEffectPath);
+            }
 
             soundEffectTimer = Calc.Random.Range(soundEffectTimeRange);
         }
@@ -86,7 +92,7 @@ namespace palmesneo_village
 
             if(soundEffectTimer <= 0)
             {
-                soundEffects[Calc.Random.Next(soundEffects.Length)].Play();
+                Calc.Random.ChooseOrDefault(null, soundEffects)?.Play();
 
                 soundEffectTimer = Calc.Random.Range(soundEffectTimeRange);
             }

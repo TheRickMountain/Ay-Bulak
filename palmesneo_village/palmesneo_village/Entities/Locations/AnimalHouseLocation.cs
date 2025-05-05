@@ -64,17 +64,5 @@ namespace palmesneo_village
                 fullFeeders[i].Empty();
             }
         }
-
-        public int GetAnimalsAmount()
-        {
-            int animalsAmount = 0;
-
-            foreach (Animal animal in GetAnimals())
-            {
-                animalsAmount++;
-            }
-
-            return animalsAmount;
-        }
     }
 }

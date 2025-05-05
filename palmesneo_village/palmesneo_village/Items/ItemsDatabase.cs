@@ -30,6 +30,8 @@ namespace palmesneo_village
         public WaterSourceItem[] WaterSourceItems { get; init; }
         public StorageItem[] StorageItems { get; init; }
         public AnimalItem[] AnimalItems { get; init; }
+        public AdultAnimalItem[] AdultAnimalItems { get; init; }
+        public BabyAnimalItem[] BabyAnimalItems { get; init; }
 
         private Dictionary<string, Item> nameItemPairs;
 
@@ -61,6 +63,8 @@ namespace palmesneo_village
             ReadAndInitializeCollection(WaterSourceItems, itemsIcons);
             ReadAndInitializeCollection(StorageItems, itemsIcons);
             ReadAndInitializeCollection(AnimalItems, itemsIcons);
+            ReadAndInitializeCollection(AdultAnimalItems, itemsIcons);
+            ReadAndInitializeCollection(BabyAnimalItems, itemsIcons);
 
             floorPathItemsByTilesetIndex = new Dictionary<int, FloorPathItem>();
 
