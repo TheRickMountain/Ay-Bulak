@@ -43,7 +43,7 @@ namespace palmesneo_village
         private Tilemap groundTilemap;
         private Tilemap groundTopTilemap;
         private Tilemap floorPathTilemap;
-        private Tilemap airTopTilemap;
+        private Tilemap airTilemap;
         private Building[,] buildingsMap;
         private FloorPathItem[,] floorPathMap;
         private bool[,] collisionMap;
@@ -98,9 +98,9 @@ namespace palmesneo_village
             itemsList.IsDepthSortEnabled = true;
             AddChild(itemsList);
 
-            airTopTilemap = new Tilemap(TilesetConnection.Individual, 16, 16, mapWidth, mapHeight);
-            airTopTilemap.Tileset = new MTileset(ResourcesManager.GetTexture("Tilesets", "air_tileset"), 16, 16);
-            AddChild(airTopTilemap);
+            airTilemap = new Tilemap(TilesetConnection.SidesAndCorners, 16, 16, mapWidth, mapHeight);
+            airTilemap.Tileset = new MTileset(ResourcesManager.GetTexture("Tilesets", "air_tileset"), 16, 16);
+            AddChild(airTilemap);
 
             if (isOutdoor)
             {
@@ -149,6 +149,11 @@ namespace palmesneo_village
             return (GroundTopTile)groundTopTilemap.GetCell(x, y);
         }
 
+        public void SetAirTile(int x, int y, int terrainId)
+        {
+            airTilemap.SetCell(x, y, terrainId);
+        }
+
         public void SetTileFloorPathItem(int x, int y, FloorPathItem floorPathItem)
         {
             if (floorPathItem == null)
@@ -171,11 +176,6 @@ namespace palmesneo_village
         public FloorPathItem GetTileFloorPathItem(Vector2 tile)
         {
             return floorPathMap[(int)tile.X, (int)tile.Y];
-        }
-
-        public void SetAirTile(int x, int y, int terrainId)
-        {
-            airTopTilemap.SetCell(x, y, terrainId);
         }
 
         public void SetPlayer(Player player)

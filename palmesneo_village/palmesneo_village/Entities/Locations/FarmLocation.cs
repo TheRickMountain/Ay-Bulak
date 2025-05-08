@@ -33,18 +33,7 @@ namespace palmesneo_village
             SetGroundTile(56, 35, GroundTile.Water);
             SetGroundTile(57, 35, GroundTile.Water);
             SetGroundTile(58, 35, GroundTile.Water);
-
-            TryBuild(Engine.ItemsDatabase.GetItemByName<BuildingItem>("small_main_gate"), 28, 48, Direction.Down);
-            TryBuild(Engine.ItemsDatabase.GetItemByName<BuildingItem>("big_left_main_gate"), 30, 48, Direction.Down);
-            TryBuild(Engine.ItemsDatabase.GetItemByName<BuildingItem>("big_right_main_gate"), 32, 48, Direction.Down);
             
-            TryBuild(Engine.ItemsDatabase.GetItemByName<BuildingItem>("bench"), 25, 49, Direction.Down);
-
-            for(int x = 0; x < MapWidth; x += 2)
-            {
-                TryBuild(Engine.ItemsDatabase.GetItemByName<BuildingItem>("fence"), x, 48, Direction.Down);
-            }
-
             BuildingItem toilet = Engine.ItemsDatabase.GetItemByName<BuildingItem>("toilet");
             TryBuild(toilet, 34, 24, Direction.Down);
 
@@ -96,27 +85,6 @@ namespace palmesneo_village
                         }
                     }
                 }
-            }
-
-            // Линия электропередач
-            BuildingItem electricPoleItem = Engine.ItemsDatabase.GetItemByName<BuildingItem>("electric_pole");
-
-            TryBuild(electricPoleItem, 24, 55, Direction.Down);
-            TryBuild(electricPoleItem, 59, 55, Direction.Down);
-
-            for (int x = 0; x < MapWidth; x++)
-            {
-                if (x == 24 || x == 59) continue;
-
-                SetAirTile(x, 51, 12);
-                SetAirTile(x, 52, 13);
-            }
-
-            // Следы от колес
-            for (int x = 0; x < MapWidth; x++)
-            {
-                SetGroundTile(x, 58, GroundTile.Ground);
-                SetGroundTile(x, 60, GroundTile.Ground);
             }
         }
 

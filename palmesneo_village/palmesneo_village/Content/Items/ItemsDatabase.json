@@ -526,20 +526,6 @@
       }
     },
     {
-      "Id": 1007,
-      "Name": "electric_pole",
-      "Description": "test",
-      "Width": 1,
-      "Height": 1,
-      "GroundPattern": [
-        [
-          "A"
-        ]
-      ],
-      "IsRotatable": false,
-      "IsPassable": false
-    },
-    {
       "Id": 1008,
       "Name": "wash_basin",
       "Description": "test",
@@ -560,23 +546,6 @@
       "Width": 1,
       "Height": 1,
       "GroundPattern": [
-        [
-          "A"
-        ]
-      ],
-      "IsRotatable": false,
-      "IsPassable": false
-    },
-    {
-      "Id": 1010,
-      "Name": "fence",
-      "Description": "test",
-      "Width": 2,
-      "Height": 1,
-      "GroundPattern": [
-        [
-          "A"
-        ],
         [
           "A"
         ]
