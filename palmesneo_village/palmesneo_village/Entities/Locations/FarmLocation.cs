@@ -7,7 +7,7 @@ namespace palmesneo_village
     public class FarmLocation : GameLocation
     {
 
-        public FarmLocation(string id) : base(id, 64, 64, true)
+        public FarmLocation(string id) : base(id, 128, 128, true)
         {
             GenerateGrassTiles();
 
