@@ -19,6 +19,27 @@ namespace palmesneo_village
                 }
             }
 
+            // TEMP: Временно устанавливаем тайлы воды, чтобы края карты были непроходимыми
+            for (int x = 0; x < MapWidth; x++)
+            {
+                for (int y = 0; y < MapHeight; y++)
+                {
+                    if ((x > 0 && x < MapWidth - 1) && (y > 0 && y < MapHeight - 1)) continue;
+
+                    SetGroundTile(x, y, GroundTile.Water);
+                }
+            }
+
+            for (int x = 0; x < MapWidth; x++)
+            {
+                for (int y = 0; y < MapHeight; y++)
+                {
+                    if ((x > 1 && x < MapWidth - 2) && (y > 1 && y < MapHeight - 2)) continue;
+
+                    SetAirTile(x, y, AirTile.Forest);
+                }
+            }
+
             SetGroundTile(56, 32, GroundTile.Water);
             SetGroundTile(57, 32, GroundTile.Water);
             SetGroundTile(55, 33, GroundTile.Water);

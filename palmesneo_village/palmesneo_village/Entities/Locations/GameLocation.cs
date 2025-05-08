@@ -26,6 +26,12 @@ namespace palmesneo_village
         Moisture = 0
     }
 
+    public enum AirTile
+    {
+        None = -1,
+        Forest = 0
+    }
+
     public class GameLocation : Entity
     {
         public string LocationId { get; private set; }
@@ -70,9 +76,9 @@ namespace palmesneo_village
             cameraMovement.Bounds = GetBoundaries();
             AddChild(cameraMovement);
 
-            groundTilemap = new Tilemap(TilesetConnection.SidesAndCorners, 16, 16, mapWidth, mapHeight);
-            groundTopTilemap = new Tilemap(TilesetConnection.SidesAndCorners, 16, 16, mapWidth, mapHeight);
-            floorPathTilemap = new Tilemap(TilesetConnection.Sides, 16, 16, mapWidth, mapHeight);
+            groundTilemap = new Tilemap(TilesetConnection.SidesAndCorners, true, 16, 16, mapWidth, mapHeight);
+            groundTopTilemap = new Tilemap(TilesetConnection.SidesAndCorners, false, 16, 16, mapWidth, mapHeight);
+            floorPathTilemap = new Tilemap(TilesetConnection.Sides, false, 16, 16, mapWidth, mapHeight);
 
             groundTilemap.Tileset = new MTileset(ResourcesManager.GetTexture("Tilesets", "ground_summer_tileset"), 16, 16);
             groundTopTilemap.Tileset = new MTileset(ResourcesManager.GetTexture("Tilesets", "ground_top_tileset"), 16, 16);
@@ -98,7 +104,7 @@ namespace palmesneo_village
             itemsList.IsDepthSortEnabled = true;
             AddChild(itemsList);
 
-            airTilemap = new Tilemap(TilesetConnection.SidesAndCorners, 16, 16, mapWidth, mapHeight);
+            airTilemap = new Tilemap(TilesetConnection.SidesAndCorners, true, 16, 16, mapWidth, mapHeight);
             airTilemap.Tileset = new MTileset(ResourcesManager.GetTexture("Tilesets", "air_tileset"), 16, 16);
             AddChild(airTilemap);
 
@@ -149,9 +155,14 @@ namespace palmesneo_village
             return (GroundTopTile)groundTopTilemap.GetCell(x, y);
         }
 
-        public void SetAirTile(int x, int y, int terrainId)
+        public void SetAirTile(int x, int y, AirTile airTile)
         {
-            airTilemap.SetCell(x, y, terrainId);
+            airTilemap.SetCell(x, y, (int)airTile);
+        }
+
+        public AirTile GetAirTile(int x, int y)
+        {
+            return (AirTile)airTilemap.GetCell(x, y);
         }
 
         public void SetTileFloorPathItem(int x, int y, FloorPathItem floorPathItem)
