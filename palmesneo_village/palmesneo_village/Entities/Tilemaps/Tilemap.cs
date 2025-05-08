@@ -18,13 +18,15 @@ namespace palmesneo_village
             get => tileset;
             set
             {
+                if (tileset == value) return;
+
                 tileset = value;
 
                 isTilesetUpdated = true;
             }
         }
-        public int TileColumns { get; private set; }
-        public int TileRows { get; private set; }
+        public int TileColumns { get; }
+        public int TileRows { get; }
 
         private TilesetConnection tilesetConnection = TilesetConnection.Individual;
         private bool connectTilesetWithTilemapBorders;
@@ -52,15 +54,7 @@ namespace palmesneo_village
 
             CreateChunks();
 
-            terrains = new int[this.TileColumns, this.TileRows];
-
-            for (int x = 0; x < this.TileColumns; x++)
-            {
-                for (int y = 0; y < this.TileRows; y++)
-                {
-                    terrains[x, y] = -1;
-                }
-            }
+            InitializeTerrains();
         }
 
         private void CreateChunks()
@@ -78,6 +72,19 @@ namespace palmesneo_village
                     int chunkY = y * chunkSize * tileSize;
 
                     chunks[x, y] = new Chunk(chunkX, chunkY, chunkSize, tileSize);
+                }
+            }
+        }
+
+        private void InitializeTerrains()
+        {
+            terrains = new int[TileColumns, TileRows];
+
+            for (int x = 0; x < TileColumns; x++)
+            {
+                for (int y = 0; y < TileRows; y++)
+                {
+                    terrains[x, y] = -1;
                 }
             }
         }
@@ -123,7 +130,7 @@ namespace palmesneo_village
 
         public void SetCell(int x, int y, int terrain)
         {
-            if (x < 0 || y < 0 || x >= TileColumns || y >= TileRows)
+            if (IsWithinBounds(x, y) == false)
             {
                 throw new Exception("Out of bounds!");
             }
@@ -172,7 +179,7 @@ namespace palmesneo_village
 
         private void UpdateCell(int x, int y)
         {
-            if (x < 0 || y < 0 || x >= TileColumns || y >= TileRows)
+            if (IsWithinBounds(x, y) == false)
             {
                 return;
             }
@@ -280,7 +287,7 @@ namespace palmesneo_village
 
         public int GetCell(int x, int y)
         {
-            if (x < 0 || y < 0 || x >= TileColumns || y >= TileRows)
+            if (IsWithinBounds(x, y) == false)
             {
                 return -1;
             }
@@ -290,7 +297,7 @@ namespace palmesneo_village
 
         private void SetCellTileId(int x, int y, int tileId)
         {
-            if (x < 0 || y < 0 || x >= TileColumns || y >= TileRows)
+            if(IsWithinBounds(x, y) == false)
             {
                 throw new Exception("Out of bounds!");
             }
@@ -312,6 +319,11 @@ namespace palmesneo_village
         public Vector2 MapToWorld(Vector2 vector)
         {
             return vector * tileSize;
+        }
+
+        private bool IsWithinBounds(int x, int y)
+        {
+            return x >= 0 && y >= 0 && x < TileColumns && y < TileRows;
         }
     }
 }
