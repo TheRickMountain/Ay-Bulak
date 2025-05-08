@@ -128,16 +128,16 @@ namespace palmesneo_village
             base.Render();
         }
 
-        public void SetCell(int x, int y, int terrain)
+        public bool TrySetCell(int x, int y, int terrain)
         {
             if (IsWithinBounds(x, y) == false)
             {
-                throw new Exception("Out of bounds!");
+                return false;
             }
 
             if (terrains[x, y] == terrain)
             {
-                return;
+                return true;
             }
 
             terrains[x, y] = terrain;
@@ -174,6 +174,16 @@ namespace palmesneo_village
                         UpdateCell(x + 1, y + 1);
                     }
                     break;
+            }
+
+            return true;
+        }
+
+        public void SetCell(int x, int y, int terrain)
+        {
+            if(TrySetCell(x, y, terrain) == false)
+            {
+                throw new Exception("Out of bounds!");
             }
         }
 
@@ -321,7 +331,7 @@ namespace palmesneo_village
             return vector * tileSize;
         }
 
-        private bool IsWithinBounds(int x, int y)
+        public bool IsWithinBounds(int x, int y)
         {
             return x >= 0 && y >= 0 && x < TileColumns && y < TileRows;
         }

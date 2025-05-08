@@ -138,6 +138,14 @@ namespace palmesneo_village
             UpdateTilePassability(x, y);
         }
 
+        public void TrySetGroundTile(int x, int y, GroundTile groundTile)
+        {
+            if (groundTilemap.TrySetCell(x, y, (int)groundTile))
+            {
+                UpdateTilePassability(x, y);
+            }
+        }
+
         public GroundTile GetGroundTile(int x, int y)
         {
             return (GroundTile)groundTilemap.GetCell(x, y);
@@ -158,6 +166,16 @@ namespace palmesneo_village
         public void SetAirTile(int x, int y, AirTile airTile)
         {
             airTilemap.SetCell(x, y, (int)airTile);
+
+            UpdateTilePassability(x, y);
+        }
+
+        public void TrySetAirTile(int x, int y, AirTile airTile)
+        {
+            if(airTilemap.TrySetCell(x, y, (int)airTile))
+            {
+                UpdateTilePassability(x, y);
+            }
         }
 
         public AirTile GetAirTile(int x, int y)
@@ -855,6 +873,8 @@ namespace palmesneo_village
 
         public void UpdateTilePassability(int x, int y)
         {
+            if (groundTilemap.IsWithinBounds(x, y) == false) return;
+
             collisionMap[x, y] = true;
 
             switch (GetGroundTile(x, y))
@@ -862,6 +882,13 @@ namespace palmesneo_village
                 case GroundTile.AnimalHouseWall:
                 case GroundTile.HouseWall:
                 case GroundTile.Water:
+                    collisionMap[x, y] = false;
+                    break;
+            }
+
+            switch(GetAirTile(x, y))
+            {
+                case AirTile.Forest:
                     collisionMap[x, y] = false;
                     break;
             }
