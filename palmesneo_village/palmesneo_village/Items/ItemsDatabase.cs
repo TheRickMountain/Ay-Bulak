@@ -23,13 +23,15 @@ namespace palmesneo_village
         public WindowItem[] WindowItems { get; init; }
         public SprinklerItem[] SprinklerItems { get; init; }
         public GateItem[] GateItems { get; init; }
-        public AnimalSpawnerItem[] AnimalSpawnerItems { get; init; }
         public AnimalFeederItem[] AnimalFeederItems { get; init; }
         public BirdNestItem[] BirdNestItems { get; init; }
         public BackpackItem[] BackpackItems { get; init; }
         public GrassItem[] GrassItems { get; init; }
         public WaterSourceItem[] WaterSourceItems { get; init; }
         public StorageItem[] StorageItems { get; init; }
+        public AnimalItem[] AnimalItems { get; init; }
+        public AdultAnimalItem[] AdultAnimalItems { get; init; }
+        public BabyAnimalItem[] BabyAnimalItems { get; init; }
 
         private Dictionary<string, Item> nameItemPairs;
 
@@ -54,13 +56,15 @@ namespace palmesneo_village
             ReadAndInitializeCollection(WindowItems, itemsIcons);
             ReadAndInitializeCollection(SprinklerItems, itemsIcons);
             ReadAndInitializeCollection(GateItems, itemsIcons);
-            ReadAndInitializeCollection(AnimalSpawnerItems, itemsIcons);
             ReadAndInitializeCollection(AnimalFeederItems, itemsIcons);
             ReadAndInitializeCollection(BirdNestItems, itemsIcons);
             ReadAndInitializeCollection(BackpackItems, itemsIcons);
             ReadAndInitializeCollection(GrassItems, itemsIcons);
             ReadAndInitializeCollection(WaterSourceItems, itemsIcons);
             ReadAndInitializeCollection(StorageItems, itemsIcons);
+            ReadAndInitializeCollection(AnimalItems, itemsIcons);
+            ReadAndInitializeCollection(AdultAnimalItems, itemsIcons);
+            ReadAndInitializeCollection(BabyAnimalItems, itemsIcons);
 
             floorPathItemsByTilesetIndex = new Dictionary<int, FloorPathItem>();
 

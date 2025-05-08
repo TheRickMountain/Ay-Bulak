@@ -26,6 +26,12 @@ namespace palmesneo_village
         Moisture = 0
     }
 
+    public enum AirTile
+    {
+        None = -1,
+        Forest = 0
+    }
+
     public class GameLocation : Entity
     {
         public string LocationId { get; private set; }
@@ -43,7 +49,7 @@ namespace palmesneo_village
         private Tilemap groundTilemap;
         private Tilemap groundTopTilemap;
         private Tilemap floorPathTilemap;
-        private Tilemap airTopTilemap;
+        private Tilemap airTilemap;
         private Building[,] buildingsMap;
         private FloorPathItem[,] floorPathMap;
         private bool[,] collisionMap;
@@ -70,9 +76,9 @@ namespace palmesneo_village
             cameraMovement.Bounds = GetBoundaries();
             AddChild(cameraMovement);
 
-            groundTilemap = new Tilemap(TilesetConnection.SidesAndCorners, 16, 16, mapWidth, mapHeight);
-            groundTopTilemap = new Tilemap(TilesetConnection.SidesAndCorners, 16, 16, mapWidth, mapHeight);
-            floorPathTilemap = new Tilemap(TilesetConnection.Sides, 16, 16, mapWidth, mapHeight);
+            groundTilemap = new Tilemap(TilesetConnection.SidesAndCorners, true, 16, 16, mapWidth, mapHeight);
+            groundTopTilemap = new Tilemap(TilesetConnection.SidesAndCorners, false, 16, 16, mapWidth, mapHeight);
+            floorPathTilemap = new Tilemap(TilesetConnection.Sides, false, 16, 16, mapWidth, mapHeight);
 
             groundTilemap.Tileset = new MTileset(ResourcesManager.GetTexture("Tilesets", "ground_summer_tileset"), 16, 16);
             groundTopTilemap.Tileset = new MTileset(ResourcesManager.GetTexture("Tilesets", "ground_top_tileset"), 16, 16);
@@ -98,9 +104,9 @@ namespace palmesneo_village
             itemsList.IsDepthSortEnabled = true;
             AddChild(itemsList);
 
-            airTopTilemap = new Tilemap(TilesetConnection.Individual, 16, 16, mapWidth, mapHeight);
-            airTopTilemap.Tileset = new MTileset(ResourcesManager.GetTexture("Tilesets", "air_tileset"), 16, 16);
-            AddChild(airTopTilemap);
+            airTilemap = new Tilemap(TilesetConnection.SidesAndCorners, true, 16, 16, mapWidth, mapHeight);
+            airTilemap.Tileset = new MTileset(ResourcesManager.GetTexture("Tilesets", "air_tileset"), 16, 16);
+            AddChild(airTilemap);
 
             if (isOutdoor)
             {
@@ -132,6 +138,14 @@ namespace palmesneo_village
             UpdateTilePassability(x, y);
         }
 
+        public void TrySetGroundTile(int x, int y, GroundTile groundTile)
+        {
+            if (groundTilemap.TrySetCell(x, y, (int)groundTile))
+            {
+                UpdateTilePassability(x, y);
+            }
+        }
+
         public GroundTile GetGroundTile(int x, int y)
         {
             return (GroundTile)groundTilemap.GetCell(x, y);
@@ -147,6 +161,26 @@ namespace palmesneo_village
         public GroundTopTile GetGroundTopTile(int x, int y)
         {
             return (GroundTopTile)groundTopTilemap.GetCell(x, y);
+        }
+
+        public void SetAirTile(int x, int y, AirTile airTile)
+        {
+            airTilemap.SetCell(x, y, (int)airTile);
+
+            UpdateTilePassability(x, y);
+        }
+
+        public void TrySetAirTile(int x, int y, AirTile airTile)
+        {
+            if(airTilemap.TrySetCell(x, y, (int)airTile))
+            {
+                UpdateTilePassability(x, y);
+            }
+        }
+
+        public AirTile GetAirTile(int x, int y)
+        {
+            return (AirTile)airTilemap.GetCell(x, y);
         }
 
         public void SetTileFloorPathItem(int x, int y, FloorPathItem floorPathItem)
@@ -171,23 +205,6 @@ namespace palmesneo_village
         public FloorPathItem GetTileFloorPathItem(Vector2 tile)
         {
             return floorPathMap[(int)tile.X, (int)tile.Y];
-        }
-
-        public void SetAirTile(int x, int y, int terrainId)
-        {
-            airTopTilemap.SetCell(x, y, terrainId);
-        }
-
-        public void AddAnimal(Animal animal)
-        {
-            entitiesList.AddChild(animal);
-            animal.SetGameLocation(this);
-        }
-
-        public void RemoveAnimal(Animal animal)
-        {
-            entitiesList.RemoveChild(animal);
-            animal.SetGameLocation(null);
         }
 
         public void SetPlayer(Player player)
@@ -216,16 +233,7 @@ namespace palmesneo_village
             _player = null;
         }
 
-        public IEnumerable<Animal> GetAnimals()
-        {
-            foreach(Entity entity in entitiesList.GetChildren())
-            {
-                if (entity is Animal animal)
-                {
-                    yield return animal;
-                }
-            }
-        }
+        
 
         public Rectangle GetBoundaries()
         {
@@ -451,6 +459,60 @@ namespace palmesneo_village
             }
         }
 
+        #region Animals
+
+        public bool TrySpawnAnimal(AnimalItem animalItem, int x, int y)
+        {
+            if (IsTilePassable(x, y) == false) return false;
+
+            Animal animal;
+
+            if (animalItem is BabyAnimalItem babyAnimalItem)
+            {
+                animal = new BabyAnimal(babyAnimalItem);
+            }
+            else if (animalItem is AdultAnimalItem adultAnimalItem)
+            {
+                animal = new AdultAnimal(adultAnimalItem);
+            }
+            else
+            {
+                throw new Exception("Animal item is not valid!");
+            }
+
+            animal.SetGameLocation(this);
+            animal.SetTilePosition(new Vector2(x, y));
+            entitiesList.AddChild(animal);
+
+            return true;
+        }
+
+        public void RemoveAnimal(Animal animal)
+        {
+            entitiesList.RemoveChild(animal);
+        }
+
+        public IEnumerable<Animal> GetAnimals()
+        {
+            foreach (Entity entity in entitiesList.GetChildren())
+            {
+                if (entity is Animal animal)
+                {
+                    yield return animal;
+                }
+            }
+        }
+
+        public IEnumerable<T> GetAnimals<T>() where T : Animal
+        {
+            foreach (T animal in entitiesList.GetChildren<T>())
+            {
+                yield return animal;
+            }
+        }
+
+        #endregion
+
         #region Buildings
 
         public Building GetBuilding(int x, int y)
@@ -562,10 +624,6 @@ namespace palmesneo_village
                 else if (buildingItem is GateItem gateItem)
                 {
                     building = new GateBuilding(this, gateItem, direction, tiles);
-                }
-                else if(buildingItem is AnimalSpawnerItem animalSpawnerItem)
-                {
-                    building = new AnimalSpawnerBuilding(this, animalSpawnerItem, direction, tiles);
                 }
                 else if(buildingItem is AnimalFeederItem animalFeederItem)
                 {
@@ -748,6 +806,13 @@ namespace palmesneo_village
                             groundTile == GroundTile.Ground ||
                             groundTile == GroundTile.HouseFloor;
                     }
+                case "I":
+                    {
+                        return (groundTile == GroundTile.Grass || 
+                            groundTile == GroundTile.Ground || 
+                            groundTile == GroundTile.CoopHouseFloor) &&
+                            floorPathMap[x, y] == null;
+                    }
             }
 
             return false;
@@ -808,6 +873,8 @@ namespace palmesneo_village
 
         public void UpdateTilePassability(int x, int y)
         {
+            if (groundTilemap.IsWithinBounds(x, y) == false) return;
+
             collisionMap[x, y] = true;
 
             switch (GetGroundTile(x, y))
@@ -815,6 +882,13 @@ namespace palmesneo_village
                 case GroundTile.AnimalHouseWall:
                 case GroundTile.HouseWall:
                 case GroundTile.Water:
+                    collisionMap[x, y] = false;
+                    break;
+            }
+
+            switch(GetAirTile(x, y))
+            {
+                case AirTile.Forest:
                     collisionMap[x, y] = false;
                     break;
             }

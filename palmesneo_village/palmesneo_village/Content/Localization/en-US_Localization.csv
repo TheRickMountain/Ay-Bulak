@@ -9,6 +9,7 @@ carrot,Carrot
 carrot_seeds,Carrot seeds
 chest,Chest
 chest_description,Used to store items
+chick,Chick
 chicken_egg,Chicken egg
 concrete_path,Concrete path
 dirt_path,Dirt path
@@ -18,7 +19,11 @@ energy,Energy
 fried_chicken_egg,Fried chicken egg
 garlic,Garlic
 garlic_seeds,Garlic seeds
+goose,Goose
+gosling,Gosling
 hay,Hay
+hay_path,Hay path
+hen,Hen
 iron_axe,Iron axe
 iron_pickaxe,Iron pickaxe
 iron_scythe,Iron scythe
@@ -33,6 +38,7 @@ small_backpack,Small backpack
 sprinkler,Sprinkler
 stone,Stone
 stone_path,Stone path
+stove,Stove
 strawberry,Strawberry
 strawberry_seeds,Strawberry seeds
 tomato,Tomato

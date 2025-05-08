@@ -15,10 +15,11 @@ namespace palmesneo_village
             Name = name;
             Speed = speed;
 
+            // TODO: постараться избавиться в будущем
             BodyImage = new ImageEntity();
-            BodyImage.Texture = texture;
-            BodyImage.Centered = true;
-            BodyImage.Offset = new Vector2(0, texture.Height / 2 - Engine.TILE_SIZE / 2);
+            //BodyImage.Texture = texture;
+            //BodyImage.Centered = true;
+            //BodyImage.Offset = new Vector2(0, texture.Height / 2 - Engine.TILE_SIZE / 2);
 
             AddChild(BodyImage);
         }

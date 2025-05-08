@@ -16,7 +16,9 @@ namespace palmesneo_village
 
         public override void InteractAlternatively(Item item, PlayerEnergyManager playerEnergyManager)
         {
-            if(item.Name == "hay")
+            if (item == null) return;
+
+            if (item.Name == "hay")
             {
                 if (IsFull)
                 {

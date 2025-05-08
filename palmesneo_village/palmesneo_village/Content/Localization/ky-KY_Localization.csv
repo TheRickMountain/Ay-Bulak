@@ -9,6 +9,7 @@ carrot,Сабиз
 carrot_seeds,Сабиз уруктары
 chest,Сандык
 chest_description,Буюмдарды сактоо үчүн колдонулат
+chick,Чөжө
 chicken_egg,Тоок жумурткасы
 concrete_path,Бетон жол
 dirt_path,
@@ -18,7 +19,11 @@ energy,Энергия
 fried_chicken_egg,Куурулган тоок жумурткасы
 garlic,Сарымсак
 garlic_seeds,Сарымсак уруктары
+goose,Каз
+gosling,Каз балапаны
 hay,Чөп
+hay_path,
+hen,Тоок
 iron_axe,Темир балта
 iron_pickaxe,
 iron_scythe,Темир чалгы
@@ -33,6 +38,7 @@ small_backpack,Кичинекей рюкзак
 sprinkler,Сепкич
 stone,Таш
 stone_path,Таш жол
+stove,Меш
 strawberry,Кулпунай
 strawberry_seeds,Кулпунай уруктары
 tomato,Помидор

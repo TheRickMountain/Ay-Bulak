@@ -9,6 +9,7 @@ carrot,Кишер
 carrot_seeds,Кишер орлыклары
 chest,Сандык
 chest_description,Әйберләр саклау өчен кулланыла
+chick,Чеби
 chicken_egg,Тавык йомыркасы
 concrete_path,Бетон сукмак
 dirt_path,Сукмак
@@ -18,7 +19,11 @@ energy,Энергия
 fried_chicken_egg,Кыздырылган тавык йомыркасы
 garlic,Сарымсак
 garlic_seeds,Сарымсак орлыклары
+goose,Каз
+gosling,Каз бәбкәсе
 hay,Печән
+hay_path,Печән сукмак
+hen,Тавык
 iron_axe,Тимер балта
 iron_pickaxe,Тимер кәйлә
 iron_scythe,Тимер чалгы
@@ -33,6 +38,7 @@ small_backpack,Кечкенә рюкзак
 sprinkler,Сиптергеч
 stone,Таш
 stone_path,Таш сукмак
+stove,Мич
 strawberry,Җир җиләге
 strawberry_seeds,Җир җиләк орлыклары
 tomato,Помидор

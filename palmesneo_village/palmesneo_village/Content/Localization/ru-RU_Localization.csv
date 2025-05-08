@@ -9,6 +9,7 @@ carrot,Морковь
 carrot_seeds,Семена моркови
 chest,Сундук
 chest_description,Используется для хранения вещей
+chick,Цыпленок
 chicken_egg,Куриное яйцо
 concrete_path,Бетонная тропинка
 dirt_path,Грунтовая тропинка
@@ -18,7 +19,11 @@ energy,Энергия
 fried_chicken_egg,Жаренное куриное яйцо
 garlic,Чеснок
 garlic_seeds,Семена чеснока
+goose,Гусь
+gosling,Утёнок
 hay,Сено
+hay_path,Соломенная тропинка
+hen,Курица
 iron_axe,Железный топор
 iron_pickaxe,Железная кирка
 iron_scythe,Железная коса
@@ -33,6 +38,7 @@ small_backpack,Маленький рюкзак
 sprinkler,Поливалка
 stone,Камень
 stone_path,Каменная тропинка
+stove,Печь
 strawberry,Клубника
 strawberry_seeds,Семена клубники
 tomato,Помидор

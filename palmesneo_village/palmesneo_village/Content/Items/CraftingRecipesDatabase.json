@@ -35,6 +35,18 @@
 							"Amount": 1
 						}
 					]
+				},
+				{
+					"Result": {
+						"Item": "hay_path",
+						"Amount": 1
+					},
+					"RequiredIngredients": [
+						{
+							"Item": "hay",
+							"Amount": 1
+						}
+					]
 				}
 			]
 }

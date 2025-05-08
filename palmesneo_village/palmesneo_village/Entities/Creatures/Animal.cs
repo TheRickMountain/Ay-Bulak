@@ -17,11 +17,11 @@ namespace palmesneo_village
     {
         public bool IsFed { get; set; } = false;
 
+        private AnimalItem animalItem;
+
         private AnimalState animalState = AnimalState.Idle;
 
         private float idleTime = 0;
-
-        private Dictionary<Direction, MTexture> directionTextures = new();
 
         private Direction movementDirection = Direction.Down;
 
@@ -35,44 +35,40 @@ namespace palmesneo_village
 
         private Range<float> soundEffectTimeRange = new Range<float>(5.0f, 20.0f);
 
-        public Animal(string name, MTexture texture, float speed) 
-            : base(name, texture, speed)
+        public Animal(AnimalItem animalItem) 
+            : base(animalItem.Name, null, animalItem.MovementSpeed)
         {
-            int directionTextureWidth = texture.Width / 4;
-            int directionTextureHeight = texture.Height;
+            this.animalItem = animalItem;
 
-            foreach(Direction direction in Enum.GetValues<Direction>())
-            {
-                MTexture directionTexture = new MTexture(texture, new Rectangle(
-                    directionTextureWidth * (int)direction, 
-                    0, 
-                    directionTextureWidth, 
-                    directionTextureHeight));
-
-                directionTextures.Add(direction, directionTexture);
-            }
-
-            BodyImage.Texture = directionTextures[movementDirection];
+            // TODO: заменить на анимированный спрайт
+            BodyImage.Texture = animalItem.DirectionTexture[movementDirection];
 
             BodyImage.Centered = true;
-            BodyImage.Offset = new Vector2(0, directionTextureHeight / 2 - Engine.TILE_SIZE / 2);
+            BodyImage.Offset = new Vector2(0, animalItem.DirectionTexture[movementDirection].Height / 2 - Engine.TILE_SIZE / 2);
             BodyImage.LocalPosition = new Vector2(Engine.TILE_SIZE / 2, Engine.TILE_SIZE / 2);
 
-            AddChild(creatureMovement = new CreatureMovement(speed));
+            AddChild(creatureMovement = new CreatureMovement(animalItem.MovementSpeed));
 
-            soundEffects = new SoundEffect[5];
-            soundEffects[0] = ResourcesManager.GetSoundEffect("SoundEffects", "Chicken", "chicken_1");
-            soundEffects[1] = ResourcesManager.GetSoundEffect("SoundEffects", "Chicken", "chicken_2");
-            soundEffects[2] = ResourcesManager.GetSoundEffect("SoundEffects", "Chicken", "chicken_3");
-            soundEffects[3] = ResourcesManager.GetSoundEffect("SoundEffects", "Chicken", "chicken_4");
-            soundEffects[4] = ResourcesManager.GetSoundEffect("SoundEffects", "Chicken", "chicken_5");
+            InitializeSoundEffects();
+        }
+
+        private void InitializeSoundEffects()
+        {
+            soundEffects = new SoundEffect[animalItem.SoundEffects.Length];
+
+            for (int i = 0; i < animalItem.SoundEffects.Length; i++)
+            {
+                string soundEffectPath = animalItem.SoundEffects[i];
+
+                soundEffects[i] = ResourcesManager.GetSoundEffect(soundEffectPath);
+            }
 
             soundEffectTimer = Calc.Random.Range(soundEffectTimeRange);
         }
 
         public override void Update()
         {
-            BodyImage.Texture = directionTextures[movementDirection];
+            BodyImage.Texture = animalItem.DirectionTexture[movementDirection];
 
             switch (animalState)
             {
@@ -96,7 +92,7 @@ namespace palmesneo_village
 
             if(soundEffectTimer <= 0)
             {
-                soundEffects[Calc.Random.Next(soundEffects.Length)].Play();
+                Calc.Random.ChooseOrDefault(null, soundEffects)?.Play();
 
                 soundEffectTimer = Calc.Random.Range(soundEffectTimeRange);
             }

@@ -25,6 +25,27 @@ namespace palmesneo_village
             return true;
         }
 
+        [Command("spawn_animal", "Spawns an animal in the current game location")]
+        private static void SpawnAnimal(string animaItemName)
+        {
+            AnimalItem animalItem = Engine.ItemsDatabase.GetItemByName<AnimalItem>(animaItemName);
+
+            if(animalItem == null)
+            {
+                Engine.Commands.Log($"Animal '{animaItemName}' not found", Color.Red);
+                return;
+            }
+
+            if (Engine.CurrentScene is GameplayScene gameplayScene)
+            {
+                GameLocation currentGameLocation = gameplayScene.CurrentGameLocation;
+                
+                Vector2 spawnTile = currentGameLocation.WorldToMap(MInput.Mouse.GlobalPosition);
+
+                gameplayScene.CurrentGameLocation.TrySpawnAnimal(animalItem, (int)spawnTile.X, (int)spawnTile.Y);
+            }
+        }
+
         [Command("set_time_speed", "Set time speed")]
         private static void SetTimeSpeed(int value)
         {

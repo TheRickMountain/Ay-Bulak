@@ -53,7 +53,9 @@
         "SoundEffects\\watering_2",
         "SoundEffects\\watering_3",
         "SoundEffects\\watering_4"
-      ]
+      ],
+      "OffsetX": 2,
+      "OffsetY": 10
     },
     {
       "Id": 130,
@@ -68,7 +70,9 @@
       "SoundEffects": [
         "SoundEffects\\Minifantasy_Forgotten_Plains_SFX\\15_Hit_on_wood_1",
         "SoundEffects\\Minifantasy_Forgotten_Plains_SFX\\15_Hit_on_wood_2"
-      ]
+      ],
+      "OffsetX": 3,
+      "OffsetY": 8
     },
     {
       "Id": 131,
@@ -83,7 +87,9 @@
       "SoundEffects": [
         "SoundEffects\\Minifantasy_Forgotten_Plains_SFX\\16_Hit_on_brick_1",
         "SoundEffects\\Minifantasy_Forgotten_Plains_SFX\\16_Hit_on_brick_2"
-      ]
+      ],
+      "OffsetX": 4,
+      "OffsetY": 8
     },
     {
       "Id": 132,
@@ -98,7 +104,9 @@
       "SoundEffects": [
         "SoundEffects\\Minifantasy_Forgotten_Plains_SFX\\08_landing_on_stone_1",
         "SoundEffects\\Minifantasy_Forgotten_Plains_SFX\\08_landing_on_stone_2"
-      ]
+      ],
+      "OffsetX": 8,
+      "OffsetY": 4
     },
     {
       "Id": 133,
@@ -113,7 +121,9 @@
       "SoundEffects": [
         "SoundEffects\\Minifantasy_Forgotten_Plains_SFX\\07_landing_on_grass_1",
         "SoundEffects\\Minifantasy_Forgotten_Plains_SFX\\07_landing_on_grass_2"
-      ]
+      ],
+      "OffsetX": 3,
+      "OffsetY": 8
     }
   ],
   "ConsumableItems": [
@@ -432,20 +442,6 @@
       "IsPassable": false
     },
     {
-      "Id": 1004,
-      "Name": "gas_pipe_pole",
-      "Description": "test",
-      "Width": 1,
-      "Height": 1,
-      "GroundPattern": [
-        [
-          "A"
-        ]
-      ],
-      "IsRotatable": false,
-      "IsPassable": false
-    },
-    {
       "Id": 1005,
       "Name": "wall_clock",
       "Description": "test",
@@ -530,20 +526,6 @@
       }
     },
     {
-      "Id": 1007,
-      "Name": "electric_pole",
-      "Description": "test",
-      "Width": 1,
-      "Height": 1,
-      "GroundPattern": [
-        [
-          "A"
-        ]
-      ],
-      "IsRotatable": false,
-      "IsPassable": false
-    },
-    {
       "Id": 1008,
       "Name": "wash_basin",
       "Description": "test",
@@ -564,23 +546,6 @@
       "Width": 1,
       "Height": 1,
       "GroundPattern": [
-        [
-          "A"
-        ]
-      ],
-      "IsRotatable": false,
-      "IsPassable": false
-    },
-    {
-      "Id": 1010,
-      "Name": "fence",
-      "Description": "test",
-      "Width": 2,
-      "Height": 1,
-      "GroundPattern": [
-        [
-          "A"
-        ],
         [
           "A"
         ]
@@ -641,6 +606,30 @@
       "IsRotatable": false,
       "IsPassable": true,
       "IsFlat": true
+    },
+    {
+      "Id": 1014,
+      "Name": "stove",
+      "Description": "test",
+      "Width": 3,
+      "Height": 2,
+      "GroundPattern": [
+        [
+          "D",
+          "D"
+        ],
+        [
+          "D",
+          "D"
+        ],
+        [
+          "D",
+          "D"
+        ]
+      ],
+      "IsRotatable": false,
+      "IsPassable": false,
+      "IsFlat": false
     }
   ],
   "PlantItems": [
@@ -999,6 +988,23 @@
       "IsPassable": true,
       "TilesetIndex": 3,
       "MovementSpeedBuff": 0.2
+    },
+    {
+      "Id": 8004,
+      "Name": "hay_path",
+      "Description": "test",
+      "IsStackable": true,
+      "Width": 1,
+      "Height": 1,
+      "GroundPattern": [
+        [
+          "I"
+        ]
+      ],
+      "IsRotatable": false,
+      "IsPassable": true,
+      "TilesetIndex": 4,
+      "MovementSpeedBuff": 0.1
     }
   ],
   "ManualCrafterItems": [
@@ -1160,23 +1166,6 @@
       "IsPassable": false,
       "OpenSoundEffect": "SoundEffects\\Minifantasy_Dungeon_SFX\\05_door_open_1",
       "CloseSoundEffect": "SoundEffects\\Minifantasy_Dungeon_SFX\\06_door_close_1"
-    }
-  ],
-  "AnimalSpawnerItems": [
-    {
-      "Id": 13000,
-      "Name": "hen_spawner",
-      "Description": "test",
-      "Width": 1,
-      "Height": 1,
-      "GroundPattern": [
-        [
-          "F"
-        ]
-      ],
-      "IsRotatable": false,
-      "IsPassable": true,
-      "AnimalName": "hen"
     }
   ],
   "AnimalFeederItems": [
@@ -1373,6 +1362,66 @@
       "IsRotatable": false,
       "IsPassable": false,
       "OpenSoundEffect": "SoundEffects\\Minifantasy_Dungeon_SFX\\01_chest_open_1"
+    }
+  ],
+  "AnimalItems": [],
+  "AdultAnimalItems": [
+    {
+      "Id": 19000,
+      "Name": "hen",
+      "Description": "test",
+      "IsStackable": false,
+      "IsTradable": false,
+      "IsDroppable": false,
+      "Price": 500,
+      "MovementSpeed": 3,
+      "SoundEffects": [
+        "SoundEffects\\Hen\\hen_1",
+        "SoundEffects\\Hen\\hen_2",
+        "SoundEffects\\Hen\\hen_3",
+        "SoundEffects\\Hen\\hen_4"
+      ]
+    },
+    {
+      "Id": 19001,
+      "Name": "goose",
+      "Description": "test",
+      "IsStackable": false,
+      "IsTradable": false,
+      "IsDroppable": false,
+      "Price": 750,
+      "MovementSpeed": 3,
+      "SoundEffects": [
+        "SoundEffects\\Goose\\goose_1",
+        "SoundEffects\\Goose\\goose_2",
+        "SoundEffects\\Goose\\goose_3"
+      ]
+    }
+  ],
+  "BabyAnimalItems": [
+    {
+      "Id": 20000,
+      "Name": "chick",
+      "Description": "test",
+      "IsStackable": false,
+      "IsTradable": false,
+      "IsDroppable": false,
+      "Price": 500,
+      "MovementSpeed": 3,
+      "AdultAnimalName": "hen",
+      "DaysUntilAging": 4
+    },
+    {
+      "Id": 20001,
+      "Name": "gosling",
+      "Description": "test",
+      "IsStackable": false,
+      "IsTradable": false,
+      "IsDroppable": false,
+      "Price": 500,
+      "MovementSpeed": 3,
+      "AdultAnimalName": "goose",
+      "DaysUntilAging": 5
     }
   ]
 }

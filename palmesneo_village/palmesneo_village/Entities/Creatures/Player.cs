@@ -18,6 +18,9 @@ namespace palmesneo_village
 
         private SpriteEntity bodySprite;
 
+        private Item handItem;
+        private ImageEntity handItemImage;
+
         private Direction movementDirection = Direction.Down;
 
         private bool isMoving = false;
@@ -31,10 +34,14 @@ namespace palmesneo_village
         {
             this.inventory = inventory;
 
+            IsDepthSortEnabled = true;
+
             // TODO: перестать использовать BodyImage
             BodyImage.IsVisible = false;
 
             CreateAndInitializeBodySprite(texture);
+
+            CreateAndInitializeHandItemImage();
 
             // TODO: создать отдельный класс для воспроизведения звуков
             grassShakeSFXs = new List<SoundEffectInstance>();
@@ -75,11 +82,35 @@ namespace palmesneo_village
             bodySprite.Play("idle_down");
         }
 
+        private void CreateAndInitializeHandItemImage()
+        {
+            handItemImage = new ImageEntity();
+            handItemImage.IsVisible = false;
+            AddChild(handItemImage);
+        }
+
         public override void Update()
         {
             base.Update();
 
             UpdateMovement();
+
+            Direction viewDirection = CalculateViewDirection();
+
+            UpdateBodySprite(viewDirection);
+
+            UpdateHandItemImage();
+
+            if (viewDirection == Direction.Up)
+            {
+                bodySprite.Depth = 1;
+                handItemImage.Depth = 0;
+            }
+            else
+            {
+                bodySprite.Depth = 0;
+                handItemImage.Depth = 1;
+            }
 
             UpdateItemsPickup();
 
@@ -134,15 +165,6 @@ namespace palmesneo_village
                     }
                 }
             }
-
-            if(movement != Vector2.Zero)
-            {
-                bodySprite.Play($"walk_{movementDirection.ToString().ToLower()}");
-            }
-            else
-            {
-                bodySprite.Play($"idle_{movementDirection.ToString().ToLower()}");
-            }
         }
 
         private bool IsValidMovement(Vector2 newPosition)
@@ -177,6 +199,86 @@ namespace palmesneo_village
             }
 
             return true;
+        }
+
+        private Direction CalculateViewDirection()
+        {
+            float radianAngle = Calc.Angle(GlobalPosition, MInput.Mouse.GlobalPosition);
+            float degreeAngle = MathHelper.ToDegrees(radianAngle) + 180;
+
+            if (degreeAngle >= 45 && degreeAngle < 135)
+            {
+                return Direction.Up;
+            }
+            else if (degreeAngle >= 135 && degreeAngle < 225)
+            {
+                return Direction.Right;
+            }
+            else if (degreeAngle >= 225 && degreeAngle < 315)
+            {
+                return Direction.Down;
+            }
+            else
+            {
+                return Direction.Left;
+            }
+        }
+
+        private void UpdateBodySprite(Direction viewDirection)
+        {
+            if (isMoving)
+            {
+                bodySprite.Play($"walk_{viewDirection.ToString().ToLower()}");
+            }
+            else
+            {
+                bodySprite.Play($"idle_{viewDirection.ToString().ToLower()}");
+            }
+        }
+
+        private void UpdateHandItemImage()
+        {
+            if (handItem == null) return;
+
+            float radianAngle = Calc.Angle(GlobalPosition, MInput.Mouse.GlobalPosition);
+            float degreeAngle = MathHelper.ToDegrees(radianAngle) + 180;
+
+            if(handItem is ToolItem toolItem)
+            {
+                handItemImage.LocalRotation = radianAngle;
+                handItemImage.Centered = false;
+                handItemImage.LocalScale = new Vector2(1.0f, 1.0f);
+
+                if ((degreeAngle >= 270 && degreeAngle <= 360) || (degreeAngle >= 0 && degreeAngle <= 90))
+                {
+                    handItemImage.FlipY = true;
+                    handItemImage.LocalPosition = new Vector2(-5, -5);
+                    handItemImage.Offset = new Vector2(toolItem.OffsetX, Engine.TILE_SIZE - toolItem.OffsetY);
+                }
+                else
+                {
+                    handItemImage.FlipY = false;
+                    handItemImage.LocalPosition = new Vector2(5, -5);
+                    handItemImage.Offset = new Vector2(toolItem.OffsetX, toolItem.OffsetY);
+                }
+            }
+            else
+            {
+                handItemImage.LocalRotation = 0f;
+                handItemImage.Centered = true;
+                handItemImage.LocalScale = new Vector2(0.7f, 0.7f);
+                handItemImage.Offset = Vector2.Zero;
+                handItemImage.FlipY = false;
+
+                if ((degreeAngle >= 270 && degreeAngle <= 360) || (degreeAngle >= 0 && degreeAngle <= 90))
+                {
+                    handItemImage.LocalPosition = new Vector2(-5, -5);
+                }
+                else
+                {
+                    handItemImage.LocalPosition = new Vector2(5, -5);
+                }
+            }
         }
 
         private void UpdateItemsPickup()
@@ -272,6 +374,21 @@ namespace palmesneo_village
             RenderManager.Line(checkPoints[1], checkPoints[3], Color.YellowGreen);
             RenderManager.Line(checkPoints[3], checkPoints[2], Color.YellowGreen);
             RenderManager.Line(checkPoints[2], checkPoints[0], Color.YellowGreen);
+        }
+    
+        public void SetHandItem(Item item)
+        {
+            handItem = item;
+
+            if(item != null)
+            {
+                handItemImage.IsVisible = true;
+                handItemImage.Texture = item.Icon;
+            }
+            else
+            {
+                handItemImage.IsVisible = false;
+            }
         }
     }
 }

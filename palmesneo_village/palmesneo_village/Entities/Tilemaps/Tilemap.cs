@@ -18,17 +18,20 @@ namespace palmesneo_village
             get => tileset;
             set
             {
+                if (tileset == value) return;
+
                 tileset = value;
 
                 isTilesetUpdated = true;
             }
         }
+        public int TileColumns { get; }
+        public int TileRows { get; }
 
         private TilesetConnection tilesetConnection = TilesetConnection.Individual;
+        private bool connectTilesetWithTilemapBorders;
         private int tileSize;
         private int chunkSize;
-        public int TileColumns { get; private set; }
-        public int TileRows { get; private set; }
 
         private int chunkColumns;
         private int chunkRows;
@@ -39,9 +42,11 @@ namespace palmesneo_village
 
         private bool isTilesetUpdated = false;
 
-        public Tilemap(TilesetConnection tilesetConnection, int tileSize, int chunkSize, int tileColumns, int tileRows)
+        public Tilemap(TilesetConnection tilesetConnection, bool connectTilesetWithTilemapBorders, 
+            int tileSize, int chunkSize, int tileColumns, int tileRows)
         {
             this.tilesetConnection = tilesetConnection;
+            this.connectTilesetWithTilemapBorders = connectTilesetWithTilemapBorders;
             this.tileSize = tileSize;
             this.chunkSize = chunkSize;
             TileColumns = tileColumns;
@@ -49,15 +54,7 @@ namespace palmesneo_village
 
             CreateChunks();
 
-            terrains = new int[this.TileColumns, this.TileRows];
-
-            for (int x = 0; x < this.TileColumns; x++)
-            {
-                for (int y = 0; y < this.TileRows; y++)
-                {
-                    terrains[x, y] = -1;
-                }
-            }
+            InitializeTerrains();
         }
 
         private void CreateChunks()
@@ -75,6 +72,19 @@ namespace palmesneo_village
                     int chunkY = y * chunkSize * tileSize;
 
                     chunks[x, y] = new Chunk(chunkX, chunkY, chunkSize, tileSize);
+                }
+            }
+        }
+
+        private void InitializeTerrains()
+        {
+            terrains = new int[TileColumns, TileRows];
+
+            for (int x = 0; x < TileColumns; x++)
+            {
+                for (int y = 0; y < TileRows; y++)
+                {
+                    terrains[x, y] = -1;
                 }
             }
         }
@@ -118,16 +128,16 @@ namespace palmesneo_village
             base.Render();
         }
 
-        public void SetCell(int x, int y, int terrain)
+        public bool TrySetCell(int x, int y, int terrain)
         {
-            if (x < 0 || y < 0 || x >= TileColumns || y >= TileRows)
+            if (IsWithinBounds(x, y) == false)
             {
-                throw new Exception("Out of bounds!");
+                return false;
             }
 
             if (terrains[x, y] == terrain)
             {
-                return;
+                return true;
             }
 
             terrains[x, y] = terrain;
@@ -165,11 +175,21 @@ namespace palmesneo_village
                     }
                     break;
             }
+
+            return true;
+        }
+
+        public void SetCell(int x, int y, int terrain)
+        {
+            if(TrySetCell(x, y, terrain) == false)
+            {
+                throw new Exception("Out of bounds!");
+            }
         }
 
         private void UpdateCell(int x, int y)
         {
-            if (x < 0 || y < 0 || x >= TileColumns || y >= TileRows)
+            if (IsWithinBounds(x, y) == false)
             {
                 return;
             }
@@ -190,7 +210,18 @@ namespace palmesneo_village
                         bool left = GetCell(x - 1, y) == terrain;
                         bool right = GetCell(x + 1, y) == terrain;
                         bool bottom = GetCell(x, y + 1) == terrain;
-                        
+
+                        if (connectTilesetWithTilemapBorders)
+                        {
+                            if(y - 1 < 0) top = true;
+
+                            if(x - 1 < 0) left = true;
+
+                            if(x + 1 >= TileColumns) right = true;
+
+                            if(y + 1 >= TileRows) bottom = true;
+                        }
+
                         int regionTileId = BitmaskGenerator.Get4BitBitmask(top, left, right, bottom);
 
                         int globalTileId = terrain * 16 + regionTileId;
@@ -209,6 +240,41 @@ namespace palmesneo_village
                         bool topRight = top && right ? GetCell(x + 1, y - 1) == terrain : false;
                         bool bottomLeft = bottom && left ? GetCell(x - 1, y + 1) == terrain : false;
                         bool bottomRight = bottom && right ? GetCell(x + 1, y + 1) == terrain : false;
+
+                        if (connectTilesetWithTilemapBorders)
+                        {
+                            if (y - 1 < 0) top = true;
+
+                            if (x - 1 < 0) left = true;
+
+                            if (x + 1 >= TileColumns) right = true;
+
+                            if (y + 1 >= TileRows) bottom = true;
+
+                            if(y - 1 < 0)
+                            {
+                                topLeft = true;
+                                topRight = true;
+                            }
+
+                            if(x - 1 < 0)
+                            {
+                                topLeft = true;
+                                bottomLeft = true;
+                            }
+
+                            if (y + 1 >= TileColumns)
+                            {
+                                bottomLeft = true;
+                                bottomRight = true;
+                            }
+
+                            if (x + 1 >= TileRows)
+                            {
+                                topRight = true;
+                                bottomRight = true;
+                            }
+                        }
 
                         int bitmask = BitmaskGenerator.Get8BitBitmask(topLeft, top, topRight, left, 
                             right, bottomLeft, bottom, bottomRight);
@@ -231,7 +297,7 @@ namespace palmesneo_village
 
         public int GetCell(int x, int y)
         {
-            if (x < 0 || y < 0 || x >= TileColumns || y >= TileRows)
+            if (IsWithinBounds(x, y) == false)
             {
                 return -1;
             }
@@ -241,7 +307,7 @@ namespace palmesneo_village
 
         private void SetCellTileId(int x, int y, int tileId)
         {
-            if (x < 0 || y < 0 || x >= TileColumns || y >= TileRows)
+            if(IsWithinBounds(x, y) == false)
             {
                 throw new Exception("Out of bounds!");
             }
@@ -263,6 +329,11 @@ namespace palmesneo_village
         public Vector2 MapToWorld(Vector2 vector)
         {
             return vector * tileSize;
+        }
+
+        public bool IsWithinBounds(int x, int y)
+        {
+            return x >= 0 && y >= 0 && x < TileColumns && y < TileRows;
         }
     }
 }

@@ -11,19 +11,18 @@ namespace palmesneo_village
         public TimeOfDayGradients()
         {
             Color nightColor = new Color(63, 137, 255);
-            Color sunriseColor = new Color(250, 180, 170);
+            Color sunriseColor = new Color(203, 178, 254);
             Color dayColor = Color.White;
             Color rainyDayColor = new Color(150, 150, 180);
 
             List<ColorPoint> sunnyColorPoints = new List<ColorPoint>()
             {
-                new ColorPoint(0, nightColor),
-                new ColorPoint(0.1f, nightColor),
+                new ColorPoint(0, sunriseColor),
                 new ColorPoint(0.25f, sunriseColor),
                 new ColorPoint(0.3f, dayColor),
                 new ColorPoint(0.7f,  dayColor),
-                new ColorPoint(0.75f, sunriseColor),
-                new ColorPoint(0.9f, nightColor),
+                new ColorPoint(0.75f, dayColor),
+                new ColorPoint(0.9f, sunriseColor),
                 new ColorPoint(1.0f, nightColor),
             };
 

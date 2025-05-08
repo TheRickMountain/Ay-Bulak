@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 
@@ -22,7 +23,7 @@ namespace palmesneo_village
         Cubic
     }
 
-    public class GradientTexture1D
+    public class GradientTexture1D : MTexture
     {
         private readonly int _width;
         
@@ -33,6 +34,7 @@ namespace palmesneo_village
         private InterpolationType _interpolationType;
 
         public GradientTexture1D(int width, List<ColorPoint> colorPoints, InterpolationType interpolationType)
+            : base(new Texture2D(Engine.Instance.GraphicsDevice, width, 1))
         {
             _width = width;
             _colorPoints = colorPoints;
@@ -43,6 +45,8 @@ namespace palmesneo_village
             _colors = new Color[_width];
 
             GenerateColorsData();
+
+            Texture.SetData(GetColors());
         }
 
         private void GenerateColorsData()

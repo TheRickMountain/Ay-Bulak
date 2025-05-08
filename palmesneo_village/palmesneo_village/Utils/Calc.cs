@@ -416,6 +416,16 @@ namespace palmesneo_village
             return choices[random.Next(choices.Length)];
         }
 
+        public static T ChooseOrDefault<T>(this Random random, T defaultValue, params T[] choices)
+        {
+            if(choices.Length == 0)
+            {
+                return defaultValue;
+            }
+
+            return choices[random.Next(choices.Length)];
+        }
+
         public static T Choose<T>(this Random random, List<T> choices)
         {
             return choices[random.Next(choices.Count)];
