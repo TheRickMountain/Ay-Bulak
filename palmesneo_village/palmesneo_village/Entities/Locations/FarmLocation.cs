@@ -45,11 +45,6 @@ namespace palmesneo_village
                 TryBuild(Engine.ItemsDatabase.GetItemByName<BuildingItem>("fence"), x, 48, Direction.Down);
             }
 
-            for (int x = 0; x < MapWidth; x++)
-            {
-                SetAirTile(x, 50, 11);
-            }
-
             BuildingItem toilet = Engine.ItemsDatabase.GetItemByName<BuildingItem>("toilet");
             TryBuild(toilet, 34, 24, Direction.Down);
 
@@ -101,18 +96,6 @@ namespace palmesneo_village
                         }
                     }
                 }
-            }
-
-            // Газовая труба
-            int gasPipePolesAmount = 6;
-
-            BuildingItem gasPipePoleItem = Engine.ItemsDatabase.GetItemByName<BuildingItem>("gas_pipe_pole");
-
-            for (int i = 0; i <= gasPipePolesAmount; i++)
-            {
-                int step = MapWidth / gasPipePolesAmount;
-
-                TryBuild(gasPipePoleItem, i * step, 53, Direction.Down);
             }
 
             // Линия электропередач

@@ -442,20 +442,6 @@
       "IsPassable": false
     },
     {
-      "Id": 1004,
-      "Name": "gas_pipe_pole",
-      "Description": "test",
-      "Width": 1,
-      "Height": 1,
-      "GroundPattern": [
-        [
-          "A"
-        ]
-      ],
-      "IsRotatable": false,
-      "IsPassable": false
-    },
-    {
       "Id": 1005,
       "Name": "wall_clock",
       "Description": "test",
