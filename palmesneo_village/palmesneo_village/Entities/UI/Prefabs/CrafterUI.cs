@@ -17,8 +17,8 @@ namespace palmesneo_village
         private CraftingRecipeButtonUI[,] craftingRecipeButtonsArray;
         private GridContainerUI gridContainer;
 
-        private const int COLUMNS = 6;
-        private const int ROWS = 4;
+        private const int COLUMNS = 10;
+        private const int ROWS = 5;
 
         private Tweener tweener = new Tweener();
 
@@ -143,6 +143,8 @@ namespace palmesneo_village
             CraftingRecipe craftingRecipe = craftingRecipeButtonUI.CraftingRecipe;
 
             if (craftingRecipe == null) return;
+
+            ResourcesManager.GetSoundEffect("SoundEffects", "UI Soundpack", "Abstract2").Play();
 
             tweener.TweenTo(
                         target: craftingRecipeButtonUI,
