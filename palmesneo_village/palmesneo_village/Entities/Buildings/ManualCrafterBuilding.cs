@@ -13,7 +13,7 @@ namespace palmesneo_village
         {
             foreach (JsonCraftingRecipe jsonCraftingRecipe in item.CraftingRecipes)
             {
-                CraftingRecipe craftingRecipe = Engine.CraftingRecipesDatabase.ConvertJsonCraftingRecipe(jsonCraftingRecipe);
+                CraftingRecipe craftingRecipe = Engine.ItemsDatabase.ConvertJsonCraftingRecipe(jsonCraftingRecipe);
                 craftingRecipes.Add(craftingRecipe);
             }
         }
@@ -22,7 +22,7 @@ namespace palmesneo_village
 
         public override void InteractAlternatively(Item item, PlayerEnergyManager playerEnergyManager)
         {
-            ((GameplayScene)Engine.CurrentScene).OpenCraftingInventoryUI(CraftingRecipes);
+            ((GameplayScene)Engine.CurrentScene).OpenCrafterUI(CraftingRecipes);
         }
     }
 }

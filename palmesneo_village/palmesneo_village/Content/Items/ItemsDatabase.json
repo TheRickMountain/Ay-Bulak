@@ -1056,6 +1056,74 @@
           ]
         }
       ]
+    },
+    {
+      "Id": 9001,
+      "Name": "workbench",
+      "Description": "workbench_description",
+      "IsStackable": false,
+      "Width": 2,
+      "Height": 1,
+      "GroundPattern": [
+        [
+          "A"
+        ],
+        [
+          "A"
+        ]
+      ],
+      "IsRotatable": false,
+      "IsPassable": false,
+      "CraftingRecipes": [
+        {
+          "Result": {
+            "Item": "chest",
+            "Amount": 1
+          },
+          "RequiredIngredients": [
+            {
+              "Item": "wood",
+              "Amount": 50
+            }
+          ]
+        },
+        {
+          "Result": {
+            "Item": "wooden_path",
+            "Amount": 1
+          },
+          "RequiredIngredients": [
+            {
+              "Item": "wood",
+              "Amount": 1
+            }
+          ]
+        },
+        {
+          "Result": {
+            "Item": "stone_path",
+            "Amount": 1
+          },
+          "RequiredIngredients": [
+            {
+              "Item": "stone",
+              "Amount": 1
+            }
+          ]
+        },
+        {
+          "Result": {
+            "Item": "hay_path",
+            "Amount": 1
+          },
+          "RequiredIngredients": [
+            {
+              "Item": "hay",
+              "Amount": 1
+            }
+          ]
+        }
+      ]
     }
   ],
   "WindowItems": [

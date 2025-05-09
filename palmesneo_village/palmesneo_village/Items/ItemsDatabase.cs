@@ -99,6 +99,32 @@ namespace palmesneo_village
             return floorPathItemsByTilesetIndex[tilesetIndex];
         }
 
+        public Ingredient ConvertJsonIngredient(JsonIngredient jsonIngredient)
+        {
+            Item item = GetItemByName(jsonIngredient.Item);
+
+            if (item == null)
+            {
+                throw new Exception($"Item with name {jsonIngredient.Item} not found in the database.");
+            }
+
+            return new Ingredient(item, jsonIngredient.Amount);
+        }
+
+        public CraftingRecipe ConvertJsonCraftingRecipe(JsonCraftingRecipe jsonCraftingRecipe)
+        {
+            Ingredient resultIngredient = ConvertJsonIngredient(jsonCraftingRecipe.Result);
+
+            List<Ingredient> requiredIngredients = new();
+
+            foreach (JsonIngredient jsonIngredient in jsonCraftingRecipe.RequiredIngredients)
+            {
+                requiredIngredients.Add(ConvertJsonIngredient(jsonIngredient));
+            }
+
+            return new CraftingRecipe(resultIngredient, requiredIngredients);
+        }
+
         private void ReadAndInitializeCollection(Item[] itemsArray, MTileset itemsIcons)
         {
             foreach(Item item in itemsArray)

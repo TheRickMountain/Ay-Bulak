@@ -127,7 +127,7 @@ namespace palmesneo_village
         private void ClearGrabbedItem()
         {
             grabbedItemContainer.Clear();
-            Parent.Parent.GetChildByName<ImageUI>("Cursor").RemoveChild(grabbedItemContainerVisualiser);
+            Parent.GetChildByName<ImageUI>("Cursor").RemoveChild(grabbedItemContainerVisualiser);
         }
 
         private void GrabItem(Item item, int quantity, int contentAmount)
@@ -139,9 +139,9 @@ namespace palmesneo_village
             grabbedItemContainerVisualiser.GetChildByName<ImageUI>("Icon").Texture = item.Icon;
             grabbedItemContainerVisualiser.GetChildByName<TextUI>("Quantity").Text = quantity.ToString();
 
-            if (Parent.Parent.GetChildByName<ImageUI>("Cursor").ContainsChild(grabbedItemContainerVisualiser) == false)
+            if (Parent.GetChildByName<ImageUI>("Cursor").ContainsChild(grabbedItemContainerVisualiser) == false)
             {
-                Parent.Parent.GetChildByName<ImageUI>("Cursor").AddChild(grabbedItemContainerVisualiser);
+                Parent.GetChildByName<ImageUI>("Cursor").AddChild(grabbedItemContainerVisualiser);
             }
         }
     }
