@@ -133,8 +133,13 @@ namespace palmesneo_village
             }
         }
 
+        public Action<EntityUI> MouseEntered { get; set; }
+        public Action<EntityUI> MouseExited { get; set; }
+
         private Matrix transformMatrix = Matrix.Identity;
         private Matrix invertedTransformMatrix = Matrix.Identity;
+
+        private bool isHovered = false;
 
         public EntityUI()
         {
@@ -147,11 +152,30 @@ namespace palmesneo_village
 
             base.Update();
 
+            UpdateMouseHover();
+
             if (string.IsNullOrEmpty(Tooltip) == false)
             {
                 if (Contains(MInput.Mouse.UIPosition))
                 {
                     Engine.CurrentScene.ShowTooltip(Tooltip);
+                }
+            }
+        }
+
+        private void UpdateMouseHover()
+        {
+            if (MouseEntered != null || MouseExited != null)
+            {
+                if (isHovered == false && Contains(MInput.Mouse.UIPosition))
+                {
+                    isHovered = true;
+                    MouseEntered?.Invoke(this);
+                }
+                else if (isHovered == true && Contains(MInput.Mouse.UIPosition) == false)
+                {
+                    isHovered = false;
+                    MouseExited?.Invoke(this);
                 }
             }
         }
