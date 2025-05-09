@@ -1,4 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
+using MonoGame.Extended.ECS;
+using MonoGame.Extended.Tweening;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -18,7 +20,7 @@ namespace palmesneo_village
         private const int COLUMNS = 6;
         private const int ROWS = 4;
 
-        // TODO: увеличивать размер иконки рецепта при наведении мыши
+        private Tweener tweener = new Tweener();
 
         public CrafterUI(Inventory inventory)
         {
@@ -44,7 +46,10 @@ namespace palmesneo_village
                 for (int x = 0; x < COLUMNS; x++)
                 {
                     CraftingRecipeButtonUI craftingRecipeButton = new CraftingRecipeButtonUI();
+                    craftingRecipeButton.Origin = craftingRecipeButton.Size / 2;
                     craftingRecipeButton.ActionTriggered += OnCraftingRecipeButtonPressed;
+                    craftingRecipeButton.MouseEntered += OnCraftingRecipeButtonMouseEntered;
+                    craftingRecipeButton.MouseExited += OnCraftingRecipeButtonMouseExited;
                     gridContainer.AddChild(craftingRecipeButton);
 
                     craftingRecipeButtonsArray[x, y] = craftingRecipeButton;
@@ -74,6 +79,8 @@ namespace palmesneo_village
 
         public override void Update()
         {
+            tweener.Update(Engine.DeltaTime);
+
             if (Contains(MInput.Mouse.UIPosition))
             {
                 int wheelDelta = 0;
@@ -127,6 +134,38 @@ namespace palmesneo_village
 
                 i++;
             }
+        }
+
+        private void OnCraftingRecipeButtonMouseEntered(EntityUI buttonUI)
+        {
+            CraftingRecipeButtonUI craftingRecipeButtonUI = (CraftingRecipeButtonUI)buttonUI;
+
+            CraftingRecipe craftingRecipe = craftingRecipeButtonUI.CraftingRecipe;
+
+            if (craftingRecipe == null) return;
+
+            tweener.TweenTo(
+                        target: craftingRecipeButtonUI,
+                        expression: x => craftingRecipeButtonUI.LocalScale,
+                        toValue: new Vector2(1.3f, 1.3f),
+                        duration: 0.2f)
+                        .Easing(EasingFunctions.CubicInOut);
+        }
+
+        private void OnCraftingRecipeButtonMouseExited(EntityUI buttonUI)
+        {
+            CraftingRecipeButtonUI craftingRecipeButtonUI = (CraftingRecipeButtonUI)buttonUI;
+
+            CraftingRecipe craftingRecipe = craftingRecipeButtonUI.CraftingRecipe;
+
+            if (craftingRecipe == null) return;
+
+            tweener.TweenTo(
+                        target: craftingRecipeButtonUI,
+                        expression: x => craftingRecipeButtonUI.LocalScale,
+                        toValue: new Vector2(1.0f, 1.0f),
+                        duration: 0.2f)
+                        .Easing(EasingFunctions.CubicInOut);
         }
 
         private void OnCraftingRecipeButtonPressed(ButtonUI buttonUI)
