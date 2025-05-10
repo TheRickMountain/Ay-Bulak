@@ -216,7 +216,19 @@ namespace palmesneo_village
                                 .Easing(EasingFunctions.BounceOut);
                         });
 
-            ResourcesManager.GetSoundEffect("SoundEffects", "pop_0").Play();
+            PlayItemPickupSoundEffect();
+        }
+
+        private void PlayItemPickupSoundEffect()
+        {
+            Calc.Random.Choose(
+                ResourcesManager.GetSoundEffect("SoundEffects", "pop_0"),
+                ResourcesManager.GetSoundEffect("SoundEffects", "pop_1"),
+                ResourcesManager.GetSoundEffect("SoundEffects", "pop_2"),
+                ResourcesManager.GetSoundEffect("SoundEffects", "pop_3"),
+                ResourcesManager.GetSoundEffect("SoundEffects", "pop_4"),
+                ResourcesManager.GetSoundEffect("SoundEffects", "pop_5")
+                ).Play();
         }
 
         private void OnScrollBarGrabberPositionChanged(ScrollBarUI scrollBarUI)
