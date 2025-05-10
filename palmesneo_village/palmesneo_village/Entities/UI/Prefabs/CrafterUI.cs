@@ -199,6 +199,24 @@ namespace palmesneo_village
             }
 
             UpdateCraftingRecipes();
+
+            tweener.TweenTo(
+                        target: craftingRecipeButtonUI,
+                        expression: x => craftingRecipeButtonUI.LocalScale,
+                        toValue: new Vector2(0.7f, 0.7f),
+                        duration: 0.1f)
+                        .Easing(EasingFunctions.CubicInOut)
+                        .OnEnd(tween =>
+                        {
+                            tweener.TweenTo(
+                                target: craftingRecipeButtonUI,
+                                expression: x => craftingRecipeButtonUI.LocalScale,
+                                toValue: new Vector2(1.3f, 1.3f),
+                                duration: 0.1f)
+                                .Easing(EasingFunctions.BounceOut);
+                        });
+
+            ResourcesManager.GetSoundEffect("SoundEffects", "pop_0").Play();
         }
 
         private void OnScrollBarGrabberPositionChanged(ScrollBarUI scrollBarUI)
