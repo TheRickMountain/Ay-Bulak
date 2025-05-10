@@ -30,17 +30,5 @@ namespace palmesneo_village
             return requiredIngredients;
         }
 
-        public override string ToString()
-        {
-            string info = Result.Item.GetTooltipInfo();
-            
-            foreach(Ingredient ingredient in requiredIngredients)
-            {
-                info += "\n" + LocalizationManager.GetText(ingredient.Item.Name) + " x" + ingredient.Amount;
-            }
-
-            return info;
-        }
-
     }
 }

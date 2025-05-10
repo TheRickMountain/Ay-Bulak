@@ -128,7 +128,7 @@ namespace palmesneo_village
 
                         bool canCraft = CanCraft(craftingRecipe);
 
-                        craftingRecipeButtonsArray[currentColumn, i].SetCraftingRecipe(craftingRecipe, canCraft);
+                        craftingRecipeButtonsArray[currentColumn, i].SetCraftingRecipe(craftingRecipe, canCraft, inventory);
                     }
                 }
 

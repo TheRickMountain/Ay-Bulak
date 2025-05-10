@@ -33,7 +33,7 @@ namespace palmesneo_village
             AddChild(resultItemAmount);
         }
 
-        public void SetCraftingRecipe(CraftingRecipe craftingRecipe, bool canCraft)
+        public void SetCraftingRecipe(CraftingRecipe craftingRecipe, bool canCraft, Inventory inventory)
         {
             CraftingRecipe = craftingRecipe;
 
@@ -57,7 +57,31 @@ namespace palmesneo_village
             resultItemAmount.Text = craftingRecipe.Result.Amount.ToString();
             resultItemAmount.SelfColor = canCraft ? Color.White : Color.White * 0.4f;
 
-            Tooltip = craftingRecipe.ToString();
+            Tooltip = CreateTooltipText(craftingRecipe, inventory);
+        }
+
+        private string CreateTooltipText(CraftingRecipe craftingRecipe, Inventory inventory)
+        {
+            string tooltipText = craftingRecipe.Result.Item.GetTooltipInfo();
+
+            foreach (Ingredient ingredient in craftingRecipe.GetRequiredIngredients())
+            {
+                int amountOfIngredientsInInventory = inventory.GetItemQuantity(ingredient.Item);
+                int requiredAmountOfIngredients = ingredient.Amount;
+
+                if (amountOfIngredientsInInventory < requiredAmountOfIngredients)
+                {
+                    tooltipText += $"\n{LocalizationManager.GetText(ingredient.Item.Name)}   " +
+                        $"/c[{ColorUtils.RED_HEX}]{amountOfIngredientsInInventory}/cd // {requiredAmountOfIngredients}";
+                }
+                else
+                {
+                    tooltipText += $"\n{LocalizationManager.GetText(ingredient.Item.Name)}   " +
+                        $"{amountOfIngredientsInInventory} // {requiredAmountOfIngredients}";
+                }
+            }
+
+            return tooltipText;
         }
 
         public void Clear()
