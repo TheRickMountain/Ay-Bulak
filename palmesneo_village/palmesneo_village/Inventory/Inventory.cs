@@ -56,7 +56,7 @@ namespace palmesneo_village
             return slotsByIndex[slotIndex].Item;
         }
 
-        public int GetItemQuantity(Item item)
+        public int GetTotalItemQuantity(Item item)
         {
             int quantity = 0;
 

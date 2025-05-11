@@ -53,7 +53,7 @@ namespace palmesneo_village
             if (inventory.IsSlotEmpty(slotIndex)) return;
 
             Item item = inventory.GetSlotItem(slotIndex);
-            int quantity = inventory.GetItemQuantity(item);
+            int quantity = inventory.GetSlotQuantity(slotIndex);
             int contentAmount = inventory.GetSlotContentAmount(slotIndex);
 
             if (toInventory.CanAddItem(item, quantity) == false) return;

@@ -30,6 +30,7 @@ iron_scythe,Iron scythe
 iron_showel,Iron showel
 iron_watering_can,Iron watering can
 meat,Meat
+not_enough_space_in_inventory,There is no free space in the inventory
 potato,Potato
 price,Price
 quests,Quests

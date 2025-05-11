@@ -126,9 +126,12 @@ namespace palmesneo_village
                     {
                         CraftingRecipe craftingRecipe = craftingRecipesList[craftingRecipeIndex];
 
-                        bool canCraft = CanCraft(craftingRecipe);
+                        string cantCraftReason;
+
+                        bool canCraft = CanCraft(craftingRecipe, out cantCraftReason);
 
                         craftingRecipeButtonsArray[currentColumn, i].SetCraftingRecipe(craftingRecipe, canCraft, inventory);
+                        craftingRecipeButtonsArray[currentColumn, i].Tooltip += $"\n/c[{ColorUtils.RED_HEX}]{cantCraftReason}/cd";
                     }
                 }
 
@@ -181,7 +184,7 @@ namespace palmesneo_village
             Item resultItem = craftingRecipe.Result.Item;
             int resultAmount = craftingRecipe.Result.Amount;
 
-            if (CanCraft(craftingRecipe) == false)
+            if (CanCraft(craftingRecipe, out _) == false)
             {
                 return;
             }
@@ -236,15 +239,24 @@ namespace palmesneo_village
             UpdateCraftingRecipes();
         }
 
-        private bool CanCraft(CraftingRecipe craftingRecipe)
+        private bool CanCraft(CraftingRecipe craftingRecipe, out string reasonMessage)
         {
-            foreach(Ingredient ingredient in craftingRecipe.GetRequiredIngredients())
+            if(inventory.CanAddItem(craftingRecipe.Result.Item, craftingRecipe.Result.Amount) == false)
             {
-                if (inventory.GetItemQuantity(ingredient.Item) < ingredient.Amount)
+                reasonMessage = LocalizationManager.GetText("not_enough_space_in_inventory");
+                return false;
+            }
+
+            foreach (Ingredient ingredient in craftingRecipe.GetRequiredIngredients())
+            {
+                if (inventory.GetTotalItemQuantity(ingredient.Item) < ingredient.Amount)
                 {
+                    reasonMessage = string.Empty;
                     return false;
                 }
             }
+
+            reasonMessage = string.Empty;
 
             return true;
         }

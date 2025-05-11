@@ -66,7 +66,7 @@ namespace palmesneo_village
 
             foreach (Ingredient ingredient in craftingRecipe.GetRequiredIngredients())
             {
-                int amountOfIngredientsInInventory = inventory.GetItemQuantity(ingredient.Item);
+                int amountOfIngredientsInInventory = inventory.GetTotalItemQuantity(ingredient.Item);
                 int requiredAmountOfIngredients = ingredient.Amount;
 
                 if (amountOfIngredientsInInventory < requiredAmountOfIngredients)
