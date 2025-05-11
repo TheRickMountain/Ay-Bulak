@@ -630,6 +630,55 @@
       "IsRotatable": false,
       "IsPassable": false,
       "IsFlat": false
+    },
+    {
+      "Id": 1015,
+      "Name": "tent",
+      "Description": "tent_description",
+      "IsStackable": false,
+      "Width": 3,
+      "Height": 3,
+      "GroundPattern": [
+        [
+          "A",
+          "A",
+          "A"
+        ],
+        [
+          "A",
+          "A",
+          "A"
+        ],
+        [
+          "A",
+          "A",
+          "A"
+        ]
+      ],
+      "IsRotatable": false,
+      "IsPassable": false,
+      "TeleportData": {
+        "TeleportPattern": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "Location": "tent",
+        "X": 8,
+        "Y": 10
+      }
     }
   ],
   "PlantItems": [

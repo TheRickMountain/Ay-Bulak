@@ -380,7 +380,7 @@ namespace palmesneo_village
         {
             handItem = item;
 
-            if(item != null)
+            if(item != null && item is not BuildingItem)
             {
                 handItemImage.IsVisible = true;
                 handItemImage.Texture = item.Icon;

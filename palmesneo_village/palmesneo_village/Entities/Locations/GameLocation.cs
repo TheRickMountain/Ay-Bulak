@@ -17,7 +17,9 @@ namespace palmesneo_village
         HouseFloor = 4,
         HouseWall = 5,
         CoopHouseFloor = 6,
-        AnimalHouseWall = 7
+        AnimalHouseWall = 7,
+        TentFloor = 8,
+        TentWall = 9
     }
 
     public enum GroundTopTile
@@ -710,6 +712,13 @@ namespace palmesneo_village
 
                                     ((GameplayScene)Engine.CurrentScene).RegisterLocation(location);
                                 }
+                                else if(teleportData.Location == "tent")
+                                {
+                                    TentLocation location = new TentLocation(
+                                        enterLocationId, new Teleport(LocationId, teleportEnterTile + new Vector2(0, 1)));
+
+                                    ((GameplayScene)Engine.CurrentScene).RegisterLocation(location);
+                                }
                             }
                         }
                     }
@@ -881,6 +890,7 @@ namespace palmesneo_village
             {
                 case GroundTile.AnimalHouseWall:
                 case GroundTile.HouseWall:
+                case GroundTile.TentWall:
                 case GroundTile.Water:
                     collisionMap[x, y] = false;
                     break;
