@@ -35,6 +35,24 @@
       "IsTradable": true,
       "IsDroppable": true,
       "Price": 10
+    },
+    {
+      "Id": 37,
+      "Name": "tea_leaf",
+      "Description": "test",
+      "IsStackable": true,
+      "IsTradable": true,
+      "IsDroppable": true,
+      "Price": 10
+    },
+    {
+      "Id": 38,
+      "Name": "black_tea",
+      "Description": "test",
+      "IsStackable": true,
+      "IsTradable": true,
+      "IsDroppable": true,
+      "Price": 0
     }
   ],
   "ToolItems": [
@@ -1115,10 +1133,10 @@
       "Height": 1,
       "GroundPattern": [
         [
-          "A"
+          "H"
         ],
         [
-          "A"
+          "H"
         ]
       ],
       "IsRotatable": false,
@@ -1171,6 +1189,38 @@
               "Amount": 1
             }
           ]
+        }
+      ]
+    }
+  ],
+  "AutoCrafterItems": [
+    {
+      "Id": 13000,
+      "Name": "samovar",
+      "Description": "samovar_description",
+      "IsStackable": false,
+      "Width": 1,
+      "Height": 1,
+      "GroundPattern": [
+        [
+          "H"
+        ]
+      ],
+      "IsRotatable": false,
+      "IsPassable": false,
+      "CraftingRecipes": [
+        {
+          "Result": {
+            "Item": "black_tea",
+            "Amount": 1
+          },
+          "RequiredIngredients": [
+            {
+              "Item": "tea_leaf",
+              "Amount": 1
+            }
+          ],
+          "CraftingTimeInHours": 0.2
         }
       ]
     }

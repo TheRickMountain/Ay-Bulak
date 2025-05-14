@@ -3,8 +3,10 @@ backpack_description,Permanently increases your inventory capacity
 beetroot,Beetroot
 beetroot_seeds,Beetroot seeds
 birch_seeds,Birch seeds
+black_tea,Black tea
 cabbage,Cabbage
 cabbage_seeds,Cabbage seeds
+cancel,Cancel
 carrot,Carrot
 carrot_seeds,Carrot seeds
 chest,Chest
@@ -19,6 +21,7 @@ energy,Energy
 fried_chicken_egg,Fried chicken egg
 garlic,Garlic
 garlic_seeds,Garlic seeds
+gather,Gather
 goose,Goose
 gosling,Gosling
 hay,Hay
@@ -35,6 +38,8 @@ potato,Potato
 price,Price
 quests,Quests
 round_rug,Round rug
+samovar,Samovar
+samovar_description,Start your day with a cup of hot tea
 small_backpack,Small backpack
 sprinkler,Sprinkler
 stone,Stone
@@ -42,6 +47,7 @@ stone_path,Stone path
 stove,Stove
 strawberry,Strawberry
 strawberry_seeds,Strawberry seeds
+tea_leaf,Tea leaf
 tent,Tent
 tent_description,A temporary shelter for a novice farmer!/nHere you can relax after a long day at the/nfarm and take shelter from the weather.
 tomato,Tomato

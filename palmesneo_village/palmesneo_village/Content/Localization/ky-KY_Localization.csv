@@ -3,8 +3,10 @@ backpack_description,
 beetroot,Кызылча
 beetroot_seeds,Кызылча уруктары
 birch_seeds,Кайың уруктары
+black_tea,Кара чай
 cabbage,
 cabbage_seeds,
+cancel,Жокко чыгаруу
 carrot,Сабиз
 carrot_seeds,Сабиз уруктары
 chest,Сандык
@@ -19,6 +21,7 @@ energy,Энергия
 fried_chicken_egg,Куурулган тоок жумурткасы
 garlic,Сарымсак
 garlic_seeds,Сарымсак уруктары
+gather,Чогултуу
 goose,Каз
 gosling,Каз балапаны
 hay,Чөп
@@ -35,6 +38,8 @@ potato,Картөшкө
 price,Баасы
 quests,Тапшырмалар
 round_rug,Тегерек килем
+samovar,Самавыр
+samovar_description,Күнүңүздү бир стакан ысык чай менен баштаңыз
 small_backpack,Кичинекей рюкзак
 sprinkler,Сепкич
 stone,Таш
@@ -42,6 +47,7 @@ stone_path,Таш жол
 stove,Меш
 strawberry,Кулпунай
 strawberry_seeds,Кулпунай уруктары
+tea_leaf,Чай жалбырагы
 tent,Чатыр
 tent_description,Башталгыч фермер үчүн убактылуу баш калкалоочу жай!/nМына сен аткара аласың отдохнуть кийин долгого күндөн/nфермада жана баш калкалоо элементтерден.
 tomato,Помидор

@@ -20,6 +20,7 @@ namespace palmesneo_village
         public ResourceItem[] ResourceItems { get; init; }
         public FloorPathItem[] FloorPathItems { get; init; }
         public ManualCrafterItem[] ManualCrafterItems { get; init; }
+        public AutoCrafterItem[] AutoCrafterItems { get; init; }
         public WindowItem[] WindowItems { get; init; }
         public SprinklerItem[] SprinklerItems { get; init; }
         public GateItem[] GateItems { get; init; }
@@ -53,6 +54,7 @@ namespace palmesneo_village
             ReadAndInitializeCollection(ResourceItems, itemsIcons);
             ReadAndInitializeCollection(FloorPathItems, itemsIcons);
             ReadAndInitializeCollection(ManualCrafterItems, itemsIcons);
+            ReadAndInitializeCollection(AutoCrafterItems, itemsIcons);
             ReadAndInitializeCollection(WindowItems, itemsIcons);
             ReadAndInitializeCollection(SprinklerItems, itemsIcons);
             ReadAndInitializeCollection(GateItems, itemsIcons);
@@ -122,7 +124,9 @@ namespace palmesneo_village
                 requiredIngredients.Add(ConvertJsonIngredient(jsonIngredient));
             }
 
-            return new CraftingRecipe(resultIngredient, requiredIngredients);
+            float craftingTimeInHours = jsonCraftingRecipe.CraftingTimeInHours;
+
+            return new CraftingRecipe(resultIngredient, requiredIngredients, craftingTimeInHours);
         }
 
         private void ReadAndInitializeCollection(Item[] itemsArray, MTileset itemsIcons)

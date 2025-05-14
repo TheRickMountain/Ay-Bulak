@@ -16,19 +16,17 @@ namespace palmesneo_village
     public class CraftingRecipe
     {
         public Ingredient Result { get; private set; }
+        public float CraftingTimeInHours { get; private set; } = 0;
 
         private List<Ingredient> requiredIngredients;
-
-        public CraftingRecipe(Ingredient result, List<Ingredient> requiredIngredients)
+        
+        public CraftingRecipe(Ingredient result, List<Ingredient> requiredIngredients, float craftingTimeInHours)
         {
             Result = result;
             this.requiredIngredients = requiredIngredients;
+            CraftingTimeInHours = craftingTimeInHours;
         }
 
-        public IEnumerable<Ingredient> GetRequiredIngredients()
-        {
-            return requiredIngredients;
-        }
-
+        public IReadOnlyList<Ingredient> RequiredIngredients => requiredIngredients;
     }
 }

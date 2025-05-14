@@ -7,15 +7,26 @@ using System.Threading.Tasks;
 
 namespace palmesneo_village
 {
+    public enum InteractionType
+    {
+        Gather,
+        Craft,
+        Cancel
+    }
+
     public class InteractionData
     {
+        public InteractionType InteractionType { get; private set; }
         public MTexture Icon { get; private set; }
         public string Information { get; private set; }
+        public bool IsActive { get; private set; }
 
-        public InteractionData(MTexture icon, string information)
+        public InteractionData(InteractionType interactionType, MTexture icon, string information, bool isActive)
         {
+            InteractionType = interactionType;
             Icon = icon;
             Information = information;
+            IsActive = isActive;
         }
 
     }

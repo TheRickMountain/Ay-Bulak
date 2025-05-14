@@ -196,7 +196,7 @@ namespace palmesneo_village
 
             inventory.TryAddItem(resultItem, resultAmount, 0);
 
-            foreach (Ingredient ingredient in craftingRecipe.GetRequiredIngredients())
+            foreach (Ingredient ingredient in craftingRecipe.RequiredIngredients)
             {
                 inventory.RemoveItem(ingredient.Item, ingredient.Amount);
             }
@@ -247,7 +247,7 @@ namespace palmesneo_village
                 return false;
             }
 
-            foreach (Ingredient ingredient in craftingRecipe.GetRequiredIngredients())
+            foreach (Ingredient ingredient in craftingRecipe.RequiredIngredients)
             {
                 if (inventory.GetTotalItemQuantity(ingredient.Item) < ingredient.Amount)
                 {

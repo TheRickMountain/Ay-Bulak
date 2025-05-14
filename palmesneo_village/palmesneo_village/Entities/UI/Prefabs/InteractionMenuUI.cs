@@ -58,9 +58,20 @@ namespace palmesneo_village
                 MiddleButtonUI button = buttons[i];
                 button.Origin = button.Size / 2;
                 button.SetMetadata("interaction_data", interaction);
-
                 button.GetChildByName<ImageUI>("Icon").Texture = interaction.Icon;
                 button.Tooltip = interaction.Information;
+
+                if (interaction.IsActive)
+                {
+                    button.IsDisabled = false;
+                    button.GetChildByName<ImageUI>("Icon").SelfColor = Color.White;
+                }
+                else
+                {
+                    button.IsDisabled = true;
+                    button.GetChildByName<ImageUI>("Icon").SelfColor = Color.White * 0.5f;
+                }
+
                 AddChild(button);
             }
 

@@ -615,6 +615,10 @@ namespace palmesneo_village
                 {
                     building = new ManualCrafterBuilding(this, manualCrafterItem, direction, tiles);
                 }
+                else if(buildingItem is AutoCrafterItem autoCrafterItem)
+                {
+                    building = new AutoCrafterBuilding(this, autoCrafterItem, direction, tiles);
+                }
                 else if (buildingItem is WindowItem windowItem)
                 {
                     building = new WindowBuilding(this, windowItem, direction, tiles);
@@ -627,23 +631,23 @@ namespace palmesneo_village
                 {
                     building = new GateBuilding(this, gateItem, direction, tiles);
                 }
-                else if(buildingItem is AnimalFeederItem animalFeederItem)
+                else if (buildingItem is AnimalFeederItem animalFeederItem)
                 {
                     building = new AnimalFeederBuilding(this, animalFeederItem, direction, tiles);
                 }
-                else if(buildingItem is BirdNestItem birdNestItem)
+                else if (buildingItem is BirdNestItem birdNestItem)
                 {
                     building = new BirdNestBuilding(this, birdNestItem, direction, tiles);
                 }
-                else if(buildingItem is GrassItem grassItem)
+                else if (buildingItem is GrassItem grassItem)
                 {
                     building = new GrassBuilding(this, grassItem, direction, tiles);
                 }
-                else if(buildingItem is WaterSourceItem waterSourceItem)
+                else if (buildingItem is WaterSourceItem waterSourceItem)
                 {
                     building = new WaterSourceBuilding(this, waterSourceItem, direction, tiles);
                 }
-                else if(buildingItem is StorageItem storageItem)
+                else if (buildingItem is StorageItem storageItem)
                 {
                     building = new StorageBuilding(this, storageItem, direction, tiles);
                 }
@@ -813,7 +817,8 @@ namespace palmesneo_village
                     {
                         return groundTile == GroundTile.Grass || 
                             groundTile == GroundTile.Ground ||
-                            groundTile == GroundTile.HouseFloor;
+                            groundTile == GroundTile.HouseFloor ||
+                            groundTile == GroundTile.TentFloor;
                     }
                 case "I":
                     {

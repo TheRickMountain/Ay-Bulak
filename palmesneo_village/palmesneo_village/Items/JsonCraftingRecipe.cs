@@ -14,5 +14,6 @@ namespace palmesneo_village
 
         public List<JsonIngredient> RequiredIngredients { get; init; }
 
+        public float CraftingTimeInHours { get; init; } = 0;
     }
 }
