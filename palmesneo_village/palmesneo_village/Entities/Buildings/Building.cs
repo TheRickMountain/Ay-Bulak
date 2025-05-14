@@ -57,7 +57,7 @@ namespace palmesneo_village
 
         }
 
-        public virtual void Interact(Item item, PlayerEnergyManager playerEnergyManager)
+        public virtual void Interact(Inventory inventory, int activeSlotIndex, PlayerEnergyManager playerEnergyManager)
         {
         }
 

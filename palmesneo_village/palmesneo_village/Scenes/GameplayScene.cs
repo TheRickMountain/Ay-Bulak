@@ -350,10 +350,11 @@ namespace palmesneo_village
 
                                     selectedAutoCrafterBuilding = autoCrafterBuilding;
                                 }
-
-                                // TEMP: temporarily commented
-                                //CurrentGameLocation.InteractWithTile(tileX, tileY, Inventory,
-                                //    inventoryHotbar.CurrentSlotIndex, PlayerEnergyManager, this, true);
+                                else
+                                {
+                                    CurrentGameLocation.InteractWithTile(tileX, tileY, PlayerInventory,
+                                        inventoryHotbar.CurrentSlotIndex, PlayerEnergyManager, this, true);
+                                }
                             }
                         }
 

@@ -72,8 +72,10 @@ namespace palmesneo_village
             Sprite.Texture = plantItem.GrowthStagesTextures[currentGrowthStage];
         }
 
-        public override void Interact(Item item, PlayerEnergyManager playerEnergyManager)
+        public override void Interact(Inventory inventory, int activeSlotIndex, PlayerEnergyManager playerEnergyManager)
         {
+            Item item = inventory.GetSlotItem(activeSlotIndex);
+
             if (IsRipe)
             {
                 Harvest();

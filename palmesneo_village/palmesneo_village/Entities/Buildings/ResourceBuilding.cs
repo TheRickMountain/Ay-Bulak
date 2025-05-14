@@ -17,8 +17,10 @@ namespace palmesneo_village
             currentStrength = resourceItem.Strength;
         }
 
-        public override void Interact(Item item, PlayerEnergyManager playerEnergyManager)
+        public override void Interact(Inventory inventory, int activeSlotIndex, PlayerEnergyManager playerEnergyManager)
         {
+            Item item = inventory.GetSlotItem(activeSlotIndex);
+
             if (resourceItem.RequiredToolType == ToolType.None)
             {
                 currentStrength--;

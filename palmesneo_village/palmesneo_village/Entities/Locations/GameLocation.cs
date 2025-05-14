@@ -281,7 +281,7 @@ namespace palmesneo_village
             }
         }
 
-        public void InteractWithTile(int x, int y, Inventory inventory, int slotIndex, PlayerEnergyManager playerEnergyManager,
+        public void InteractWithTile(int x, int y, Inventory inventory, int activeSlotIndex, PlayerEnergyManager playerEnergyManager,
             GameplayScene gameplayScene, bool isAlternativeInteraction)
         {
             if (isAlternativeInteraction)
@@ -294,7 +294,7 @@ namespace palmesneo_village
                 }
             }
 
-            Item handItem = inventory.GetSlotItem(slotIndex);
+            Item handItem = inventory.GetSlotItem(activeSlotIndex);
 
             Building building = buildingsMap[x, y];
 
@@ -306,7 +306,7 @@ namespace palmesneo_village
                 }
                 else
                 {
-                    building.Interact(handItem, playerEnergyManager);
+                    building.Interact(inventory, activeSlotIndex, playerEnergyManager);
                 }
             }
 
@@ -331,14 +331,14 @@ namespace palmesneo_village
                             if (GetGroundTile(x, y) == GroundTile.Water || building is WaterSourceBuilding)
                             {
                                 toolItem.PlaySoundEffect();
-                                inventory.AddSlotItemContentAmount(slotIndex, toolItem.Capacity);
+                                inventory.AddSlotItemContentAmount(activeSlotIndex, toolItem.Capacity);
                             }
                             else if (GetGroundTile(x, y) == GroundTile.FarmPlot)
                             {
-                                if (inventory.GetSlotContentAmount(slotIndex) > 0)
+                                if (inventory.GetSlotContentAmount(activeSlotIndex) > 0)
                                 {
                                     toolItem.PlaySoundEffect();
-                                    inventory.SubSlotItemContentAmount(slotIndex, 1);
+                                    inventory.SubSlotItemContentAmount(activeSlotIndex, 1);
                                     SetGroundTopTile(x, y, GroundTopTile.Moisture);
                                     playerEnergyManager.ConsumeEnergy(1);
                                 }
@@ -378,7 +378,7 @@ namespace palmesneo_village
 
                 if (TryBuild(plantItem, x, y, Direction.Down))
                 {
-                    inventory.RemoveItem(handItem, 1, slotIndex);
+                    inventory.RemoveItem(handItem, 1, activeSlotIndex);
                 }
             }
             else if (handItem is TreeSeedItem treeSeedItem)
@@ -387,7 +387,7 @@ namespace palmesneo_village
 
                 if (TryBuild(treeItem, x, y, Direction.Down))
                 {
-                    inventory.RemoveItem(handItem, 1, slotIndex);
+                    inventory.RemoveItem(handItem, 1, activeSlotIndex);
                 }
             }
         }
