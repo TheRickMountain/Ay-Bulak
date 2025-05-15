@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 
 namespace palmesneo_village
 {
@@ -30,6 +31,16 @@ namespace palmesneo_village
 
                 CurrentLocation.TrySpawnAnimal(adultAnimalItem, (int)tilePosition.X, (int)tilePosition.Y);
             }
+        }
+
+        public override IEnumerable<InteractionData> GetAvailableInteractions(Inventory inventory)
+        {
+            yield break;
+        }
+
+        public override void Interact(InteractionData interactionData, Inventory inventory)
+        {
+
         }
 
     }

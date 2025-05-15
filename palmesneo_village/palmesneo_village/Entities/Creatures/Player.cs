@@ -390,5 +390,15 @@ namespace palmesneo_village
                 handItemImage.IsVisible = false;
             }
         }
+
+        public override IEnumerable<InteractionData> GetAvailableInteractions(Inventory inventory)
+        {
+            yield break;
+        }
+
+        public override void Interact(InteractionData interactionData, Inventory inventory)
+        {
+
+        }
     }
 }

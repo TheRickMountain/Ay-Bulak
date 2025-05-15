@@ -471,6 +471,11 @@ namespace palmesneo_village
             return true;
         }
 
+        public IEnumerable<Creature> GetCreatures()
+        {
+            return entitiesList.GetChildren<Creature>();
+        }
+
         public void RemoveAnimal(Animal animal)
         {
             entitiesList.RemoveChild(animal);

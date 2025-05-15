@@ -313,7 +313,7 @@ namespace palmesneo_village
 
                         Item currentPlayerItem = PlayerInventory.GetSlotItem(hotbarCurrentSlotIndex);
 
-                        bool canUseItemOnPlayer = true;
+                        bool canUseInventoryItem = true;
 
                         // Handle building item selection
                         if (currentPlayerItem is BuildingItem buildingItem)
@@ -343,29 +343,27 @@ namespace palmesneo_village
                             }
                             else if (MInput.Mouse.PressedRightButton)
                             {
-                                if(CurrentGameLocation.TryGetTeleport(tileX, tileY) is Teleport teleport)
+                                if (TryToTeleport(mouseTile))
                                 {
-                                    GoToLocation(teleport.Location, teleport.Tile);
-
-                                    canUseItemOnPlayer = false;
+                                    canUseInventoryItem = false;
                                 }
-                                else if(CurrentGameLocation.GetBuilding(tileX, tileY) is InteractableEntity interactableEntity)
+                                else
                                 {
-                                    List<InteractionData> interactionList = interactableEntity.GetAvailableInteractions(PlayerInventory).ToList();
+                                    selectedInteractableEntity = TryGetInteractableEntityOnTile(mouseTile);
 
-                                    if (interactionList.Count > 0)
+                                    if (selectedInteractableEntity != null)
                                     {
-                                        OpenInteractionMenuUI(interactionList);
+                                        OpenInteractionMenuUI(selectedInteractableEntity.
+                                            GetAvailableInteractions(PlayerInventory)
+                                            .ToList());
 
-                                        selectedInteractableEntity = interactableEntity;
-
-                                        canUseItemOnPlayer = false;
+                                        canUseInventoryItem = false;
                                     }
                                 }
                             }
                         }
 
-                        if (MInput.Mouse.PressedRightButton && canUseItemOnPlayer)
+                        if (MInput.Mouse.PressedRightButton && canUseInventoryItem)
                         {
                             if (currentPlayerItem is ConsumableItem consumableItem)
                             {
@@ -506,6 +504,41 @@ namespace palmesneo_village
             }
 
             base.Update();
+        }
+
+        private bool TryToTeleport(Vector2 tile)
+        {
+            if (CurrentGameLocation.TryGetTeleport((int)tile.X, (int)tile.Y) is Teleport teleport)
+            {
+                GoToLocation(teleport.Location, teleport.Tile);
+
+                return true;
+            }
+
+            return false;
+        }
+
+        private InteractableEntity TryGetInteractableEntityOnTile(Vector2 tile)
+        {
+            // Check all creatures to interact with 
+            foreach (Creature creature in CurrentGameLocation.GetCreatures())
+            {
+                if (creature.GetTilePosition() == tile)
+                {
+                    List<InteractionData> interactionList = creature.GetAvailableInteractions(PlayerInventory).ToList();
+
+                    if (interactionList.Count > 0) return creature;
+                }
+            }
+
+            if (CurrentGameLocation.GetBuilding((int)tile.X, (int)tile.Y) is InteractableEntity interactableEntity)
+            {
+                List<InteractionData> interactionList = interactableEntity.GetAvailableInteractions(PlayerInventory).ToList();
+
+                if (interactionList.Count > 0) return interactableEntity;
+            }
+
+            return null;
         }
 
         public void StartNextDay()
