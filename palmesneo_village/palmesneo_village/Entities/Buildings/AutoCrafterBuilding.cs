@@ -77,11 +77,7 @@ namespace palmesneo_village
             }
         }
 
-        public override void InteractAlternatively(Item item, PlayerEnergyManager playerEnergyManager)
-        {
-        }
-
-        public void Interact(InteractionData interactionData, Inventory inventory)
+        public override void Interact(InteractionData interactionData, Inventory inventory)
         {
             switch(interactionData.InteractionType)
             {
@@ -119,7 +115,7 @@ namespace palmesneo_village
             }
         }
 
-        public IEnumerable<InteractionData> GetAvailableInteractions(Inventory inventory)
+        public override IEnumerable<InteractionData> GetAvailableInteractions(Inventory inventory)
         {
             switch(crafterState)
             {

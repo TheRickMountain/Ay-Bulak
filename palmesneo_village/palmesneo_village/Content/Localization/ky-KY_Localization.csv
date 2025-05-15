@@ -14,6 +14,7 @@ chest_description,Буюмдарды сактоо үчүн колдонулат
 chick,Чөжө
 chicken_egg,Тоок жумурткасы
 concrete_path,Бетон жол
+create_item,Предмет жасоо
 dirt_path,
 eggplant,Баклажан
 eggplant_seeds,Баклажан уруктары
@@ -34,12 +35,14 @@ iron_showel,Темир күрөк
 iron_watering_can,Темир лейка
 meat,Эт
 not_enough_space_in_inventory,Инвентарьда бош орун жок
+open_x,"""{0}"" ачуу"
 potato,Картөшкө
 price,Баасы
 quests,Тапшырмалар
 round_rug,Тегерек килем
 samovar,Самавыр
 samovar_description,Күнүңүздү бир стакан ысык чай менен баштаңыз
+sleep,Уктоо
 small_backpack,Кичинекей рюкзак
 sprinkler,Сепкич
 stone,Таш

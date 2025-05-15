@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 
 namespace palmesneo_village
@@ -7,21 +8,36 @@ namespace palmesneo_village
     {
         private StorageItem storageItem;
 
-        private Inventory inventory;
+        private Inventory storageInventory;
 
         public StorageBuilding(GameLocation gameLocation, StorageItem item, Direction direction, Vector2[,] occupiedTiles)
             : base(gameLocation, item, direction, occupiedTiles)
         {
             storageItem = item;
 
-            inventory = new Inventory(10, 3, 3);
+            storageInventory = new Inventory(10, 3, 3);
         }
 
-        public override void InteractAlternatively(Item item, PlayerEnergyManager playerEnergyManager)
+        public override void Interact(InteractionData interactionData, Inventory inventory)
         {
-            ((GameplayScene)Engine.CurrentScene).OpenStorageInventoryUI(inventory);
+            switch(interactionData.InteractionType)
+            {
+                case InteractionType.Open:
+                    {
+                        ((GameplayScene)Engine.CurrentScene).OpenStorageInventoryUI(storageInventory);
 
-            ResourcesManager.GetSoundEffect(storageItem.OpenSoundEffect)?.Play();
+                        ResourcesManager.GetSoundEffect(storageItem.OpenSoundEffect)?.Play();
+                    }
+                    break;
+            }
+        }
+
+        public override IEnumerable<InteractionData> GetAvailableInteractions(Inventory inventory)
+        {
+            yield return new InteractionData(InteractionType.Open,
+                ResourcesManager.GetTexture("Sprites", "chest_icon"),
+                LocalizationManager.GetText("open_x", LocalizationManager.GetText(storageItem.Name)),
+                true);
         }
     }
 }

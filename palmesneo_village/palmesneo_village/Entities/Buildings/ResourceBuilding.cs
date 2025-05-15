@@ -48,19 +48,6 @@ namespace palmesneo_village
             }
         }
 
-        public override void InteractAlternatively(Item item, PlayerEnergyManager playerEnergyManager)
-        {
-            if(resourceItem.RequiredToolType == ToolType.None)
-            {
-                currentStrength--;
-
-                if(currentStrength <= 0)
-                {
-                    GatherResource();
-                }
-            }
-        }
-
         private void GatherResource()
         {
             ItemContainer itemContainer = new ItemContainer();

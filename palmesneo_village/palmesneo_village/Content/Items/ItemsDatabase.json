@@ -1276,65 +1276,6 @@
       "IsDroppable": true
     }
   ],
-  "GateItems": [
-    {
-      "Id": 12000,
-      "Name": "small_main_gate",
-      "Description": "test",
-      "Width": 2,
-      "Height": 1,
-      "GroundPattern": [
-        [
-          "A"
-        ],
-        [
-          "A"
-        ]
-      ],
-      "IsRotatable": false,
-      "IsPassable": false,
-      "OpenSoundEffect": "SoundEffects\\Minifantasy_Dungeon_SFX\\05_door_open_1",
-      "CloseSoundEffect": "SoundEffects\\Minifantasy_Dungeon_SFX\\06_door_close_1"
-    },
-    {
-      "Id": 12001,
-      "Name": "big_left_main_gate",
-      "Description": "test",
-      "Width": 2,
-      "Height": 1,
-      "GroundPattern": [
-        [
-          "A"
-        ],
-        [
-          "A"
-        ]
-      ],
-      "IsRotatable": false,
-      "IsPassable": false,
-      "OpenSoundEffect": "SoundEffects\\Minifantasy_Dungeon_SFX\\05_door_open_1",
-      "CloseSoundEffect": "SoundEffects\\Minifantasy_Dungeon_SFX\\06_door_close_1"
-    },
-    {
-      "Id": 12002,
-      "Name": "big_right_main_gate",
-      "Description": "test",
-      "Width": 2,
-      "Height": 1,
-      "GroundPattern": [
-        [
-          "A"
-        ],
-        [
-          "A"
-        ]
-      ],
-      "IsRotatable": false,
-      "IsPassable": false,
-      "OpenSoundEffect": "SoundEffects\\Minifantasy_Dungeon_SFX\\05_door_open_1",
-      "CloseSoundEffect": "SoundEffects\\Minifantasy_Dungeon_SFX\\06_door_close_1"
-    }
-  ],
   "AnimalFeederItems": [
     {
       "Id": 14000,

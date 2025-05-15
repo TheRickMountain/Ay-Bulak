@@ -93,14 +93,6 @@ namespace palmesneo_village
             }
         }
 
-        public override void InteractAlternatively(Item item, PlayerEnergyManager playerEnergyManager)
-        {
-            if(IsRipe)
-            {
-                Harvest();
-            }
-        }
-
         private void Harvest()
         {
             if (isRemoved) return;

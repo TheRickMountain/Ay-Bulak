@@ -14,6 +14,7 @@ chest_description,Әйберләр саклау өчен кулланыла
 chick,Чеби
 chicken_egg,Тавык йомыркасы
 concrete_path,Бетон сукмак
+create_item,Предмет булдыру
 dirt_path,Сукмак
 eggplant,Баклажан
 eggplant_seeds,Баклажан орлыклары
@@ -34,12 +35,14 @@ iron_showel,Тимер көрәк
 iron_watering_can,Тимер лейка
 meat,Ит
 not_enough_space_in_inventory,Инвентарьда буш урын юк
+open_x,"""{0}"" ачарга"
 potato,Бәрәңге
 price,Бәя
 quests,Бурычлар
 round_rug,Түгәрәк келәм
 samovar,Самавыр
 samovar_description,Көнеңне бер кружка кайнар чәй белән башла
+sleep,Йокларга ятарга
 small_backpack,Кечкенә рюкзак
 sprinkler,Сиптергеч
 stone,Таш

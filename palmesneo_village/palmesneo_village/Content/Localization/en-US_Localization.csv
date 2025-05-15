@@ -14,6 +14,7 @@ chest_description,Used to store items
 chick,Chick
 chicken_egg,Chicken egg
 concrete_path,Concrete path
+create_item,Create item
 dirt_path,Dirt path
 eggplant,Eggplant
 eggplant_seeds,Eggplant seeds
@@ -34,12 +35,14 @@ iron_showel,Iron showel
 iron_watering_can,Iron watering can
 meat,Meat
 not_enough_space_in_inventory,There is no free space in the inventory
+open_x,"Open ""{0}"""
 potato,Potato
 price,Price
 quests,Quests
 round_rug,Round rug
 samovar,Samovar
 samovar_description,Start your day with a cup of hot tea
+sleep,Go to bed
 small_backpack,Small backpack
 sprinkler,Sprinkler
 stone,Stone

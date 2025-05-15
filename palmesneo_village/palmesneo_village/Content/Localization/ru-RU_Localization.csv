@@ -14,6 +14,7 @@ chest_description,Используется для хранения вещей
 chick,Цыпленок
 chicken_egg,Куриное яйцо
 concrete_path,Бетонная тропинка
+create_item,Создать предмет
 dirt_path,Грунтовая тропинка
 eggplant,Баклажан
 eggplant_seeds,Семена баклажана
@@ -34,12 +35,14 @@ iron_showel,Железная лопата
 iron_watering_can,Железная лейка
 meat,Мясо
 not_enough_space_in_inventory,Нет свободного места в инвентаре
+open_x,"Открыть ""{0}"""
 potato,Картофель
 price,Цена
 quests,Задачи
 round_rug,Круглый ковер
 samovar,Самовар
 samovar_description,Начни свой день с кружечки горячего чая
+sleep,Лечь спать
 small_backpack,Маленький рюкзак
 sprinkler,Поливалка
 stone,Камень

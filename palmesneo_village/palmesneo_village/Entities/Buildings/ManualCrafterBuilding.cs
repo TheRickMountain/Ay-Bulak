@@ -12,9 +12,23 @@ namespace palmesneo_village
             
         }
 
-        public override void InteractAlternatively(Item item, PlayerEnergyManager playerEnergyManager)
+        public override void Interact(InteractionData interactionData, Inventory inventory)
         {
-            ((GameplayScene)Engine.CurrentScene).OpenCrafterUI(CraftingRecipes);
+            switch (interactionData.InteractionType)
+            {
+                case InteractionType.ManualCraft:
+                    ((GameplayScene)Engine.CurrentScene).OpenCrafterUI(CraftingRecipes);
+                    break;
+            }
+        }
+
+        public override IEnumerable<InteractionData> GetAvailableInteractions(Inventory inventory)
+        {
+            yield return new InteractionData(
+                InteractionType.ManualCraft,
+                ResourcesManager.GetTexture("Sprites", "craft_icon"),
+                LocalizationManager.GetText("create_item"),
+                true);
         }
     }
 }

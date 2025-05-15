@@ -1,9 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
+using System.Collections.Generic;
 
 namespace palmesneo_village
 {
-    public class Building : Entity
+    public class Building : InteractableEntity
     {
         public bool IsPassable => buildingItem.IsPassable;
         public Vector2[,] OccupiedTiles { get; private set; }
@@ -61,8 +62,14 @@ namespace palmesneo_village
         {
         }
 
-        public virtual void InteractAlternatively(Item item, PlayerEnergyManager playerEnergyManager)
+        public override void Interact(InteractionData interactionData, Inventory inventory)
         {
+            
+        }
+
+        public override IEnumerable<InteractionData> GetAvailableInteractions(Inventory inventory)
+        {
+            yield break;
         }
     }
 }

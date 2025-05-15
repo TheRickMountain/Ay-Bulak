@@ -7,29 +7,13 @@ namespace palmesneo_village
 {
     public abstract class InteractableEntity : Entity
     {
-        public event Action Destroyed;
-
-        private bool isDestroyed;
-
         public InteractableEntity()
         {
 
         }
 
-        public void Destroy()
-        {
-            if (isDestroyed)
-            {
-                return;
-            }
+        public abstract void Interact(InteractionData interactionData, Inventory inventory);
 
-            Parent.RemoveChild(this);
-
-            isDestroyed = true;
-
-            Destroyed?.Invoke();
-        }
-
-        public abstract Rectangle GetSelectorBounds();
+        public abstract IEnumerable<InteractionData> GetAvailableInteractions(Inventory inventory);
     }
 }

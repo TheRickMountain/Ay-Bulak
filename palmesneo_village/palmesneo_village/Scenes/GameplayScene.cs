@@ -71,8 +71,7 @@ namespace palmesneo_village
 
         private MiddleButtonUI openQuestsButtonUI;
 
-        // TEMP: for testing
-        private AutoCrafterBuilding selectedAutoCrafterBuilding;
+        private InteractableEntity selectedInteractableEntity;
 
         public override void Begin()
         {
@@ -314,6 +313,8 @@ namespace palmesneo_village
 
                         Item currentPlayerItem = PlayerInventory.GetSlotItem(hotbarCurrentSlotIndex);
 
+                        bool canUseItemOnPlayer = true;
+
                         // Handle building item selection
                         if (currentPlayerItem is BuildingItem buildingItem)
                         {
@@ -338,27 +339,33 @@ namespace palmesneo_village
                             if (MInput.Mouse.PressedLeftButton)
                             {
                                 CurrentGameLocation.InteractWithTile(tileX, tileY, PlayerInventory,
-                                    inventoryHotbar.CurrentSlotIndex, PlayerEnergyManager, this, false);
+                                    inventoryHotbar.CurrentSlotIndex, PlayerEnergyManager);
                             }
                             else if (MInput.Mouse.PressedRightButton)
                             {
-                                Building building = CurrentGameLocation.GetBuilding(tileX, tileY);
-
-                                if(building is AutoCrafterBuilding autoCrafterBuilding)
+                                if(CurrentGameLocation.TryGetTeleport(tileX, tileY) is Teleport teleport)
                                 {
-                                    OpenInteractionMenuUI(autoCrafterBuilding.GetAvailableInteractions(PlayerInventory).ToList());
+                                    GoToLocation(teleport.Location, teleport.Tile);
 
-                                    selectedAutoCrafterBuilding = autoCrafterBuilding;
+                                    canUseItemOnPlayer = false;
                                 }
-                                else
+                                else if(CurrentGameLocation.GetBuilding(tileX, tileY) is InteractableEntity interactableEntity)
                                 {
-                                    CurrentGameLocation.InteractWithTile(tileX, tileY, PlayerInventory,
-                                        inventoryHotbar.CurrentSlotIndex, PlayerEnergyManager, this, true);
+                                    List<InteractionData> interactionList = interactableEntity.GetAvailableInteractions(PlayerInventory).ToList();
+
+                                    if (interactionList.Count > 0)
+                                    {
+                                        OpenInteractionMenuUI(interactionList);
+
+                                        selectedInteractableEntity = interactableEntity;
+
+                                        canUseItemOnPlayer = false;
+                                    }
                                 }
                             }
                         }
 
-                        if (MInput.Mouse.PressedRightButton)
+                        if (MInput.Mouse.PressedRightButton && canUseItemOnPlayer)
                         {
                             if (currentPlayerItem is ConsumableItem consumableItem)
                             {
@@ -648,7 +655,7 @@ namespace palmesneo_village
 
             gameState = GameState.Game;
 
-            selectedAutoCrafterBuilding.Interact(interactionData, PlayerInventory);
+            selectedInteractableEntity.Interact(interactionData, PlayerInventory);
         }
     }
 }

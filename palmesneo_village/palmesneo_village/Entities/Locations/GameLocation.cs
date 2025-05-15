@@ -281,33 +281,15 @@ namespace palmesneo_village
             }
         }
 
-        public void InteractWithTile(int x, int y, Inventory inventory, int activeSlotIndex, PlayerEnergyManager playerEnergyManager,
-            GameplayScene gameplayScene, bool isAlternativeInteraction)
+        public void InteractWithTile(int x, int y, Inventory inventory, int activeSlotIndex, PlayerEnergyManager playerEnergyManager)
         {
-            if (isAlternativeInteraction)
-            {
-                if (teleportsMap[x, y] != null)
-                {
-                    Teleport teleport = teleportsMap[x, y];
-                    gameplayScene.GoToLocation(teleport.Location, teleport.Tile);
-                    return;
-                }
-            }
-
             Item handItem = inventory.GetSlotItem(activeSlotIndex);
 
             Building building = buildingsMap[x, y];
 
             if (building != null)
             {
-                if (isAlternativeInteraction)
-                {
-                    building.InteractAlternatively(handItem, playerEnergyManager);
-                }
-                else
-                {
-                    building.Interact(inventory, activeSlotIndex, playerEnergyManager);
-                }
+                building.Interact(inventory, activeSlotIndex, playerEnergyManager);
             }
 
             if (handItem is ToolItem toolItem)
@@ -627,10 +609,6 @@ namespace palmesneo_village
                 {
                     building = new SprinklerBuilding(this, sprinklerItem, direction, tiles);
                 }
-                else if (buildingItem is GateItem gateItem)
-                {
-                    building = new GateBuilding(this, gateItem, direction, tiles);
-                }
                 else if (buildingItem is AnimalFeederItem animalFeederItem)
                 {
                     building = new AnimalFeederBuilding(this, animalFeederItem, direction, tiles);
@@ -860,6 +838,13 @@ namespace palmesneo_village
 
         #endregion
 
+        public Teleport TryGetTeleport(int x, int y)
+        {
+            if (groundTilemap.IsWithinBounds(x, y) == false) return null;
+
+            return teleportsMap[x, y];
+        }
+
         protected void CreateTeleport(int x, int y, Teleport teleport)
         {
             if (teleportsMap[x, y] != null)
@@ -910,11 +895,7 @@ namespace palmesneo_village
 
             if (buildingsMap[x, y] != null)
             {
-                if (buildingsMap[x, y] is GateBuilding gateBuilding)
-                {
-                    collisionMap[x, y] = gateBuilding.IsOpen;
-                }
-                else if (buildingsMap[x, y].IsPassable == false)
+                if (buildingsMap[x, y].IsPassable == false)
                 {
                     collisionMap[x, y] = false;
                 }

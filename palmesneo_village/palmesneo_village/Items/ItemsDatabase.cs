@@ -23,7 +23,6 @@ namespace palmesneo_village
         public AutoCrafterItem[] AutoCrafterItems { get; init; }
         public WindowItem[] WindowItems { get; init; }
         public SprinklerItem[] SprinklerItems { get; init; }
-        public GateItem[] GateItems { get; init; }
         public AnimalFeederItem[] AnimalFeederItems { get; init; }
         public BirdNestItem[] BirdNestItems { get; init; }
         public BackpackItem[] BackpackItems { get; init; }
@@ -57,7 +56,6 @@ namespace palmesneo_village
             ReadAndInitializeCollection(AutoCrafterItems, itemsIcons);
             ReadAndInitializeCollection(WindowItems, itemsIcons);
             ReadAndInitializeCollection(SprinklerItems, itemsIcons);
-            ReadAndInitializeCollection(GateItems, itemsIcons);
             ReadAndInitializeCollection(AnimalFeederItems, itemsIcons);
             ReadAndInitializeCollection(BirdNestItems, itemsIcons);
             ReadAndInitializeCollection(BackpackItems, itemsIcons);

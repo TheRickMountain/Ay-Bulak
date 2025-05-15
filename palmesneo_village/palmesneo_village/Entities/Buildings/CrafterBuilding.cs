@@ -19,11 +19,6 @@ namespace palmesneo_village
             }
         }
 
-        public IEnumerable<CraftingRecipe> CraftingRecipes => craftingRecipes;
-
-        public override void InteractAlternatively(Item item, PlayerEnergyManager playerEnergyManager)
-        {
-            ((GameplayScene)Engine.CurrentScene).OpenCrafterUI(CraftingRecipes);
-        }
+        public IReadOnlyList<CraftingRecipe> CraftingRecipes => craftingRecipes;
     }
 }

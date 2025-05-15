@@ -11,7 +11,10 @@ namespace palmesneo_village
     {
         Gather,
         Craft,
-        Cancel
+        Cancel,
+        Sleep,
+        ManualCraft,
+        Open
     }
 
     public class InteractionData
