@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 
 namespace palmesneo_village
 {
@@ -14,7 +15,7 @@ namespace palmesneo_village
             birdNestItem = item;
         }
 
-        public override void InteractAlternatively(Item item, PlayerEnergyManager playerEnergyManager)
+        public override void Interact(Inventory inventory, int activeSlotIndex, PlayerEnergyManager playerEnergyManager)
         {
             Gather();
 

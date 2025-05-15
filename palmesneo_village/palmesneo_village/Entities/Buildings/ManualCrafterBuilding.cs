@@ -4,25 +4,31 @@ using System.Collections.Generic;
 
 namespace palmesneo_village
 {
-    public class ManualCrafterBuilding : Building
+    public class ManualCrafterBuilding : CrafterBuilding
     {
-        private List<CraftingRecipe> craftingRecipes = new();
-
         public ManualCrafterBuilding(GameLocation gameLocation, ManualCrafterItem item, Direction direction, Vector2[,] occupiedTiles) 
             : base(gameLocation, item, direction, occupiedTiles)
         {
-            foreach (JsonCraftingRecipe jsonCraftingRecipe in item.CraftingRecipes)
+            
+        }
+
+        public override void Interact(InteractionData interactionData, Inventory inventory)
+        {
+            switch (interactionData.InteractionType)
             {
-                CraftingRecipe craftingRecipe = Engine.CraftingRecipesDatabase.ConvertJsonCraftingRecipe(jsonCraftingRecipe);
-                craftingRecipes.Add(craftingRecipe);
+                case InteractionType.ManualCraft:
+                    ((GameplayScene)Engine.CurrentScene).OpenCrafterUI(CraftingRecipes);
+                    break;
             }
         }
 
-        public IEnumerable<CraftingRecipe> CraftingRecipes => craftingRecipes;
-
-        public override void InteractAlternatively(Item item, PlayerEnergyManager playerEnergyManager)
+        public override IEnumerable<InteractionData> GetAvailableInteractions(Inventory inventory)
         {
-            ((GameplayScene)Engine.CurrentScene).OpenCraftingInventoryUI(CraftingRecipes);
+            yield return new InteractionData(
+                InteractionType.ManualCraft,
+                ResourcesManager.GetTexture("Sprites", "craft_icon"),
+                LocalizationManager.GetText("create_item"),
+                true);
         }
     }
 }

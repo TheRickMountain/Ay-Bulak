@@ -15,18 +15,6 @@ namespace palmesneo_village
 
             GenerateWaterTiles();
 
-            BuildingItem toilet = Engine.ItemsDatabase.GetItemByName<BuildingItem>("toilet");
-            TryBuild(toilet, 34, 24, Direction.Down);
-
-            BuildingItem playerHouse = Engine.ItemsDatabase.GetItemByName<BuildingItem>("player_house");
-            TryBuild(playerHouse, 23, 38, Direction.Down);
-
-            BuildingItem coop = Engine.ItemsDatabase.GetItemByName<BuildingItem>("coop");
-            TryBuild(coop, 40, 28, Direction.Down);
-
-            BuildingItem well = Engine.ItemsDatabase.GetItemByName<BuildingItem>("well");
-            TryBuild(well, 40, 42, Direction.Down);
-
             List<Point> buildableTiles = GetBuildableTiles();
 
             foreach(Point tile in buildableTiles)

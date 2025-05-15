@@ -16,31 +16,17 @@ namespace palmesneo_village
     public class CraftingRecipe
     {
         public Ingredient Result { get; private set; }
+        public float CraftingTimeInHours { get; private set; } = 0;
 
         private List<Ingredient> requiredIngredients;
-
-        public CraftingRecipe(Ingredient result, List<Ingredient> requiredIngredients)
+        
+        public CraftingRecipe(Ingredient result, List<Ingredient> requiredIngredients, float craftingTimeInHours)
         {
             Result = result;
             this.requiredIngredients = requiredIngredients;
+            CraftingTimeInHours = craftingTimeInHours;
         }
 
-        public IEnumerable<Ingredient> GetRequiredIngredients()
-        {
-            return requiredIngredients;
-        }
-
-        public override string ToString()
-        {
-            string info = Result.Item.GetTooltipInfo();
-            
-            foreach(Ingredient ingredient in requiredIngredients)
-            {
-                info += "\n" + LocalizationManager.GetText(ingredient.Item.Name) + " x" + ingredient.Amount;
-            }
-
-            return info;
-        }
-
+        public IReadOnlyList<Ingredient> RequiredIngredients => requiredIngredients;
     }
 }

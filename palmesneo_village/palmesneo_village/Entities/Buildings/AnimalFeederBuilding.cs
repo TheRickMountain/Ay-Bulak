@@ -14,20 +14,20 @@ namespace palmesneo_village
             animalFeederItem = item;
         }
 
-        public override void InteractAlternatively(Item item, PlayerEnergyManager playerEnergyManager)
+        public override void Interact(Inventory inventory, int activeSlotIndex, PlayerEnergyManager playerEnergyManager)
         {
-            if (item == null) return;
+            Item handItem = inventory.GetSlotItem(activeSlotIndex);
 
-            if (item.Name == "hay")
-            {
-                if (IsFull)
-                {
-                    return;
-                }
+            if (handItem == null) return;
 
-                IsFull = true;
-                Sprite.Texture = animalFeederItem.FullTexture;
-            }
+            if (handItem != Engine.ItemsDatabase.GetItemByName("hay")) return;
+
+            if (IsFull) return;
+
+            IsFull = true;
+            Sprite.Texture = animalFeederItem.FullTexture;
+            
+            inventory.RemoveItem(handItem, 1, activeSlotIndex);
         }
 
         public void Empty()

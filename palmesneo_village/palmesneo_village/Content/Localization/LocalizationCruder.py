@@ -168,8 +168,6 @@ class LocalizationEditor:
             widget.bind("<Control-KeyPress-X>", lambda e: widget.event_generate("<<Cut>>"))
             widget.bind("<Control-KeyPress-c>", lambda e: widget.event_generate("<<Copy>>"))
             widget.bind("<Control-KeyPress-C>", lambda e: widget.event_generate("<<Copy>>"))
-            widget.bind("<Control-KeyPress-v>", lambda e: widget.event_generate("<<Paste>>"))
-            widget.bind("<Control-KeyPress-V>", lambda e: widget.event_generate("<<Paste>>"))
 
             # Add explicit Cyrillic bindings as fallback/primary method if needed
             widget.bind("<Control-KeyPress-Cyrillic_che>", lambda e: widget.event_generate("<<Cut>>")) # ч -> x

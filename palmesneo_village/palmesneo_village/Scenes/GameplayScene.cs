@@ -3,16 +3,19 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 
 namespace palmesneo_village
 {
     public enum GameState
     {
         Game,
-        CraftingInventory,
+        Crafter,
+        Inventory,
         StorageInventory,
         Trading,
         Quests,
+        InteractionMenu,
         SceneTransitionIn,
         DayTransitionIn,
         TransitionOut
@@ -25,7 +28,7 @@ namespace palmesneo_village
             get => currentGameLocation;
         }
 
-        public Inventory Inventory { get; private set; }
+        public Inventory PlayerInventory { get; private set; }
 
         public PlayerMoneyManager PlayerMoneyManager { get; private set; }
 
@@ -59,20 +62,24 @@ namespace palmesneo_village
 
         private List<EntityUI> gameUIElements = new();
 
-        private CrafringInventoryUI craftingInventoryUI;
+        private CrafterUI crafterUI;
+        private DraggableInventoryUI inventoryUI;
         private StorageInventoryUI storageInventoryUI;
         private TradingUI tradingUI;
         private QuestsUI questsUI;
+        private InteractionMenuUI interactionMenuUI;
 
         private MiddleButtonUI openQuestsButtonUI;
+
+        private InteractableEntity selectedInteractableEntity;
 
         public override void Begin()
         {
             MasterEntity.IsDepthSortEnabled = true;
 
-            Inventory = new Inventory(10, 2, 4);
+            PlayerInventory = new Inventory(10, 2, 4);
 
-            inventoryHotbar = new InventoryHotbar(Inventory);
+            inventoryHotbar = new InventoryHotbar(PlayerInventory);
             MasterEntity.AddChild(inventoryHotbar);
 
             timeOfDayManager = new TimeOfDayManager();
@@ -81,7 +88,7 @@ namespace palmesneo_village
 
             QuestManager = new QuestManager();
 
-            player = new Player("Player", ResourcesManager.GetTexture("Sprites", "player"), 80, Inventory);
+            player = new Player("Player", ResourcesManager.GetTexture("Sprites", "player"), 80, PlayerInventory);
 
             RegisterLocation(new FarmLocation("farm"));
 
@@ -96,12 +103,12 @@ namespace palmesneo_village
             PlayerEnergyManager = new PlayerEnergyManager(100, 100);
             PlayerMoneyManager = new PlayerMoneyManager();
 
-            Inventory.SlotDataChanged += OnInventorySlotDataChanged;
+            PlayerInventory.SlotDataChanged += OnInventorySlotDataChanged;
             inventoryHotbar.CurrentSlotIndexChanged += OnInventoryHotbarCurrentSlotIndexChanged;
 
             #region UI
 
-            InventoryHotbarUI inventoryHotbarUI = new InventoryHotbarUI(Inventory, inventoryHotbar);
+            InventoryHotbarUI inventoryHotbarUI = new InventoryHotbarUI(PlayerInventory, inventoryHotbar);
             inventoryHotbarUI.Anchor = Anchor.BottomCenter;
             inventoryHotbarUI.LocalPosition = new Vector2(0, -5);
             MasterUIEntity.AddChild(inventoryHotbarUI);
@@ -140,17 +147,23 @@ namespace palmesneo_village
             gameUIElements.Add(timeText);
             gameUIElements.Add(openQuestsButtonUI);
 
-            craftingInventoryUI = new CrafringInventoryUI(Inventory, player);
-            craftingInventoryUI.Anchor = Anchor.Center;
+            crafterUI = new CrafterUI(PlayerInventory);
+            crafterUI.Anchor = Anchor.Center;
+
+            inventoryUI = new DraggableInventoryUI(player);
+            inventoryUI.Anchor = Anchor.Center;
 
             storageInventoryUI = new StorageInventoryUI();
             storageInventoryUI.Anchor = Anchor.Center;
 
-            tradingUI = new TradingUI(Inventory, PlayerMoneyManager);
+            tradingUI = new TradingUI(PlayerInventory, PlayerMoneyManager);
             tradingUI.Anchor = Anchor.Center;
 
             questsUI = new QuestsUI(QuestManager, PlayerMoneyManager);
             questsUI.Anchor = Anchor.Center;
+
+            interactionMenuUI = new InteractionMenuUI();
+            interactionMenuUI.InteractionSelected += OnInteractionMenuInteractionSelected;
 
             transitionImage = new ImageUI();
             transitionImage.Texture = RenderManager.Pixel;
@@ -164,14 +177,14 @@ namespace palmesneo_village
 
             PlayerMoneyManager.MoneyAmount = 500;
 
-            Inventory.TryAddItem(Engine.ItemsDatabase.GetItemByName("iron_pickaxe"), 1, 0);
-            Inventory.TryAddItem(Engine.ItemsDatabase.GetItemByName("iron_axe"), 1, 0);
-            Inventory.TryAddItem(Engine.ItemsDatabase.GetItemByName("iron_showel"), 1, 0);
-            Inventory.TryAddItem(Engine.ItemsDatabase.GetItemByName("iron_scythe"), 1, 0);
+            PlayerInventory.TryAddItem(Engine.ItemsDatabase.GetItemByName("iron_pickaxe"), 1, 0);
+            PlayerInventory.TryAddItem(Engine.ItemsDatabase.GetItemByName("iron_axe"), 1, 0);
+            PlayerInventory.TryAddItem(Engine.ItemsDatabase.GetItemByName("iron_showel"), 1, 0);
+            PlayerInventory.TryAddItem(Engine.ItemsDatabase.GetItemByName("iron_scythe"), 1, 0);
 
             ToolItem ironWateringCan = Engine.ItemsDatabase.GetItemByName<ToolItem>("iron_watering_can");
 
-            Inventory.TryAddItem(ironWateringCan, 1, ironWateringCan.Capacity);
+            PlayerInventory.TryAddItem(ironWateringCan, 1, ironWateringCan.Capacity);
 
             base.Begin();
         }
@@ -194,6 +207,21 @@ namespace palmesneo_village
 
             switch (gameState)
             {
+                case GameState.InteractionMenu:
+                    {
+                        if (InputBindings.Exit.Pressed)
+                        {
+                            foreach (var gameUIElement in gameUIElements)
+                            {
+                                MasterUIEntity.AddChild(gameUIElement);
+                            }
+
+                            MasterUIEntity.RemoveChild(interactionMenuUI);
+
+                            gameState = GameState.Game;
+                        }
+                    }
+                    break;
                 case GameState.Quests:
                     {
                         if (InputBindings.Exit.Pressed)
@@ -224,17 +252,32 @@ namespace palmesneo_village
                         }
                     }
                     break;
-                case GameState.CraftingInventory:
+                case GameState.Inventory:
                     {
-                        if (InputBindings.Exit.Pressed && craftingInventoryUI.IsItemGrabbed() == false)
+                        if (InputBindings.Exit.Pressed && inventoryUI.IsItemGrabbed() == false)
                         {
                             foreach (var gameUIElement in gameUIElements)
                             {
                                 MasterUIEntity.AddChild(gameUIElement);
                             }
 
-                            craftingInventoryUI.Close();
-                            MasterUIEntity.RemoveChild(craftingInventoryUI);
+                            inventoryUI.Close();
+                            MasterUIEntity.RemoveChild(inventoryUI);
+
+                            gameState = GameState.Game;
+                        }
+                    }
+                    break;
+                case GameState.Crafter:
+                    {
+                        if (InputBindings.Exit.Pressed)
+                        {
+                            foreach (var gameUIElement in gameUIElements)
+                            {
+                                MasterUIEntity.AddChild(gameUIElement);
+                            }
+
+                            MasterUIEntity.RemoveChild(crafterUI);
 
                             gameState = GameState.Game;
                         }
@@ -268,7 +311,9 @@ namespace palmesneo_village
 
                         int hotbarCurrentSlotIndex = inventoryHotbar.CurrentSlotIndex;
 
-                        Item currentPlayerItem = Inventory.GetSlotItem(hotbarCurrentSlotIndex);
+                        Item currentPlayerItem = PlayerInventory.GetSlotItem(hotbarCurrentSlotIndex);
+
+                        bool canUseItemOnPlayer = true;
 
                         // Handle building item selection
                         if (currentPlayerItem is BuildingItem buildingItem)
@@ -282,7 +327,7 @@ namespace palmesneo_village
                             {
                                 if (buildingSystem.TryPlaceBuilding(mouseTile))
                                 {
-                                    Inventory.RemoveItem(buildingItem, 1, inventoryHotbar.CurrentSlotIndex);
+                                    PlayerInventory.RemoveItem(buildingItem, 1, inventoryHotbar.CurrentSlotIndex);
                                 }
                             }
                         }
@@ -293,29 +338,46 @@ namespace palmesneo_village
 
                             if (MInput.Mouse.PressedLeftButton)
                             {
-                                CurrentGameLocation.InteractWithTile(tileX, tileY, Inventory,
-                                    inventoryHotbar.CurrentSlotIndex, PlayerEnergyManager, this, false);
+                                CurrentGameLocation.InteractWithTile(tileX, tileY, PlayerInventory,
+                                    inventoryHotbar.CurrentSlotIndex, PlayerEnergyManager);
                             }
                             else if (MInput.Mouse.PressedRightButton)
                             {
-                                CurrentGameLocation.InteractWithTile(tileX, tileY, Inventory,
-                                    inventoryHotbar.CurrentSlotIndex, PlayerEnergyManager, this, true);
+                                if(CurrentGameLocation.TryGetTeleport(tileX, tileY) is Teleport teleport)
+                                {
+                                    GoToLocation(teleport.Location, teleport.Tile);
+
+                                    canUseItemOnPlayer = false;
+                                }
+                                else if(CurrentGameLocation.GetBuilding(tileX, tileY) is InteractableEntity interactableEntity)
+                                {
+                                    List<InteractionData> interactionList = interactableEntity.GetAvailableInteractions(PlayerInventory).ToList();
+
+                                    if (interactionList.Count > 0)
+                                    {
+                                        OpenInteractionMenuUI(interactionList);
+
+                                        selectedInteractableEntity = interactableEntity;
+
+                                        canUseItemOnPlayer = false;
+                                    }
+                                }
                             }
                         }
 
-                        if (MInput.Mouse.PressedRightButton)
+                        if (MInput.Mouse.PressedRightButton && canUseItemOnPlayer)
                         {
                             if (currentPlayerItem is ConsumableItem consumableItem)
                             {
                                 PlayerEnergyManager.AddEnergy(consumableItem.EnergyAmount);
 
-                                Inventory.RemoveItem(currentPlayerItem, 1, inventoryHotbar.CurrentSlotIndex);
+                                PlayerInventory.RemoveItem(currentPlayerItem, 1, inventoryHotbar.CurrentSlotIndex);
                             }
                             else if(currentPlayerItem is BackpackItem)
                             {
-                                Inventory.Expand();
+                                PlayerInventory.Expand();
 
-                                Inventory.RemoveItem(currentPlayerItem, 1, inventoryHotbar.CurrentSlotIndex);
+                                PlayerInventory.RemoveItem(currentPlayerItem, 1, inventoryHotbar.CurrentSlotIndex);
 
                                 ResourcesManager.GetSoundEffect("SoundEffects", "Minifantasy_Dungeon_SFX", "04_sack_open_3").Play();
                             }
@@ -325,14 +387,14 @@ namespace palmesneo_village
                         {
                             StartNextDay();
                         }
-                    
-                        if(InputBindings.Exit.Pressed)
+
+                        if (InputBindings.Exit.Pressed)
                         {
-                            OpenCraftingInventoryUI(Engine.CraftingRecipesDatabase.GetCraftingRecipes());
+                            OpenInventoryUI();
                         }
 
                         // TODO: temp
-                        if(MInput.Keyboard.Pressed(Microsoft.Xna.Framework.Input.Keys.T))
+                        if (MInput.Keyboard.Pressed(Microsoft.Xna.Framework.Input.Keys.T))
                         {
                             foreach (var gameUIElement in gameUIElements)
                             {
@@ -341,7 +403,7 @@ namespace palmesneo_village
 
                             MasterUIEntity.AddChild(tradingUI);
                             // TODO: Temp
-                            tradingUI.Open(Inventory, PlayerMoneyManager, new List<Item>() 
+                            tradingUI.Open(PlayerInventory, PlayerMoneyManager, new List<Item>() 
                             {
                                 Engine.ItemsDatabase.GetItemByName("small_backpack"),
                                 Engine.ItemsDatabase.GetItemByName("sprinkler"),
@@ -476,17 +538,30 @@ namespace palmesneo_village
             gameLocations.Add(gameLocation.LocationId, gameLocation);
         }
 
-        public void OpenCraftingInventoryUI(IEnumerable<CraftingRecipe> craftingRecipes)
+        public void OpenInventoryUI()
         {
             foreach (var gameUIElement in gameUIElements)
             {
                 MasterUIEntity.RemoveChild(gameUIElement);
             }
 
-            MasterUIEntity.AddChild(craftingInventoryUI);
-            craftingInventoryUI.Open(craftingRecipes);
+            MasterUIEntity.AddChild(inventoryUI);
+            inventoryUI.Open(PlayerInventory);
 
-            gameState = GameState.CraftingInventory;
+            gameState = GameState.Inventory;
+        }
+
+        public void OpenCrafterUI(IEnumerable<CraftingRecipe> craftingRecipes)
+        {
+            foreach (var gameUIElement in gameUIElements)
+            {
+                MasterUIEntity.RemoveChild(gameUIElement);
+            }
+            
+            MasterUIEntity.AddChild(crafterUI);
+            crafterUI.Open(craftingRecipes);
+
+            gameState = GameState.Crafter;
         }
 
         public void OpenStorageInventoryUI(Inventory storageInventory)
@@ -497,7 +572,7 @@ namespace palmesneo_village
             }
 
             MasterUIEntity.AddChild(storageInventoryUI);
-            storageInventoryUI.Open(storageInventory, Inventory);
+            storageInventoryUI.Open(storageInventory, PlayerInventory);
             
             gameState = GameState.StorageInventory;
         }
@@ -515,6 +590,21 @@ namespace palmesneo_village
             gameState = GameState.Quests;
         }
 
+        public void OpenInteractionMenuUI(List<InteractionData> interactionList)
+        {
+            foreach (var gameUIElement in gameUIElements)
+            {
+                MasterUIEntity.RemoveChild(gameUIElement);
+            }
+
+            MasterUIEntity.AddChild(interactionMenuUI);
+            interactionMenuUI.Open(interactionList);
+
+            interactionMenuUI.LocalPosition = MInput.Mouse.UIScaledPosition;
+
+            gameState = GameState.InteractionMenu;
+        }
+
         private bool CanShowTileSelector(Vector2 playerTile, Vector2 mouseTile, int maxDistance)
         {
             if (playerTile == mouseTile)
@@ -529,7 +619,7 @@ namespace palmesneo_village
 
         private void OnInventoryHotbarCurrentSlotIndexChanged(int slotIndex)
         {
-            SetCurrentPlayerItem(Inventory.GetSlotItem(slotIndex));
+            SetCurrentPlayerItem(PlayerInventory.GetSlotItem(slotIndex));
         }
 
         private void OnInventorySlotDataChanged(Inventory inventory, int slotIndex)
@@ -552,6 +642,20 @@ namespace palmesneo_village
             }
 
             player.SetHandItem(item);
+        }
+
+        private void OnInteractionMenuInteractionSelected(InteractionData interactionData)
+        {
+            foreach (var gameUIElement in gameUIElements)
+            {
+                MasterUIEntity.AddChild(gameUIElement);
+            }
+
+            MasterUIEntity.RemoveChild(interactionMenuUI);
+
+            gameState = GameState.Game;
+
+            selectedInteractableEntity.Interact(interactionData, PlayerInventory);
         }
     }
 }

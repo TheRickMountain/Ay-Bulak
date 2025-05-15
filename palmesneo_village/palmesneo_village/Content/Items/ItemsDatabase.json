@@ -35,6 +35,24 @@
       "IsTradable": true,
       "IsDroppable": true,
       "Price": 10
+    },
+    {
+      "Id": 37,
+      "Name": "tea_leaf",
+      "Description": "test",
+      "IsStackable": true,
+      "IsTradable": true,
+      "IsDroppable": true,
+      "Price": 10
+    },
+    {
+      "Id": 38,
+      "Name": "black_tea",
+      "Description": "test",
+      "IsStackable": true,
+      "IsTradable": true,
+      "IsDroppable": true,
+      "Price": 0
     }
   ],
   "ToolItems": [
@@ -630,6 +648,55 @@
       "IsRotatable": false,
       "IsPassable": false,
       "IsFlat": false
+    },
+    {
+      "Id": 1015,
+      "Name": "tent",
+      "Description": "tent_description",
+      "IsStackable": false,
+      "Width": 3,
+      "Height": 3,
+      "GroundPattern": [
+        [
+          "A",
+          "A",
+          "A"
+        ],
+        [
+          "A",
+          "A",
+          "A"
+        ],
+        [
+          "A",
+          "A",
+          "A"
+        ]
+      ],
+      "IsRotatable": false,
+      "IsPassable": false,
+      "TeleportData": {
+        "TeleportPattern": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "Location": "tent",
+        "X": 8,
+        "Y": 10
+      }
     }
   ],
   "PlantItems": [
@@ -1056,6 +1123,106 @@
           ]
         }
       ]
+    },
+    {
+      "Id": 9001,
+      "Name": "workbench",
+      "Description": "workbench_description",
+      "IsStackable": false,
+      "Width": 2,
+      "Height": 1,
+      "GroundPattern": [
+        [
+          "H"
+        ],
+        [
+          "H"
+        ]
+      ],
+      "IsRotatable": false,
+      "IsPassable": false,
+      "CraftingRecipes": [
+        {
+          "Result": {
+            "Item": "chest",
+            "Amount": 1
+          },
+          "RequiredIngredients": [
+            {
+              "Item": "wood",
+              "Amount": 50
+            }
+          ]
+        },
+        {
+          "Result": {
+            "Item": "wooden_path",
+            "Amount": 1
+          },
+          "RequiredIngredients": [
+            {
+              "Item": "wood",
+              "Amount": 1
+            }
+          ]
+        },
+        {
+          "Result": {
+            "Item": "stone_path",
+            "Amount": 1
+          },
+          "RequiredIngredients": [
+            {
+              "Item": "stone",
+              "Amount": 1
+            }
+          ]
+        },
+        {
+          "Result": {
+            "Item": "hay_path",
+            "Amount": 1
+          },
+          "RequiredIngredients": [
+            {
+              "Item": "hay",
+              "Amount": 1
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "AutoCrafterItems": [
+    {
+      "Id": 13000,
+      "Name": "samovar",
+      "Description": "samovar_description",
+      "IsStackable": false,
+      "Width": 1,
+      "Height": 1,
+      "GroundPattern": [
+        [
+          "H"
+        ]
+      ],
+      "IsRotatable": false,
+      "IsPassable": false,
+      "CraftingRecipes": [
+        {
+          "Result": {
+            "Item": "black_tea",
+            "Amount": 1
+          },
+          "RequiredIngredients": [
+            {
+              "Item": "tea_leaf",
+              "Amount": 1
+            }
+          ],
+          "CraftingTimeInHours": 0.2
+        }
+      ]
     }
   ],
   "WindowItems": [
@@ -1107,65 +1274,6 @@
       "Price": 350,
       "IsTradable": false,
       "IsDroppable": true
-    }
-  ],
-  "GateItems": [
-    {
-      "Id": 12000,
-      "Name": "small_main_gate",
-      "Description": "test",
-      "Width": 2,
-      "Height": 1,
-      "GroundPattern": [
-        [
-          "A"
-        ],
-        [
-          "A"
-        ]
-      ],
-      "IsRotatable": false,
-      "IsPassable": false,
-      "OpenSoundEffect": "SoundEffects\\Minifantasy_Dungeon_SFX\\05_door_open_1",
-      "CloseSoundEffect": "SoundEffects\\Minifantasy_Dungeon_SFX\\06_door_close_1"
-    },
-    {
-      "Id": 12001,
-      "Name": "big_left_main_gate",
-      "Description": "test",
-      "Width": 2,
-      "Height": 1,
-      "GroundPattern": [
-        [
-          "A"
-        ],
-        [
-          "A"
-        ]
-      ],
-      "IsRotatable": false,
-      "IsPassable": false,
-      "OpenSoundEffect": "SoundEffects\\Minifantasy_Dungeon_SFX\\05_door_open_1",
-      "CloseSoundEffect": "SoundEffects\\Minifantasy_Dungeon_SFX\\06_door_close_1"
-    },
-    {
-      "Id": 12002,
-      "Name": "big_right_main_gate",
-      "Description": "test",
-      "Width": 2,
-      "Height": 1,
-      "GroundPattern": [
-        [
-          "A"
-        ],
-        [
-          "A"
-        ]
-      ],
-      "IsRotatable": false,
-      "IsPassable": false,
-      "OpenSoundEffect": "SoundEffects\\Minifantasy_Dungeon_SFX\\05_door_open_1",
-      "CloseSoundEffect": "SoundEffects\\Minifantasy_Dungeon_SFX\\06_door_close_1"
     }
   ],
   "AnimalFeederItems": [

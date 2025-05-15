@@ -20,9 +20,9 @@ namespace palmesneo_village
         public ResourceItem[] ResourceItems { get; init; }
         public FloorPathItem[] FloorPathItems { get; init; }
         public ManualCrafterItem[] ManualCrafterItems { get; init; }
+        public AutoCrafterItem[] AutoCrafterItems { get; init; }
         public WindowItem[] WindowItems { get; init; }
         public SprinklerItem[] SprinklerItems { get; init; }
-        public GateItem[] GateItems { get; init; }
         public AnimalFeederItem[] AnimalFeederItems { get; init; }
         public BirdNestItem[] BirdNestItems { get; init; }
         public BackpackItem[] BackpackItems { get; init; }
@@ -53,9 +53,9 @@ namespace palmesneo_village
             ReadAndInitializeCollection(ResourceItems, itemsIcons);
             ReadAndInitializeCollection(FloorPathItems, itemsIcons);
             ReadAndInitializeCollection(ManualCrafterItems, itemsIcons);
+            ReadAndInitializeCollection(AutoCrafterItems, itemsIcons);
             ReadAndInitializeCollection(WindowItems, itemsIcons);
             ReadAndInitializeCollection(SprinklerItems, itemsIcons);
-            ReadAndInitializeCollection(GateItems, itemsIcons);
             ReadAndInitializeCollection(AnimalFeederItems, itemsIcons);
             ReadAndInitializeCollection(BirdNestItems, itemsIcons);
             ReadAndInitializeCollection(BackpackItems, itemsIcons);
@@ -97,6 +97,34 @@ namespace palmesneo_village
         public FloorPathItem GetFloorPathItemByTilesetIndex(int tilesetIndex)
         {
             return floorPathItemsByTilesetIndex[tilesetIndex];
+        }
+
+        public Ingredient ConvertJsonIngredient(JsonIngredient jsonIngredient)
+        {
+            Item item = GetItemByName(jsonIngredient.Item);
+
+            if (item == null)
+            {
+                throw new Exception($"Item with name {jsonIngredient.Item} not found in the database.");
+            }
+
+            return new Ingredient(item, jsonIngredient.Amount);
+        }
+
+        public CraftingRecipe ConvertJsonCraftingRecipe(JsonCraftingRecipe jsonCraftingRecipe)
+        {
+            Ingredient resultIngredient = ConvertJsonIngredient(jsonCraftingRecipe.Result);
+
+            List<Ingredient> requiredIngredients = new();
+
+            foreach (JsonIngredient jsonIngredient in jsonCraftingRecipe.RequiredIngredients)
+            {
+                requiredIngredients.Add(ConvertJsonIngredient(jsonIngredient));
+            }
+
+            float craftingTimeInHours = jsonCraftingRecipe.CraftingTimeInHours;
+
+            return new CraftingRecipe(resultIngredient, requiredIngredients, craftingTimeInHours);
         }
 
         private void ReadAndInitializeCollection(Item[] itemsArray, MTileset itemsIcons)

@@ -17,7 +17,9 @@ namespace palmesneo_village
         HouseFloor = 4,
         HouseWall = 5,
         CoopHouseFloor = 6,
-        AnimalHouseWall = 7
+        AnimalHouseWall = 7,
+        TentFloor = 8,
+        TentWall = 9
     }
 
     public enum GroundTopTile
@@ -279,33 +281,15 @@ namespace palmesneo_village
             }
         }
 
-        public void InteractWithTile(int x, int y, Inventory inventory, int slotIndex, PlayerEnergyManager playerEnergyManager,
-            GameplayScene gameplayScene, bool isAlternativeInteraction)
+        public void InteractWithTile(int x, int y, Inventory inventory, int activeSlotIndex, PlayerEnergyManager playerEnergyManager)
         {
-            if (isAlternativeInteraction)
-            {
-                if (teleportsMap[x, y] != null)
-                {
-                    Teleport teleport = teleportsMap[x, y];
-                    gameplayScene.GoToLocation(teleport.Location, teleport.Tile);
-                    return;
-                }
-            }
-
-            Item handItem = inventory.GetSlotItem(slotIndex);
+            Item handItem = inventory.GetSlotItem(activeSlotIndex);
 
             Building building = buildingsMap[x, y];
 
             if (building != null)
             {
-                if (isAlternativeInteraction)
-                {
-                    building.InteractAlternatively(handItem, playerEnergyManager);
-                }
-                else
-                {
-                    building.Interact(handItem, playerEnergyManager);
-                }
+                building.Interact(inventory, activeSlotIndex, playerEnergyManager);
             }
 
             if (handItem is ToolItem toolItem)
@@ -329,14 +313,14 @@ namespace palmesneo_village
                             if (GetGroundTile(x, y) == GroundTile.Water || building is WaterSourceBuilding)
                             {
                                 toolItem.PlaySoundEffect();
-                                inventory.AddSlotItemContentAmount(slotIndex, toolItem.Capacity);
+                                inventory.AddSlotItemContentAmount(activeSlotIndex, toolItem.Capacity);
                             }
                             else if (GetGroundTile(x, y) == GroundTile.FarmPlot)
                             {
-                                if (inventory.GetSlotContentAmount(slotIndex) > 0)
+                                if (inventory.GetSlotContentAmount(activeSlotIndex) > 0)
                                 {
                                     toolItem.PlaySoundEffect();
-                                    inventory.SubSlotItemContentAmount(slotIndex, 1);
+                                    inventory.SubSlotItemContentAmount(activeSlotIndex, 1);
                                     SetGroundTopTile(x, y, GroundTopTile.Moisture);
                                     playerEnergyManager.ConsumeEnergy(1);
                                 }
@@ -376,7 +360,7 @@ namespace palmesneo_village
 
                 if (TryBuild(plantItem, x, y, Direction.Down))
                 {
-                    inventory.RemoveItem(handItem, 1, slotIndex);
+                    inventory.RemoveItem(handItem, 1, activeSlotIndex);
                 }
             }
             else if (handItem is TreeSeedItem treeSeedItem)
@@ -385,7 +369,7 @@ namespace palmesneo_village
 
                 if (TryBuild(treeItem, x, y, Direction.Down))
                 {
-                    inventory.RemoveItem(handItem, 1, slotIndex);
+                    inventory.RemoveItem(handItem, 1, activeSlotIndex);
                 }
             }
         }
@@ -613,6 +597,10 @@ namespace palmesneo_village
                 {
                     building = new ManualCrafterBuilding(this, manualCrafterItem, direction, tiles);
                 }
+                else if(buildingItem is AutoCrafterItem autoCrafterItem)
+                {
+                    building = new AutoCrafterBuilding(this, autoCrafterItem, direction, tiles);
+                }
                 else if (buildingItem is WindowItem windowItem)
                 {
                     building = new WindowBuilding(this, windowItem, direction, tiles);
@@ -621,27 +609,23 @@ namespace palmesneo_village
                 {
                     building = new SprinklerBuilding(this, sprinklerItem, direction, tiles);
                 }
-                else if (buildingItem is GateItem gateItem)
-                {
-                    building = new GateBuilding(this, gateItem, direction, tiles);
-                }
-                else if(buildingItem is AnimalFeederItem animalFeederItem)
+                else if (buildingItem is AnimalFeederItem animalFeederItem)
                 {
                     building = new AnimalFeederBuilding(this, animalFeederItem, direction, tiles);
                 }
-                else if(buildingItem is BirdNestItem birdNestItem)
+                else if (buildingItem is BirdNestItem birdNestItem)
                 {
                     building = new BirdNestBuilding(this, birdNestItem, direction, tiles);
                 }
-                else if(buildingItem is GrassItem grassItem)
+                else if (buildingItem is GrassItem grassItem)
                 {
                     building = new GrassBuilding(this, grassItem, direction, tiles);
                 }
-                else if(buildingItem is WaterSourceItem waterSourceItem)
+                else if (buildingItem is WaterSourceItem waterSourceItem)
                 {
                     building = new WaterSourceBuilding(this, waterSourceItem, direction, tiles);
                 }
-                else if(buildingItem is StorageItem storageItem)
+                else if (buildingItem is StorageItem storageItem)
                 {
                     building = new StorageBuilding(this, storageItem, direction, tiles);
                 }
@@ -706,6 +690,13 @@ namespace palmesneo_village
                                 else if (teleportData.Location == "coop")
                                 {
                                     CoopLocation location = new CoopLocation(
+                                        enterLocationId, new Teleport(LocationId, teleportEnterTile + new Vector2(0, 1)));
+
+                                    ((GameplayScene)Engine.CurrentScene).RegisterLocation(location);
+                                }
+                                else if(teleportData.Location == "tent")
+                                {
+                                    TentLocation location = new TentLocation(
                                         enterLocationId, new Teleport(LocationId, teleportEnterTile + new Vector2(0, 1)));
 
                                     ((GameplayScene)Engine.CurrentScene).RegisterLocation(location);
@@ -804,7 +795,8 @@ namespace palmesneo_village
                     {
                         return groundTile == GroundTile.Grass || 
                             groundTile == GroundTile.Ground ||
-                            groundTile == GroundTile.HouseFloor;
+                            groundTile == GroundTile.HouseFloor ||
+                            groundTile == GroundTile.TentFloor;
                     }
                 case "I":
                     {
@@ -846,6 +838,13 @@ namespace palmesneo_village
 
         #endregion
 
+        public Teleport TryGetTeleport(int x, int y)
+        {
+            if (groundTilemap.IsWithinBounds(x, y) == false) return null;
+
+            return teleportsMap[x, y];
+        }
+
         protected void CreateTeleport(int x, int y, Teleport teleport)
         {
             if (teleportsMap[x, y] != null)
@@ -881,6 +880,7 @@ namespace palmesneo_village
             {
                 case GroundTile.AnimalHouseWall:
                 case GroundTile.HouseWall:
+                case GroundTile.TentWall:
                 case GroundTile.Water:
                     collisionMap[x, y] = false;
                     break;
@@ -895,11 +895,7 @@ namespace palmesneo_village
 
             if (buildingsMap[x, y] != null)
             {
-                if (buildingsMap[x, y] is GateBuilding gateBuilding)
-                {
-                    collisionMap[x, y] = gateBuilding.IsOpen;
-                }
-                else if (buildingsMap[x, y].IsPassable == false)
+                if (buildingsMap[x, y].IsPassable == false)
                 {
                     collisionMap[x, y] = false;
                 }

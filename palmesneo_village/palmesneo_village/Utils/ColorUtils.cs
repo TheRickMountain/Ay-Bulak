@@ -7,6 +7,7 @@ namespace palmesneo_village
     {
         public const string YELLOW_HEX = "#F5E61B";
         public const string GRAY_HEX = "#A9A9A9";
+        public const string RED_HEX = "#FF0000";
 
         public static Color HexToColor(string hex)
         {

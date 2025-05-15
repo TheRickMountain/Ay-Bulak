@@ -1,4 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
+using MonoGame.Extended.ECS;
+using MonoGame.Extended.Tweening;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,10 +17,10 @@ namespace palmesneo_village
         private CraftingRecipeButtonUI[,] craftingRecipeButtonsArray;
         private GridContainerUI gridContainer;
 
-        private const int COLUMNS = 6;
-        private const int ROWS = 4;
+        private const int COLUMNS = 10;
+        private const int ROWS = 5;
 
-        // TODO: увеличивать размер иконки рецепта при наведении мыши
+        private Tweener tweener = new Tweener();
 
         public CrafterUI(Inventory inventory)
         {
@@ -44,7 +46,10 @@ namespace palmesneo_village
                 for (int x = 0; x < COLUMNS; x++)
                 {
                     CraftingRecipeButtonUI craftingRecipeButton = new CraftingRecipeButtonUI();
+                    craftingRecipeButton.Origin = craftingRecipeButton.Size / 2;
                     craftingRecipeButton.ActionTriggered += OnCraftingRecipeButtonPressed;
+                    craftingRecipeButton.MouseEntered += OnCraftingRecipeButtonMouseEntered;
+                    craftingRecipeButton.MouseExited += OnCraftingRecipeButtonMouseExited;
                     gridContainer.AddChild(craftingRecipeButton);
 
                     craftingRecipeButtonsArray[x, y] = craftingRecipeButton;
@@ -74,6 +79,8 @@ namespace palmesneo_village
 
         public override void Update()
         {
+            tweener.Update(Engine.DeltaTime);
+
             if (Contains(MInput.Mouse.UIPosition))
             {
                 int wheelDelta = 0;
@@ -119,14 +126,51 @@ namespace palmesneo_village
                     {
                         CraftingRecipe craftingRecipe = craftingRecipesList[craftingRecipeIndex];
 
-                        bool canCraft = CanCraft(craftingRecipe);
+                        string cantCraftReason;
 
-                        craftingRecipeButtonsArray[currentColumn, i].SetCraftingRecipe(craftingRecipe, canCraft);
+                        bool canCraft = CanCraft(craftingRecipe, out cantCraftReason);
+
+                        craftingRecipeButtonsArray[currentColumn, i].SetCraftingRecipe(craftingRecipe, canCraft, inventory);
+                        craftingRecipeButtonsArray[currentColumn, i].Tooltip += $"\n/c[{ColorUtils.RED_HEX}]{cantCraftReason}/cd";
                     }
                 }
 
                 i++;
             }
+        }
+
+        private void OnCraftingRecipeButtonMouseEntered(EntityUI buttonUI)
+        {
+            CraftingRecipeButtonUI craftingRecipeButtonUI = (CraftingRecipeButtonUI)buttonUI;
+
+            CraftingRecipe craftingRecipe = craftingRecipeButtonUI.CraftingRecipe;
+
+            if (craftingRecipe == null) return;
+
+            ResourcesManager.GetSoundEffect("SoundEffects", "UI Soundpack", "Abstract2").Play();
+
+            tweener.TweenTo(
+                        target: craftingRecipeButtonUI,
+                        expression: x => craftingRecipeButtonUI.LocalScale,
+                        toValue: new Vector2(1.3f, 1.3f),
+                        duration: 0.2f)
+                        .Easing(EasingFunctions.CubicInOut);
+        }
+
+        private void OnCraftingRecipeButtonMouseExited(EntityUI buttonUI)
+        {
+            CraftingRecipeButtonUI craftingRecipeButtonUI = (CraftingRecipeButtonUI)buttonUI;
+
+            CraftingRecipe craftingRecipe = craftingRecipeButtonUI.CraftingRecipe;
+
+            if (craftingRecipe == null) return;
+
+            tweener.TweenTo(
+                        target: craftingRecipeButtonUI,
+                        expression: x => craftingRecipeButtonUI.LocalScale,
+                        toValue: new Vector2(1.0f, 1.0f),
+                        duration: 0.2f)
+                        .Easing(EasingFunctions.CubicInOut);
         }
 
         private void OnCraftingRecipeButtonPressed(ButtonUI buttonUI)
@@ -140,7 +184,7 @@ namespace palmesneo_village
             Item resultItem = craftingRecipe.Result.Item;
             int resultAmount = craftingRecipe.Result.Amount;
 
-            if (CanCraft(craftingRecipe) == false)
+            if (CanCraft(craftingRecipe, out _) == false)
             {
                 return;
             }
@@ -152,12 +196,42 @@ namespace palmesneo_village
 
             inventory.TryAddItem(resultItem, resultAmount, 0);
 
-            foreach (Ingredient ingredient in craftingRecipe.GetRequiredIngredients())
+            foreach (Ingredient ingredient in craftingRecipe.RequiredIngredients)
             {
                 inventory.RemoveItem(ingredient.Item, ingredient.Amount);
             }
 
             UpdateCraftingRecipes();
+
+            tweener.TweenTo(
+                        target: craftingRecipeButtonUI,
+                        expression: x => craftingRecipeButtonUI.LocalScale,
+                        toValue: new Vector2(0.7f, 0.7f),
+                        duration: 0.1f)
+                        .Easing(EasingFunctions.CubicInOut)
+                        .OnEnd(tween =>
+                        {
+                            tweener.TweenTo(
+                                target: craftingRecipeButtonUI,
+                                expression: x => craftingRecipeButtonUI.LocalScale,
+                                toValue: new Vector2(1.3f, 1.3f),
+                                duration: 0.1f)
+                                .Easing(EasingFunctions.BounceOut);
+                        });
+
+            PlayItemPickupSoundEffect();
+        }
+
+        private void PlayItemPickupSoundEffect()
+        {
+            Calc.Random.Choose(
+                ResourcesManager.GetSoundEffect("SoundEffects", "pop_0"),
+                ResourcesManager.GetSoundEffect("SoundEffects", "pop_1"),
+                ResourcesManager.GetSoundEffect("SoundEffects", "pop_2"),
+                ResourcesManager.GetSoundEffect("SoundEffects", "pop_3"),
+                ResourcesManager.GetSoundEffect("SoundEffects", "pop_4"),
+                ResourcesManager.GetSoundEffect("SoundEffects", "pop_5")
+                ).Play();
         }
 
         private void OnScrollBarGrabberPositionChanged(ScrollBarUI scrollBarUI)
@@ -165,15 +239,24 @@ namespace palmesneo_village
             UpdateCraftingRecipes();
         }
 
-        private bool CanCraft(CraftingRecipe craftingRecipe)
+        private bool CanCraft(CraftingRecipe craftingRecipe, out string reasonMessage)
         {
-            foreach(Ingredient ingredient in craftingRecipe.GetRequiredIngredients())
+            if(inventory.CanAddItem(craftingRecipe.Result.Item, craftingRecipe.Result.Amount) == false)
             {
-                if (inventory.GetItemQuantity(ingredient.Item) < ingredient.Amount)
+                reasonMessage = LocalizationManager.GetText("not_enough_space_in_inventory");
+                return false;
+            }
+
+            foreach (Ingredient ingredient in craftingRecipe.RequiredIngredients)
+            {
+                if (inventory.GetTotalItemQuantity(ingredient.Item) < ingredient.Amount)
                 {
+                    reasonMessage = string.Empty;
                     return false;
                 }
             }
+
+            reasonMessage = string.Empty;
 
             return true;
         }

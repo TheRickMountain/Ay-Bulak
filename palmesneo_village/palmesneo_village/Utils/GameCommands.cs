@@ -75,7 +75,7 @@ namespace palmesneo_village
         {
             if (Engine.CurrentScene is GameplayScene)
             {
-                ((GameplayScene)Engine.CurrentScene).Inventory.Expand();
+                ((GameplayScene)Engine.CurrentScene).PlayerInventory.Expand();
             }
         }
 
@@ -88,7 +88,7 @@ namespace palmesneo_village
             {
                 Item item = Engine.ItemsDatabase.GetItemByName<Item>(itemName);
 
-                ((GameplayScene)Engine.CurrentScene).Inventory.TryAddItem(item, itemAmount, 0);
+                ((GameplayScene)Engine.CurrentScene).PlayerInventory.TryAddItem(item, itemAmount, 0);
             }
         }
 
@@ -101,7 +101,7 @@ namespace palmesneo_village
             {
                 Item item = Engine.ItemsDatabase.GetItemByName<Item>(itemName);
 
-                ((GameplayScene)Engine.CurrentScene).Inventory.AddItem(item, itemAmount, 0, slotIndex);
+                ((GameplayScene)Engine.CurrentScene).PlayerInventory.AddItem(item, itemAmount, 0, slotIndex);
             }
         }
 
