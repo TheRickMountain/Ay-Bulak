@@ -443,6 +443,26 @@ namespace palmesneo_village
             }
         }
 
+        public IEnumerable<Creature> GetCreatures()
+        {
+            return entitiesList.GetChildren<Creature>();
+        }
+
+        #region NPC
+
+        public bool TrySpawnNPC(int x, int y)
+        {
+            NPC npc = new NPC("Test", ResourcesManager.GetTexture("Sprites", "player"), 0);
+
+            npc.SetGameLocation(this);
+            npc.SetTilePosition(new Vector2(x, y));
+            entitiesList.AddChild(npc);
+
+            return true;
+        }
+
+        #endregion
+
         #region Animals
 
         public bool TrySpawnAnimal(AnimalItem animalItem, int x, int y)
@@ -469,11 +489,6 @@ namespace palmesneo_village
             entitiesList.AddChild(animal);
 
             return true;
-        }
-
-        public IEnumerable<Creature> GetCreatures()
-        {
-            return entitiesList.GetChildren<Creature>();
         }
 
         public void RemoveAnimal(Animal animal)

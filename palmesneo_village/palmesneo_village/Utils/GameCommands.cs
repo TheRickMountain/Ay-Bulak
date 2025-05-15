@@ -46,6 +46,19 @@ namespace palmesneo_village
             }
         }
 
+        [Command("spawn_npc", "Spawns an NPC in the current game location")]
+        private static void SpawnNPC()
+        {
+            if(Engine.CurrentScene is GameplayScene gameplayScene)
+            {
+                GameLocation currentGameLocation = gameplayScene.CurrentGameLocation;
+
+                Vector2 spawnTile = currentGameLocation.WorldToMap(MInput.Mouse.GlobalPosition);
+
+                ((GameplayScene)Engine.CurrentScene).CurrentGameLocation.TrySpawnNPC((int)spawnTile.X, (int)spawnTile.Y);
+            }
+        }
+
         [Command("set_time_speed", "Set time speed")]
         private static void SetTimeSpeed(int value)
         {
