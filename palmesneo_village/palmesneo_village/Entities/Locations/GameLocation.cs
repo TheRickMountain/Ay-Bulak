@@ -399,31 +399,40 @@ namespace palmesneo_village
                 }
             }
 
-            if (timeOfDayManager.CurrentWeather == Weather.Rainy)
+            for (int x = 0; x < MapWidth; x++)
             {
-                for (int x = 0; x < MapWidth; x++)
+                for (int y = 0; y < MapHeight; y++)
                 {
-                    for (int y = 0; y < MapHeight; y++)
-                    {
-                        GroundTile groundTile = GetGroundTile(x, y);
+                    GroundTile groundTile = GetGroundTile(x, y);
+                    GroundTopTile groundTopTile = GetGroundTopTile(x, y);
 
-                        if (groundTile == GroundTile.FarmPlot)
+                    if(timeOfDayManager.CurrentWeather == Weather.Rainy)
+                    {
+                        if(groundTile == GroundTile.FarmPlot)
                         {
                             SetGroundTopTile(x, y, GroundTopTile.Moisture);
                         }
+                        else if(groundTile == GroundTile.Ground)
+                        {
+                            if (Calc.Random.Chance(0.5f))
+                            {
+                                SetGroundTile(x, y, GroundTile.Grass);
+                            }
+                        }
                     }
-                }
-            }
-            else
-            {
-                for (int x = 0; x < MapWidth; x++)
-                {
-                    for (int y = 0; y < MapHeight; y++)
+                    else
                     {
-                        GroundTopTile groundTopTile = GetGroundTopTile(x, y);
                         if (groundTopTile == GroundTopTile.Moisture)
                         {
                             SetGroundTopTile(x, y, GroundTopTile.None);
+                        }
+
+                        if (groundTile == GroundTile.Ground)
+                        {
+                            if (Calc.Random.Chance(0.25f))
+                            {
+                                SetGroundTile(x, y, GroundTile.Grass);
+                            }
                         }
                     }
                 }
