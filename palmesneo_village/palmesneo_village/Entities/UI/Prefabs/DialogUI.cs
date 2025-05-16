@@ -138,7 +138,10 @@ namespace palmesneo_village
                 letterDelay = GetDelayForCharacter(currentChar);
                 letterTimer = 0f;
 
-                Calc.Random.Choose(speechSoundFX).Play();
+                if (char.IsLetter(currentChar))
+                {
+                    Calc.Random.Choose(speechSoundFX).Play();
+                }
 
                 if (charIndex >= fullLine.Length)
                 {
