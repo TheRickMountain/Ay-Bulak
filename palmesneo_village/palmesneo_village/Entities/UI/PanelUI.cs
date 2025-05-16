@@ -2,13 +2,29 @@
 
 namespace palmesneo_village
 {
+    public enum PanelStyle
+    {
+        Default,
+        Dialog
+    }
+
     public class PanelUI : NineSlicedImageUI
     {
         private TextUI labelText;
 
-        public PanelUI()
+        public PanelUI(PanelStyle panelStyle = PanelStyle.Default)
         {
-            Texture = ResourcesManager.GetTexture("Sprites", "UI", "panel");
+            switch(panelStyle)
+            {
+                case PanelStyle.Default:
+                    Texture = ResourcesManager.GetTexture("Sprites", "UI", "default_panel");
+                    break;
+                case PanelStyle.Dialog:
+                    Texture = ResourcesManager.GetTexture("Sprites", "UI", "dialog_panel");
+                    break;
+            }
+            
+         
             SliceCenter = new Rectangle(4, 4, 4, 4);
 
             labelText = new TextUI();

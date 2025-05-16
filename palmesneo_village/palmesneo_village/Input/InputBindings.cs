@@ -12,6 +12,7 @@ namespace palmesneo_village
 
         public static VirtualButton Pause { get; private set; }
         public static VirtualButton Exit { get; private set; }
+        public static VirtualButton Accept { get; private set; }
 
         public static void Initialize()
         {
@@ -31,6 +32,11 @@ namespace palmesneo_village
 
             Exit = new VirtualButton();
             Exit.Nodes.Add(new VirtualButton.KeyboardKey(Keys.Escape));
+
+            Accept = new VirtualButton();
+            Accept.Nodes.Add(new VirtualButton.KeyboardKey(Keys.E));
+            Accept.Nodes.Add(new VirtualButton.MouseLeftButton());
+            Accept.Nodes.Add(new VirtualButton.PadButton(0, Buttons.A));
         }
 
     }
