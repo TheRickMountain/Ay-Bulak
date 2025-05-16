@@ -191,6 +191,8 @@ namespace palmesneo_village
 
         public override void Update()
         {
+            ChageCursorTextureToDefault();
+
             transitionImage.Size = MasterUIEntity.Size;
 
             timeText.Text = timeOfDayManager.GetTimeString();
@@ -336,6 +338,13 @@ namespace palmesneo_village
                             tileSelector.IsVisible = true;
                             tileSelector.LocalPosition = CurrentGameLocation.MapToWorld(mouseTile);
 
+                            var interactableEntity = TryGetInteractableEntityOnTile(mouseTile);
+
+                            if(interactableEntity != null)
+                            {
+                                ChangeCursorTexture(ResourcesManager.GetTexture("Sprites", "interaction_cursor"));
+                            }
+
                             if (MInput.Mouse.PressedLeftButton)
                             {
                                 CurrentGameLocation.InteractWithTile(tileX, tileY, PlayerInventory,
@@ -347,18 +356,15 @@ namespace palmesneo_village
                                 {
                                     canUseInventoryItem = false;
                                 }
-                                else
+                                else if (interactableEntity != null)
                                 {
-                                    selectedInteractableEntity = TryGetInteractableEntityOnTile(mouseTile);
+                                    selectedInteractableEntity = interactableEntity;
 
-                                    if (selectedInteractableEntity != null)
-                                    {
-                                        OpenInteractionMenuUI(selectedInteractableEntity.
-                                            GetAvailableInteractions(PlayerInventory)
-                                            .ToList());
+                                    OpenInteractionMenuUI(selectedInteractableEntity.
+                                        GetAvailableInteractions(PlayerInventory)
+                                        .ToList());
 
-                                        canUseInventoryItem = false;
-                                    }
+                                    canUseInventoryItem = false;
                                 }
                             }
                         }
