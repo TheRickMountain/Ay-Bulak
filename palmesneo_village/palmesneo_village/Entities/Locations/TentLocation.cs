@@ -8,7 +8,8 @@ namespace palmesneo_village
     public class TentLocation : GameLocation
     {
 
-        public TentLocation(string id, Teleport exitTeleport) : base(id, 16, 16, false)
+        public TentLocation(string id, Teleport exitTeleport, TimeOfDayManager timeOfDayManager) 
+            : base(id, 16, 16, false, timeOfDayManager)
         {
             CreateHouseFirstLayer();
 

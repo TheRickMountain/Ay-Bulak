@@ -90,7 +90,7 @@ namespace palmesneo_village
 
             player = new Player("Player", ResourcesManager.GetTexture("Sprites", "player"), 80, PlayerInventory);
 
-            RegisterLocation(new FarmLocation("farm"));
+            RegisterLocation(new FarmLocation("farm", timeOfDayManager));
 
             buildingSystem = new BuildingSystem();
             buildingSystem.Depth = 100;
@@ -477,10 +477,10 @@ namespace palmesneo_village
                             foreach (var kvp in gameLocations)
                             {
                                 GameLocation gameLocation = kvp.Value;
-                                gameLocation.StartNextDay(timeOfDayManager);
+                                gameLocation.StartNextDay();
                             }
 
-                            if (timeOfDayManager.CurrentWeather == Weather.Sunny)
+                            if (timeOfDayManager.CurrentWeather == Weather.Sun && timeOfDayManager.CurrentSeason != Season.Winter)
                             {
                                 ResourcesManager.GetSoundEffect("SoundEffects", "rooster_crow").Play();
                             }

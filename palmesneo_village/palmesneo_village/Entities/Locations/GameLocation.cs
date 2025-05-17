@@ -44,6 +44,8 @@ namespace palmesneo_village
 
         private bool isOutdoor;
 
+        private TimeOfDayManager timeOfDayManager;
+
         private PathNodeMap pathNodeMap;
 
         private CameraMovement cameraMovement;
@@ -62,15 +64,19 @@ namespace palmesneo_village
         private Entity entitiesList;
         private Entity itemsList;
         private RainEffectEntity rainEffect;
+        private SnowEffectEntity snowEffect;
 
         private Player _player;
 
-        public GameLocation(string locationId, int mapWidth, int mapHeight, bool isOutdoor)
+        private Dictionary<Season, MTileset> groundTilesets = new();
+
+        public GameLocation(string locationId, int mapWidth, int mapHeight, bool isOutdoor, TimeOfDayManager timeOfDayManager)
         {
             LocationId = locationId;
             MapWidth = mapWidth;
             MapHeight = mapHeight;
             this.isOutdoor = isOutdoor;
+            this.timeOfDayManager = timeOfDayManager;
 
             pathNodeMap = new PathNodeMap(mapWidth, mapHeight);
 
@@ -82,7 +88,12 @@ namespace palmesneo_village
             groundTopTilemap = new Tilemap(TilesetConnection.SidesAndCorners, false, 16, 16, mapWidth, mapHeight);
             floorPathTilemap = new Tilemap(TilesetConnection.Sides, false, 16, 16, mapWidth, mapHeight);
 
-            groundTilemap.Tileset = new MTileset(ResourcesManager.GetTexture("Tilesets", "ground_summer_tileset"), 16, 16);
+            groundTilesets.Add(Season.Spring, new MTileset(ResourcesManager.GetTexture("Tilesets", "ground_spring_tileset"), 16, 16));
+            groundTilesets.Add(Season.Summer, new MTileset(ResourcesManager.GetTexture("Tilesets", "ground_summer_tileset"), 16, 16));
+            groundTilesets.Add(Season.Autumn, new MTileset(ResourcesManager.GetTexture("Tilesets", "ground_autumn_tileset"), 16, 16));
+            groundTilesets.Add(Season.Winter, new MTileset(ResourcesManager.GetTexture("Tilesets", "ground_winter_tileset"), 16, 16));
+
+            groundTilemap.Tileset = groundTilesets[timeOfDayManager.CurrentSeason];
             groundTopTilemap.Tileset = new MTileset(ResourcesManager.GetTexture("Tilesets", "ground_top_tileset"), 16, 16);
             floorPathTilemap.Tileset = new MTileset(ResourcesManager.GetTexture("Tilesets", "floor_path_tileset"), 16, 16);
 
@@ -112,10 +123,13 @@ namespace palmesneo_village
 
             if (isOutdoor)
             {
-                // TODO: включать/выключать дождь в зависимости от начальной погоды
                 rainEffect = new RainEffectEntity();
-                rainEffect.Emitting = false;
+                rainEffect.Emitting = timeOfDayManager.CurrentWeather == Weather.Rain;
                 AddChild(rainEffect);
+
+                snowEffect = new SnowEffectEntity();
+                snowEffect.Emitting = timeOfDayManager.CurrentWeather == Weather.Snow;
+                AddChild(snowEffect);
             }
         }
 
@@ -128,6 +142,9 @@ namespace palmesneo_village
                 Vector2 viewportSize = cameraMovement.GetViewportZoomedSize();
                 rainEffect.LocalPosition = _player.LocalPosition + new Vector2(0, -(viewportSize.Y / 2));
                 rainEffect.EmitterLineLength = (int)viewportSize.X;
+
+                snowEffect.LocalPosition = _player.LocalPosition + new Vector2(0, -(viewportSize.Y / 2));
+                snowEffect.EmitterLineLength = (int)viewportSize.X;
             }
 
             base.Update();
@@ -389,8 +406,10 @@ namespace palmesneo_village
             return groundTilemap.MapToWorld(vector);
         }
 
-        public virtual void StartNextDay(TimeOfDayManager timeOfDayManager)
+        public virtual void StartNextDay()
         {
+            groundTilemap.Tileset = groundTilesets[timeOfDayManager.CurrentSeason];
+
             foreach (Entity entity in entitiesList.GetChildren())
             {
                 if (entity is Building building)
@@ -406,33 +425,30 @@ namespace palmesneo_village
                     GroundTile groundTile = GetGroundTile(x, y);
                     GroundTopTile groundTopTile = GetGroundTopTile(x, y);
 
-                    if(timeOfDayManager.CurrentWeather == Weather.Rainy)
+                    // Grass growing
+                    if(timeOfDayManager.CurrentSeason != Season.Winter)
+                    {
+                        float growUpChance = timeOfDayManager.CurrentWeather == Weather.Rain ? 0.5f : 0.25f;
+
+                        if (groundTile == GroundTile.Ground && Calc.Random.Chance(growUpChance))
+                        {
+                            SetGroundTile(x, y, GroundTile.Grass);
+                        }
+                    }
+
+                    // Moisture
+                    if(timeOfDayManager.CurrentWeather == Weather.Rain)
                     {
                         if(groundTile == GroundTile.FarmPlot)
                         {
                             SetGroundTopTile(x, y, GroundTopTile.Moisture);
                         }
-                        else if(groundTile == GroundTile.Ground)
-                        {
-                            if (Calc.Random.Chance(0.5f))
-                            {
-                                SetGroundTile(x, y, GroundTile.Grass);
-                            }
-                        }
                     }
-                    else
+                    else if(timeOfDayManager.CurrentWeather == Weather.Sun)
                     {
                         if (groundTopTile == GroundTopTile.Moisture)
                         {
                             SetGroundTopTile(x, y, GroundTopTile.None);
-                        }
-
-                        if (groundTile == GroundTile.Ground)
-                        {
-                            if (Calc.Random.Chance(0.25f))
-                            {
-                                SetGroundTile(x, y, GroundTile.Grass);
-                            }
                         }
                     }
                 }
@@ -440,7 +456,8 @@ namespace palmesneo_village
 
             if (isOutdoor)
             {
-                rainEffect.Emitting = timeOfDayManager.CurrentWeather == Weather.Rainy;
+                rainEffect.Emitting = timeOfDayManager.CurrentWeather == Weather.Rain;
+                snowEffect.Emitting = timeOfDayManager.CurrentWeather == Weather.Snow;
             }
 
             foreach (Entity entity in entitiesList.GetChildren())
@@ -712,21 +729,27 @@ namespace palmesneo_village
                                 if (teleportData.Location == "house")
                                 {
                                     HouseLocation location = new HouseLocation(
-                                        enterLocationId, new Teleport(LocationId, teleportEnterTile + new Vector2(0, 1)));
+                                        enterLocationId, 
+                                        new Teleport(LocationId, teleportEnterTile + new Vector2(0, 1)),
+                                        timeOfDayManager);
 
                                     ((GameplayScene)Engine.CurrentScene).RegisterLocation(location);
                                 }
                                 else if (teleportData.Location == "coop")
                                 {
                                     CoopLocation location = new CoopLocation(
-                                        enterLocationId, new Teleport(LocationId, teleportEnterTile + new Vector2(0, 1)));
+                                        enterLocationId, 
+                                        new Teleport(LocationId, teleportEnterTile + new Vector2(0, 1)), 
+                                        timeOfDayManager);
 
                                     ((GameplayScene)Engine.CurrentScene).RegisterLocation(location);
                                 }
                                 else if(teleportData.Location == "tent")
                                 {
                                     TentLocation location = new TentLocation(
-                                        enterLocationId, new Teleport(LocationId, teleportEnterTile + new Vector2(0, 1)));
+                                        enterLocationId, 
+                                        new Teleport(LocationId, teleportEnterTile + new Vector2(0, 1)),
+                                        timeOfDayManager);
 
                                     ((GameplayScene)Engine.CurrentScene).RegisterLocation(location);
                                 }

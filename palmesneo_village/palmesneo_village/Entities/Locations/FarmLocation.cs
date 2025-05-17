@@ -7,7 +7,7 @@ namespace palmesneo_village
     public class FarmLocation : GameLocation
     {
 
-        public FarmLocation(string id) : base(id, 128, 128, true)
+        public FarmLocation(string id, TimeOfDayManager timeOfDayManager) : base(id, 128, 128, true, timeOfDayManager)
         {
             GenerateGrassTiles();
 

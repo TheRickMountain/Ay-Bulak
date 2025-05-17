@@ -8,7 +8,8 @@ namespace palmesneo_village
     public class HouseLocation : GameLocation
     {
 
-        public HouseLocation(string id, Teleport exitTeleport) : base(id, 32, 16, false)
+        public HouseLocation(string id, Teleport exitTeleport, TimeOfDayManager timeOfDayManager) 
+            : base(id, 32, 16, false, timeOfDayManager)
         {
             CreateHouseFirstLayer();
 

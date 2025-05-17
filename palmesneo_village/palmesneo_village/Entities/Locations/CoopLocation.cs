@@ -7,7 +7,7 @@ namespace palmesneo_village
 {
     public class CoopLocation : AnimalHouseLocation
     {
-        public CoopLocation(string id, Teleport exitTeleport) : base(6, id, 32, 16)
+        public CoopLocation(string id, Teleport exitTeleport, TimeOfDayManager timeOfDayManager) : base(6, id, 32, 16, timeOfDayManager)
         {
             CreateTeleport(20, 9, exitTeleport);
 
@@ -75,9 +75,9 @@ namespace palmesneo_village
             }
         }
 
-        public override void StartNextDay(TimeOfDayManager timeOfDayManager)
+        public override void StartNextDay()
         {
-            base.StartNextDay(timeOfDayManager);
+            base.StartNextDay();
 
             ProduceResources();
 
