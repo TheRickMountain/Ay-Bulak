@@ -12,11 +12,11 @@ namespace palmesneo_village
             {
                 Texture = texture,
                 Velocity = new Vector2(0, 5 + Calc.Random.Range(0f, 10f)),
-                Lifetime = 5f,
+                Lifetime = 10f,
                 Color = Color.White,
-                Scale = Calc.Random.Range(0.3f, 0.6f),
+                Scale = 1.0f,
                 Rotation = 0,
-                RotationSpeed = Calc.Random.Range(-0.5f, 0.5f)
+                RotationSpeed = 0
             };
         }
 
@@ -25,10 +25,10 @@ namespace palmesneo_village
             return () => new MParticle
             {
                 Texture = texture,
-                Velocity = new Vector2(-10, 200 + Calc.Random.Range(0f, 50f)),
-                Lifetime = 1f,
+                Velocity = new Vector2(-50, 200 + Calc.Random.Range(0f, 50f)),
+                Lifetime = 1.5f,
                 Color = Color.White,
-                Scale = 0.5f,
+                Scale = 1f,
                 Rotation = 0,
                 RotationSpeed = 0
             };
@@ -41,8 +41,8 @@ namespace palmesneo_village
                 Texture = texture,
                 Velocity = new Vector2(Calc.Random.Range(-10f, 10f), Calc.Random.Range(-30f, -10f)),
                 Lifetime = 2f,
-                Color = Color.Gray,
-                Scale = Calc.Random.Range(0.4f, 0.8f),
+                Color = Color.White,
+                Scale = Calc.Random.Range(0.8f, 1.0f),
                 Rotation = Calc.Random.Range(0f, MathF.Tau),
                 RotationSpeed = Calc.Random.Range(-0.2f, 0.2f)
             };

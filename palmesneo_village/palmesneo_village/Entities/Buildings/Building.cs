@@ -39,9 +39,10 @@ namespace palmesneo_village
 
             if (buildingItem.SmokeSpawnData != null)
             {
-                SmokeEffectEntity smokeEffect = new SmokeEffectEntity();
-                smokeEffect.LocalPosition = buildingItem.SmokeSpawnData.GetPosition();
-                AddChild(smokeEffect);
+                MParticleEmitter smokeEmitter = new MParticleEmitter(2, 
+                    MParticlePresets.SmokeParticle(ResourcesManager.GetTexture("Sprites", "smoke")));
+                smokeEmitter.LocalPosition = buildingItem.SmokeSpawnData.GetPosition();
+                AddChild(smokeEmitter);
             }
         }
 

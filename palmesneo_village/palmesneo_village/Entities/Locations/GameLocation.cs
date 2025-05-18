@@ -63,8 +63,12 @@ namespace palmesneo_village
 
         private Entity entitiesList;
         private Entity itemsList;
-        private RainEffectEntity rainEffect;
-        private SnowEffectEntity snowEffect;
+
+        private MParticleEmitter rainEmitter;
+        private MParticleEmitter snowEmitter;
+
+        private MRectangleShape rainEmitterSpawnShape;
+        private MRectangleShape snowEmitterSpawnShape;
 
         private Player _player;
 
@@ -123,13 +127,26 @@ namespace palmesneo_village
 
             if (isOutdoor)
             {
-                rainEffect = new RainEffectEntity();
-                rainEffect.Emitting = timeOfDayManager.CurrentWeather == Weather.Rain;
-                AddChild(rainEffect);
+                rainEmitterSpawnShape = new MRectangleShape(new Vector2(100, 100));
 
-                snowEffect = new SnowEffectEntity();
-                snowEffect.Emitting = timeOfDayManager.CurrentWeather == Weather.Snow;
-                AddChild(snowEffect);
+                rainEmitter = new MParticleEmitter(100,
+                    MParticlePresets.RainParticle(ResourcesManager.GetTexture("Sprites", "rain_drop")));
+                rainEmitter.SetSpawnShape(rainEmitterSpawnShape);
+
+                snowEmitterSpawnShape = new MRectangleShape(new Vector2(100, 100));
+
+                snowEmitter = new MParticleEmitter(100,
+                    MParticlePresets.SnowParticle(ResourcesManager.GetTexture("Sprites", "snow_flake")));
+                snowEmitter.SetSpawnShape(snowEmitterSpawnShape);
+
+                if(timeOfDayManager.CurrentWeather == Weather.Rain)
+                {
+                    AddChild(rainEmitter);
+                }
+                else if(timeOfDayManager.CurrentWeather == Weather.Snow)
+                {
+                    AddChild(snowEmitter);
+                }
             }
         }
 
@@ -140,11 +157,12 @@ namespace palmesneo_village
             if (isOutdoor)
             {
                 Vector2 viewportSize = cameraMovement.GetViewportZoomedSize();
-                rainEffect.LocalPosition = _player.LocalPosition + new Vector2(0, -(viewportSize.Y / 2));
-                rainEffect.EmitterLineLength = (int)viewportSize.X;
 
-                snowEffect.LocalPosition = _player.LocalPosition + new Vector2(0, -(viewportSize.Y / 2));
-                snowEffect.EmitterLineLength = (int)viewportSize.X;
+                rainEmitterSpawnShape.Size = viewportSize + new Vector2(viewportSize.X / 3, 0);
+                rainEmitter.LocalPosition = cameraMovement.LocalPosition + new Vector2(0, -(viewportSize.Y / 2));
+
+                snowEmitterSpawnShape.Size = viewportSize;
+                snowEmitter.LocalPosition = cameraMovement.LocalPosition;
             }
 
             base.Update();
@@ -456,8 +474,30 @@ namespace palmesneo_village
 
             if (isOutdoor)
             {
-                rainEffect.Emitting = timeOfDayManager.CurrentWeather == Weather.Rain;
-                snowEffect.Emitting = timeOfDayManager.CurrentWeather == Weather.Snow;
+                if (rainEmitter.Parent != null)
+                {
+                    RemoveChild(rainEmitter);
+                }
+
+                if (snowEmitter.Parent != null)
+                {
+                    RemoveChild(snowEmitter);
+                }
+
+                if (timeOfDayManager.CurrentWeather == Weather.Rain)
+                {
+                    if (rainEmitter.Parent == null)
+                    {
+                        AddChild(rainEmitter);
+                    }
+                }
+                else if(timeOfDayManager.CurrentWeather == Weather.Snow)
+                {
+                    if (snowEmitter.Parent == null)
+                    {
+                        AddChild(snowEmitter);
+                    }
+                }
             }
 
             foreach (Entity entity in entitiesList.GetChildren())
