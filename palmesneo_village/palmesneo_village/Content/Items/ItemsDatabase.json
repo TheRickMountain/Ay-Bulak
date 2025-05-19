@@ -907,6 +907,48 @@
       ],
       "GrowthRateInDays": 14,
       "StumpName": "birch_stump"
+    },
+    {
+      "Id": 6001,
+      "Name": "pine_tree",
+      "Description": "test",
+      "IsStackable": false,
+      "Width": 1,
+      "Height": 1,
+      "GroundPattern": [
+        [
+          "A"
+        ]
+      ],
+      "IsRotatable": false,
+      "IsPassable": false,
+      "GrowthStagesData": [
+        {
+          "Strength": 1,
+          "Loot": {}
+        },
+        {
+          "Strength": 4,
+          "Loot": {
+            "wood": 5
+          }
+        },
+        {
+          "Strength": 6,
+          "Loot": {
+            "wood": 10
+          }
+        },
+        {
+          "Strength": 10,
+          "Loot": {
+            "wood": 25,
+            "pine_seeds": 2
+          }
+        }
+      ],
+      "GrowthRateInDays": 14,
+      "StumpName": "pine_stump"
     }
   ],
   "ResourceItems": [
@@ -970,6 +1012,25 @@
     {
       "Id": 7003,
       "Name": "birch_stump",
+      "Description": "test",
+      "IsStackable": false,
+      "Width": 1,
+      "Height": 1,
+      "GroundPattern": [
+        [
+          "A"
+        ]
+      ],
+      "IsRotatable": false,
+      "IsPassable": false,
+      "Strength": 3,
+      "ItemName": "wood",
+      "ItemAmount": 4,
+      "RequiredToolType": "Axe"
+    },
+    {
+      "Id": 7004,
+      "Name": "pine_stump",
       "Description": "test",
       "IsStackable": false,
       "Width": 1,
@@ -1391,6 +1452,16 @@
       "IsDroppable": true,
       "Price": 0,
       "TreeName": "birch_tree"
+    },
+    {
+      "Id": 17,
+      "Name": "pine_seeds",
+      "Description": "test",
+      "IsStackable": true,
+      "IsTradable": true,
+      "IsDroppable": true,
+      "Price": 0,
+      "TreeName": "pine_tree"
     }
   ],
   "BackpackItems": [

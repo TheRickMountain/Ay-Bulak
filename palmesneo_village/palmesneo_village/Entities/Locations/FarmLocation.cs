@@ -22,7 +22,7 @@ namespace palmesneo_village
                 int x = tile.X;
                 int y = tile.Y;
 
-                int generationType = Calc.Random.Range(0, 4);
+                int generationType = Calc.Random.Range(0, 5);
 
                 if (Calc.Random.Chance(0.10f))
                 {
@@ -36,19 +36,29 @@ namespace palmesneo_village
 
                         treeBuilding?.SetGrowthProgress(Calc.Random.Choose(0.35f, 0.5f, 0.75f, 1.0f));
                     }
-                    else if (generationType == 1)
+                    if (generationType == 1)
+                    {
+                        TreeItem birchTree = Engine.ItemsDatabase.GetItemByName<TreeItem>("pine_tree");
+
+                        TryBuild(birchTree, x, y, Direction.Down);
+
+                        TreeBuilding treeBuilding = GetBuilding(x, y) as TreeBuilding;
+
+                        treeBuilding?.SetGrowthProgress(Calc.Random.Choose(0.35f, 0.5f, 0.75f, 1.0f));
+                    }
+                    else if (generationType == 2)
                     {
                         ResourceItem resourceItem = Engine.ItemsDatabase.GetItemByName<ResourceItem>("stone_resource");
 
                         TryBuild(resourceItem, x, y, Direction.Down);
                     }
-                    else if (generationType == 2)
+                    else if (generationType == 3)
                     {
                         ResourceItem resourceItem = Engine.ItemsDatabase.GetItemByName<ResourceItem>("wood_resource");
 
                         TryBuild(resourceItem, x, y, Direction.Down);
                     }
-                    else if (generationType == 3)
+                    else if (generationType == 4)
                     {
                         ResourceItem resourceItem = Engine.ItemsDatabase.GetItemByName<ResourceItem>("grass_resource");
 

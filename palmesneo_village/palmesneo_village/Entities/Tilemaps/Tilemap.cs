@@ -284,7 +284,7 @@ namespace palmesneo_village
                         // Совершенный тайл (окруженный со всех сторон)
                         if(regionTileId == 5)
                         {
-                            if(Calc.Random.Chance(0.5f))
+                            if(Calc.Random.Chance(0.4f))
                             {
                                 regionTileId = Calc.Random.Range(48, 56);
                             }
