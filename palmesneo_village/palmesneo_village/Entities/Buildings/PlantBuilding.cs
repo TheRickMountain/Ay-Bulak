@@ -52,7 +52,7 @@ namespace palmesneo_village
             tileWasWatered = groundTopTile == GroundTopTile.Moisture;
         }
 
-        public override void OnAfterDayChanged()
+        public override void OnAfterDayChanged(TimeOfDayManager timeOfDayManager)
         {
             if (IsRipe) return;
 

@@ -504,7 +504,7 @@ namespace palmesneo_village
             {
                 if (entity is Building building)
                 {
-                    building.OnAfterDayChanged();
+                    building.OnAfterDayChanged(timeOfDayManager);
                 }
             }
         }

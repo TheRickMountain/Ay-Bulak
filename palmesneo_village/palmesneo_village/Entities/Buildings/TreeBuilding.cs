@@ -59,9 +59,9 @@ namespace palmesneo_village
             base.Update();
         }
 
-        public override void OnAfterDayChanged()
+        public override void OnAfterDayChanged(TimeOfDayManager timeOfDayManager)
         {
-            if (IsRipe) return;
+            if (IsRipe || timeOfDayManager.CurrentSeason == Season.Winter) return;
 
             float progressPerDay = 1.0f / treeItem.GrowthRateInDays;
 

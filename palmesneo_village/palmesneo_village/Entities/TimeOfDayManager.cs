@@ -51,19 +51,7 @@ namespace palmesneo_village
         {
             timeOfDayGradients = new TimeOfDayGradients();
 
-            switch(CurrentWeather)
-            {
-                case Weather.Rain:
-                    {
-                        currentDayGradient = timeOfDayGradients.RainyDayGradient;
-                    }
-                    break;
-                case Weather.Sun:
-                    {
-                        currentDayGradient = timeOfDayGradients.SunnyDayGradient;
-                    }
-                    break;
-            }
+            currentDayGradient = timeOfDayGradients.GetGradientFor(CurrentWeather);
         }
 
         public override void Update()
@@ -121,20 +109,7 @@ namespace palmesneo_village
                 }
             }
 
-            switch (CurrentWeather)
-            {
-                case Weather.Rain:
-                    {
-                        currentDayGradient = timeOfDayGradients.RainyDayGradient;
-                    }
-                    break;
-                case Weather.Sun:
-                case Weather.Snow:
-                    {
-                        currentDayGradient = timeOfDayGradients.SunnyDayGradient;
-                    }
-                    break;
-            }
+            currentDayGradient = timeOfDayGradients.GetGradientFor(CurrentWeather);
 
             DayChanged?.Invoke(day);
         }

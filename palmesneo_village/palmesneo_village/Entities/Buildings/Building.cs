@@ -54,7 +54,7 @@ namespace palmesneo_village
 
         }
 
-        public virtual void OnAfterDayChanged()
+        public virtual void OnAfterDayChanged(TimeOfDayManager timeOfDayManager)
         {
 
         }

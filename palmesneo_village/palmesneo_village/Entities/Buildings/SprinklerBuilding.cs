@@ -12,7 +12,7 @@ namespace palmesneo_village
             sprinklerItem = item;
         }
 
-        public override void OnAfterDayChanged()
+        public override void OnAfterDayChanged(TimeOfDayManager timeOfDayManager)
         {
             if(sprinklerItem.Range == 1)
             {

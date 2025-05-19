@@ -40,5 +40,23 @@ namespace palmesneo_village
 
             RainyDayGradient = new GradientTexture1D(512, rainyColorPoints, InterpolationType.Cubic);
         }
+    
+        public GradientTexture1D GetGradientFor(Weather weather)
+        {
+            switch (weather)
+            {
+                case Weather.Rain:
+                    {
+                        return RainyDayGradient;
+                    }
+                case Weather.Sun:
+                case Weather.Snow:
+                    {
+                        return SunnyDayGradient;
+                    }
+            }
+
+            return SunnyDayGradient;
+        }
     }
 }
