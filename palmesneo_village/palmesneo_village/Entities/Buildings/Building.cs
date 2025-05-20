@@ -39,7 +39,7 @@ namespace palmesneo_village
 
             if (buildingItem.SmokeSpawnData != null)
             {
-                MParticleEmitter smokeEmitter = new MParticleEmitter(2, 
+                ParticlesEntity smokeEmitter = new ParticlesEntity(2, 
                     MParticlePresets.SmokeParticle(ResourcesManager.GetTexture("Sprites", "smoke")));
                 smokeEmitter.LocalPosition = buildingItem.SmokeSpawnData.GetPosition();
                 AddChild(smokeEmitter);

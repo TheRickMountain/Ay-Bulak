@@ -4,11 +4,12 @@ using Microsoft.Xna.Framework;
 
 namespace palmesneo_village
 {
-    public class MParticleEmitter : Entity
+    public class ParticlesEntity : Entity
     {
-        protected List<MParticle> particles = new();
-        public bool IsEmitting = true;
+        public bool IsEmitting { get; set; } = true;
 
+        protected List<MParticle> particles = new();
+        
         private float emissionRate;
         private float timeAccumulator = 0f;
         private Func<MParticle> particleFactory;
@@ -20,7 +21,7 @@ namespace palmesneo_village
         /// </summary>
         /// <param name="emissionRate">Particles per second</param>
         /// <param name="particleFactory"></param>
-        public MParticleEmitter(float emissionRate, Func<MParticle> particleFactory)
+        public ParticlesEntity(float emissionRate, Func<MParticle> particleFactory)
         {
             this.emissionRate = emissionRate;
             this.particleFactory = particleFactory;

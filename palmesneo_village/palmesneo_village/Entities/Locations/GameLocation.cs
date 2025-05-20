@@ -64,8 +64,8 @@ namespace palmesneo_village
         private Entity entitiesList;
         private Entity itemsList;
 
-        private MParticleEmitter rainEmitter;
-        private MParticleEmitter snowEmitter;
+        private ParticlesEntity rainEmitter;
+        private ParticlesEntity snowEmitter;
 
         private MRectangleShape rainEmitterSpawnShape;
         private MRectangleShape snowEmitterSpawnShape;
@@ -136,14 +136,14 @@ namespace palmesneo_village
             {
                 rainEmitterSpawnShape = new MRectangleShape(new Vector2(100, 100));
 
-                rainEmitter = new MParticleEmitter(100,
+                rainEmitter = new ParticlesEntity(100,
                     MParticlePresets.RainParticle(ResourcesManager.GetTexture("Sprites", "rain_drop")));
                 rainEmitter.SetSpawnShape(rainEmitterSpawnShape);
 
                 snowEmitterSpawnShape = new MRectangleShape(new Vector2(100, 100));
 
-                snowEmitter = new MParticleEmitter(100,
-                    MParticlePresets.SnowParticle(ResourcesManager.GetTexture("Sprites", "snow_flake")));
+                snowEmitter = new ParticlesEntity(100,
+                    MParticlePresets.SnowParticle(new MTileset(ResourcesManager.GetTexture("Sprites", "snow_flakes"), 16, 16)));
                 snowEmitter.SetSpawnShape(snowEmitterSpawnShape);
 
                 if(timeOfDayManager.CurrentWeather == Weather.Rain)

@@ -2,6 +2,9 @@
 {
     public class MTileset
     {
+        public int Columns { get; private set; }
+        public int Rows { get; private set; }
+
         private MTexture[,] tiles;
 
         public MTileset(MTexture texture, int tileWidth, int tileHeight)
@@ -9,6 +12,9 @@
             Texture = texture;
             TileWidth = tileWidth;
             TileHeight = tileHeight;
+
+            Columns = Texture.Width / TileWidth;
+            Rows = Texture.Height / TileHeight;
 
             tiles = new MTexture[texture.Width / tileWidth, texture.Height / tileHeight];
             for (int x = 0; x < texture.Width / tileWidth; x++)

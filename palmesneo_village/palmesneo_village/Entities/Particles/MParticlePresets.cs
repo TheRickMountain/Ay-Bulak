@@ -1,16 +1,17 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended.Tiled;
 using System;
 
 namespace palmesneo_village
 {
     public static class MParticlePresets
     {
-        public static Func<MParticle> SnowParticle(MTexture texture)
+        public static Func<MParticle> SnowParticle(MTileset tileset)
         {
             return () => new MParticle
             {
-                Texture = texture,
+                Texture = tileset[Calc.Random.Range(0, tileset.Columns), Calc.Random.Range(0, tileset.Rows)],
                 Velocity = new Vector2(0, 5 + Calc.Random.Range(0f, 10f)),
                 Lifetime = 10f,
                 Color = Color.White,
