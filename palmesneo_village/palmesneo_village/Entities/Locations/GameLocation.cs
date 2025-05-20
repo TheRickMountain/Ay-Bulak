@@ -73,6 +73,7 @@ namespace palmesneo_village
         private Player _player;
 
         private Dictionary<Season, MTileset> groundTilesets = new();
+        private Dictionary<Season, MTileset> airTilesets = new();
 
         public GameLocation(string locationId, int mapWidth, int mapHeight, bool isOutdoor, TimeOfDayManager timeOfDayManager)
         {
@@ -122,7 +123,13 @@ namespace palmesneo_village
             AddChild(itemsList);
 
             airTilemap = new Tilemap(TilesetConnection.SidesAndCorners, true, 16, 16, mapWidth, mapHeight);
-            airTilemap.Tileset = new MTileset(ResourcesManager.GetTexture("Tilesets", "air_tileset"), 16, 16);
+
+            airTilesets.Add(Season.Spring, new MTileset(ResourcesManager.GetTexture("Tilesets", "air_spring_tileset"), 16, 16));
+            airTilesets.Add(Season.Summer, new MTileset(ResourcesManager.GetTexture("Tilesets", "air_summer_tileset"), 16, 16));
+            airTilesets.Add(Season.Autumn, new MTileset(ResourcesManager.GetTexture("Tilesets", "air_autumn_tileset"), 16, 16));
+            airTilesets.Add(Season.Winter, new MTileset(ResourcesManager.GetTexture("Tilesets", "air_winter_tileset"), 16, 16));
+
+            airTilemap.Tileset = airTilesets[timeOfDayManager.CurrentSeason];
             AddChild(airTilemap);
 
             if (isOutdoor)
@@ -427,6 +434,7 @@ namespace palmesneo_village
         public virtual void StartNextDay()
         {
             groundTilemap.Tileset = groundTilesets[timeOfDayManager.CurrentSeason];
+            airTilemap.Tileset = airTilesets[timeOfDayManager.CurrentSeason];
 
             foreach (Entity entity in entitiesList.GetChildren())
             {
