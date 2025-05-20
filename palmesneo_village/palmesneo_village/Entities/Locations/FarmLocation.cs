@@ -38,7 +38,7 @@ namespace palmesneo_village
                     }
                     if (generationType == 1)
                     {
-                        TreeItem birchTree = Engine.ItemsDatabase.GetItemByName<TreeItem>("pine_tree");
+                        TreeItem birchTree = Engine.ItemsDatabase.GetItemByName<TreeItem>("spruce_tree");
 
                         TryBuild(birchTree, x, y, Direction.Down);
 

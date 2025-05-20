@@ -910,7 +910,7 @@
     },
     {
       "Id": 6001,
-      "Name": "pine_tree",
+      "Name": "spruce_tree",
       "Description": "test",
       "IsStackable": false,
       "Width": 1,
@@ -943,12 +943,12 @@
           "Strength": 10,
           "Loot": {
             "wood": 25,
-            "pine_seeds": 2
+            "spruce_seeds": 2
           }
         }
       ],
       "GrowthRateInDays": 14,
-      "StumpName": "pine_stump"
+      "StumpName": "spruce_stump"
     }
   ],
   "ResourceItems": [
@@ -1011,7 +1011,7 @@
     },
     {
       "Id": 7004,
-      "Name": "pine_stump",
+      "Name": "spruce_stump",
       "Description": "test",
       "IsStackable": false,
       "Width": 1,
@@ -1436,13 +1436,13 @@
     },
     {
       "Id": 17,
-      "Name": "pine_seeds",
+      "Name": "spruce_seeds",
       "Description": "test",
       "IsStackable": true,
       "IsTradable": true,
       "IsDroppable": true,
       "Price": 0,
-      "TreeName": "pine_tree"
+      "TreeName": "spruce_tree"
     }
   ],
   "BackpackItems": [
