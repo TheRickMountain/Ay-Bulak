@@ -991,25 +991,6 @@
       "RequiredToolType": "Axe"
     },
     {
-      "Id": 7002,
-      "Name": "grass_resource",
-      "Description": "test",
-      "IsStackable": false,
-      "Width": 1,
-      "Height": 1,
-      "GroundPattern": [
-        [
-          "A"
-        ]
-      ],
-      "IsRotatable": false,
-      "IsPassable": false,
-      "Strength": 1,
-      "ItemName": "hay",
-      "ItemAmount": 1,
-      "RequiredToolType": "Scythe"
-    },
-    {
       "Id": 7003,
       "Name": "birch_stump",
       "Description": "test",

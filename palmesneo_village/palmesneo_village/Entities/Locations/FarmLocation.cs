@@ -60,9 +60,9 @@ namespace palmesneo_village
                     }
                     else if (generationType == 4)
                     {
-                        ResourceItem resourceItem = Engine.ItemsDatabase.GetItemByName<ResourceItem>("grass_resource");
+                        GrassItem grassItem = Engine.ItemsDatabase.GetItemByName<GrassItem>("blade_grass");
 
-                        TryBuild(resourceItem, x, y, Direction.Down);
+                        TryBuild(grassItem, x, y, Direction.Down);
                     }
                 }
             }
