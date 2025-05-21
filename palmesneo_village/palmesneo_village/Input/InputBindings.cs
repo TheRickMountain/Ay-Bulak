@@ -19,10 +19,14 @@ namespace palmesneo_village
             MoveHorizontally = new VirtualIntegerAxis();
             MoveHorizontally.Nodes.Add(new VirtualAxis.KeyboardKeys(VirtualInput.OverlapBehaviors.TakeOlder, Keys.A, Keys.D));
             MoveHorizontally.Nodes.Add(new VirtualAxis.KeyboardKeys(VirtualInput.OverlapBehaviors.TakeOlder, Keys.Left, Keys.Right));
+            MoveHorizontally.Nodes.Add(new VirtualAxis.PadDpadLeftRight(0));
+            MoveHorizontally.Nodes.Add(new VirtualAxis.PadLeftStickX(0, 0.0f));
 
             MoveVertically = new VirtualIntegerAxis();
             MoveVertically.Nodes.Add(new VirtualAxis.KeyboardKeys(VirtualInput.OverlapBehaviors.TakeOlder, Keys.W, Keys.S));
             MoveVertically.Nodes.Add(new VirtualAxis.KeyboardKeys(VirtualInput.OverlapBehaviors.TakeOlder, Keys.Up, Keys.Down));
+            MoveVertically.Nodes.Add(new VirtualAxis.PadDpadUpDown(0));
+            MoveVertically.Nodes.Add(new VirtualAxis.PadLeftStickY(0, 0.0f));
 
             Rotate = new VirtualButton();
             Rotate.Nodes.Add(new VirtualButton.KeyboardKey(Keys.R));
