@@ -34,7 +34,7 @@ namespace palmesneo_village
 
                         TreeBuilding treeBuilding = GetBuilding(x, y) as TreeBuilding;
 
-                        treeBuilding?.SetGrowthProgress(Calc.Random.Choose(0.35f, 0.5f, 0.75f, 1.0f));
+                        treeBuilding?.SetGrowthProgress(Calc.Random.Choose(0.35f, 0.5f, 0.75f, 1.0f), timeOfDayManager);
                     }
                     if (generationType == 1)
                     {
@@ -44,7 +44,7 @@ namespace palmesneo_village
 
                         TreeBuilding treeBuilding = GetBuilding(x, y) as TreeBuilding;
 
-                        treeBuilding?.SetGrowthProgress(Calc.Random.Choose(0.35f, 0.5f, 0.75f, 1.0f));
+                        treeBuilding?.SetGrowthProgress(Calc.Random.Choose(0.35f, 0.5f, 0.75f, 1.0f), timeOfDayManager);
                     }
                     else if (generationType == 2)
                     {
