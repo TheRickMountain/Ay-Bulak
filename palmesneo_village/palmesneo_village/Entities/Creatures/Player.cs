@@ -85,9 +85,7 @@ namespace palmesneo_village
 
             UpdateMovement();
 
-            Direction viewDirection = CalculateViewDirection();
-
-            UpdateBodySprite(viewDirection);
+            UpdateBodySprite(movementDirection);
 
             UpdateItemsPickup();
 
@@ -178,38 +176,15 @@ namespace palmesneo_village
             return true;
         }
 
-        private Direction CalculateViewDirection()
-        {
-            float radianAngle = Calc.Angle(GlobalPosition, MInput.Mouse.GlobalPosition);
-            float degreeAngle = MathHelper.ToDegrees(radianAngle) + 180;
-
-            if (degreeAngle >= 45 && degreeAngle < 135)
-            {
-                return Direction.Up;
-            }
-            else if (degreeAngle >= 135 && degreeAngle < 225)
-            {
-                return Direction.Right;
-            }
-            else if (degreeAngle >= 225 && degreeAngle < 315)
-            {
-                return Direction.Down;
-            }
-            else
-            {
-                return Direction.Left;
-            }
-        }
-
-        private void UpdateBodySprite(Direction viewDirection)
+        private void UpdateBodySprite(Direction direction)
         {
             if (isMoving)
             {
-                bodySprite.Play($"walk_{viewDirection.ToString().ToLower()}");
+                bodySprite.Play($"walk_{direction.ToString().ToLower()}");
             }
             else
             {
-                bodySprite.Play($"idle_{viewDirection.ToString().ToLower()}");
+                bodySprite.Play($"idle_{direction.ToString().ToLower()}");
             }
         }
 
