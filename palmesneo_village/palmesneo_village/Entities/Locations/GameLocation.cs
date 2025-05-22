@@ -347,6 +347,11 @@ namespace palmesneo_village
                                 toolItem.PlaySoundEffect();
                                 playerEnergyManager.ConsumeEnergy(1);
                                 SetGroundTile(x, y, GroundTile.FarmPlot);
+
+                                if(timeOfDayManager.CurrentWeather == Weather.Rain)
+                                {
+                                    SetGroundTopTile(x, y, GroundTopTile.Moisture);
+                                }
                             }
                         }
                         break;
