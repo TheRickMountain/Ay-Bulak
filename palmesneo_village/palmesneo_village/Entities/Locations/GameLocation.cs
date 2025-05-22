@@ -340,7 +340,9 @@ namespace palmesneo_village
                 {
                     case ToolType.Showel:
                         {
-                            if ((GetGroundTile(x, y) == GroundTile.Grass || GetGroundTile(x, y) == GroundTile.Ground)
+                            GroundTile groundTile = GetGroundTile(x, y);
+
+                            if ((groundTile == GroundTile.Grass || groundTile == GroundTile.Ground)
                                 && GetTileFloorPathItem(x, y) == null
                                 && building == null)
                             {
@@ -352,6 +354,14 @@ namespace palmesneo_village
                                 {
                                     SetGroundTopTile(x, y, GroundTopTile.Moisture);
                                 }
+                            }
+                            else if(groundTile == GroundTile.FarmPlot && building == null)
+                            {
+                                toolItem.PlaySoundEffect();
+                                playerEnergyManager.ConsumeEnergy(1);
+                                SetGroundTile(x, y, GroundTile.Ground);
+
+                                SetGroundTopTile(x, y, GroundTopTile.None);
                             }
                         }
                         break;
@@ -377,15 +387,7 @@ namespace palmesneo_village
                     case ToolType.Pickaxe:
                     case ToolType.Axe:
                         {
-                            if(building == null && GetGroundTile(x, y) == GroundTile.FarmPlot)
-                            {
-                                SetGroundTile(x, y, GroundTile.Ground);
-
-                                SetGroundTopTile(x, y, GroundTopTile.None);
-
-                                playerEnergyManager.ConsumeEnergy(1);
-                            }
-                            else if (floorPathTilemap.GetCell(x, y) >= 0)
+                            if (floorPathTilemap.GetCell(x, y) >= 0)
                             {
                                 AddItem(new Vector2(x, y) * Engine.TILE_SIZE, new ItemContainer()
                                 {
