@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using System;
 
 namespace palmesneo_village
 {
@@ -6,11 +7,8 @@ namespace palmesneo_village
     {
         public int FramesPerSecond
         {
-            get { return framesPerSecond; }
-            set
-            {
-                framesPerSecond = MathHelper.Clamp(value, 0, 60);
-            }
+            get => framesPerSecond;
+            set => framesPerSecond = MathHelper.Clamp(value, 0, 60);
         }
 
         public MTexture[] Frames { get; private set; }
@@ -20,6 +18,9 @@ namespace palmesneo_village
 
         private int currentFrame;
         private int defaultFrame;
+        private int lastFrame = -1;
+
+        public Action<int> FrameChanged { get; set; }
 
         public Animation(MTexture[] frames, int defaultFrame, int speed)
         {
@@ -53,24 +54,22 @@ namespace palmesneo_village
 
         public void Update(float dt)
         {
-            if (Frames.Length == 1)
+            if(Frames.Length == 1 && FramesPerSecond == 0)
             {
                 currentFrame = defaultFrame;
+                return;
             }
-            else
+
+            timer += dt;
+            if (timer >= (1.0f / FramesPerSecond))
             {
-                if (FramesPerSecond == 0)
+                timer -= (1.0f / FramesPerSecond);
+                currentFrame = (currentFrame + 1) % Frames.Length;
+
+                if (currentFrame != lastFrame)
                 {
-                    currentFrame = defaultFrame;
-                }
-                else
-                {
-                    timer += dt;
-                    if (timer >= (1.0f / FramesPerSecond))
-                    {
-                        currentFrame = (currentFrame + 1) % Frames.Length;
-                        timer = 0.0f;
-                    }
+                    lastFrame = currentFrame;
+                    FrameChanged?.Invoke(currentFrame);
                 }
             }
         }
@@ -84,6 +83,7 @@ namespace palmesneo_village
         {
             currentFrame = defaultFrame;
             timer = 0.0f;
+            lastFrame = -1;
         }
     }
 }
