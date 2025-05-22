@@ -22,6 +22,8 @@ namespace palmesneo_village
             UpdateWheelInput();
 
             UpdateKeyboardInput();
+
+            UpdateGamepadInput();
         }
 
         private void UpdateWheelInput()
@@ -30,9 +32,7 @@ namespace palmesneo_village
 
             if (wheelDelta != 0)
             {
-                CurrentSlotIndex = Math.Clamp(CurrentSlotIndex - 1 * Math.Sign(wheelDelta), 0, slotsCount - 1);
-
-                CurrentSlotIndexChanged?.Invoke(CurrentSlotIndex);
+                SetCurrentSlot(CurrentSlotIndex - 1 * Math.Sign(wheelDelta));
             }
         }
 
@@ -42,21 +42,31 @@ namespace palmesneo_village
             {
                 if (MInput.Keyboard.Pressed(Keys.D1 + i))
                 {
-                    CurrentSlotIndex = i;
-                    CurrentSlotIndexChanged?.Invoke(CurrentSlotIndex);
+                    SetCurrentSlot(i);
                 }
             }
 
             if (MInput.Keyboard.Pressed(Keys.D0))
             {
-                CurrentSlotIndex = 9;
-                CurrentSlotIndexChanged?.Invoke(CurrentSlotIndex);
+                SetCurrentSlot(9);
+            }
+        }
+
+        private void UpdateGamepadInput()
+        {
+            if (InputBindings.Previous.Pressed)
+            {
+                SetCurrentSlot(CurrentSlotIndex - 1);
+            }
+            else if (InputBindings.Next.Pressed)
+            {
+                SetCurrentSlot(CurrentSlotIndex + 1);
             }
         }
         
         public void SetCurrentSlot(int slotIndex)
         {
-            CurrentSlotIndex = slotIndex;
+            CurrentSlotIndex = Math.Clamp(slotIndex, 0, slotsCount - 1);
             CurrentSlotIndexChanged?.Invoke(CurrentSlotIndex);
         }
     }
