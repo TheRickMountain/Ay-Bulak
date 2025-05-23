@@ -13,10 +13,14 @@ namespace palmesneo_village
 
         public MTexture[] Frames { get; private set; }
 
+        public bool Loop { get; set; } = true;
+        public bool IsFinished { get; private set; }
+
+        public int CurrentFrame { get; private set; }
+
         private int framesPerSecond;
         private float timer = 0;
 
-        private int currentFrame;
         private int defaultFrame;
         private int lastFrame = -1;
 
@@ -56,34 +60,51 @@ namespace palmesneo_village
         {
             if(Frames.Length == 1 && FramesPerSecond == 0)
             {
-                currentFrame = defaultFrame;
+                CurrentFrame = defaultFrame;
                 return;
             }
+
+            if (IsFinished) return;
 
             timer += dt;
             if (timer >= (1.0f / FramesPerSecond))
             {
                 timer -= (1.0f / FramesPerSecond);
-                currentFrame = (currentFrame + 1) % Frames.Length;
 
-                if (currentFrame != lastFrame)
+                CurrentFrame++;
+
+                if(CurrentFrame >= Frames.Length)
                 {
-                    lastFrame = currentFrame;
-                    FrameChanged?.Invoke(currentFrame);
+                    if(Loop)
+                    {
+                        CurrentFrame = 0;
+                    }
+                    else
+                    {
+                        CurrentFrame = Frames.Length - 1;
+                        IsFinished = true;
+                    }
+                }
+
+                if (CurrentFrame != lastFrame)
+                {
+                    lastFrame = CurrentFrame;
+                    FrameChanged?.Invoke(CurrentFrame);
                 }
             }
         }
 
         public MTexture GetCurrentFrameTexture()
         {
-            return Frames[currentFrame];
+            return Frames[CurrentFrame];
         }
 
         public void Reset()
         {
-            currentFrame = defaultFrame;
+            CurrentFrame = defaultFrame;
             timer = 0.0f;
             lastFrame = -1;
+            IsFinished = false;
         }
     }
 }

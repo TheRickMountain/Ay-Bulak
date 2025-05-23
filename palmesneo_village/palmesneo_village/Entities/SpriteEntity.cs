@@ -1,12 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace palmesneo_village
 {
     public class SpriteEntity : ImageEntity
     {
+        public Animation CurrentAnimation { get; private set; }
+
+        public Action<int> AnimationFrameChaged { get; set; }
 
         private Dictionary<string, Animation> animations;
-        private Animation currentAnimation;
         private string currentAnimationKey = "";
 
         public SpriteEntity()
@@ -17,6 +20,7 @@ namespace palmesneo_village
         public void AddAnimation(string id, Animation animation)
         {
             animations.Add(id, animation);
+            animation.FrameChanged += OnAnimationFrameChanged;
         }
 
         public Animation GetAnimation(string id)
@@ -30,18 +34,23 @@ namespace palmesneo_village
                 return;
 
             currentAnimationKey = id;
-            currentAnimation = animations[id];
+            CurrentAnimation = animations[id];
         }
 
         public override void Update()
         {
             base.Update();
 
-            if (currentAnimation != null)
+            if (CurrentAnimation != null)
             {
-                currentAnimation.Update(Engine.GameDeltaTime);
-                Texture = currentAnimation.GetCurrentFrameTexture();
+                CurrentAnimation.Update(Engine.GameDeltaTime);
+                Texture = CurrentAnimation.GetCurrentFrameTexture();
             }
+        }
+
+        private void OnAnimationFrameChanged(int frameIndex)
+        {
+            AnimationFrameChaged?.Invoke(frameIndex);
         }
 
     }
