@@ -6,9 +6,18 @@ using System.Collections.Generic;
 
 namespace palmesneo_village
 {
+    public enum PlayerState
+    {
+        Idle,
+        Walk,
+        ToolUsing
+    }
+
     public class Player : Creature
     {
         private Inventory inventory;
+        private InventoryHotbar inventoryHotbar;
+        private PlayerEnergyManager energyManager;
 
         private const float COLLISION_CHECK_OFFSET = 4f;
 
@@ -18,8 +27,6 @@ namespace palmesneo_village
 
         private SpriteEntity bodySprite;
 
-        private Item handItem;
-
         private Direction movementDirection = Direction.Down;
 
         private bool isMoving = false;
@@ -28,10 +35,18 @@ namespace palmesneo_village
 
         private List<SoundEffectInstance> grassShakeSFXs = new();
 
-        public Player(string name, MTexture texture, float speed, Inventory inventory) : 
+        private PlayerState playerState = PlayerState.Idle;
+
+        private int interactTileX;
+        private int interactTileY;
+
+        public Player(string name, MTexture texture, float speed, Inventory inventory, InventoryHotbar inventoryHotbar,
+            PlayerEnergyManager energyManager) : 
             base(name, texture, speed)
         {
             this.inventory = inventory;
+            this.inventoryHotbar = inventoryHotbar;
+            this.energyManager = energyManager;
 
             IsDepthSortEnabled = true;
 
@@ -56,7 +71,7 @@ namespace palmesneo_village
 
         private void CreateAndInitializeBodySprite(MTexture spritesheet)
         {
-            int framesColumns = 4;
+            int framesColumns = 8;
             int framesRows = 4;
 
             int frameWidth = spritesheet.Width / framesColumns;
@@ -74,7 +89,19 @@ namespace palmesneo_village
             bodySprite.AddAnimation("walk_right", new Animation(spritesheet, 4, 0, frameWidth, frameHeight, 0, frameHeight * 3));
             AddChild(bodySprite);
 
+            bodySprite.AddAnimation("showel_down", new Animation(spritesheet, 4, 0, frameWidth, frameHeight, frameWidth * 4, 0));
+            bodySprite.AddAnimation("showel_left", new Animation(spritesheet, 4, 0, frameWidth, frameHeight, frameWidth * 4, frameHeight));
+            bodySprite.AddAnimation("showel_up", new Animation(spritesheet, 4, 0, frameWidth, frameHeight, frameWidth * 4, frameHeight * 2));
+            bodySprite.AddAnimation("showel_right", new Animation(spritesheet, 4, 0, frameWidth, frameHeight, frameWidth * 4, frameHeight * 3));
+
+            bodySprite.GetAnimation("showel_down").Loop = false;
+            bodySprite.GetAnimation("showel_left").Loop = false;
+            bodySprite.GetAnimation("showel_up").Loop = false;
+            bodySprite.GetAnimation("showel_right").Loop = false;
+
             bodySprite.LocalPosition = new Vector2(-frameWidth / 2, -(frameHeight - (Engine.TILE_SIZE / 2)));
+
+            bodySprite.AnimationFrameChaged += OnBodySpriteAnimationFrameChanged;
 
             bodySprite.Play("idle_down");
         }
@@ -83,9 +110,47 @@ namespace palmesneo_village
         {
             base.Update();
 
-            UpdateMovement();
+            switch(playerState)
+            {
+                case PlayerState.Idle:
+                    {
+                        bodySprite.Play($"idle_{movementDirection.ToString().ToLower()}");
 
-            UpdateBodySprite(movementDirection);
+                        Vector2 movementVector = new Vector2(InputBindings.MoveHorizontally.Value, InputBindings.MoveVertically.Value);
+
+                        if(movementVector != Vector2.Zero)
+                        {
+                            playerState = PlayerState.Walk;
+                        }
+                    }
+                    break;
+                case PlayerState.Walk:
+                    {
+                        bodySprite.Play($"walk_{movementDirection.ToString().ToLower()}");
+
+                        Vector2 movementVector = new Vector2(InputBindings.MoveHorizontally.Value, InputBindings.MoveVertically.Value);
+
+                        UpdateMovement(movementVector);
+
+                        if (movementVector == Vector2.Zero)
+                        {
+                            playerState = PlayerState.Idle;
+                        }
+                    }
+                    break;
+                case PlayerState.ToolUsing:
+                    {
+                        if(bodySprite.CurrentAnimation.IsFinished)
+                        {
+                            bodySprite.CurrentAnimation.Reset();
+
+                            playerState = PlayerState.Idle;
+
+                            bodySprite.Play($"idle_{movementDirection.ToString().ToLower()}");
+                        }
+                    }
+                    break;
+            }
 
             UpdateItemsPickup();
 
@@ -97,17 +162,15 @@ namespace palmesneo_village
             }
         }
 
-        protected void UpdateMovement()
+        protected void UpdateMovement(Vector2 movementVector)
         {
-            Vector2 movement = new Vector2(InputBindings.MoveHorizontally.Value, InputBindings.MoveVertically.Value);
-            
-            isMoving = movement != Vector2.Zero;
+            isMoving = movementVector != Vector2.Zero;
 
-            if (movement != Vector2.Zero)
+            if (movementVector != Vector2.Zero)
             {
-                movement.Normalize();
+                movementVector.Normalize();
 
-                movementDirection = Calc.GetDirection(movement);
+                movementDirection = Calc.GetDirection(movementVector);
 
                 float actualSpeed = Speed;
 
@@ -117,7 +180,7 @@ namespace palmesneo_village
                     actualSpeed = Speed + (Speed * floorPathItem.MovementSpeedBuff);
                 }
 
-                Vector2 newPosition = LocalPosition + movement * actualSpeed * Engine.GameDeltaTime;
+                Vector2 newPosition = LocalPosition + movementVector * actualSpeed * Engine.GameDeltaTime;
 
                 // Проверяем коллизии перед перемещением
                 if (IsValidMovement(newPosition))
@@ -127,8 +190,8 @@ namespace palmesneo_village
                 else
                 {
                     // Попробуем двигаться только по X или только по Y
-                    Vector2 testX = LocalPosition + new Vector2(movement.X * actualSpeed * Engine.GameDeltaTime, 0);
-                    Vector2 testY = LocalPosition + new Vector2(0, movement.Y * actualSpeed * Engine.GameDeltaTime);
+                    Vector2 testX = LocalPosition + new Vector2(movementVector.X * actualSpeed * Engine.GameDeltaTime, 0);
+                    Vector2 testY = LocalPosition + new Vector2(0, movementVector.Y * actualSpeed * Engine.GameDeltaTime);
 
                     if (IsValidMovement(testX))
                     {
@@ -174,18 +237,6 @@ namespace palmesneo_village
             }
 
             return true;
-        }
-
-        private void UpdateBodySprite(Direction direction)
-        {
-            if (isMoving)
-            {
-                bodySprite.Play($"walk_{direction.ToString().ToLower()}");
-            }
-            else
-            {
-                bodySprite.Play($"idle_{direction.ToString().ToLower()}");
-            }
         }
 
         private void UpdateItemsPickup()
@@ -283,11 +334,6 @@ namespace palmesneo_village
             RenderManager.Line(checkPoints[2], checkPoints[0], Color.YellowGreen);
         }
     
-        public void SetHandItem(Item item)
-        {
-            handItem = item;
-        }
-
         public override IEnumerable<InteractionData> GetAvailableInteractions(Inventory inventory)
         {
             yield break;
@@ -296,6 +342,43 @@ namespace palmesneo_village
         public override void Interact(InteractionData interactionData, Inventory inventory)
         {
 
+        }
+
+        public void InteractWithTile(int tileX, int tileY)
+        {
+            interactTileX = tileX;
+            interactTileY = tileY;
+
+            Item item = inventory.GetSlotItem(inventoryHotbar.CurrentSlotIndex);
+
+            if(item is ToolItem toolItem)
+            {
+                switch(toolItem.ToolType)
+                {
+                    case ToolType.Showel:
+                        {
+                            bodySprite.Play($"showel_{movementDirection.ToString().ToLower()}");
+                        }
+                        break;
+                }
+
+                playerState = PlayerState.ToolUsing;
+            }
+            else
+            {
+                CurrentLocation.InteractWithTile(tileX, tileY, inventory, inventoryHotbar.CurrentSlotIndex, energyManager);
+            }
+        }
+
+        private void OnBodySpriteAnimationFrameChanged(int frameIndex)
+        {
+            if (playerState == PlayerState.ToolUsing)
+            {
+                if(frameIndex == 3)
+                {
+                    CurrentLocation.InteractWithTile(interactTileX, interactTileY, inventory, inventoryHotbar.CurrentSlotIndex, energyManager);
+                }
+            }
         }
     }
 }

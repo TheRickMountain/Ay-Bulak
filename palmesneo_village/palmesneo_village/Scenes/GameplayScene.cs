@@ -88,7 +88,10 @@ namespace palmesneo_village
 
             QuestManager = new QuestManager();
 
-            player = new Player("Player", ResourcesManager.GetTexture("Sprites", "player"), 80, PlayerInventory);
+            PlayerEnergyManager = new PlayerEnergyManager(100, 100);
+
+            player = new Player("Player", ResourcesManager.GetTexture("Sprites", "player"), 80, PlayerInventory, 
+                inventoryHotbar, PlayerEnergyManager);
 
             RegisterLocation(new FarmLocation("farm", timeOfDayManager));
 
@@ -100,7 +103,7 @@ namespace palmesneo_village
             tileSelector.Depth = 100;
             MasterEntity.AddChild(tileSelector);
 
-            PlayerEnergyManager = new PlayerEnergyManager(100, 100);
+            
             PlayerMoneyManager = new PlayerMoneyManager();
 
             PlayerInventory.SlotDataChanged += OnInventorySlotDataChanged;
@@ -347,8 +350,7 @@ namespace palmesneo_village
 
                             if (MInput.Mouse.PressedLeftButton)
                             {
-                                CurrentGameLocation.InteractWithTile(tileX, tileY, PlayerInventory,
-                                    inventoryHotbar.CurrentSlotIndex, PlayerEnergyManager);
+                                player.InteractWithTile(tileX, tileY);
                             }
                             else if (MInput.Mouse.PressedRightButton)
                             {
@@ -679,8 +681,6 @@ namespace palmesneo_village
             {
                 buildingSystem.SetCurrentBuildingItem(null);
             }
-
-            player.SetHandItem(item);
         }
 
         private void OnInteractionMenuInteractionSelected(InteractionData interactionData)
