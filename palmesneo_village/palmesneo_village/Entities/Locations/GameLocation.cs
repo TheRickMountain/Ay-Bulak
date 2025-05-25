@@ -25,7 +25,8 @@ namespace palmesneo_village
     public enum GroundTopTile
     {
         None = -1,
-        Moisture = 0
+        Moisture = 0,
+        ForestTrunk = 1
     }
 
     public enum AirTile
@@ -865,6 +866,8 @@ namespace palmesneo_village
         {
             if (buildingsMap[x, y] != null) return false;
 
+            if (GetGroundTopTile(x, y) == GroundTopTile.ForestTrunk) return false;
+
             GroundTile groundTile = GetGroundTile(x, y);
 
             switch (groundPatternId)
@@ -993,9 +996,9 @@ namespace palmesneo_village
                     break;
             }
 
-            switch(GetAirTile(x, y))
+            switch(GetGroundTopTile(x, y))
             {
-                case AirTile.Forest:
+                case GroundTopTile.ForestTrunk:
                     collisionMap[x, y] = false;
                     break;
             }
