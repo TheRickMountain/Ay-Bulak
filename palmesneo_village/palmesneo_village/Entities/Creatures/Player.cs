@@ -73,7 +73,7 @@ namespace palmesneo_village
         private void CreateAndInitializeBodySprite(MTexture spritesheet)
         {
             int framesColumns = 8;
-            int framesRows = 4;
+            int framesRows = 8;
 
             int frameWidth = spritesheet.Width / framesColumns;
             int frameHeight = spritesheet.Height / framesRows;
@@ -99,6 +99,16 @@ namespace palmesneo_village
             bodySprite.GetAnimation("showel_left").Loop = false;
             bodySprite.GetAnimation("showel_up").Loop = false;
             bodySprite.GetAnimation("showel_right").Loop = false;
+
+            bodySprite.AddAnimation("watering_can_down", new Animation(spritesheet, 4, 0, frameWidth, frameHeight, 0, frameHeight * 4));
+            bodySprite.AddAnimation("watering_can_left", new Animation(spritesheet, 4, 0, frameWidth, frameHeight, 0, frameHeight * 5));
+            bodySprite.AddAnimation("watering_can_up", new Animation(spritesheet, 4, 0, frameWidth, frameHeight, 0, frameHeight * 6));
+            bodySprite.AddAnimation("watering_can_right", new Animation(spritesheet, 4, 0, frameWidth, frameHeight, 0, frameHeight * 7));
+
+            bodySprite.GetAnimation("watering_can_down").Loop = false;
+            bodySprite.GetAnimation("watering_can_left").Loop = false;
+            bodySprite.GetAnimation("watering_can_up").Loop = false;
+            bodySprite.GetAnimation("watering_can_right").Loop = false;
 
             bodySprite.LocalPosition = new Vector2(-frameWidth / 2, -(frameHeight - (Engine.TILE_SIZE / 2)));
 
@@ -359,6 +369,11 @@ namespace palmesneo_village
                     case ToolType.Showel:
                         {
                             bodySprite.Play($"showel_{movementDirection.ToString().ToLower()}");
+                        }
+                        break;
+                    case ToolType.WateringCan:
+                        {
+                            bodySprite.Play($"watering_can_{movementDirection.ToString().ToLower()}");
                         }
                         break;
                 }
