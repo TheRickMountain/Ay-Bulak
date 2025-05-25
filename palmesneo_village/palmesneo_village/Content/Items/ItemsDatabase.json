@@ -1045,7 +1045,8 @@
       "IsRotatable": false,
       "IsPassable": true,
       "TilesetIndex": 0,
-      "MovementSpeedBuff": 0.2
+      "MovementSpeedBuff": 0.2,
+      "FootstepSoundEffect": "SoundEffects\\RPG_Essentials_Free\\12_Player_Movement_SFX\\45_Landing_01"
     },
     {
       "Id": 8001,
@@ -1062,7 +1063,8 @@
       "IsRotatable": false,
       "IsPassable": true,
       "TilesetIndex": 1,
-      "MovementSpeedBuff": 0.2
+      "MovementSpeedBuff": 0.2,
+      "FootstepSoundEffect": "SoundEffects\\RPG_Essentials_Free\\12_Player_Movement_SFX\\08_Step_rock_02"
     },
     {
       "Id": 8002,
@@ -1079,7 +1081,8 @@
       "IsRotatable": false,
       "IsPassable": true,
       "TilesetIndex": 2,
-      "MovementSpeedBuff": 0.2
+      "MovementSpeedBuff": 0.2,
+      "FootstepSoundEffect": "SoundEffects\\RPG_Essentials_Free\\12_Player_Movement_SFX\\12_Step_wood_03"
     },
     {
       "Id": 8003,
@@ -1096,7 +1099,8 @@
       "IsRotatable": false,
       "IsPassable": true,
       "TilesetIndex": 3,
-      "MovementSpeedBuff": 0.2
+      "MovementSpeedBuff": 0.2,
+      "FootstepSoundEffect": "SoundEffects\\RPG_Essentials_Free\\12_Player_Movement_SFX\\08_Step_rock_02"
     },
     {
       "Id": 8004,
@@ -1113,7 +1117,8 @@
       "IsRotatable": false,
       "IsPassable": true,
       "TilesetIndex": 4,
-      "MovementSpeedBuff": 0.1
+      "MovementSpeedBuff": 0.1,
+      "FootstepSoundEffect": "SoundEffects\\RPG_Essentials_Free\\12_Player_Movement_SFX\\03_Step_grass_03"
     }
   ],
   "ManualCrafterItems": [

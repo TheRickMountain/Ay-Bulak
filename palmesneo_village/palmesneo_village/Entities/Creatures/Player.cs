@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace palmesneo_village
 {
@@ -174,7 +175,7 @@ namespace palmesneo_village
 
                 float actualSpeed = Speed;
 
-                FloorPathItem floorPathItem = CurrentLocation.GetTileFloorPathItem(CurrentLocation.WorldToMap(LocalPosition));
+                FloorPathItem floorPathItem = CurrentLocation.GetTileFloorPathItem(GetTilePosition());
                 if (floorPathItem != null)
                 {
                     actualSpeed = Speed + (Speed * floorPathItem.MovementSpeedBuff);
@@ -372,12 +373,76 @@ namespace palmesneo_village
 
         private void OnBodySpriteAnimationFrameChanged(int frameIndex)
         {
-            if (playerState == PlayerState.ToolUsing)
+            switch(playerState)
             {
-                if(frameIndex == 3)
-                {
-                    CurrentLocation.InteractWithTile(interactTileX, interactTileY, inventory, inventoryHotbar.CurrentSlotIndex, energyManager);
-                }
+                case PlayerState.ToolUsing:
+                    {
+                        if (frameIndex == 3)
+                        {
+                            CurrentLocation.InteractWithTile(interactTileX, interactTileY, inventory, inventoryHotbar.CurrentSlotIndex, energyManager);
+                        }
+                    }
+                    break;
+                case PlayerState.Walk:
+                    {
+                        if (frameIndex == 1 || frameIndex == 3)
+                        {
+                            Vector2 tilePosition = GetTilePosition();
+
+                            FloorPathItem floorPathItem = CurrentLocation.GetTileFloorPathItem(tilePosition);
+                            if (floorPathItem != null)
+                            {
+                                var footstepSFX = ResourcesManager.GetSoundEffect(floorPathItem.FootstepSoundEffect);
+
+                                if (footstepSFX == null)
+                                {
+                                    Debug.WriteLine($"Sfx '{floorPathItem.FootstepSoundEffect}' not found!");
+                                }
+                                else
+                                {
+                                    footstepSFX.Play(0.5f, Calc.Random.Range(0.0f, 0.5f), 0.0f);
+                                }
+                            }
+                            else
+                            {
+                                GroundTile groundTile = CurrentLocation.GetGroundTile((int)tilePosition.X, (int)tilePosition.Y);
+
+                                switch(groundTile)
+                                {
+                                    case GroundTile.FarmPlot:
+                                    case GroundTile.Ground:
+                                    case GroundTile.CoopHouseFloor:
+                                        {
+                                            ResourcesManager.GetSoundEffect(
+                                                "SoundEffects",
+                                                "RPG_Essentials_Free",
+                                                "12_Player_Movement_SFX",
+                                                "45_Landing_01").Play(0.5f, Calc.Random.Range(0.0f, 0.5f), 0.0f);
+                                        }
+                                        break;
+                                    case GroundTile.Grass:
+                                        {
+                                            ResourcesManager.GetSoundEffect(
+                                                "SoundEffects",
+                                                "RPG_Essentials_Free",
+                                                "12_Player_Movement_SFX",
+                                                "03_Step_grass_03").Play(0.5f, Calc.Random.Range(0.0f, 0.5f), 0.0f);
+                                        }
+                                        break;
+                                    case GroundTile.HouseFloor:
+                                        {
+                                            ResourcesManager.GetSoundEffect(
+                                                "SoundEffects",
+                                                "RPG_Essentials_Free",
+                                                "12_Player_Movement_SFX",
+                                                "12_Step_wood_03").Play(0.5f, Calc.Random.Range(0.0f, 0.5f), 0.0f);
+                                        }
+                                        break;
+                                }
+                            }
+                        }
+                    }
+                    break;
             }
         }
     }

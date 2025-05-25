@@ -10,6 +10,7 @@ namespace palmesneo_village
     {
         public int TilesetIndex { get; init; }
         public float MovementSpeedBuff { get; init; }
+        public string FootstepSoundEffect { get; init; }
 
         public override void Initialize(MTileset sourceTileset)
         {
