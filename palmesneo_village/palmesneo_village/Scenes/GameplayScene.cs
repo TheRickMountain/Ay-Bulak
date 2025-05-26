@@ -180,7 +180,6 @@ namespace palmesneo_village
 
             PlayerMoneyManager.MoneyAmount = 500;
 
-            PlayerInventory.TryAddItem(Engine.ItemsDatabase.GetItemByName("iron_pickaxe"), 1, 0);
             PlayerInventory.TryAddItem(Engine.ItemsDatabase.GetItemByName("iron_axe"), 1, 0);
             PlayerInventory.TryAddItem(Engine.ItemsDatabase.GetItemByName("iron_showel"), 1, 0);
             PlayerInventory.TryAddItem(Engine.ItemsDatabase.GetItemByName("iron_scythe"), 1, 0);

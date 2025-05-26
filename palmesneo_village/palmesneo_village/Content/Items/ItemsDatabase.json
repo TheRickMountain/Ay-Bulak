@@ -93,23 +93,6 @@
       "OffsetY": 8
     },
     {
-      "Id": 131,
-      "Name": "iron_pickaxe",
-      "Description": "test",
-      "IsStackable": false,
-      "IsTradable": false,
-      "IsDroppable": false,
-      "ToolType": "Pickaxe",
-      "Capacity": 0,
-      "Efficiency": 1,
-      "SoundEffects": [
-        "SoundEffects\\Minifantasy_Forgotten_Plains_SFX\\16_Hit_on_brick_1",
-        "SoundEffects\\Minifantasy_Forgotten_Plains_SFX\\16_Hit_on_brick_2"
-      ],
-      "OffsetX": 4,
-      "OffsetY": 8
-    },
-    {
       "Id": 132,
       "Name": "iron_showel",
       "Description": "test",
@@ -969,7 +952,7 @@
       "Strength": 1,
       "ItemName": "stone",
       "ItemAmount": 1,
-      "RequiredToolType": "Pickaxe"
+      "RequiredToolType": "Showel"
     },
     {
       "Id": 7001,

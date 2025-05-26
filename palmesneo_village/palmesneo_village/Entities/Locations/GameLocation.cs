@@ -392,7 +392,6 @@ namespace palmesneo_village
                             }
                         }
                         break;
-                    case ToolType.Pickaxe:
                     case ToolType.Axe:
                         {
                             if (floorPathTilemap.GetCell(x, y) >= 0)
