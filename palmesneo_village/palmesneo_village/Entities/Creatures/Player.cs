@@ -11,7 +11,8 @@ namespace palmesneo_village
     {
         Idle,
         Walk,
-        ToolUsing
+        ToolUsing,
+        ScytheUsing
     }
 
     public class Player : Creature
@@ -170,6 +171,7 @@ namespace palmesneo_village
                     }
                     break;
                 case PlayerState.ToolUsing:
+                case PlayerState.ScytheUsing:
                     {
                         if(bodySprite.CurrentAnimation.IsFinished)
                         {
@@ -380,6 +382,8 @@ namespace palmesneo_village
             interactTileX = tileX;
             interactTileY = tileY;
 
+            LookAtTile(new Vector2(tileX, tileY));
+
             Item item = inventory.GetSlotItem(inventoryHotbar.CurrentSlotIndex);
 
             if(item is ToolItem toolItem)
@@ -389,30 +393,44 @@ namespace palmesneo_village
                     case ToolType.Showel:
                         {
                             bodySprite.Play($"showel_{movementDirection.ToString().ToLower()}");
+                            playerState = PlayerState.ToolUsing;
                         }
                         break;
                     case ToolType.WateringCan:
                         {
                             bodySprite.Play($"watering_can_{movementDirection.ToString().ToLower()}");
+                            playerState = PlayerState.ToolUsing;
                         }
                         break;
                     case ToolType.Axe:
                         {
                             bodySprite.Play($"axe_{movementDirection.ToString().ToLower()}");
+                            playerState = PlayerState.ToolUsing;
                         }
                         break;
                     case ToolType.Scythe:
                         {
                             bodySprite.Play($"scythe_{movementDirection.ToString().ToLower()}");
+                            playerState = PlayerState.ScytheUsing;
                         }
                         break;
                 }
-
-                playerState = PlayerState.ToolUsing;
             }
             else
             {
                 CurrentLocation.InteractWithTile(tileX, tileY, inventory, inventoryHotbar.CurrentSlotIndex, energyManager);
+            }
+        }
+
+        private void LookAtTile(Vector2 targetTile)
+        {
+            Vector2 selfTile = GetTilePosition();
+            Vector2 directionToTarget = targetTile - selfTile;
+
+            if (directionToTarget != Vector2.Zero)
+            {
+                directionToTarget.Normalize();
+                movementDirection = Calc.GetDirection(directionToTarget);
             }
         }
 
@@ -425,6 +443,14 @@ namespace palmesneo_village
                         if (frameIndex == 2)
                         {
                             CurrentLocation.InteractWithTile(interactTileX, interactTileY, inventory, inventoryHotbar.CurrentSlotIndex, energyManager);
+                        }
+                    }
+                    break;
+                case PlayerState.ScytheUsing:
+                    {
+                        if(frameIndex == 2)
+                        {
+                            ApplyScytheEffect();
                         }
                     }
                     break;
@@ -488,6 +514,52 @@ namespace palmesneo_village
                         }
                     }
                     break;
+            }
+        }
+
+        private void ApplyScytheEffect()
+        {
+            Vector2 baseTile = GetTilePosition();
+            List<Point> affectedTiles = new();
+
+            switch (movementDirection)
+            {
+                case Direction.Up:
+                    for (int dx = -1; dx <= 1; dx++)
+                    {
+                        affectedTiles.Add(new Point((int)baseTile.X + dx, (int)baseTile.Y - 1));
+                        affectedTiles.Add(new Point((int)baseTile.X + dx, (int)baseTile.Y - 2));
+                    }
+                    break;
+
+                case Direction.Down:
+                    for (int dx = -1; dx <= 1; dx++)
+                    {
+                        affectedTiles.Add(new Point((int)baseTile.X + dx, (int)baseTile.Y + 1));
+                        affectedTiles.Add(new Point((int)baseTile.X + dx, (int)baseTile.Y + 2));
+                    }
+                    break;
+
+                case Direction.Left:
+                    for (int dy = -1; dy <= 1; dy++)
+                    {
+                        affectedTiles.Add(new Point((int)baseTile.X - 1, (int)baseTile.Y + dy));
+                        affectedTiles.Add(new Point((int)baseTile.X - 2, (int)baseTile.Y + dy));
+                    }
+                    break;
+
+                case Direction.Right:
+                    for (int dy = -1; dy <= 1; dy++)
+                    {
+                        affectedTiles.Add(new Point((int)baseTile.X + 1, (int)baseTile.Y + dy));
+                        affectedTiles.Add(new Point((int)baseTile.X + 2, (int)baseTile.Y + dy));
+                    }
+                    break;
+            }
+
+            foreach (Point tile in affectedTiles)
+            {
+                CurrentLocation.InteractWithTile(tile.X, tile.Y, inventory, inventoryHotbar.CurrentSlotIndex, energyManager);
             }
         }
     }
