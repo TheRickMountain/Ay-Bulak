@@ -66,6 +66,7 @@ namespace palmesneo_village
         private Entity entitiesList;
         private Entity itemsList;
 
+        private RainSplashEmitter rainSplashEmitter;
         private RainEmitter rainEmitter;
         private SnowEmitter snowEmitter;
 
@@ -133,11 +134,13 @@ namespace palmesneo_village
 
             if (isOutdoor)
             {
+                rainSplashEmitter = new RainSplashEmitter();
                 rainEmitter = new RainEmitter();
                 snowEmitter = new SnowEmitter();
 
                 if (timeOfDayManager.CurrentWeather == Weather.Rain)
                 {
+                    AddChild(rainSplashEmitter);
                     AddChild(rainEmitter);
                 }
                 else if(timeOfDayManager.CurrentWeather == Weather.Snow)
@@ -154,6 +157,13 @@ namespace palmesneo_village
             if (isOutdoor)
             {
                 Vector2 viewportSize = cameraMovement.GetViewportZoomedSize();
+
+                if (rainSplashEmitter.TryGetSpawnShape(out MRectangleShape rainSplashShape))
+                {
+                    rainSplashShape.Size = viewportSize;
+                }
+
+                rainSplashEmitter.LocalPosition = cameraMovement.LocalPosition;
 
                 if (rainEmitter.TryGetSpawnShape(out MRectangleShape rainShape))
                 {
@@ -489,6 +499,7 @@ namespace palmesneo_village
             {
                 if (rainEmitter.Parent != null)
                 {
+                    RemoveChild(rainSplashEmitter);
                     RemoveChild(rainEmitter);
                 }
 
@@ -501,6 +512,7 @@ namespace palmesneo_village
                 {
                     if (rainEmitter.Parent == null)
                     {
+                        AddChild(rainSplashEmitter);
                         AddChild(rainEmitter);
                     }
                 }
