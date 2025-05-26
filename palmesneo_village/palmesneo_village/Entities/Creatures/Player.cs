@@ -72,7 +72,7 @@ namespace palmesneo_village
 
         private void CreateAndInitializeBodySprite(MTexture spritesheet)
         {
-            int framesColumns = 8;
+            int framesColumns = 10;
             int framesRows = 8;
 
             int frameWidth = spritesheet.Width / framesColumns;
@@ -90,25 +90,45 @@ namespace palmesneo_village
             bodySprite.AddAnimation("walk_right", new Animation(spritesheet, 4, 0, frameWidth, frameHeight, 0, frameHeight * 3));
             AddChild(bodySprite);
 
-            bodySprite.AddAnimation("showel_down", new Animation(spritesheet, 4, 0, frameWidth, frameHeight, frameWidth * 4, 0));
-            bodySprite.AddAnimation("showel_left", new Animation(spritesheet, 4, 0, frameWidth, frameHeight, frameWidth * 4, frameHeight));
-            bodySprite.AddAnimation("showel_up", new Animation(spritesheet, 4, 0, frameWidth, frameHeight, frameWidth * 4, frameHeight * 2));
-            bodySprite.AddAnimation("showel_right", new Animation(spritesheet, 4, 0, frameWidth, frameHeight, frameWidth * 4, frameHeight * 3));
+            bodySprite.AddAnimation("showel_down", new Animation(spritesheet, 3, 0, frameWidth, frameHeight, frameWidth * 4, 0));
+            bodySprite.AddAnimation("showel_left", new Animation(spritesheet, 3, 0, frameWidth, frameHeight, frameWidth * 4, frameHeight));
+            bodySprite.AddAnimation("showel_up", new Animation(spritesheet, 3, 0, frameWidth, frameHeight, frameWidth * 4, frameHeight * 2));
+            bodySprite.AddAnimation("showel_right", new Animation(spritesheet, 3, 0, frameWidth, frameHeight, frameWidth * 4, frameHeight * 3));
 
             bodySprite.GetAnimation("showel_down").Loop = false;
             bodySprite.GetAnimation("showel_left").Loop = false;
             bodySprite.GetAnimation("showel_up").Loop = false;
             bodySprite.GetAnimation("showel_right").Loop = false;
 
-            bodySprite.AddAnimation("watering_can_down", new Animation(spritesheet, 4, 0, frameWidth, frameHeight, 0, frameHeight * 4));
-            bodySprite.AddAnimation("watering_can_left", new Animation(spritesheet, 4, 0, frameWidth, frameHeight, 0, frameHeight * 5));
-            bodySprite.AddAnimation("watering_can_up", new Animation(spritesheet, 4, 0, frameWidth, frameHeight, 0, frameHeight * 6));
-            bodySprite.AddAnimation("watering_can_right", new Animation(spritesheet, 4, 0, frameWidth, frameHeight, 0, frameHeight * 7));
+            bodySprite.AddAnimation("watering_can_down", new Animation(spritesheet, 3, 0, frameWidth, frameHeight, 0, frameHeight * 4));
+            bodySprite.AddAnimation("watering_can_left", new Animation(spritesheet, 3, 0, frameWidth, frameHeight, 0, frameHeight * 5));
+            bodySprite.AddAnimation("watering_can_up", new Animation(spritesheet, 3, 0, frameWidth, frameHeight, 0, frameHeight * 6));
+            bodySprite.AddAnimation("watering_can_right", new Animation(spritesheet, 3, 0, frameWidth, frameHeight, 0, frameHeight * 7));
 
             bodySprite.GetAnimation("watering_can_down").Loop = false;
             bodySprite.GetAnimation("watering_can_left").Loop = false;
             bodySprite.GetAnimation("watering_can_up").Loop = false;
             bodySprite.GetAnimation("watering_can_right").Loop = false;
+
+            bodySprite.AddAnimation("axe_down", new Animation(spritesheet, 3, 0, frameWidth, frameHeight, frameWidth * 4, frameHeight * 4));
+            bodySprite.AddAnimation("axe_left", new Animation(spritesheet, 3, 0, frameWidth, frameHeight, frameWidth * 4, frameHeight * 5));
+            bodySprite.AddAnimation("axe_up", new Animation(spritesheet, 3, 0, frameWidth, frameHeight, frameWidth * 4, frameHeight * 6));
+            bodySprite.AddAnimation("axe_right", new Animation(spritesheet, 3, 0, frameWidth, frameHeight, frameWidth * 4, frameHeight * 7));
+
+            bodySprite.GetAnimation("axe_down").Loop = false;
+            bodySprite.GetAnimation("axe_left").Loop = false;
+            bodySprite.GetAnimation("axe_up").Loop = false;
+            bodySprite.GetAnimation("axe_right").Loop = false;
+
+            bodySprite.AddAnimation("scythe_down", new Animation(spritesheet, 3, 0, frameWidth, frameHeight, frameWidth * 7, 0));
+            bodySprite.AddAnimation("scythe_left", new Animation(spritesheet, 3, 0, frameWidth, frameHeight, frameWidth * 7, frameHeight));
+            bodySprite.AddAnimation("scythe_up", new Animation(spritesheet, 3, 0, frameWidth, frameHeight, frameWidth * 7, frameHeight * 2));
+            bodySprite.AddAnimation("scythe_right", new Animation(spritesheet, 3, 0, frameWidth, frameHeight, frameWidth * 7, frameHeight * 3));
+
+            bodySprite.GetAnimation("scythe_down").Loop = false;
+            bodySprite.GetAnimation("scythe_left").Loop = false;
+            bodySprite.GetAnimation("scythe_up").Loop = false;
+            bodySprite.GetAnimation("scythe_right").Loop = false;
 
             bodySprite.LocalPosition = new Vector2(-frameWidth / 2, -(frameHeight - (Engine.TILE_SIZE / 2)));
 
@@ -376,6 +396,16 @@ namespace palmesneo_village
                             bodySprite.Play($"watering_can_{movementDirection.ToString().ToLower()}");
                         }
                         break;
+                    case ToolType.Axe:
+                        {
+                            bodySprite.Play($"axe_{movementDirection.ToString().ToLower()}");
+                        }
+                        break;
+                    case ToolType.Scythe:
+                        {
+                            bodySprite.Play($"scythe_{movementDirection.ToString().ToLower()}");
+                        }
+                        break;
                 }
 
                 playerState = PlayerState.ToolUsing;
@@ -392,7 +422,7 @@ namespace palmesneo_village
             {
                 case PlayerState.ToolUsing:
                     {
-                        if (frameIndex == 3)
+                        if (frameIndex == 2)
                         {
                             CurrentLocation.InteractWithTile(interactTileX, interactTileY, inventory, inventoryHotbar.CurrentSlotIndex, energyManager);
                         }
