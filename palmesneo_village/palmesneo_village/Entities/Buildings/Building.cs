@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using palmesneo_village.Entities;
 using System;
 using System.Collections.Generic;
 
@@ -41,6 +42,7 @@ namespace palmesneo_village
             {
                 ParticlesEntity smokeEmitter = new ParticlesEntity(2, 
                     MParticlePresets.SmokeParticle(ResourcesManager.GetTexture("Sprites", "smoke")));
+                smokeEmitter.AddModifier(new AlphaFadeParticleModifier());
                 smokeEmitter.LocalPosition = buildingItem.SmokeSpawnData.GetPosition();
                 AddChild(smokeEmitter);
             }

@@ -14,7 +14,13 @@ namespace palmesneo_village
         private float timeAccumulator = 0f;
         private Func<MParticle> particleFactory;
 
-        private ISpawnShape spawnShape = new MPointShape();
+        private ISpawnShape defaultSpawnShape = new MPointShape();
+        private IParticleRenderer defaultRenderer = new StaticParticleRenderer();
+
+        private ISpawnShape currentSpawnShape;
+        private IParticleRenderer currentRenderer;
+
+        private List<IParticleModifier> modifiers;
 
         /// <summary>
         /// 
@@ -25,6 +31,11 @@ namespace palmesneo_village
         {
             this.emissionRate = emissionRate;
             this.particleFactory = particleFactory;
+
+            currentSpawnShape = defaultSpawnShape;
+            currentRenderer = defaultRenderer;
+
+            modifiers = new List<IParticleModifier>();
         }
 
         public override void Update()
@@ -40,7 +51,7 @@ namespace palmesneo_village
                 {
                     var particle = particleFactory();
                     
-                    particle.Position = spawnShape.GetSpawnPosition(GlobalPosition);
+                    particle.Position = currentSpawnShape.GetSpawnPosition(GlobalPosition);
                     
                     particles.Add(particle);
                     
@@ -53,6 +64,11 @@ namespace palmesneo_village
                 var p = particles[i];
 
                 p.Update(Engine.GameDeltaTime);
+
+                foreach (var modifier in modifiers)
+                {
+                    modifier.Update(p, Engine.GameDeltaTime);
+                }
 
                 if (p.IsAlive == false)
                 {
@@ -67,13 +83,35 @@ namespace palmesneo_village
 
             foreach (var p in particles)
             {
-                p.Draw(RenderManager.SpriteBatch);
+                currentRenderer.Draw(p);
             }
         }
 
         public void SetSpawnShape(ISpawnShape spawnShape)
         {
-            this.spawnShape = spawnShape;
+            if(spawnShape == null)
+            {
+                currentSpawnShape = defaultSpawnShape;
+                return;
+            }
+
+            currentSpawnShape = spawnShape;
+        }
+
+        public void SetRenderer(IParticleRenderer renderer)
+        {
+            if (renderer == null)
+            {
+                currentRenderer = defaultRenderer;
+                return;
+            }
+
+            currentRenderer = renderer;
+        }
+
+        public void AddModifier(IParticleModifier modifier)
+        {
+            modifiers.Add(modifier);
         }
     }
 }

@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Particles;
+using palmesneo_village.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -140,14 +141,16 @@ namespace palmesneo_village
                 rainEmitter = new ParticlesEntity(100,
                     MParticlePresets.RainParticle(ResourcesManager.GetTexture("Sprites", "rain_drop")));
                 rainEmitter.SetSpawnShape(rainEmitterSpawnShape);
+                rainEmitter.AddModifier(new AlphaFadeParticleModifier());
 
                 snowEmitterSpawnShape = new MRectangleShape(new Vector2(100, 100));
 
                 snowEmitter = new ParticlesEntity(100,
                     MParticlePresets.SnowParticle(new MTileset(ResourcesManager.GetTexture("Sprites", "snow_flakes"), 16, 16)));
                 snowEmitter.SetSpawnShape(snowEmitterSpawnShape);
+                snowEmitter.AddModifier(new AlphaFadeParticleModifier());
 
-                if(timeOfDayManager.CurrentWeather == Weather.Rain)
+                if (timeOfDayManager.CurrentWeather == Weather.Rain)
                 {
                     AddChild(rainEmitter);
                 }
