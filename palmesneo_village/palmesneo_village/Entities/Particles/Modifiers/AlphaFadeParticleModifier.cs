@@ -1,7 +1,7 @@
 ﻿using Cyotek.Drawing.BitmapFont;
 using Microsoft.Xna.Framework;
 
-namespace palmesneo_village.Entities
+namespace palmesneo_village
 {
     public class AlphaFadeParticleModifier : IParticleModifier
     {

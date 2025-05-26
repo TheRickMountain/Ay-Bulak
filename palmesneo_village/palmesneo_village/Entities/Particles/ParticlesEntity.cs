@@ -98,6 +98,12 @@ namespace palmesneo_village
             currentSpawnShape = spawnShape;
         }
 
+        public bool TryGetSpawnShape<T>(out T shape) where T : class, ISpawnShape
+        {
+            shape = currentSpawnShape as T;
+            return shape != null;
+        }
+
         public void SetRenderer(IParticleRenderer renderer)
         {
             if (renderer == null)

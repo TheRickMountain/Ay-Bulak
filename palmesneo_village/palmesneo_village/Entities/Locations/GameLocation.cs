@@ -66,11 +66,8 @@ namespace palmesneo_village
         private Entity entitiesList;
         private Entity itemsList;
 
-        private ParticlesEntity rainEmitter;
-        private ParticlesEntity snowEmitter;
-
-        private MRectangleShape rainEmitterSpawnShape;
-        private MRectangleShape snowEmitterSpawnShape;
+        private RainEmitter rainEmitter;
+        private SnowEmitter snowEmitter;
 
         private Player _player;
 
@@ -136,19 +133,8 @@ namespace palmesneo_village
 
             if (isOutdoor)
             {
-                rainEmitterSpawnShape = new MRectangleShape(new Vector2(100, 100));
-
-                rainEmitter = new ParticlesEntity(100,
-                    MParticlePresets.RainParticle(ResourcesManager.GetTexture("Sprites", "rain_drop")));
-                rainEmitter.SetSpawnShape(rainEmitterSpawnShape);
-                rainEmitter.AddModifier(new AlphaFadeParticleModifier());
-
-                snowEmitterSpawnShape = new MRectangleShape(new Vector2(100, 100));
-
-                snowEmitter = new ParticlesEntity(100,
-                    MParticlePresets.SnowParticle(new MTileset(ResourcesManager.GetTexture("Sprites", "snow_flakes"), 16, 16)));
-                snowEmitter.SetSpawnShape(snowEmitterSpawnShape);
-                snowEmitter.AddModifier(new AlphaFadeParticleModifier());
+                rainEmitter = new RainEmitter();
+                snowEmitter = new SnowEmitter();
 
                 if (timeOfDayManager.CurrentWeather == Weather.Rain)
                 {
@@ -169,10 +155,18 @@ namespace palmesneo_village
             {
                 Vector2 viewportSize = cameraMovement.GetViewportZoomedSize();
 
-                rainEmitterSpawnShape.Size = viewportSize + new Vector2(viewportSize.X / 3, 0);
+                if (rainEmitter.TryGetSpawnShape(out MRectangleShape rainShape))
+                {
+                    rainShape.Size = viewportSize + new Vector2(viewportSize.X / 3, 0);
+                }
+                
                 rainEmitter.LocalPosition = cameraMovement.LocalPosition + new Vector2(0, -(viewportSize.Y / 2));
 
-                snowEmitterSpawnShape.Size = viewportSize;
+                if (snowEmitter.TryGetSpawnShape(out MRectangleShape snowShape))
+                {
+                    snowShape.Size = viewportSize;
+                }
+
                 snowEmitter.LocalPosition = cameraMovement.LocalPosition;
             }
 
