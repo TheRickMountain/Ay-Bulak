@@ -30,9 +30,13 @@ namespace palmesneo_village
         {
             tweener = new Tweener();
 
-            Sprite.Centered = true;
-            Sprite.LocalPosition = new Vector2(Engine.TILE_SIZE / 2, Engine.TILE_SIZE / 2);
+            int buildingWidthInPixels = item.Width * Engine.TILE_SIZE;
+            int buildingHeightInPixels = item.Height * Engine.TILE_SIZE;
 
+            Sprite.Offset = new Vector2(Sprite.Texture.Width / 2, Sprite.Texture.Height);
+            
+            Sprite.LocalPosition = new Vector2(buildingWidthInPixels / 2, buildingHeightInPixels);
+            
             messageBubble = new ImageEntity();
             messageBubble.Texture = ResourcesManager.GetTexture("Sprites", "UI", "message_bubble");
             messageBubble.IsVisible = false;

@@ -82,14 +82,16 @@ namespace palmesneo_village
             tooltip.ShowTooltip(text);
         }
 
-        public void ChangeCursorTexture(MTexture texture)
+        public void ChangeCursor(MTexture texture, Color color)
         {
             cursor.Texture = texture;
+            cursor.SelfColor = color;
         }
 
         public void ChageCursorTextureToDefault()
         {
             cursor.Texture = ResourcesManager.GetTexture("Sprites", "cursor");
+            cursor.SelfColor = Color.White;
         }
 
     }

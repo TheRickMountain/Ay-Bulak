@@ -23,6 +23,8 @@ namespace palmesneo_village
 
     public class GameplayScene : Scene
     {
+        public const int PLAYER_INTERACTION_DISTANCE = 3;
+
         public GameLocation CurrentGameLocation 
         {
             get => currentGameLocation;
@@ -317,6 +319,20 @@ namespace palmesneo_village
 
                         Item currentPlayerItem = PlayerInventory.GetSlotItem(hotbarCurrentSlotIndex);
 
+                        InteractableEntity interactableEntity = TryGetInteractableEntityOnTile(mouseTile);
+
+                        if (interactableEntity != null)
+                        {
+                            Color cursorColor = Color.White;
+
+                            if (Vector2.Distance(playerTile, mouseTile) > PLAYER_INTERACTION_DISTANCE)
+                            {
+                                cursorColor = Color.White * 0.5f;
+                            }
+
+                            ChangeCursor(ResourcesManager.GetTexture("Sprites", "interaction_cursor"), cursorColor);
+                        }
+
                         bool canUseInventoryItem = true;
 
                         // Handle building item selection
@@ -335,17 +351,10 @@ namespace palmesneo_village
                                 }
                             }
                         }
-                        else if (CanShowTileSelector(playerTile, mouseTile, 4))
+                        else if (Vector2.Distance(playerTile, mouseTile) <= PLAYER_INTERACTION_DISTANCE)
                         {
                             tileSelector.IsVisible = true;
                             tileSelector.LocalPosition = CurrentGameLocation.MapToWorld(mouseTile);
-
-                            var interactableEntity = TryGetInteractableEntityOnTile(mouseTile);
-
-                            if(interactableEntity != null)
-                            {
-                                ChangeCursorTexture(ResourcesManager.GetTexture("Sprites", "interaction_cursor"));
-                            }
 
                             if (MInput.Mouse.PressedLeftButton)
                             {
@@ -643,18 +652,6 @@ namespace palmesneo_village
             interactionMenuUI.LocalPosition = MInput.Mouse.UIScaledPosition;
 
             gameState = GameState.InteractionMenu;
-        }
-
-        private bool CanShowTileSelector(Vector2 playerTile, Vector2 mouseTile, int maxDistance)
-        {
-            if (playerTile == mouseTile)
-            {
-                return false;
-            }
-
-            float distance = Vector2.Distance(playerTile, mouseTile);
-
-            return distance < maxDistance;
         }
 
         private void OnInventoryHotbarCurrentSlotIndexChanged(int slotIndex)

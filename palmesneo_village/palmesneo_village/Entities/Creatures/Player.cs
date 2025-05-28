@@ -31,8 +31,6 @@ namespace palmesneo_village
 
         private Direction movementDirection = Direction.Down;
 
-        private bool isMoving = false;
-
         private SoundEffectInstance currentSFX;
 
         private List<SoundEffectInstance> grassShakeSFXs = new();
@@ -197,8 +195,6 @@ namespace palmesneo_village
 
         protected void UpdateMovement(Vector2 movementVector)
         {
-            isMoving = movementVector != Vector2.Zero;
-
             if (movementVector != Vector2.Zero)
             {
                 movementVector.Normalize();
@@ -315,9 +311,9 @@ namespace palmesneo_village
 
         private void ShakeGrass()
         {
-            if (isMoving == false) return;
-        
-            Vector2 playerTile = CurrentLocation.WorldToMap(LocalPosition);
+            if (playerState != PlayerState.Walk) return;
+
+            Vector2 playerTile = GetTilePosition();
 
             Building building = CurrentLocation.GetBuilding((int)playerTile.X, (int)playerTile.Y);
 
