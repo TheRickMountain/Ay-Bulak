@@ -31,10 +31,10 @@ namespace palmesneo_village
         {
             this.treeItem = treeItem;
 
-            Sprite.Texture = treeItem.GrowthStagesTextures[0];
+            Sprite.Texture = treeItem.GrowthStagesTextures[Season.Spring][0];
 
             trunkImage = new ImageEntity();
-            trunkImage.Texture = treeItem.TrunkTexture;
+            trunkImage.Texture = treeItem.TrunkTextures[Season.Spring];
             trunkImage.Centered = true;
             // TODO: продумать как это вычислить автоматически
             trunkImage.Offset = new Vector2(0, 30);
@@ -59,22 +59,25 @@ namespace palmesneo_village
             base.Update();
         }
 
-        public override void OnAfterDayChanged()
+        public override void OnAfterDayChanged(TimeOfDayManager timeOfDayManager)
         {
-            if (IsRipe) return;
+            Sprite.Texture = treeItem.GrowthStagesTextures[timeOfDayManager.CurrentSeason][currentGrowthStage];
+            trunkImage.Texture = treeItem.TrunkTextures[timeOfDayManager.CurrentSeason];
+
+            if (IsRipe || timeOfDayManager.CurrentSeason == Season.Winter) return;
 
             float progressPerDay = 1.0f / treeItem.GrowthRateInDays;
 
-            SetGrowthProgress(growthProgress + progressPerDay);
+            SetGrowthProgress(growthProgress + progressPerDay, timeOfDayManager);
         }
 
-        public void SetGrowthProgress(float value)
+        public void SetGrowthProgress(float value, TimeOfDayManager timeOfDayManager)
         {
             growthProgress = MathHelper.Clamp(value, 0.0f, 1.0f);
 
             currentGrowthStage = (int)(growthProgress * ((treeItem.GrowthStagesData.Length - 1) / 1.0f));
 
-            Sprite.Texture = treeItem.GrowthStagesTextures[currentGrowthStage];
+            Sprite.Texture = treeItem.GrowthStagesTextures[timeOfDayManager.CurrentSeason][currentGrowthStage];
 
             currentStrength = treeItem.GrowthStagesData[currentGrowthStage].Strength;
 

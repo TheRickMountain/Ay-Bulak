@@ -13,7 +13,7 @@ namespace palmesneo_village
         Moving
     }
 
-    public class Animal : Creature
+    public abstract class Animal : Creature
     {
         public bool IsFed { get; set; } = false;
 

@@ -113,7 +113,7 @@ namespace palmesneo_village
                 float angle = radiansOfSeparation * i;
                 Vector2 targetButtonPosition = (new Vector2(-MathF.Sin(angle), -MathF.Cos(angle)) * radius) + buttonPositionOffset;
 
-                float delayTime = 0.05f * i;
+                float delayTime = 0.1f * i;
 
                 tweener.TweenTo(
                         target: button,
@@ -122,6 +122,7 @@ namespace palmesneo_village
                         duration: 0.2f,
                         delay: delayTime)
                         .Easing(EasingFunctions.CubicInOut)
+                        .OnBegin(tween => { ResourcesManager.GetSoundEffect("SoundEffects", "my_card").Play(); })
                         .OnEnd(tween => { button.SetMetadata("is_animating", false); });
 
                 tweener.TweenTo(

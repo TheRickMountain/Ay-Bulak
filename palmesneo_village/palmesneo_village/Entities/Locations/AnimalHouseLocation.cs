@@ -11,15 +11,15 @@ namespace palmesneo_village
     {
         public int Capacity { get; private set; }
 
-        public AnimalHouseLocation(int capacity, string locationId, int mapWidth, int mapHeight) 
-            : base(locationId, mapWidth, mapHeight, false)
+        public AnimalHouseLocation(int capacity, string locationId, int mapWidth, int mapHeight, TimeOfDayManager timeOfDayManager) 
+            : base(locationId, mapWidth, mapHeight, false, timeOfDayManager)
         {
             Capacity = capacity;
         }
 
-        public override void StartNextDay(TimeOfDayManager timeOfDayManager)
+        public override void StartNextDay()
         {
-            base.StartNextDay(timeOfDayManager);
+            base.StartNextDay();
 
             ResetAnimalsSatiety();
 

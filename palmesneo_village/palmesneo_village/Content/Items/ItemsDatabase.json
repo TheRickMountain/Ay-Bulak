@@ -93,23 +93,6 @@
       "OffsetY": 8
     },
     {
-      "Id": 131,
-      "Name": "iron_pickaxe",
-      "Description": "test",
-      "IsStackable": false,
-      "IsTradable": false,
-      "IsDroppable": false,
-      "ToolType": "Pickaxe",
-      "Capacity": 0,
-      "Efficiency": 1,
-      "SoundEffects": [
-        "SoundEffects\\Minifantasy_Forgotten_Plains_SFX\\16_Hit_on_brick_1",
-        "SoundEffects\\Minifantasy_Forgotten_Plains_SFX\\16_Hit_on_brick_2"
-      ],
-      "OffsetX": 4,
-      "OffsetY": 8
-    },
-    {
       "Id": 132,
       "Name": "iron_showel",
       "Description": "test",
@@ -428,8 +411,8 @@
           ]
         ],
         "Location": "house",
-        "X": 23,
-        "Y": 10
+        "X": 9,
+        "Y": 12
       },
       "SmokeSpawnData": {
         "X": 106,
@@ -907,6 +890,48 @@
       ],
       "GrowthRateInDays": 14,
       "StumpName": "birch_stump"
+    },
+    {
+      "Id": 6001,
+      "Name": "spruce_tree",
+      "Description": "test",
+      "IsStackable": false,
+      "Width": 1,
+      "Height": 1,
+      "GroundPattern": [
+        [
+          "A"
+        ]
+      ],
+      "IsRotatable": false,
+      "IsPassable": false,
+      "GrowthStagesData": [
+        {
+          "Strength": 1,
+          "Loot": {}
+        },
+        {
+          "Strength": 4,
+          "Loot": {
+            "wood": 5
+          }
+        },
+        {
+          "Strength": 6,
+          "Loot": {
+            "wood": 10
+          }
+        },
+        {
+          "Strength": 10,
+          "Loot": {
+            "wood": 25,
+            "spruce_seeds": 2
+          }
+        }
+      ],
+      "GrowthRateInDays": 14,
+      "StumpName": "spruce_stump"
     }
   ],
   "ResourceItems": [
@@ -927,7 +952,7 @@
       "Strength": 1,
       "ItemName": "stone",
       "ItemAmount": 1,
-      "RequiredToolType": "Pickaxe"
+      "RequiredToolType": "Showel"
     },
     {
       "Id": 7001,
@@ -949,8 +974,8 @@
       "RequiredToolType": "Axe"
     },
     {
-      "Id": 7002,
-      "Name": "grass_resource",
+      "Id": 7003,
+      "Name": "birch_stump",
       "Description": "test",
       "IsStackable": false,
       "Width": 1,
@@ -962,14 +987,14 @@
       ],
       "IsRotatable": false,
       "IsPassable": false,
-      "Strength": 1,
-      "ItemName": "hay",
-      "ItemAmount": 1,
-      "RequiredToolType": "Scythe"
+      "Strength": 3,
+      "ItemName": "wood",
+      "ItemAmount": 4,
+      "RequiredToolType": "Axe"
     },
     {
-      "Id": 7003,
-      "Name": "birch_stump",
+      "Id": 7004,
+      "Name": "spruce_stump",
       "Description": "test",
       "IsStackable": false,
       "Width": 1,
@@ -1003,7 +1028,8 @@
       "IsRotatable": false,
       "IsPassable": true,
       "TilesetIndex": 0,
-      "MovementSpeedBuff": 0.2
+      "MovementSpeedBuff": 0.2,
+      "FootstepSoundEffect": "SoundEffects\\RPG_Essentials_Free\\12_Player_Movement_SFX\\45_Landing_01"
     },
     {
       "Id": 8001,
@@ -1020,7 +1046,8 @@
       "IsRotatable": false,
       "IsPassable": true,
       "TilesetIndex": 1,
-      "MovementSpeedBuff": 0.2
+      "MovementSpeedBuff": 0.2,
+      "FootstepSoundEffect": "SoundEffects\\RPG_Essentials_Free\\12_Player_Movement_SFX\\08_Step_rock_02"
     },
     {
       "Id": 8002,
@@ -1037,7 +1064,8 @@
       "IsRotatable": false,
       "IsPassable": true,
       "TilesetIndex": 2,
-      "MovementSpeedBuff": 0.2
+      "MovementSpeedBuff": 0.2,
+      "FootstepSoundEffect": "SoundEffects\\RPG_Essentials_Free\\12_Player_Movement_SFX\\12_Step_wood_03"
     },
     {
       "Id": 8003,
@@ -1054,7 +1082,8 @@
       "IsRotatable": false,
       "IsPassable": true,
       "TilesetIndex": 3,
-      "MovementSpeedBuff": 0.2
+      "MovementSpeedBuff": 0.2,
+      "FootstepSoundEffect": "SoundEffects\\RPG_Essentials_Free\\12_Player_Movement_SFX\\08_Step_rock_02"
     },
     {
       "Id": 8004,
@@ -1071,7 +1100,8 @@
       "IsRotatable": false,
       "IsPassable": true,
       "TilesetIndex": 4,
-      "MovementSpeedBuff": 0.1
+      "MovementSpeedBuff": 0.1,
+      "FootstepSoundEffect": "SoundEffects\\RPG_Essentials_Free\\12_Player_Movement_SFX\\03_Step_grass_03"
     }
   ],
   "ManualCrafterItems": [
@@ -1391,6 +1421,16 @@
       "IsDroppable": true,
       "Price": 0,
       "TreeName": "birch_tree"
+    },
+    {
+      "Id": 17,
+      "Name": "spruce_seeds",
+      "Description": "test",
+      "IsStackable": true,
+      "IsTradable": true,
+      "IsDroppable": true,
+      "Price": 0,
+      "TreeName": "spruce_tree"
     }
   ],
   "BackpackItems": [

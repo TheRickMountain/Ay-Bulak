@@ -10,7 +10,6 @@ namespace palmesneo_village
     {
         None,
         Axe,
-        Pickaxe,
         WateringCan,
         Showel,
         Scythe

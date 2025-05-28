@@ -88,9 +88,12 @@ namespace palmesneo_village
 
             QuestManager = new QuestManager();
 
-            player = new Player("Player", ResourcesManager.GetTexture("Sprites", "player"), 80, PlayerInventory);
+            PlayerEnergyManager = new PlayerEnergyManager(100, 100);
 
-            RegisterLocation(new FarmLocation("farm"));
+            player = new Player("Player", ResourcesManager.GetTexture("Sprites", "player"), 80, PlayerInventory, 
+                inventoryHotbar, PlayerEnergyManager);
+
+            RegisterLocation(new FarmLocation("farm", timeOfDayManager));
 
             buildingSystem = new BuildingSystem();
             buildingSystem.Depth = 100;
@@ -100,7 +103,7 @@ namespace palmesneo_village
             tileSelector.Depth = 100;
             MasterEntity.AddChild(tileSelector);
 
-            PlayerEnergyManager = new PlayerEnergyManager(100, 100);
+            
             PlayerMoneyManager = new PlayerMoneyManager();
 
             PlayerInventory.SlotDataChanged += OnInventorySlotDataChanged;
@@ -177,7 +180,6 @@ namespace palmesneo_village
 
             PlayerMoneyManager.MoneyAmount = 500;
 
-            PlayerInventory.TryAddItem(Engine.ItemsDatabase.GetItemByName("iron_pickaxe"), 1, 0);
             PlayerInventory.TryAddItem(Engine.ItemsDatabase.GetItemByName("iron_axe"), 1, 0);
             PlayerInventory.TryAddItem(Engine.ItemsDatabase.GetItemByName("iron_showel"), 1, 0);
             PlayerInventory.TryAddItem(Engine.ItemsDatabase.GetItemByName("iron_scythe"), 1, 0);
@@ -191,6 +193,8 @@ namespace palmesneo_village
 
         public override void Update()
         {
+            ChageCursorTextureToDefault();
+
             transitionImage.Size = MasterUIEntity.Size;
 
             timeText.Text = timeOfDayManager.GetTimeString();
@@ -313,7 +317,7 @@ namespace palmesneo_village
 
                         Item currentPlayerItem = PlayerInventory.GetSlotItem(hotbarCurrentSlotIndex);
 
-                        bool canUseItemOnPlayer = true;
+                        bool canUseInventoryItem = true;
 
                         // Handle building item selection
                         if (currentPlayerItem is BuildingItem buildingItem)
@@ -336,36 +340,37 @@ namespace palmesneo_village
                             tileSelector.IsVisible = true;
                             tileSelector.LocalPosition = CurrentGameLocation.MapToWorld(mouseTile);
 
+                            var interactableEntity = TryGetInteractableEntityOnTile(mouseTile);
+
+                            if(interactableEntity != null)
+                            {
+                                ChangeCursorTexture(ResourcesManager.GetTexture("Sprites", "interaction_cursor"));
+                            }
+
                             if (MInput.Mouse.PressedLeftButton)
                             {
-                                CurrentGameLocation.InteractWithTile(tileX, tileY, PlayerInventory,
-                                    inventoryHotbar.CurrentSlotIndex, PlayerEnergyManager);
+                                player.InteractWithTile(tileX, tileY);
                             }
                             else if (MInput.Mouse.PressedRightButton)
                             {
-                                if(CurrentGameLocation.TryGetTeleport(tileX, tileY) is Teleport teleport)
+                                if (TryToTeleport(mouseTile))
                                 {
-                                    GoToLocation(teleport.Location, teleport.Tile);
-
-                                    canUseItemOnPlayer = false;
+                                    canUseInventoryItem = false;
                                 }
-                                else if(CurrentGameLocation.GetBuilding(tileX, tileY) is InteractableEntity interactableEntity)
+                                else if (interactableEntity != null)
                                 {
-                                    List<InteractionData> interactionList = interactableEntity.GetAvailableInteractions(PlayerInventory).ToList();
+                                    selectedInteractableEntity = interactableEntity;
 
-                                    if (interactionList.Count > 0)
-                                    {
-                                        OpenInteractionMenuUI(interactionList);
+                                    OpenInteractionMenuUI(selectedInteractableEntity.
+                                        GetAvailableInteractions(PlayerInventory)
+                                        .ToList());
 
-                                        selectedInteractableEntity = interactableEntity;
-
-                                        canUseItemOnPlayer = false;
-                                    }
+                                    canUseInventoryItem = false;
                                 }
                             }
                         }
 
-                        if (MInput.Mouse.PressedRightButton && canUseItemOnPlayer)
+                        if (MInput.Mouse.PressedRightButton && canUseInventoryItem)
                         {
                             if (currentPlayerItem is ConsumableItem consumableItem)
                             {
@@ -473,10 +478,10 @@ namespace palmesneo_village
                             foreach (var kvp in gameLocations)
                             {
                                 GameLocation gameLocation = kvp.Value;
-                                gameLocation.StartNextDay(timeOfDayManager);
+                                gameLocation.StartNextDay();
                             }
 
-                            if (timeOfDayManager.CurrentWeather == Weather.Sunny)
+                            if (timeOfDayManager.CurrentWeather == Weather.Sun && timeOfDayManager.CurrentSeason != Season.Winter)
                             {
                                 ResourcesManager.GetSoundEffect("SoundEffects", "rooster_crow").Play();
                             }
@@ -506,6 +511,41 @@ namespace palmesneo_village
             }
 
             base.Update();
+        }
+
+        private bool TryToTeleport(Vector2 tile)
+        {
+            if (CurrentGameLocation.TryGetTeleport((int)tile.X, (int)tile.Y) is Teleport teleport)
+            {
+                GoToLocation(teleport.Location, teleport.Tile);
+
+                return true;
+            }
+
+            return false;
+        }
+
+        private InteractableEntity TryGetInteractableEntityOnTile(Vector2 tile)
+        {
+            // Check all creatures to interact with 
+            foreach (Creature creature in CurrentGameLocation.GetCreatures())
+            {
+                if (creature.GetTilePosition() == tile)
+                {
+                    List<InteractionData> interactionList = creature.GetAvailableInteractions(PlayerInventory).ToList();
+
+                    if (interactionList.Count > 0) return creature;
+                }
+            }
+
+            if (CurrentGameLocation.GetBuilding((int)tile.X, (int)tile.Y) is InteractableEntity interactableEntity)
+            {
+                List<InteractionData> interactionList = interactableEntity.GetAvailableInteractions(PlayerInventory).ToList();
+
+                if (interactionList.Count > 0) return interactableEntity;
+            }
+
+            return null;
         }
 
         public void StartNextDay()
@@ -640,8 +680,6 @@ namespace palmesneo_village
             {
                 buildingSystem.SetCurrentBuildingItem(null);
             }
-
-            player.SetHandItem(item);
         }
 
         private void OnInteractionMenuInteractionSelected(InteractionData interactionData)

@@ -12,8 +12,9 @@ namespace palmesneo_village
 
     public enum Weather
     {
-        Sunny,
-        Rainy
+        Sun,
+        Rain,
+        Snow
     }
 
     public class TimeOfDayManager : Entity
@@ -25,7 +26,7 @@ namespace palmesneo_village
         public const int DAYS_IN_THE_SEASON = 28;
 
         public Season CurrentSeason { get; private set; } = Season.Spring;
-        public Weather CurrentWeather { get; private set; } = Weather.Sunny;
+        public Weather CurrentWeather { get; private set; } = Weather.Sun;
 
         public int CurrentDay { get => day; }
         public int CurrentHour { get => hour; }
@@ -50,19 +51,7 @@ namespace palmesneo_village
         {
             timeOfDayGradients = new TimeOfDayGradients();
 
-            switch(CurrentWeather)
-            {
-                case Weather.Rainy:
-                    {
-                        currentDayGradient = timeOfDayGradients.RainyDayGradient;
-                    }
-                    break;
-                case Weather.Sunny:
-                    {
-                        currentDayGradient = timeOfDayGradients.SunnyDayGradient;
-                    }
-                    break;
-            }
+            currentDayGradient = timeOfDayGradients.GetGradientFor(CurrentWeather);
         }
 
         public override void Update()
@@ -88,22 +77,6 @@ namespace palmesneo_village
 
             day++;
 
-            CurrentWeather = Calc.Random.Chance(0.2f) ? Weather.Rainy : Weather.Sunny;
-
-            switch (CurrentWeather)
-            {
-                case Weather.Rainy:
-                    {
-                        currentDayGradient = timeOfDayGradients.RainyDayGradient;
-                    }
-                    break;
-                case Weather.Sunny:
-                    {
-                        currentDayGradient = timeOfDayGradients.SunnyDayGradient;
-                    }
-                    break;
-            }
-
             if (day == DAYS_IN_THE_SEASON + 1)
             {
                 day = 1;
@@ -112,6 +85,31 @@ namespace palmesneo_village
 
                 SeasonChanged?.Invoke(CurrentSeason);
             }
+
+            if (CurrentSeason == Season.Winter)
+            {
+                if (day == 1)
+                {
+                    CurrentWeather = Weather.Snow;
+                }
+                else
+                {
+                    CurrentWeather = Calc.Random.Chance(0.2f) ? Weather.Snow : Weather.Sun;
+                }
+            }
+            else
+            {
+                if (day == 1)
+                {
+                    CurrentWeather = Weather.Sun;
+                }
+                else
+                {
+                    CurrentWeather = Calc.Random.Chance(0.2f) ? Weather.Rain : Weather.Sun;
+                }
+            }
+
+            currentDayGradient = timeOfDayGradients.GetGradientFor(CurrentWeather);
 
             DayChanged?.Invoke(day);
         }

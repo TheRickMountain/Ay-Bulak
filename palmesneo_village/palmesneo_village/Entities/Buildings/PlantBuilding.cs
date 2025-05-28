@@ -52,7 +52,7 @@ namespace palmesneo_village
             tileWasWatered = groundTopTile == GroundTopTile.Moisture;
         }
 
-        public override void OnAfterDayChanged()
+        public override void OnAfterDayChanged(TimeOfDayManager timeOfDayManager)
         {
             if (IsRipe) return;
 
@@ -84,7 +84,7 @@ namespace palmesneo_village
             }
             else if(item is ToolItem toolItem)
             {
-                if(toolItem.ToolType == ToolType.Axe || toolItem.ToolType == ToolType.Pickaxe)
+                if(toolItem.ToolType == ToolType.Axe)
                 {
                     playerEnergyManager.ConsumeEnergy(1);
                     

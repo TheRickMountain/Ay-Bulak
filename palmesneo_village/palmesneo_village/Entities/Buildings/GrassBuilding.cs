@@ -92,6 +92,8 @@ namespace palmesneo_village
                 SpawnLoot();
 
                 toolItem.PlaySoundEffect();
+
+                GameLocation.RemoveBuilding(this);
             }
         }
 

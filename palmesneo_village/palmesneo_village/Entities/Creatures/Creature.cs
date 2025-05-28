@@ -3,7 +3,7 @@
 namespace palmesneo_village
 {
 
-    public abstract class Creature : Entity
+    public abstract class Creature : InteractableEntity
     {
         protected float Speed { get; private set; }
         public GameLocation CurrentLocation { get; private set; }

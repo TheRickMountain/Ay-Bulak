@@ -13,7 +13,7 @@ namespace palmesneo_village
             Color nightColor = new Color(63, 137, 255);
             Color sunriseColor = new Color(203, 178, 254);
             Color dayColor = Color.White;
-            Color rainyDayColor = new Color(150, 150, 180);
+            Color rainyDayColor = new Color(170, 170, 200);
 
             List<ColorPoint> sunnyColorPoints = new List<ColorPoint>()
             {
@@ -39,6 +39,24 @@ namespace palmesneo_village
             };
 
             RainyDayGradient = new GradientTexture1D(512, rainyColorPoints, InterpolationType.Cubic);
+        }
+    
+        public GradientTexture1D GetGradientFor(Weather weather)
+        {
+            switch (weather)
+            {
+                case Weather.Rain:
+                    {
+                        return RainyDayGradient;
+                    }
+                case Weather.Sun:
+                case Weather.Snow:
+                    {
+                        return SunnyDayGradient;
+                    }
+            }
+
+            return SunnyDayGradient;
         }
     }
 }

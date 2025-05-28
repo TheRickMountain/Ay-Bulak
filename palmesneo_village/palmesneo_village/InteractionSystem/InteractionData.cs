@@ -14,7 +14,8 @@ namespace palmesneo_village
         Cancel,
         Sleep,
         ManualCraft,
-        Open
+        Open,
+        Talk
     }
 
     public class InteractionData

@@ -281,13 +281,32 @@ namespace palmesneo_village
 
                         int regionTileId = BitmaskGenerator.GetBitmask8BitTileId(bitmask);
 
-                        int offsetX = (terrain % 4) * 8;
-                        int offsetY = (terrain / 4) * 6;
+                        // Совершенный тайл (окруженный со всех сторон)
+                        if(regionTileId == 5)
+                        {
+                            if(Calc.Random.Chance(0.4f))
+                            {
+                                regionTileId = Calc.Random.Range(48, 56);
+                            }
+                        }
 
-                        int regionTileX = regionTileId % 8;
-                        int regionTileY = regionTileId / 8;
+                        // Размер региона (ширина и высота в тайлах) в тайлсете
+                        int tilesetRegionWidth = 8;
+                        int tilesetRegionHeight = 7;
 
-                        int globalTileId = (regionTileX + offsetX) + (regionTileY + offsetY) * 32;
+                        // Количество регионов (в колонках и строках), которое вмещается в тайлсет
+                        int tilesetRegionsColumns = 4;
+                        int tilesetRegionsRows = 4;
+
+                        int offsetX = (terrain % tilesetRegionsColumns) * tilesetRegionWidth;
+                        int offsetY = (terrain / tilesetRegionsRows) * tilesetRegionHeight;
+
+                        int regionTileX = regionTileId % tilesetRegionWidth;
+                        int regionTileY = regionTileId / tilesetRegionWidth;
+
+                        int totalTilesetWidthInTiles = 32;
+
+                        int globalTileId = (regionTileX + offsetX) + (regionTileY + offsetY) * totalTilesetWidthInTiles;
 
                         SetCellTileId(x, y, globalTileId);
                     }
