@@ -7,16 +7,10 @@ using System.Diagnostics;
 
 namespace palmesneo_village
 {
-    public enum PlayerState
-    {
-        Idle,
-        Walk,
-        ToolUsing,
-        ScytheUsing
-    }
-
     public class Player : Creature
     {
+        public Direction MovementDirection { get; private set; } = Direction.Down;
+
         private Inventory inventory;
         private InventoryHotbar inventoryHotbar;
         private PlayerEnergyManager energyManager;
@@ -29,16 +23,13 @@ namespace palmesneo_village
 
         private SpriteEntity bodySprite;
 
-        private Direction movementDirection = Direction.Down;
-
         private SoundEffectInstance currentSFX;
 
         private List<SoundEffectInstance> grassShakeSFXs = new();
 
-        private PlayerState playerState = PlayerState.Idle;
+        private FishingBobberEntity fishingBobber;
 
-        private int interactTileX;
-        private int interactTileY;
+        private IPlayerState currentState;
 
         public Player(string name, MTexture texture, float speed, Inventory inventory, InventoryHotbar inventoryHotbar,
             PlayerEnergyManager energyManager) : 
@@ -67,6 +58,10 @@ namespace palmesneo_village
 
                 grassShakeSFXs.Add(sfxInstance);
             }
+
+            fishingBobber = new FishingBobberEntity();
+
+            SetState(new PlayerIdleState());
         }
 
         private void CreateAndInitializeBodySprite(MTexture spritesheet)
@@ -129,6 +124,16 @@ namespace palmesneo_village
             bodySprite.GetAnimation("scythe_up").Loop = false;
             bodySprite.GetAnimation("scythe_right").Loop = false;
 
+            bodySprite.AddAnimation("fishing_rod_down", new Animation(spritesheet, 3, 0, frameWidth, frameHeight, frameWidth * 7, frameHeight * 4));
+            bodySprite.AddAnimation("fishing_rod_left", new Animation(spritesheet, 3, 0, frameWidth, frameHeight, frameWidth * 7, frameHeight * 5));
+            bodySprite.AddAnimation("fishing_rod_up", new Animation(spritesheet, 3, 0, frameWidth, frameHeight, frameWidth * 7, frameHeight * 6));
+            bodySprite.AddAnimation("fishing_rod_right", new Animation(spritesheet, 3, 0, frameWidth, frameHeight, frameWidth * 7, frameHeight * 7));
+
+            bodySprite.GetAnimation("fishing_rod_down").Loop = false;
+            bodySprite.GetAnimation("fishing_rod_left").Loop = false;
+            bodySprite.GetAnimation("fishing_rod_up").Loop = false;
+            bodySprite.GetAnimation("fishing_rod_right").Loop = false;
+
             bodySprite.LocalPosition = new Vector2(-frameWidth / 2, -(frameHeight - (Engine.TILE_SIZE / 2)));
 
             bodySprite.AnimationFrameChaged += OnBodySpriteAnimationFrameChanged;
@@ -140,52 +145,9 @@ namespace palmesneo_village
         {
             base.Update();
 
-            switch(playerState)
-            {
-                case PlayerState.Idle:
-                    {
-                        bodySprite.Play($"idle_{movementDirection.ToString().ToLower()}");
-
-                        Vector2 movementVector = new Vector2(InputBindings.MoveHorizontally.Value, InputBindings.MoveVertically.Value);
-
-                        if(movementVector != Vector2.Zero)
-                        {
-                            playerState = PlayerState.Walk;
-                        }
-                    }
-                    break;
-                case PlayerState.Walk:
-                    {
-                        bodySprite.Play($"walk_{movementDirection.ToString().ToLower()}");
-
-                        Vector2 movementVector = new Vector2(InputBindings.MoveHorizontally.Value, InputBindings.MoveVertically.Value);
-
-                        UpdateMovement(movementVector);
-
-                        if (movementVector == Vector2.Zero)
-                        {
-                            playerState = PlayerState.Idle;
-                        }
-                    }
-                    break;
-                case PlayerState.ToolUsing:
-                case PlayerState.ScytheUsing:
-                    {
-                        if(bodySprite.CurrentAnimation.IsFinished)
-                        {
-                            bodySprite.CurrentAnimation.Reset();
-
-                            playerState = PlayerState.Idle;
-
-                            bodySprite.Play($"idle_{movementDirection.ToString().ToLower()}");
-                        }
-                    }
-                    break;
-            }
+            currentState?.Update(this, Engine.GameDeltaTime);
 
             UpdateItemsPickup();
-
-            ShakeGrass();
 
             if(currentSFX != null && currentSFX.State == SoundState.Stopped)
             {
@@ -193,13 +155,13 @@ namespace palmesneo_village
             }
         }
 
-        protected void UpdateMovement(Vector2 movementVector)
+        public void UpdateMovement(Vector2 movementVector)
         {
             if (movementVector != Vector2.Zero)
             {
                 movementVector.Normalize();
 
-                movementDirection = Calc.GetDirection(movementVector);
+                MovementDirection = Calc.GetDirection(movementVector);
 
                 float actualSpeed = Speed;
 
@@ -268,6 +230,13 @@ namespace palmesneo_village
             return true;
         }
 
+        public void SetState(IPlayerState newState)
+        {
+            currentState?.Exit(this);
+            currentState = newState;
+            currentState.Enter(this);
+        }
+
         private void UpdateItemsPickup()
         {
             foreach(ItemEntity itemEntity in CurrentLocation.GetItemEntities())
@@ -309,17 +278,15 @@ namespace palmesneo_village
             inventory.TryAddItem(itemContainer.Item, itemContainer.Quantity, itemContainer.ContentAmount);
         }
 
-        private void ShakeGrass()
+        public void ShakeGrass()
         {
-            if (playerState != PlayerState.Walk) return;
-
             Vector2 playerTile = GetTilePosition();
 
             Building building = CurrentLocation.GetBuilding((int)playerTile.X, (int)playerTile.Y);
 
             if(building != null && building is GrassBuilding grassBuilding)
             {
-                grassBuilding.Shake(movementDirection);
+                grassBuilding.Shake(MovementDirection);
 
                 PlayGrassShakeSoundEffect();
             }
@@ -375,8 +342,7 @@ namespace palmesneo_village
 
         public void InteractWithTile(int tileX, int tileY)
         {
-            interactTileX = tileX;
-            interactTileY = tileY;
+            if (currentState?.IsInterruptible() == false) return;
 
             LookAtTile(new Vector2(tileX, tileY));
 
@@ -388,26 +354,39 @@ namespace palmesneo_village
                 {
                     case ToolType.Showel:
                         {
-                            bodySprite.Play($"showel_{movementDirection.ToString().ToLower()}");
-                            playerState = PlayerState.ToolUsing;
+                            SetState(new PlayerDefaultToolState("showel", () =>
+                            {
+                                CurrentLocation.InteractWithTile(tileX, tileY, inventory, inventoryHotbar.CurrentSlotIndex, energyManager);
+                            }));
                         }
                         break;
                     case ToolType.WateringCan:
                         {
-                            bodySprite.Play($"watering_can_{movementDirection.ToString().ToLower()}");
-                            playerState = PlayerState.ToolUsing;
+                            SetState(new PlayerDefaultToolState("watering_can", () =>
+                            {
+                                CurrentLocation.InteractWithTile(tileX, tileY, inventory, inventoryHotbar.CurrentSlotIndex, energyManager);
+                            }));
                         }
                         break;
                     case ToolType.Axe:
                         {
-                            bodySprite.Play($"axe_{movementDirection.ToString().ToLower()}");
-                            playerState = PlayerState.ToolUsing;
+                            SetState(new PlayerDefaultToolState("axe", () => 
+                            {
+                                CurrentLocation.InteractWithTile(tileX, tileY, inventory, inventoryHotbar.CurrentSlotIndex, energyManager);
+                            }));
                         }
                         break;
                     case ToolType.Scythe:
                         {
-                            bodySprite.Play($"scythe_{movementDirection.ToString().ToLower()}");
-                            playerState = PlayerState.ScytheUsing;
+                            SetState(new PlayerDefaultToolState("scythe", () =>
+                            {
+                                ApplyScytheEffect();
+                            }));
+                        }
+                        break;
+                    case ToolType.FishingRod:
+                        {
+                            SetState(new PlayerFishingRodState(fishingBobber));
                         }
                         break;
                 }
@@ -418,6 +397,23 @@ namespace palmesneo_village
             }
         }
 
+        public void PlayAnimation(string animationName)
+        {
+            bodySprite.Play(animationName);
+        }
+
+        public void ResetCurrentAnimation()
+        {
+            bodySprite.CurrentAnimation?.Reset();
+        }
+
+        public bool IsCurrentAnimationFinished()
+        {
+            if (bodySprite.CurrentAnimation == null) return true;
+
+            return bodySprite.CurrentAnimation.IsFinished;
+        }
+
         private void LookAtTile(Vector2 targetTile)
         {
             Vector2 selfTile = GetTilePosition();
@@ -426,91 +422,13 @@ namespace palmesneo_village
             if (directionToTarget != Vector2.Zero)
             {
                 directionToTarget.Normalize();
-                movementDirection = Calc.GetDirection(directionToTarget);
+                MovementDirection = Calc.GetDirection(directionToTarget);
             }
         }
 
         private void OnBodySpriteAnimationFrameChanged(int frameIndex)
         {
-            switch(playerState)
-            {
-                case PlayerState.ToolUsing:
-                    {
-                        if (frameIndex == 2)
-                        {
-                            CurrentLocation.InteractWithTile(interactTileX, interactTileY, inventory, inventoryHotbar.CurrentSlotIndex, energyManager);
-                        }
-                    }
-                    break;
-                case PlayerState.ScytheUsing:
-                    {
-                        if(frameIndex == 2)
-                        {
-                            ApplyScytheEffect();
-                        }
-                    }
-                    break;
-                case PlayerState.Walk:
-                    {
-                        if (frameIndex == 1 || frameIndex == 3)
-                        {
-                            Vector2 tilePosition = GetTilePosition();
-
-                            FloorPathItem floorPathItem = CurrentLocation.GetTileFloorPathItem(tilePosition);
-                            if (floorPathItem != null)
-                            {
-                                var footstepSFX = ResourcesManager.GetSoundEffect(floorPathItem.FootstepSoundEffect);
-
-                                if (footstepSFX == null)
-                                {
-                                    Debug.WriteLine($"Sfx '{floorPathItem.FootstepSoundEffect}' not found!");
-                                }
-                                else
-                                {
-                                    footstepSFX.Play(0.5f, Calc.Random.Range(0.0f, 0.5f), 0.0f);
-                                }
-                            }
-                            else
-                            {
-                                GroundTile groundTile = CurrentLocation.GetGroundTile((int)tilePosition.X, (int)tilePosition.Y);
-
-                                switch(groundTile)
-                                {
-                                    case GroundTile.FarmPlot:
-                                    case GroundTile.Ground:
-                                    case GroundTile.CoopHouseFloor:
-                                        {
-                                            ResourcesManager.GetSoundEffect(
-                                                "SoundEffects",
-                                                "RPG_Essentials_Free",
-                                                "12_Player_Movement_SFX",
-                                                "45_Landing_01").Play(0.5f, Calc.Random.Range(0.0f, 0.5f), 0.0f);
-                                        }
-                                        break;
-                                    case GroundTile.Grass:
-                                        {
-                                            ResourcesManager.GetSoundEffect(
-                                                "SoundEffects",
-                                                "RPG_Essentials_Free",
-                                                "12_Player_Movement_SFX",
-                                                "03_Step_grass_03").Play(0.5f, Calc.Random.Range(0.0f, 0.5f), 0.0f);
-                                        }
-                                        break;
-                                    case GroundTile.HouseFloor:
-                                        {
-                                            ResourcesManager.GetSoundEffect(
-                                                "SoundEffects",
-                                                "RPG_Essentials_Free",
-                                                "12_Player_Movement_SFX",
-                                                "12_Step_wood_03").Play(0.5f, Calc.Random.Range(0.0f, 0.5f), 0.0f);
-                                        }
-                                        break;
-                                }
-                            }
-                        }
-                    }
-                    break;
-            }
+            currentState?.AnimationFrameChanged(this, frameIndex);
         }
 
         private void ApplyScytheEffect()
@@ -518,7 +436,7 @@ namespace palmesneo_village
             Vector2 baseTile = GetTilePosition();
             List<Point> affectedTiles = new();
 
-            switch (movementDirection)
+            switch (MovementDirection)
             {
                 case Direction.Up:
                     for (int dx = -1; dx <= 1; dx++)

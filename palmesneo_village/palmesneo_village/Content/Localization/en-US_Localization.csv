@@ -1,5 +1,7 @@
 key,translation
 backpack_description,Permanently increases your inventory capacity
+barrel,Barrel
+barrel_description,Used for pickling and fermenting vegetables
 beetroot,Beetroot
 beetroot_seeds,Beetroot seeds
 birch_seeds,Birch seeds
@@ -19,6 +21,7 @@ dirt_path,Dirt path
 eggplant,Eggplant
 eggplant_seeds,Eggplant seeds
 energy,Energy
+fishing_rod,Fishing rod
 fridge,Fridge
 fried_chicken_egg,Fried chicken egg
 garlic,Garlic
@@ -37,12 +40,14 @@ iron_watering_can,Iron watering can
 meat,Meat
 not_enough_space_in_inventory,There is no free space in the inventory
 open_x,"Open ""{0}"""
+pickled_tomatoes,Pickled tomatoes
 potato,Potato
 price,Price
 quests,Quests
 round_rug,Round rug
 samovar,Samovar
 samovar_description,Start your day with a cup of hot tea
+sauerkraut,Sauerkraut
 sleep,Go to bed
 small_backpack,Small backpack
 sprinkler,Sprinkler

@@ -1,5 +1,7 @@
 key,translation
 backpack_description,Сезнең инвентарьның сыйдырышлылыгын мәңгегә арттыра
+barrel,Мичкә
+barrel_description,Яшелчәләрне тозлау һәм ферментлау өчен кулланыла
 beetroot,Чөгендер
 beetroot_seeds,Чөгендер орлыклары
 birch_seeds,Каен орлыклары
@@ -19,6 +21,7 @@ dirt_path,Сукмак
 eggplant,Баклажан
 eggplant_seeds,Баклажан орлыклары
 energy,Энергия
+fishing_rod,Кармак
 fridge,Суыткыч
 fried_chicken_egg,Кыздырылган тавык йомыркасы
 garlic,Сарымсак
@@ -37,12 +40,14 @@ iron_watering_can,Тимер лейка
 meat,Ит
 not_enough_space_in_inventory,Инвентарьда буш урын юк
 open_x,"""{0}"" ачарга"
+pickled_tomatoes,Маринадланган помидорлар
 potato,Бәрәңге
 price,Бәя
 quests,Бурычлар
 round_rug,Түгәрәк келәм
 samovar,Самавыр
 samovar_description,Көнеңне бер кружка кайнар чәй белән башла
+sauerkraut,Тозлы кәбестә
 sleep,Йокларга ятарга
 small_backpack,Кечкенә рюкзак
 sprinkler,Сиптергеч

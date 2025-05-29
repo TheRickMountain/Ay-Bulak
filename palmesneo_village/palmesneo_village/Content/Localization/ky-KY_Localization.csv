@@ -1,5 +1,7 @@
 key,translation
 backpack_description,
+barrel,Челек
+barrel_description,Жашылчаларды туздоо жана ачытуу үчүн колдонулат
 beetroot,Кызылча
 beetroot_seeds,Кызылча уруктары
 birch_seeds,Кайың уруктары
@@ -19,6 +21,7 @@ dirt_path,
 eggplant,Баклажан
 eggplant_seeds,Баклажан уруктары
 energy,Энергия
+fishing_rod,Кайырмак
 fridge,Муздаткыч
 fried_chicken_egg,Куурулган тоок жумурткасы
 garlic,Сарымсак
@@ -37,12 +40,14 @@ iron_watering_can,Темир лейка
 meat,Эт
 not_enough_space_in_inventory,Инвентарьда бош орун жок
 open_x,"""{0}"" ачуу"
+pickled_tomatoes,Маринаддалган помидорлор
 potato,Картөшкө
 price,Баасы
 quests,Тапшырмалар
 round_rug,Тегерек килем
 samovar,Самавыр
 samovar_description,Күнүңүздү бир стакан ысык чай менен баштаңыз
+sauerkraut,Туздалган капуста
 sleep,Уктоо
 small_backpack,Кичинекей рюкзак
 sprinkler,Сепкич

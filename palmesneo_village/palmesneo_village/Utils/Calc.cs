@@ -8,6 +8,19 @@ namespace palmesneo_village
 {
     public static class Calc
     {
+        public static Vector2 GetVector2(Direction direction)
+        {
+            switch (direction)
+            {
+                case Direction.Up: return -Vector2.UnitY;
+                case Direction.Down: return Vector2.UnitY;
+                case Direction.Left: return -Vector2.UnitX;
+                case Direction.Right: return Vector2.UnitX;
+            }
+
+            return Vector2.Zero;
+        }
+
         public static Direction GetDirection(Vector2 vector)
         {
             if (Math.Abs(vector.X) > Math.Abs(vector.Y))

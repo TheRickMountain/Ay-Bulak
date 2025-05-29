@@ -1,5 +1,7 @@
 key,translation
 backpack_description,Навсегда увеличивает вместительность вашего инвентаря
+barrel,Бочка
+barrel_description,Используется для засолки и ферментирования овощей
 beetroot,Свекла
 beetroot_seeds,Семена свеклы
 birch_seeds,Семена березы
@@ -19,6 +21,7 @@ dirt_path,Грунтовая тропинка
 eggplant,Баклажан
 eggplant_seeds,Семена баклажана
 energy,Энергия
+fishing_rod,Удочка
 fridge,Холодильник
 fried_chicken_egg,Жаренное куриное яйцо
 garlic,Чеснок
@@ -37,12 +40,14 @@ iron_watering_can,Железная лейка
 meat,Мясо
 not_enough_space_in_inventory,Нет свободного места в инвентаре
 open_x,"Открыть ""{0}"""
+pickled_tomatoes,Маринованные помидоры
 potato,Картофель
 price,Цена
 quests,Задачи
 round_rug,Круглый ковер
 samovar,Самовар
 samovar_description,Начни свой день с кружечки горячего чая
+sauerkraut,Квашеная капуста
 sleep,Лечь спать
 small_backpack,Маленький рюкзак
 sprinkler,Поливалка

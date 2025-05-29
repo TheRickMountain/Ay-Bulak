@@ -12,7 +12,8 @@ namespace palmesneo_village
         Axe,
         WateringCan,
         Showel,
-        Scythe
+        Scythe,
+        FishingRod
     }
 
     public class ToolItem : Item
@@ -21,8 +22,6 @@ namespace palmesneo_village
         public int Efficiency { get; init; }
         public int Capacity { get; init; }
         public string[] SoundEffects { get; init; }
-        public int OffsetX { get; init; }
-        public int OffsetY { get; init; }
 
         public void PlaySoundEffect()
         {

@@ -71,9 +71,7 @@
         "SoundEffects\\watering_2",
         "SoundEffects\\watering_3",
         "SoundEffects\\watering_4"
-      ],
-      "OffsetX": 2,
-      "OffsetY": 10
+      ]
     },
     {
       "Id": 130,
@@ -88,9 +86,19 @@
       "SoundEffects": [
         "SoundEffects\\Minifantasy_Forgotten_Plains_SFX\\15_Hit_on_wood_1",
         "SoundEffects\\Minifantasy_Forgotten_Plains_SFX\\15_Hit_on_wood_2"
-      ],
-      "OffsetX": 3,
-      "OffsetY": 8
+      ]
+    },
+    {
+      "Id": 131,
+      "Name": "fishing_rod",
+      "Description": "test",
+      "IsStackable": false,
+      "IsTradable": false,
+      "IsDroppable": false,
+      "ToolType": "FishingRod",
+      "Capacity": 0,
+      "Efficiency": 1,
+      "SoundEffects": []
     },
     {
       "Id": 132,
@@ -105,9 +113,7 @@
       "SoundEffects": [
         "SoundEffects\\Minifantasy_Forgotten_Plains_SFX\\08_landing_on_stone_1",
         "SoundEffects\\Minifantasy_Forgotten_Plains_SFX\\08_landing_on_stone_2"
-      ],
-      "OffsetX": 8,
-      "OffsetY": 4
+      ]
     },
     {
       "Id": 133,
@@ -122,9 +128,7 @@
       "SoundEffects": [
         "SoundEffects\\Minifantasy_Forgotten_Plains_SFX\\07_landing_on_grass_1",
         "SoundEffects\\Minifantasy_Forgotten_Plains_SFX\\07_landing_on_grass_2"
-      ],
-      "OffsetX": 3,
-      "OffsetY": 8
+      ]
     }
   ],
   "ConsumableItems": [
@@ -241,6 +245,26 @@
     {
       "Id": 88,
       "Name": "beetroot",
+      "Description": "test",
+      "IsStackable": true,
+      "IsTradable": true,
+      "IsDroppable": true,
+      "Price": 10,
+      "EnergyAmount": 10
+    },
+    {
+      "Id": 39,
+      "Name": "pickled_tomatoes",
+      "Description": "test",
+      "IsStackable": true,
+      "IsTradable": true,
+      "IsDroppable": true,
+      "Price": 10,
+      "EnergyAmount": 10
+    },
+    {
+      "Id": 40,
+      "Name": "sauerkraut",
       "Description": "test",
       "IsStackable": true,
       "IsTradable": true,
@@ -1247,6 +1271,49 @@
           "RequiredIngredients": [
             {
               "Item": "tea_leaf",
+              "Amount": 1
+            }
+          ],
+          "CraftingTimeInHours": 0.2
+        }
+      ]
+    },
+    {
+      "Id": 13001,
+      "Name": "barrel",
+      "Description": "barrel_description",
+      "IsStackable": false,
+      "Width": 1,
+      "Height": 1,
+      "GroundPattern": [
+        [
+          "H"
+        ]
+      ],
+      "IsRotatable": false,
+      "IsPassable": false,
+      "CraftingRecipes": [
+        {
+          "Result": {
+            "Item": "pickled_tomatoes",
+            "Amount": 1
+          },
+          "RequiredIngredients": [
+            {
+              "Item": "tomato",
+              "Amount": 1
+            }
+          ],
+          "CraftingTimeInHours": 0.2
+        },
+        {
+          "Result": {
+            "Item": "sauerkraut",
+            "Amount": 1
+          },
+          "RequiredIngredients": [
+            {
+              "Item": "cabbage",
               "Amount": 1
             }
           ],
