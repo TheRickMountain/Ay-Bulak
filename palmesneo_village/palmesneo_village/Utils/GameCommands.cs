@@ -25,6 +25,19 @@ namespace palmesneo_village
             return true;
         }
 
+        [Command("spawn_fish", "Spawns a fish in the current game location")]
+        private static void SpawnFish()
+        {
+            if (Engine.CurrentScene is GameplayScene gameplayScene)
+            {
+                GameLocation currentGameLocation = gameplayScene.CurrentGameLocation;
+
+                Vector2 spawnTile = currentGameLocation.WorldToMap(MInput.Mouse.GlobalPosition);
+
+                gameplayScene.CurrentGameLocation.TrySpawnFish(new FishShadow(), (int)spawnTile.X, (int)spawnTile.Y);
+            }
+        }
+
         [Command("spawn_animal", "Spawns an animal in the current game location")]
         private static void SpawnAnimal(string animaItemName)
         {

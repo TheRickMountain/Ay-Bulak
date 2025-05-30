@@ -15,6 +15,7 @@ chest,Chest
 chest_description,Used to store items
 chick,Chick
 chicken_egg,Chicken egg
+common_bream,Common bream
 concrete_path,Concrete path
 create_item,Create item
 dirt_path,Dirt path
@@ -43,6 +44,7 @@ open_x,"Open ""{0}"""
 pickled_tomatoes,Pickled tomatoes
 potato,Potato
 price,Price
+prussian_carp,Prussian carp
 quests,Quests
 round_rug,Round rug
 samovar,Samovar

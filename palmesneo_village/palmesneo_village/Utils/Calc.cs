@@ -8,6 +8,15 @@ namespace palmesneo_village
 {
     public static class Calc
     {
+        public static Vector2 CalculateBezierPoint(float t, Vector2 p0, Vector2 p1, Vector2 p2)
+        {
+            float u = 1 - t;
+            float tt = t * t;
+            float uu = u * u;
+
+            return uu * p0 + 2 * u * t * p1 + tt * p2;
+        }
+
         public static Vector2 GetVector2(Direction direction)
         {
             switch (direction)
@@ -192,9 +201,27 @@ namespace palmesneo_village
             return AngleToVector(angle, vec.Length());
         }
 
+        public static float RotateTo(float from, float to, float speed)
+        {
+            float diff = MathHelper.WrapAngle(to - from);
+            float maxStep = speed;
+
+            if (MathF.Abs(diff) <= maxStep)
+            {
+                return to;
+            }
+
+            return from + MathF.Sign(diff) * maxStep;
+        }
+
         public static float Angle(this Vector2 vector)
         {
             return (float)Math.Atan2(vector.Y, vector.X);
+        }
+
+        public static float AngleDegrees(this Vector2 vector)
+        {
+            return MathHelper.ToDegrees((float)Math.Atan2(vector.Y, vector.X));
         }
 
         public static Vector2 AngleToVector(float angleRadians, float length)

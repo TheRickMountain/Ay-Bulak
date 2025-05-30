@@ -53,6 +53,24 @@
       "IsTradable": true,
       "IsDroppable": true,
       "Price": 0
+    },
+    {
+      "Id": 80,
+      "Name": "prussian_carp",
+      "Description": "test",
+      "IsStackable": true,
+      "IsTradable": true,
+      "IsDroppable": true,
+      "Price": 10
+    },
+    {
+      "Id": 81,
+      "Name": "common_bream",
+      "Description": "test",
+      "IsStackable": true,
+      "IsTradable": true,
+      "IsDroppable": true,
+      "Price": 10
     }
   ],
   "ToolItems": [

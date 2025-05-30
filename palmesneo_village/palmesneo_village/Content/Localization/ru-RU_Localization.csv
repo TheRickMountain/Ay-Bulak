@@ -15,6 +15,7 @@ chest,Сундук
 chest_description,Используется для хранения вещей
 chick,Цыпленок
 chicken_egg,Куриное яйцо
+common_bream,Лещ
 concrete_path,Бетонная тропинка
 create_item,Создать предмет
 dirt_path,Грунтовая тропинка
@@ -43,6 +44,7 @@ open_x,"Открыть ""{0}"""
 pickled_tomatoes,Маринованные помидоры
 potato,Картофель
 price,Цена
+prussian_carp,Серебряный карась
 quests,Задачи
 round_rug,Круглый ковер
 samovar,Самовар

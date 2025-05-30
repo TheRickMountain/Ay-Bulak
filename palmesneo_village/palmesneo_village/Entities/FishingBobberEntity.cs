@@ -18,9 +18,16 @@ namespace palmesneo_village
         private float bobAmplitude = 1f;   // высота качания
         private float bobFrequency = 2.5f; // скорость качания
 
+        private MTexture castingTexture;
+        private MTexture floatingTexture;
+
         public FishingBobberEntity()
         {
-            Texture = ResourcesManager.GetTexture("Sprites", "fishing_bobber");
+            MTileset tileset = new MTileset(ResourcesManager.GetTexture("Sprites", "fishing_bobber"), 16, 16);
+
+            castingTexture = tileset[0];
+            floatingTexture = tileset[1];
+
             Centered = true;
         }
 
@@ -44,6 +51,8 @@ namespace palmesneo_village
             {
                 case BobberState.Casting:
                     {
+                        Texture = castingTexture;
+
                         t += Engine.GameDeltaTime / castDuration;
                         if (t >= 1f)
                         {
@@ -71,6 +80,8 @@ namespace palmesneo_village
                     break;
                 case BobberState.Floating:
                     {
+                        Texture = floatingTexture;
+
                         bobTime += Engine.GameDeltaTime;
                         float offsetY = (float)MathF.Sin(bobTime * bobFrequency) * bobAmplitude;
                         LocalPosition = end + new Vector2(0, offsetY);
