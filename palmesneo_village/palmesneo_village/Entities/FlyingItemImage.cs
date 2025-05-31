@@ -15,7 +15,7 @@ namespace palmesneo_village
 
         // Визуальные параметры
         private float rotationSpeed = 8f; // радиан в секунду
-        private float bounceAmplitude = 0.2f;
+        private float bounceAmplitude = 0.5f;
 
         public bool IsCompleted => isCompleted;
 
@@ -25,7 +25,8 @@ namespace palmesneo_village
             this.startPosition = from;
             this.endPosition = to;
             this.duration = duration;
-            this.currentTime = 0f;
+            
+            currentTime = 0f;
 
             // Создаем дугообразную траекторию
             float heightOffset = Math.Max(32f, Vector2.Distance(from, to) * 0.3f);
@@ -49,15 +50,13 @@ namespace palmesneo_village
             currentTime += Engine.GameDeltaTime;
             float t = Math.Min(currentTime / duration, 1f);
 
-            // Вычисляем позицию по кривой Безье
             LocalPosition = Calc.CalculateBezierPoint(t, startPosition, middlePosition, endPosition);
 
-            // Анимация вращения
             LocalRotation += rotationSpeed * Engine.GameDeltaTime;
 
             // Анимация масштаба (небольшой bounce эффект)
             float bounceT = MathF.Sin(t * MathF.PI);
-            LocalScale = Vector2.One * (1f + bounceAmplitude * bounceT);
+            LocalScale = new Vector2(0.8f) * (1f + bounceAmplitude * bounceT);
 
             // Fade-in эффект в начале
             if (t < 0.1f)

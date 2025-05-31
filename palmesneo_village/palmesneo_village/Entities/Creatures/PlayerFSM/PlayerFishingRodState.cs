@@ -23,8 +23,8 @@ namespace palmesneo_village
         private FlyingItemImage flyingItemImage;
 
         private float castingDistance = 64f;
-        private float charmingDistance = 40f;
-        private float catchTimeWindow = 2.0f;
+        private float attractionRadius = 40f;
+        private float catchTimeWindow = 1.0f;
         private float timer = 0.0f;
 
         private FishShadow currentFish;
@@ -69,7 +69,7 @@ namespace palmesneo_village
 
         private void UpdateCasting(Player player)
         {
-            if (fishingBobber.State == FishingBobberEntity.BobberState.Floating)
+            if (fishingBobber.CurrentState == FishingBobberEntity.BobberState.Floating)
             {
                 Vector2 bobberTilePosition = player.CurrentLocation.WorldToMap(fishingBobber.LocalPosition);
 
@@ -83,9 +83,6 @@ namespace palmesneo_village
                 }
                 else
                 {
-                    ResourcesManager.GetSoundEffect("SoundEffects", "bobber_splash")
-                        .Play(1.0f, Calc.Random.Range(0.0f, 0.5f), 0.0f);
-
                     currentState = FishingState.Waiting;
                 }
             }
@@ -95,31 +92,15 @@ namespace palmesneo_village
         {
             foreach (var fish in player.CurrentLocation.GetFish())
             {
-                float distance = Vector2.Distance(fishingBobber.LocalPosition, fish.LocalPosition);
-
-                float angleBetweenFishAndBobber = Calc.AngleDegrees(fishingBobber.LocalPosition - fish.LocalPosition);
-
-                float fishAngleDegrees = MathHelper.ToDegrees(fish.LocalRotation) % 359;
-
-                if (fishAngleDegrees < 0)
+                if(fish.CheckAttraction(fishingBobber.LocalPosition, attractionRadius))
                 {
-                    fishAngleDegrees += 359;
-                }
+                    currentFish = fish;
 
-                float diff = fishAngleDegrees - angleBetweenFishAndBobber;
+                    currentFish.SetTarget(fishingBobber.LocalPosition);
 
-                if (distance < charmingDistance)
-                {
-                    if ((diff >= 0 && diff <= 30) || (diff >= -30 && diff < 0))
-                    {
-                        currentFish = fish;
+                    currentState = FishingState.FishBiting;
 
-                        currentFish.SetTarget(fishingBobber.LocalPosition);
-
-                        currentState = FishingState.FishBiting;
-
-                        break;
-                    }
+                    break;
                 }
             }
 

@@ -10,14 +10,14 @@ namespace palmesneo_village
     public class FishShadow : ImageEntity
     {
         // TODO: рыба плывет к цели плавно, скользя по воде
+        // TODO: рыба может обратить внимание на наживку даже во время вращения
 
         private enum FishState
         {
             Idle,
             Rotating,
             Swimming,
-            Scared,
-            Escaping
+            Scared
         }
 
         private FishState currentState = FishState.Idle;
@@ -28,9 +28,9 @@ namespace palmesneo_village
         private float idleTimer;
 
         private Vector2 targetPosition;
-        private float rotationSpeed = 4f; // radians per second
+        private float rotationSpeed = 4f;
         private float defaultSpeed = 10f;
-        private float scaredSpeed = 30f;
+        private float scaredSpeed = 40f;
 
         private Color originalColor = Color.White * 0.4f;
 
@@ -194,6 +194,33 @@ namespace palmesneo_village
             TryAdd(tileX, tileY + 1);
 
             return Calc.Random.Choose(neighbors);
+        }
+    
+        public bool CheckAttraction(Vector2 bobberPosition, float attractionRadius)
+        {
+            if (currentState == FishState.Scared) return false;
+
+            float distance = Vector2.Distance(LocalPosition, bobberPosition);
+
+            if (distance <= attractionRadius)
+            {
+                // Проверяем, смотрит ли рыба в сторону приманки (конус обзора)
+                Vector2 directionToBobber = (bobberPosition - LocalPosition);
+                directionToBobber.Normalize();
+
+                Vector2 fishDirection = new Vector2(MathF.Cos(LocalRotation), MathF.Sin(LocalRotation));
+
+                float dotProduct = Vector2.Dot(fishDirection, directionToBobber);
+                float viewAngle = MathF.Acos(MathHelper.Clamp(dotProduct, -1f, 1f));
+
+                // Рыба видит приманку в конусе 120 градусов
+                if (viewAngle <= MathHelper.ToRadians(60f))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 

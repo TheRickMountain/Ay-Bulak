@@ -3,12 +3,12 @@ using System;
 
 namespace palmesneo_village
 {
-    public class FishingBobberEntity : ImageEntity
+    public class FishingBobberEntity : SpriteEntity
     {
-        public enum BobberState { None, Casting, Floating };
+        public enum BobberState { None, Casting, WaterEntering, Floating };
 
         public Vector2 StartPosition { get; private set; }
-        public BobberState State { get; private set; } = BobberState.None;
+        public BobberState CurrentState { get; private set; } = BobberState.None;
 
         private Vector2 middle;
         private Vector2 end;
@@ -25,6 +25,10 @@ namespace palmesneo_village
         {
             MTileset tileset = new MTileset(ResourcesManager.GetTexture("Sprites", "fishing_bobber"), 16, 16);
 
+            AddAnimation("casting", new Animation([tileset[0]], 0, 0));
+            AddAnimation("floating", new Animation([tileset[1]], 0, 0));
+            AddAnimation("water_entering", new Animation([tileset[2], tileset[3], tileset[4], tileset[5]], 0, 5) { Loop = false });
+
             castingTexture = tileset[0];
             floatingTexture = tileset[1];
 
@@ -39,15 +43,15 @@ namespace palmesneo_village
 
             LocalPosition = from;
             t = 0f;
-            
-            State = BobberState.Casting;
+
+            SetState(BobberState.Casting);
         }
 
         public override void Update()
         {
             base.Update();
 
-            switch (State)
+            switch (CurrentState)
             {
                 case BobberState.Casting:
                     {
@@ -61,7 +65,7 @@ namespace palmesneo_village
                             LocalRotation = 0;
                             LocalPosition = end;
 
-                            State = BobberState.Floating;
+                            SetState(BobberState.WaterEntering);
                             return;
                         }
 
@@ -78,6 +82,14 @@ namespace palmesneo_village
                             LocalRotation = (float)Math.Atan2(velocity.Y, velocity.X) - MathHelper.ToRadians(90);
                     }
                     break;
+                case BobberState.WaterEntering:
+                    {
+                        if(CurrentAnimation.IsFinished)
+                        {
+                            SetState(BobberState.Floating);
+                        }
+                    }
+                    break;
                 case BobberState.Floating:
                     {
                         Texture = floatingTexture;
@@ -90,5 +102,32 @@ namespace palmesneo_village
             }
         }
 
+        private void SetState(BobberState newState)
+        {
+            CurrentState = newState;
+
+            switch (CurrentState)
+            {
+                case BobberState.Casting:
+                    {
+                        Play("casting");
+                    }
+                    break;
+                case BobberState.WaterEntering:
+                    {
+                        GetAnimation("water_entering").Reset();
+                        Play("water_entering");
+
+                        ResourcesManager.GetSoundEffect("SoundEffects", "bobber_splash")
+                        .Play(1.0f, Calc.Random.Range(0.0f, 0.5f), 0.0f);
+                    }
+                    break;
+                case BobberState.Floating:
+                    {
+                        Play("floating");
+                    }
+                    break;
+            }
+        }
     }
 }
