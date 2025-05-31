@@ -10,17 +10,22 @@ namespace palmesneo_village
     public class FishShadow : ImageEntity
     {
         // TODO: рыба плывет к цели плавно, скользя по воде
-        // TODO: рыба может обратить внимание на наживку даже во время вращения
+        // TODO: получать данные лута  из json файла
 
         private enum FishState
         {
             Idle,
             Rotating,
             Swimming,
+            AttractedRotating,
+            AttractedSwimming,
             Scared
         }
 
         private FishState currentState = FishState.Idle;
+
+        public bool IsAttracted { get; private set; }
+        public bool IsHooked { get; private set;}
 
         private GameLocation currentLocation;
 
@@ -63,6 +68,12 @@ namespace palmesneo_village
                 case FishState.Swimming:
                     UpdateSwimming();
                     break;
+                case FishState.AttractedRotating:
+                    UpdateAttractedRotating();
+                    break;
+                case FishState.AttractedSwimming:
+                    UpdateAttractedSwimming();
+                    break;
                 case FishState.Scared:
                     UpdateScared();
                     break;
@@ -71,7 +82,6 @@ namespace palmesneo_village
 
         public Item GetLoot()
         {
-            // TODO: получать данные из json файла
             List<Item> loot =
             [
                 Engine.ItemsDatabase.GetItemByName("prussian_carp"),
@@ -86,8 +96,7 @@ namespace palmesneo_village
             idleTimer -= Engine.GameDeltaTime;
             if (idleTimer <= 0f)
             {
-                Vector2 offset = new Vector2(Calc.Random.Range(0, Engine.TILE_SIZE), Calc.Random.Range(0, Engine.TILE_SIZE));
-                SetTarget(GetRandomNeighbourWaterTile() * Engine.TILE_SIZE + offset);
+                TransitionToState(FishState.Rotating);
             }
         }
 
@@ -106,6 +115,21 @@ namespace palmesneo_village
             }
         }
 
+        private void UpdateAttractedRotating()
+        {
+            Vector2 direction = targetPosition - LocalPosition;
+            direction.Normalize();
+
+            float targetAngle = Calc.Angle(direction);
+            LocalRotation = Calc.RotateTo(LocalRotation, targetAngle, rotationSpeed * Engine.GameDeltaTime);
+
+            float angleDiff = MathF.Abs(MathHelper.WrapAngle(LocalRotation - targetAngle));
+            if (angleDiff < 0.05f)
+            {
+                TransitionToState(FishState.AttractedSwimming);
+            }
+        }
+
         private void UpdateSwimming()
         {
             Vector2 direction = targetPosition - LocalPosition;
@@ -118,6 +142,23 @@ namespace palmesneo_village
             {
                 idleTimer = Calc.Random.Range(idleTimeRange);
                 TransitionToState(FishState.Idle);
+            }
+        }
+
+        private void UpdateAttractedSwimming()
+        {
+            float distance = Vector2.Distance(LocalPosition, targetPosition);
+
+            if (distance > 4f)
+            {
+                Vector2 direction = targetPosition - LocalPosition;
+                direction.Normalize();
+
+                LocalPosition += direction * defaultSpeed * Engine.GameDeltaTime;
+            }
+            else
+            {
+                IsHooked = true;
             }
         }
 
@@ -138,12 +179,6 @@ namespace palmesneo_village
             }
         }
 
-        public void SetTarget(Vector2 position)
-        {
-            targetPosition = position;
-            TransitionToState(FishState.Rotating);
-        }
-
         public void ScareAway()
         {
             if (currentState == FishState.Scared) return;
@@ -157,6 +192,12 @@ namespace palmesneo_village
 
             switch (newState)
             {
+                case FishState.Rotating:
+                    {
+                        Vector2 offset = new Vector2(Calc.Random.Range(0, Engine.TILE_SIZE), Calc.Random.Range(0, Engine.TILE_SIZE));
+                        targetPosition = GetRandomNeighbourWaterTile() * Engine.TILE_SIZE + offset;
+                    }
+                    break;
                 case FishState.Scared:
                     {
                         Vector2 offset = new Vector2(Calc.Random.Range(0, Engine.TILE_SIZE), Calc.Random.Range(0, Engine.TILE_SIZE));
@@ -170,6 +211,37 @@ namespace palmesneo_village
                         previousDistance = Vector2.Distance(LocalPosition, targetPosition);
                     }
                     break;
+            }
+        }
+
+        public void TryToAttract(Vector2 bobberPosition, float attractionRadius)
+        {
+            if (IsAttracted) return;
+
+            if (currentState == FishState.Scared) return;
+
+            float distance = Vector2.Distance(LocalPosition, bobberPosition);
+
+            if (distance <= attractionRadius)
+            {
+                // Проверяем, смотрит ли рыба в сторону приманки (конус обзора)
+                Vector2 directionToBobber = (bobberPosition - LocalPosition);
+                directionToBobber.Normalize();
+
+                Vector2 fishDirection = new Vector2(MathF.Cos(LocalRotation), MathF.Sin(LocalRotation));
+
+                float dotProduct = Vector2.Dot(fishDirection, directionToBobber);
+                float viewAngle = MathF.Acos(MathHelper.Clamp(dotProduct, -1f, 1f));
+
+                // Рыба видит приманку в конусе 120 градусов
+                if (viewAngle <= MathHelper.ToRadians(60f))
+                {
+                    targetPosition = bobberPosition;
+
+                    IsAttracted = true;
+
+                    TransitionToState(FishState.AttractedRotating);
+                }
             }
         }
 
@@ -194,33 +266,6 @@ namespace palmesneo_village
             TryAdd(tileX, tileY + 1);
 
             return Calc.Random.Choose(neighbors);
-        }
-    
-        public bool CheckAttraction(Vector2 bobberPosition, float attractionRadius)
-        {
-            if (currentState == FishState.Scared) return false;
-
-            float distance = Vector2.Distance(LocalPosition, bobberPosition);
-
-            if (distance <= attractionRadius)
-            {
-                // Проверяем, смотрит ли рыба в сторону приманки (конус обзора)
-                Vector2 directionToBobber = (bobberPosition - LocalPosition);
-                directionToBobber.Normalize();
-
-                Vector2 fishDirection = new Vector2(MathF.Cos(LocalRotation), MathF.Sin(LocalRotation));
-
-                float dotProduct = Vector2.Dot(fishDirection, directionToBobber);
-                float viewAngle = MathF.Acos(MathHelper.Clamp(dotProduct, -1f, 1f));
-
-                // Рыба видит приманку в конусе 120 градусов
-                if (viewAngle <= MathHelper.ToRadians(60f))
-                {
-                    return true;
-                }
-            }
-
-            return false;
         }
     }
 

@@ -69,7 +69,7 @@ namespace palmesneo_village
 
         private void UpdateCasting(Player player)
         {
-            if (fishingBobber.CurrentState == FishingBobberEntity.BobberState.Floating)
+            if (fishingBobber.CurrentState == FishingBobberEntity.BobberState.WaterEntering)
             {
                 Vector2 bobberTilePosition = player.CurrentLocation.WorldToMap(fishingBobber.LocalPosition);
 
@@ -83,6 +83,9 @@ namespace palmesneo_village
                 }
                 else
                 {
+                    ResourcesManager.GetSoundEffect("SoundEffects", "bobber_splash")
+                        .Play(1.0f, Calc.Random.Range(0.0f, 0.5f), 0.0f);
+
                     currentState = FishingState.Waiting;
                 }
             }
@@ -92,11 +95,11 @@ namespace palmesneo_village
         {
             foreach (var fish in player.CurrentLocation.GetFish())
             {
-                if(fish.CheckAttraction(fishingBobber.LocalPosition, attractionRadius))
+                fish.TryToAttract(fishingBobber.LocalPosition, attractionRadius);
+
+                if(fish.IsAttracted)
                 {
                     currentFish = fish;
-
-                    currentFish.SetTarget(fishingBobber.LocalPosition);
 
                     currentState = FishingState.FishBiting;
 
@@ -112,10 +115,10 @@ namespace palmesneo_village
 
         private void UpdateFishBiting(Player player)
         {
-            float distance = Vector2.Distance(fishingBobber.LocalPosition, currentFish.LocalPosition);
-
-            if (distance < 4)
+            if (currentFish.IsHooked)
             {
+                fishingBobber.Bite();
+
                 ResourcesManager.GetSoundEffect("SoundEffects", "bobber_splash")
                         .Play(1.0f, Calc.Random.Range(0.0f, 0.5f), 0.0f);
 
@@ -124,12 +127,14 @@ namespace palmesneo_village
 
                 currentState = FishingState.Catch;
             }
-
-            if (MInput.Mouse.PressedLeftButton)
+            else
             {
-                currentFish?.ScareAway();
+                if (MInput.Mouse.PressedLeftButton)
+                {
+                    currentFish?.ScareAway();
 
-                StopFishing(player);
+                    StopFishing(player);
+                }
             }
         }
 
