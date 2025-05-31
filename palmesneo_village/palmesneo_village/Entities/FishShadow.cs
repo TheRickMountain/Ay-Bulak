@@ -1,22 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO.Pipes;
-using System.Linq;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using MonoGame.Extended;
+using MonoGame.Extended.Tweening;
+using System;
+using System.Collections.Generic;
 
 namespace palmesneo_village
 {
-    public class FishShadow : ImageEntity
+    public class FishShadow : SpriteEntity
     {
-        // TODO: рыба плывет к цели плавно, скользя по воде
         // TODO: получать данные лута  из json файла
 
         private enum FishState
         {
             Idle,
-            Rotating,
-            Swimming,
+            RotatingAndSwimming,
             AttractedRotating,
             AttractedSwimming,
             Scared
@@ -41,11 +38,21 @@ namespace palmesneo_village
 
         private float previousDistance = 0;
 
+        private Tweener tweener;
+
         public FishShadow()
         {
-            Texture = ResourcesManager.GetTexture("Sprites", "fish_shadow");
-            Centered = true;
+            MTileset tileset = new MTileset(ResourcesManager.GetTexture("Sprites", "fish_shadow"), 16, 16);
+
+            AddAnimation("swimming", new Animation([tileset[0], tileset[1], tileset[2], tileset[3], tileset[4]], 0, 5));
+            Play("swimming");
+
+            Offset = new Vector2(16 - 16 / 3, 16 / 2);
             SelfColor = originalColor;
+
+            tweener = new Tweener();
+
+            TransitionToState(FishState.Idle);
         }
 
         public void SetGameLocation(GameLocation location)
@@ -57,16 +64,12 @@ namespace palmesneo_village
         {
             base.Update();
 
+            tweener.Update(Engine.GameDeltaTime);
+
             switch (currentState)
             {
                 case FishState.Idle:
                     UpdateIdle();
-                    break;
-                case FishState.Rotating:
-                    UpdateRotating();
-                    break;
-                case FishState.Swimming:
-                    UpdateSwimming();
                     break;
                 case FishState.AttractedRotating:
                     UpdateAttractedRotating();
@@ -96,22 +99,7 @@ namespace palmesneo_village
             idleTimer -= Engine.GameDeltaTime;
             if (idleTimer <= 0f)
             {
-                TransitionToState(FishState.Rotating);
-            }
-        }
-
-        private void UpdateRotating()
-        {
-            Vector2 direction = targetPosition - LocalPosition;
-            direction.Normalize();
-
-            float targetAngle = Calc.Angle(direction);
-            LocalRotation = Calc.RotateTo(LocalRotation, targetAngle, rotationSpeed * Engine.GameDeltaTime);
-
-            float angleDiff = MathF.Abs(MathHelper.WrapAngle(LocalRotation - targetAngle));
-            if (angleDiff < 0.05f)
-            {
-                TransitionToState(FishState.Swimming);
+                TransitionToState(FishState.RotatingAndSwimming);
             }
         }
 
@@ -127,21 +115,6 @@ namespace palmesneo_village
             if (angleDiff < 0.05f)
             {
                 TransitionToState(FishState.AttractedSwimming);
-            }
-        }
-
-        private void UpdateSwimming()
-        {
-            Vector2 direction = targetPosition - LocalPosition;
-            direction.Normalize();
-
-            LocalPosition += direction * defaultSpeed * Engine.GameDeltaTime;
-
-            float distance = Vector2.Distance(LocalPosition, targetPosition);
-            if (distance < 4f)
-            {
-                idleTimer = Calc.Random.Range(idleTimeRange);
-                TransitionToState(FishState.Idle);
             }
         }
 
@@ -192,10 +165,39 @@ namespace palmesneo_village
 
             switch (newState)
             {
-                case FishState.Rotating:
+                case FishState.RotatingAndSwimming:
                     {
                         Vector2 offset = new Vector2(Calc.Random.Range(0, Engine.TILE_SIZE), Calc.Random.Range(0, Engine.TILE_SIZE));
                         targetPosition = GetRandomNeighbourWaterTile() * Engine.TILE_SIZE + offset;
+
+                        Vector2 direction = targetPosition - LocalPosition;
+                        direction.Normalize();
+
+                        float targetAngle = Calc.Angle(direction);
+
+                        var tween = tweener.TweenTo(
+                            target: this,
+                            expression: sprite => LocalRotation,
+                            toValue: targetAngle,
+                            duration: 1.0f)
+                        .Easing(EasingFunctions.CubicOut);
+
+                        tweener.TweenTo(
+                            target: this,
+                            expression: sprite => LocalPosition,
+                            toValue: targetPosition,
+                            duration: 2.0f)
+                        .Easing(EasingFunctions.QuadraticOut)
+                        .OnEnd((tween) =>
+                        {
+                            idleTimer = Calc.Random.Range(idleTimeRange);
+                            TransitionToState(FishState.Idle);
+                        });
+                    }
+                    break;
+                case FishState.AttractedRotating:
+                    {
+                        tweener.CancelAll();
                     }
                     break;
                 case FishState.Scared:
