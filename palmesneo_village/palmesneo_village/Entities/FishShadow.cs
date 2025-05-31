@@ -8,35 +8,34 @@ namespace palmesneo_village
 {
     public class FishShadow : SpriteEntity
     {
-        // TODO: получать данные лута  из json файла
-
-        private enum FishState
+        public enum FishState
         {
+            None,
+            Spawning,
             Idle,
-            RotatingAndSwimming,
-            AttractedRotating,
-            AttractedSwimming,
-            Scared
+            SwimmingForward,
+            Playing,
+            SwimmingBackward,
+            Biting,
+            Ate,
+            Dispawning
         }
 
-        private FishState currentState = FishState.Idle;
+        public Action<FishState> StateChanged { get; set; }
 
-        public bool IsAttracted { get; private set; }
-        public bool IsHooked { get; private set;}
+        private FishState currentState = FishState.None;
 
-        private GameLocation currentLocation;
+        private float spawnDistance = 8;
+        private readonly Range<float> idleTimeRange = new(1.0f, 2.5f);
+        private readonly Range<int> playingAmountRange = new(0, 3);
+        private float bitingWindow = 1.0f;
 
-        private readonly Range<float> idleTimeRange = new(2.0f, 5.0f);
-        private float idleTimer;
-
-        private Vector2 targetPosition;
-        private float rotationSpeed = 4f;
-        private float defaultSpeed = 10f;
-        private float scaredSpeed = 40f;
-
-        private Color originalColor = Color.White * 0.4f;
-
-        private float previousDistance = 0;
+        private float timer = 0.0f;
+        private int playingCounter = 0;
+        
+        private Vector2 spawnPosition;
+        private Vector2 dispawnPosition;
+        private Vector2 bobberPosition;
 
         private Tweener tweener;
 
@@ -48,16 +47,9 @@ namespace palmesneo_village
             Play("swimming");
 
             Offset = new Vector2(16 - 16 / 3, 16 / 2);
-            SelfColor = originalColor;
+            SelfColor = Color.White * 0.4f;
 
             tweener = new Tweener();
-
-            TransitionToState(FishState.Idle);
-        }
-
-        public void SetGameLocation(GameLocation location)
-        {
-            currentLocation = location;
         }
 
         public override void Update()
@@ -69,205 +61,163 @@ namespace palmesneo_village
             switch (currentState)
             {
                 case FishState.Idle:
-                    UpdateIdle();
+                    {
+                        timer -= Engine.GameDeltaTime;
+
+                        if (timer < 0.0f)
+                        {
+                            SetState(FishState.SwimmingForward);
+                        }
+                    }
                     break;
-                case FishState.AttractedRotating:
-                    UpdateAttractedRotating();
-                    break;
-                case FishState.AttractedSwimming:
-                    UpdateAttractedSwimming();
-                    break;
-                case FishState.Scared:
-                    UpdateScared();
+                case FishState.Biting:
+                    {
+                        timer -= Engine.GameDeltaTime;
+
+                        if(timer < 0.0f)
+                        {
+                            SetState(FishState.Ate);
+                        }
+                    }
                     break;
             }
         }
 
-        public Item GetLoot()
+        public void SetBobberPosition(Vector2 bobberPosition)
         {
-            List<Item> loot =
-            [
-                Engine.ItemsDatabase.GetItemByName("prussian_carp"),
-                Engine.ItemsDatabase.GetItemByName("common_bream"),
-            ];
-            
-            return Calc.Random.Choose(loot);
-        }
+            this.bobberPosition = bobberPosition;
 
-        private void UpdateIdle()
-        {
-            idleTimer -= Engine.GameDeltaTime;
-            if (idleTimer <= 0f)
-            {
-                TransitionToState(FishState.RotatingAndSwimming);
-            }
-        }
+            Vector2 positionOffset;
+            Calc.Random.NextUnitVector(out positionOffset);
+            positionOffset *= spawnDistance;
+            spawnPosition = bobberPosition + positionOffset;
+            dispawnPosition = bobberPosition - positionOffset;
 
-        private void UpdateAttractedRotating()
-        {
-            Vector2 direction = targetPosition - LocalPosition;
+            LocalPosition = spawnPosition;
+
+            Vector2 direction = bobberPosition - LocalPosition;
             direction.Normalize();
 
-            float targetAngle = Calc.Angle(direction);
-            LocalRotation = Calc.RotateTo(LocalRotation, targetAngle, rotationSpeed * Engine.GameDeltaTime);
+            LocalRotation = Calc.Angle(direction);
 
-            float angleDiff = MathF.Abs(MathHelper.WrapAngle(LocalRotation - targetAngle));
-            if (angleDiff < 0.05f)
-            {
-                TransitionToState(FishState.AttractedSwimming);
-            }
+            SetState(FishState.Spawning);
         }
 
-        private void UpdateAttractedSwimming()
-        {
-            float distance = Vector2.Distance(LocalPosition, targetPosition);
-
-            if (distance > 4f)
-            {
-                Vector2 direction = targetPosition - LocalPosition;
-                direction.Normalize();
-
-                LocalPosition += direction * defaultSpeed * Engine.GameDeltaTime;
-            }
-            else
-            {
-                IsHooked = true;
-            }
-        }
-
-        private void UpdateScared()
-        {
-            Vector2 direction = targetPosition - LocalPosition;
-            direction.Normalize();
-
-            LocalPosition += direction * scaredSpeed * Engine.GameDeltaTime;
-
-            float distance = Vector2.Distance(LocalPosition, targetPosition);
-
-            SelfColor = Color.Lerp(originalColor, Color.Transparent, 1.0f - (distance / previousDistance));
-
-            if (distance < 1f)
-            {
-                currentLocation.RemoveFish(this);
-            }
-        }
-
-        public void ScareAway()
-        {
-            if (currentState == FishState.Scared) return;
-
-            TransitionToState(FishState.Scared);
-        }
-
-        private void TransitionToState(FishState newState)
+        public void SetState(FishState newState)
         {
             currentState = newState;
 
-            switch (newState)
+            switch (currentState)
             {
-                case FishState.RotatingAndSwimming:
+                case FishState.Spawning:
                     {
-                        Vector2 offset = new Vector2(Calc.Random.Range(0, Engine.TILE_SIZE), Calc.Random.Range(0, Engine.TILE_SIZE));
-                        targetPosition = GetRandomNeighbourWaterTile() * Engine.TILE_SIZE + offset;
+                        playingCounter = Calc.Random.Range(playingAmountRange);
 
-                        Vector2 direction = targetPosition - LocalPosition;
-                        direction.Normalize();
-
-                        float targetAngle = Calc.Angle(direction);
-
-                        var tween = tweener.TweenTo(
-                            target: this,
-                            expression: sprite => LocalRotation,
-                            toValue: targetAngle,
-                            duration: 1.0f)
-                        .Easing(EasingFunctions.CubicOut);
+                        SelfColor = Color.White * 0.0f;
 
                         tweener.TweenTo(
                             target: this,
-                            expression: sprite => LocalPosition,
-                            toValue: targetPosition,
-                            duration: 2.0f)
-                        .Easing(EasingFunctions.QuadraticOut)
-                        .OnEnd((tween) =>
+                            expression: sprite => SelfColor,
+                            toValue: Color.White * 0.4f,
+                            duration: 0.5f)
+                        .Easing(EasingFunctions.Linear)
+                        .OnEnd(tween =>
                         {
-                            idleTimer = Calc.Random.Range(idleTimeRange);
-                            TransitionToState(FishState.Idle);
+                            SetState(FishState.Idle);
                         });
                     }
                     break;
-                case FishState.AttractedRotating:
+                case FishState.Idle:
                     {
-                        tweener.CancelAll();
+                        timer = Calc.Random.Range(idleTimeRange);
                     }
                     break;
-                case FishState.Scared:
+                case FishState.SwimmingForward:
                     {
-                        Vector2 offset = new Vector2(Calc.Random.Range(0, Engine.TILE_SIZE), Calc.Random.Range(0, Engine.TILE_SIZE));
-                        targetPosition = GetRandomNeighbourWaterTile() * Engine.TILE_SIZE + offset;
+                        tweener.TweenTo(
+                            target: this,
+                            expression: sprite => LocalPosition,
+                            toValue: bobberPosition,
+                            duration: 0.5f)
+                        .Easing(EasingFunctions.Linear)
+                        .OnEnd(tween =>
+                        {
+                            if (playingCounter == 0)
+                            {
+                                SetState(FishState.Biting);
+                            }
+                            else
+                            {
+                                playingCounter--;
 
-                        Vector2 direction = targetPosition - LocalPosition;
+                                SetState(FishState.Playing);
+                            }
+                        });
+                    }
+                    break;
+                case FishState.Playing:
+                    {
+                        SetState(FishState.SwimmingBackward);
+                    }
+                    break;
+                case FishState.SwimmingBackward:
+                    {
+                        tweener.TweenTo(
+                            target: this,
+                            expression: sprite => LocalPosition,
+                            toValue: spawnPosition,
+                            duration: 1.0f)
+                        .Easing(EasingFunctions.QuadraticOut)
+                        .OnEnd(tween =>
+                        {
+                            SetState(FishState.Idle);
+                        });
+                    }
+                    break;
+                case FishState.Biting:
+                    {
+                        timer = bitingWindow;
+                    }
+                    break;
+                case FishState.Ate:
+                    {
+                        SetState(FishState.Dispawning);
+                    }
+                    break;
+                case FishState.Dispawning:
+                    {
+                        Vector2 direction = dispawnPosition - LocalPosition;
                         direction.Normalize();
 
                         LocalRotation = Calc.Angle(direction);
 
-                        previousDistance = Vector2.Distance(LocalPosition, targetPosition);
+                        tweener.TweenTo(
+                            target: this,
+                            expression: sprite => LocalPosition,
+                            toValue: dispawnPosition,
+                            duration: 0.5f)
+                        .Easing(EasingFunctions.QuadraticOut)
+                        .OnEnd(tween =>
+                        {
+                            Parent.RemoveChild(this);
+                        });
+
+                        tweener.TweenTo(
+                            target: this,
+                            expression: sprite => SelfColor,
+                            toValue: Color.White * 0.0f,
+                            duration: 0.4f)
+                        .Easing(EasingFunctions.QuadraticOut);
                     }
                     break;
             }
+
+            StateChanged?.Invoke(newState);
         }
 
-        public void TryToAttract(Vector2 bobberPosition, float attractionRadius)
+        public void ScareAway()
         {
-            if (IsAttracted) return;
-
-            if (currentState == FishState.Scared) return;
-
-            float distance = Vector2.Distance(LocalPosition, bobberPosition);
-
-            if (distance <= attractionRadius)
-            {
-                // Проверяем, смотрит ли рыба в сторону приманки (конус обзора)
-                Vector2 directionToBobber = (bobberPosition - LocalPosition);
-                directionToBobber.Normalize();
-
-                Vector2 fishDirection = new Vector2(MathF.Cos(LocalRotation), MathF.Sin(LocalRotation));
-
-                float dotProduct = Vector2.Dot(fishDirection, directionToBobber);
-                float viewAngle = MathF.Acos(MathHelper.Clamp(dotProduct, -1f, 1f));
-
-                // Рыба видит приманку в конусе 120 градусов
-                if (viewAngle <= MathHelper.ToRadians(60f))
-                {
-                    targetPosition = bobberPosition;
-
-                    IsAttracted = true;
-
-                    TransitionToState(FishState.AttractedRotating);
-                }
-            }
-        }
-
-        private Vector2 GetRandomNeighbourWaterTile()
-        {
-            var neighbors = new List<Vector2>();
-
-            Vector2 fishTile = currentLocation.WorldToMap(LocalPosition);
-            int tileX = (int)fishTile.X;
-            int tileY = (int)fishTile.Y;
-
-            void TryAdd(int x, int y)
-            {
-                if (currentLocation.GetGroundTile(x, y) == GroundTile.Water)
-                    neighbors.Add(new Vector2(x, y));
-            }
-
-            TryAdd(tileX, tileY);
-            TryAdd(tileX - 1, tileY);
-            TryAdd(tileX + 1, tileY);
-            TryAdd(tileX, tileY - 1);
-            TryAdd(tileX, tileY + 1);
-
-            return Calc.Random.Choose(neighbors);
+            SetState(FishState.Dispawning);
         }
     }
 

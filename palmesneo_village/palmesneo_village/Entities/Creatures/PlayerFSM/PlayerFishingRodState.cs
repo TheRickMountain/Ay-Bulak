@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
+using MonoGame.Extended;
 using MonoGame.Extended.Screens.Transitions;
 using System;
+using System.Collections.Generic;
 
 namespace palmesneo_village
 {
@@ -10,35 +12,38 @@ namespace palmesneo_village
         {
             None,
             Casting,
-            Waiting,
-            FishBiting,
-            Catch,
+            WaitingForFishSpawning,
+            FishSpawning,
+            FishPlaying,
+            FishCatchingWindow,
+            FishAte,
             FlyingItem
         }
 
         private FishingState currentState = FishingState.None;
 
         private FishingBobberEntity fishingBobber;
-        private ImageEntity attentionImage;
         private FlyingItemImage flyingItemImage;
+        private FishShadow fishShadow;
 
+        private Range<float> waitingTimeRange = new Range<float>(2.0f, 10.0f);
         private float castingDistance = 64f;
-        private float attractionRadius = 40f;
-        private float catchTimeWindow = 1.0f;
         private float timer = 0.0f;
 
-        private FishShadow currentFish;
+        private Player player;
 
         public PlayerFishingRodState(FishingBobberEntity fishingBobber)
         {
             this.fishingBobber = fishingBobber;
 
-            attentionImage = new ImageEntity();
-            attentionImage.Texture = ResourcesManager.GetTexture("Sprites", "attention_icon");
+            fishShadow = new FishShadow();
+            fishShadow.StateChanged += OnFishShadowStateChanged;
         }
 
         public void Enter(Player player)
         {
+            this.player = player;
+
             player.PlayAnimation($"fishing_rod_{player.MovementDirection.ToString().ToLower()}");
 
             ResourcesManager.GetSoundEffect("SoundEffects", "fishing_rod_swoosh")
@@ -52,14 +57,14 @@ namespace palmesneo_village
                 case FishingState.Casting:
                     UpdateCasting(player);
                     break;
-                case FishingState.Waiting:
-                    UpdateWaiting(player);
+                case FishingState.WaitingForFishSpawning:
+                    UpdateWaitingForFishSpawning(player);
                     break;
-                case FishingState.FishBiting:
-                    UpdateFishBiting(player);
+                case FishingState.FishPlaying:
+                    UpdateFishPlaying(player);
                     break;
-                case FishingState.Catch:
-                    UpdateCatch(player);
+                case FishingState.FishCatchingWindow:
+                    UpdateFishCatchingWindow(player);
                     break;
                 case FishingState.FlyingItem:
                     UpdateFlyingItem(player);
@@ -86,25 +91,18 @@ namespace palmesneo_village
                     ResourcesManager.GetSoundEffect("SoundEffects", "bobber_splash")
                         .Play(1.0f, Calc.Random.Range(0.0f, 0.5f), 0.0f);
 
-                    currentState = FishingState.Waiting;
+                    SetState(FishingState.WaitingForFishSpawning, player);
                 }
             }
         }
 
-        private void UpdateWaiting(Player player)
+        private void UpdateWaitingForFishSpawning(Player player)
         {
-            foreach (var fish in player.CurrentLocation.GetFish())
+            timer -= Engine.GameDeltaTime;
+
+            if(timer < 0)
             {
-                fish.TryToAttract(fishingBobber.LocalPosition, attractionRadius);
-
-                if(fish.IsAttracted)
-                {
-                    currentFish = fish;
-
-                    currentState = FishingState.FishBiting;
-
-                    break;
-                }
+                SetState(FishingState.FishSpawning, player);
             }
 
             if (MInput.Mouse.PressedLeftButton)
@@ -113,70 +111,37 @@ namespace palmesneo_village
             }
         }
 
-        private void UpdateFishBiting(Player player)
+        private void UpdateFishPlaying(Player player)
         {
-            if (currentFish.IsHooked)
+            if (MInput.Mouse.PressedLeftButton)
             {
-                fishingBobber.Bite();
+                fishShadow.ScareAway();
 
-                ResourcesManager.GetSoundEffect("SoundEffects", "bobber_splash")
-                        .Play(1.0f, Calc.Random.Range(0.0f, 0.5f), 0.0f);
-
-                player.CurrentLocation.AddChild(attentionImage);
-                attentionImage.LocalPosition = fishingBobber.LocalPosition + new Vector2(0, -Engine.TILE_SIZE);
-
-                currentState = FishingState.Catch;
-            }
-            else
-            {
-                if (MInput.Mouse.PressedLeftButton)
-                {
-                    currentFish?.ScareAway();
-
-                    StopFishing(player);
-                }
+                StopFishing(player);
             }
         }
 
-        private void UpdateCatch(Player player)
+        private void UpdateFishCatchingWindow(Player player)
         {
-            timer += Engine.GameDeltaTime;
-
-            if (timer >= catchTimeWindow)
+            if (MInput.Mouse.PressedLeftButton)
             {
-                player.CurrentLocation.RemoveChild(attentionImage);
+                player.CurrentLocation.RemoveChild(fishShadow);
+
+                Item lootItem = GetLoot();
+
+                flyingItemImage = new FlyingItemImage(lootItem, fishingBobber.LocalPosition, player.LocalPosition);
+
+                player.CurrentLocation.AddChild(flyingItemImage);
+
+                ResourcesManager.GetSoundEffect("SoundEffects", "bobber_catch")
+                    .Play(1.0f, Calc.Random.Range(0.0f, 0.5f), 0.0f);
+
                 player.CurrentLocation.RemoveChild(fishingBobber);
 
-                currentFish?.ScareAway();
+                player.ResetCurrentAnimation();
+                player.PlayAnimation($"idle_{player.MovementDirection.ToString().ToLower()}");
 
-                player.SetState(new PlayerIdleState());
-
-                currentState = FishingState.None;
-            }
-            else
-            {
-                if (MInput.Mouse.PressedLeftButton)
-                {
-                    player.CurrentLocation.RemoveFish(currentFish);
-
-                    player.CurrentLocation.RemoveChild(attentionImage);
-
-                    Item lootItem = currentFish.GetLoot();
-
-                    flyingItemImage = new FlyingItemImage(lootItem, fishingBobber.LocalPosition, player.LocalPosition);
-
-                    player.CurrentLocation.AddChild(flyingItemImage);
-
-                    ResourcesManager.GetSoundEffect("SoundEffects", "bobber_catch")
-                        .Play(1.0f, Calc.Random.Range(0.0f, 0.5f), 0.0f);
-
-                    player.CurrentLocation.RemoveChild(fishingBobber);
-
-                    player.ResetCurrentAnimation();
-                    player.PlayAnimation($"idle_{player.MovementDirection.ToString().ToLower()}");
-
-                    currentState = FishingState.FlyingItem;
-                }
+                SetState(FishingState.FlyingItem, player);
             }
         }
 
@@ -200,13 +165,40 @@ namespace palmesneo_village
             }
         }
 
+        private void SetState(FishingState newState, Player player)
+        {
+            currentState = newState;
+
+            switch (currentState)
+            {
+                case FishingState.WaitingForFishSpawning:
+                    {
+                        timer = Calc.Random.Range(waitingTimeRange);
+                    }
+                    break;
+                case FishingState.FishSpawning:
+                    {
+                        player.CurrentLocation.AddChild(fishShadow);
+                        fishShadow.SetBobberPosition(fishingBobber.LocalPosition);
+
+                        SetState(FishingState.FishPlaying, player);
+                    }
+                    break;
+                case FishingState.FishAte:
+                    {
+                        StopFishing(player);
+                    }
+                    break;
+            }
+        }
+
         private void StopFishing(Player player)
         {
             player.CurrentLocation.RemoveChild(fishingBobber);
 
             player.SetState(new PlayerIdleState());
 
-            currentState = FishingState.None;
+            SetState(FishingState.None, player);
         }
 
         public void Exit(Player player)
@@ -235,13 +227,58 @@ namespace palmesneo_village
                     bobberEndPosition, 
                     Engine.TILE_SIZE * 2);
 
-                currentState = FishingState.Casting;
+                SetState(FishingState.Casting, player);
             }
         }
 
         public bool IsInterruptible()
         {
             return false;
+        }
+
+        private Item GetLoot()
+        {
+            List<Item> loot =
+            [
+                Engine.ItemsDatabase.GetItemByName("prussian_carp"),
+                Engine.ItemsDatabase.GetItemByName("common_bream"),
+            ];
+
+            return Calc.Random.Choose(loot);
+        }
+
+        private void OnFishShadowStateChanged(FishShadow.FishState newState)
+        {
+            switch (newState)
+            {
+                case FishShadow.FishState.Playing:
+                    {
+                        ResourcesManager.GetSoundEffect("SoundEffects", "bobber_splash")
+                            .Play(1.0f, Calc.Random.Range(0.0f, 0.5f), 0.0f);
+
+                        MInput.GamePads[0].Rumble(6f, 0.2f);
+
+                        fishingBobber.Bite();
+                    }
+                    break;
+                case FishShadow.FishState.Biting:
+                    {
+                        ResourcesManager.GetSoundEffect("SoundEffects", "bobber_catch")
+                            .Play(1.0f, Calc.Random.Range(0.0f, 0.5f), 0.0f);
+
+                        MInput.GamePads[0].Rumble(12f, 0.4f);
+
+                        fishingBobber.Bite();
+
+                        SetState(FishingState.FishCatchingWindow, player);
+                    }
+                    break;
+                case FishShadow.FishState.Ate:
+                    {
+                        SetState(FishingState.FishAte, player);
+                    }
+                    break;
+            }
         }
     }
 }

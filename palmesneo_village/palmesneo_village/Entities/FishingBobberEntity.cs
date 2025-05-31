@@ -24,7 +24,7 @@ namespace palmesneo_village
 
             AddAnimation("casting", new Animation([tileset[0]], 0, 0));
             AddAnimation("floating", new Animation([tileset[1]], 0, 0));
-            AddAnimation("water_entering", new Animation([tileset[2], tileset[3], tileset[4], tileset[5]], 0, 6) { Loop = false });
+            AddAnimation("biting", new Animation([tileset[2], tileset[3], tileset[4], tileset[5]], 0, 6) { Loop = false });
 
             Centered = true;
         }
@@ -112,8 +112,8 @@ namespace palmesneo_village
                 case BobberState.Biting:
                 case BobberState.WaterEntering:
                     {
-                        GetAnimation("water_entering").Reset();
-                        Play("water_entering");
+                        GetAnimation("biting").Reset();
+                        Play("biting");
                     }
                     break;
                 case BobberState.Floating:

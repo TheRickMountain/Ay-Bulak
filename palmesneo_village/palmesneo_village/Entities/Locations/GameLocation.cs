@@ -63,7 +63,6 @@ namespace palmesneo_village
 
         private Dictionary<Building, List<Teleport>> buildingsTeleports = new();
 
-        private Entity fishList;
         private Entity entitiesList;
         private Entity itemsList;
 
@@ -114,9 +113,6 @@ namespace palmesneo_village
             collisionMap = new bool[mapWidth, mapHeight];
 
             teleportsMap = new Teleport[mapWidth, mapHeight];
-
-            fishList = new Entity();
-            AddChild(fishList);
 
             entitiesList = new Entity();
             entitiesList.IsDepthSortEnabled = true;
@@ -607,34 +603,6 @@ namespace palmesneo_village
             {
                 yield return animal;
             }
-        }
-
-        #endregion
-
-        #region Fish
-
-        public IEnumerable<FishShadow> GetFish()
-        {
-            foreach(FishShadow fish in fishList.GetChildren<FishShadow>())
-            {
-                yield return fish;
-            }
-        }
-
-        public bool TrySpawnFish(FishShadow fishShadow, int x, int y)
-        {
-            if (GetGroundTile(x, y) != GroundTile.Water) return false;
-
-            fishShadow.SetGameLocation(this);
-            fishShadow.LocalPosition = new Vector2(x, y) * Engine.TILE_SIZE;
-            fishList.AddChild(fishShadow);
-
-            return true;
-        }
-
-        public void RemoveFish(FishShadow fishShadow)
-        {
-            fishList.RemoveChild(fishShadow);
         }
 
         #endregion
