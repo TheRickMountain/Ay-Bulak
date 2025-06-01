@@ -424,6 +424,13 @@ namespace palmesneo_village
             return bodySprite.CurrentAnimation.IsFinished;
         }
 
+        public bool CanChangeHotbarSlot()
+        {
+            if(currentState == null) return false;
+
+            return currentState is PlayerIdleState || currentState is PlayerWalkState;
+        }
+
         private void LookAtTile(Vector2 targetTile)
         {
             Vector2 selfTile = GetTilePosition();

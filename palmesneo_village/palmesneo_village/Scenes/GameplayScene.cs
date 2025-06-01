@@ -198,6 +198,8 @@ namespace palmesneo_village
         {
             ChageCursorTextureToDefault();
 
+            inventoryHotbar.IsBlocked = player.CanChangeHotbarSlot() == false;
+
             transitionImage.Size = MasterUIEntity.Size;
 
             timeText.Text = timeOfDayManager.GetTimeString();

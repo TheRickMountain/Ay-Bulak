@@ -8,6 +8,8 @@ namespace palmesneo_village
         public int CurrentSlotIndex { get; private set; } = 0;
         public Action<int> CurrentSlotIndexChanged { get; set; }
 
+        public bool IsBlocked { get; set; } = false;
+
         private int slotsCount;
 
         public InventoryHotbar(Inventory inventory)
@@ -18,6 +20,8 @@ namespace palmesneo_village
         public override void Update()
         {
             base.Update();
+
+            if (IsBlocked) return;
 
             UpdateWheelInput();
 
@@ -66,6 +70,8 @@ namespace palmesneo_village
         
         public void SetCurrentSlot(int slotIndex)
         {
+            if(IsBlocked) return;
+
             CurrentSlotIndex = Math.Clamp(slotIndex, 0, slotsCount - 1);
             CurrentSlotIndexChanged?.Invoke(CurrentSlotIndex);
         }
