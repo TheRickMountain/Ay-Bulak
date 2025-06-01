@@ -134,6 +134,11 @@ namespace palmesneo_village
             bodySprite.GetAnimation("fishing_rod_up").Loop = false;
             bodySprite.GetAnimation("fishing_rod_right").Loop = false;
 
+            bodySprite.AddAnimation("fishing_rod_complete_down", new Animation(spritesheet, 1, 0, frameWidth, frameHeight, frameWidth * 3, frameHeight * 4));
+            bodySprite.AddAnimation("fishing_rod_complete_left", new Animation(spritesheet, 1, 0, frameWidth, frameHeight, frameWidth * 3, frameHeight * 5));
+            bodySprite.AddAnimation("fishing_rod_complete_up", new Animation(spritesheet, 1, 0, frameWidth, frameHeight, frameWidth * 3, frameHeight * 6));
+            bodySprite.AddAnimation("fishing_rod_complete_right", new Animation(spritesheet, 1, 0, frameWidth, frameHeight, frameWidth * 3, frameHeight * 7));
+
             bodySprite.LocalPosition = new Vector2(-frameWidth / 2, -(frameHeight - (Engine.TILE_SIZE / 2)));
 
             bodySprite.AnimationFrameChaged += OnBodySpriteAnimationFrameChanged;
@@ -354,30 +359,34 @@ namespace palmesneo_village
                 {
                     case ToolType.Showel:
                         {
+                            energyManager.ConsumeEnergy(1);
                             SetState(new PlayerDefaultToolState("showel", () =>
                             {
-                                CurrentLocation.InteractWithTile(tileX, tileY, inventory, inventoryHotbar.CurrentSlotIndex, energyManager);
+                                CurrentLocation.InteractWithTile(tileX, tileY, inventory, inventoryHotbar.CurrentSlotIndex);
                             }));
                         }
                         break;
                     case ToolType.WateringCan:
                         {
+                            energyManager.ConsumeEnergy(1);
                             SetState(new PlayerDefaultToolState("watering_can", () =>
                             {
-                                CurrentLocation.InteractWithTile(tileX, tileY, inventory, inventoryHotbar.CurrentSlotIndex, energyManager);
+                                CurrentLocation.InteractWithTile(tileX, tileY, inventory, inventoryHotbar.CurrentSlotIndex);
                             }));
                         }
                         break;
                     case ToolType.Axe:
                         {
+                            energyManager.ConsumeEnergy(1);
                             SetState(new PlayerDefaultToolState("axe", () => 
                             {
-                                CurrentLocation.InteractWithTile(tileX, tileY, inventory, inventoryHotbar.CurrentSlotIndex, energyManager);
+                                CurrentLocation.InteractWithTile(tileX, tileY, inventory, inventoryHotbar.CurrentSlotIndex);
                             }));
                         }
                         break;
                     case ToolType.Scythe:
                         {
+                            energyManager.ConsumeEnergy(1);
                             SetState(new PlayerDefaultToolState("scythe", () =>
                             {
                                 ApplyScytheEffect();
@@ -386,6 +395,7 @@ namespace palmesneo_village
                         break;
                     case ToolType.FishingRod:
                         {
+                            energyManager.ConsumeEnergy(1);
                             SetState(new PlayerFishingRodState(fishingBobber));
                         }
                         break;
@@ -393,7 +403,7 @@ namespace palmesneo_village
             }
             else
             {
-                CurrentLocation.InteractWithTile(tileX, tileY, inventory, inventoryHotbar.CurrentSlotIndex, energyManager);
+                CurrentLocation.InteractWithTile(tileX, tileY, inventory, inventoryHotbar.CurrentSlotIndex);
             }
         }
 
@@ -473,7 +483,7 @@ namespace palmesneo_village
 
             foreach (Point tile in affectedTiles)
             {
-                CurrentLocation.InteractWithTile(tile.X, tile.Y, inventory, inventoryHotbar.CurrentSlotIndex, energyManager);
+                CurrentLocation.InteractWithTile(tile.X, tile.Y, inventory, inventoryHotbar.CurrentSlotIndex);
             }
         }
     }

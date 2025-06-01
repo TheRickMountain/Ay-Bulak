@@ -5,7 +5,7 @@ namespace palmesneo_village
 {
     public class FishingBobberEntity : SpriteEntity
     {
-        public enum BobberState { None, Casting, WaterEntering, Biting, Floating };
+        public enum BobberState { None, Casting, WaterEntering, Biting, Floating, Completing, Completed };
 
         public BobberState CurrentState { get; private set; } = BobberState.None;
 
@@ -41,6 +41,18 @@ namespace palmesneo_village
             SetState(BobberState.Casting);
         }
 
+        public void Complete(Vector2 from, Vector2 to, float height)
+        {
+            startPosition = from;
+            endPosition = to;
+            middlePosition = new Vector2((from.X + to.X) / 2, from.Y - height);
+
+            LocalPosition = from;
+            t = 0f;
+
+            SetState(BobberState.Completing);
+        }
+
         public void Bite()
         {
             SetState(BobberState.Biting);
@@ -52,6 +64,7 @@ namespace palmesneo_village
 
             switch (CurrentState)
             {
+                case BobberState.Completing:
                 case BobberState.Casting:
                     {
                         t += Engine.GameDeltaTime / castDuration;
@@ -62,7 +75,14 @@ namespace palmesneo_village
                             LocalRotation = 0;
                             LocalPosition = endPosition;
 
-                            SetState(BobberState.WaterEntering);
+                            if (CurrentState == BobberState.Casting)
+                            {
+                                SetState(BobberState.WaterEntering);
+                            }
+                            else if(CurrentState == BobberState.Completing)
+                            {
+                                SetState(BobberState.Completed);
+                            }
                             return;
                         }
 
@@ -105,6 +125,7 @@ namespace palmesneo_village
             switch (CurrentState)
             {
                 case BobberState.Casting:
+                case BobberState.Completing:
                     {
                         Play("casting");
                     }

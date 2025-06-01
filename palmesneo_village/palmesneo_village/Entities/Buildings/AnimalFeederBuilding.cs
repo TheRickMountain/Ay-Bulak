@@ -14,7 +14,7 @@ namespace palmesneo_village
             animalFeederItem = item;
         }
 
-        public override void Interact(Inventory inventory, int activeSlotIndex, PlayerEnergyManager playerEnergyManager)
+        public override void Interact(Inventory inventory, int activeSlotIndex)
         {
             Item handItem = inventory.GetSlotItem(activeSlotIndex);
 

@@ -75,7 +75,7 @@ namespace palmesneo_village
             }
         }
 
-        public override void Interact(Inventory inventory, int activeSlotIndex, PlayerEnergyManager playerEnergyManager)
+        public override void Interact(Inventory inventory, int activeSlotIndex)
         {
             Item item = inventory.GetSlotItem(activeSlotIndex);
 

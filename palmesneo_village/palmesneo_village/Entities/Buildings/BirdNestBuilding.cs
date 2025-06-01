@@ -15,7 +15,7 @@ namespace palmesneo_village
             birdNestItem = item;
         }
 
-        public override void Interact(Inventory inventory, int activeSlotIndex, PlayerEnergyManager playerEnergyManager)
+        public override void Interact(Inventory inventory, int activeSlotIndex)
         {
             Gather();
 

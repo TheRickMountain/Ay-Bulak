@@ -88,7 +88,7 @@ namespace palmesneo_village
             }
         }
 
-        public override void Interact(Inventory inventory, int activeSlotIndex, PlayerEnergyManager playerEnergyManager)
+        public override void Interact(Inventory inventory, int activeSlotIndex)
         {
             Item item = inventory.GetSlotItem(activeSlotIndex);
 
@@ -99,8 +99,6 @@ namespace palmesneo_village
                 if (toolItem.ToolType == ToolType.Axe)
                 {
                     toolItem.PlaySoundEffect();
-
-                    playerEnergyManager.ConsumeEnergy(1);
 
                     currentStrength -= toolItem.Efficiency;
 

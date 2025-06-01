@@ -72,7 +72,7 @@ namespace palmesneo_village
             Sprite.Texture = plantItem.GrowthStagesTextures[currentGrowthStage];
         }
 
-        public override void Interact(Inventory inventory, int activeSlotIndex, PlayerEnergyManager playerEnergyManager)
+        public override void Interact(Inventory inventory, int activeSlotIndex)
         {
             Item item = inventory.GetSlotItem(activeSlotIndex);
 
@@ -85,9 +85,7 @@ namespace palmesneo_village
             else if(item is ToolItem toolItem)
             {
                 if(toolItem.ToolType == ToolType.Axe)
-                {
-                    playerEnergyManager.ConsumeEnergy(1);
-                    
+                {   
                     GameLocation.RemoveBuilding(this);
                 }
             }

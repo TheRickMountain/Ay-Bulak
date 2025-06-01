@@ -17,7 +17,7 @@ namespace palmesneo_village
             FishPlaying,
             FishCatchingWindow,
             FishAte,
-            FlyingItem
+            Complete
         }
 
         private FishingState currentState = FishingState.None;
@@ -66,8 +66,8 @@ namespace palmesneo_village
                 case FishingState.FishCatchingWindow:
                     UpdateFishCatchingWindow(player);
                     break;
-                case FishingState.FlyingItem:
-                    UpdateFlyingItem(player);
+                case FishingState.Complete:
+                    UpdateComplete(player);
                     break;
             }
         }
@@ -84,7 +84,7 @@ namespace palmesneo_village
 
                 if (groundTile != GroundTile.Water)
                 {
-                    StopFishing(player);
+                    SetState(FishingState.Complete, player);
                 }
                 else
                 {
@@ -107,7 +107,7 @@ namespace palmesneo_village
 
             if (MInput.Mouse.PressedLeftButton)
             {
-                StopFishing(player);
+                SetState(FishingState.Complete, player);
             }
         }
 
@@ -117,7 +117,7 @@ namespace palmesneo_village
             {
                 fishShadow.ScareAway();
 
-                StopFishing(player);
+                SetState(FishingState.Complete, player);
             }
         }
 
@@ -133,40 +133,38 @@ namespace palmesneo_village
 
                 player.CurrentLocation.AddChild(flyingItemImage);
 
-                ResourcesManager.GetSoundEffect("SoundEffects", "bobber_catch")
-                    .Play(1.0f, Calc.Random.Range(0.0f, 0.5f), 0.0f);
-
-                player.CurrentLocation.RemoveChild(fishingBobber);
-
-                player.ResetCurrentAnimation();
-                player.PlayAnimation($"idle_{player.MovementDirection.ToString().ToLower()}");
-
-                SetState(FishingState.FlyingItem, player);
+                SetState(FishingState.Complete, player);
             }
         }
 
-        private void UpdateFlyingItem(Player player)
+        private void UpdateComplete(Player player)
         {
-            if(flyingItemImage.IsCompleted)
+            if(fishingBobber.CurrentState == FishingBobberEntity.BobberState.Completed)
             {
-                player.CurrentLocation.AddItem(player.LocalPosition,
-                        new ItemContainer()
-                        {
-                            Item = flyingItemImage.Item,
-                            Quantity = 1,
-                            ContentAmount = 0
-                        });
+                player.CurrentLocation.RemoveChild(fishingBobber);
 
-                player.CurrentLocation.RemoveChild(flyingItemImage);
+                if (flyingItemImage != null)
+                {
+                    player.CurrentLocation.AddItem(player.LocalPosition,
+                            new ItemContainer()
+                            {
+                                Item = flyingItemImage.Item,
+                                Quantity = 1,
+                                ContentAmount = 0
+                            });
+
+                    player.CurrentLocation.RemoveChild(flyingItemImage);
+
+                    flyingItemImage = null;
+                }
 
                 player.SetState(new PlayerIdleState());
-
-                currentState = FishingState.None;
             }
         }
 
         private void SetState(FishingState newState, Player player)
         {
+            FishingState previousState = currentState;
             currentState = newState;
 
             switch (currentState)
@@ -186,19 +184,30 @@ namespace palmesneo_village
                     break;
                 case FishingState.FishAte:
                     {
-                        StopFishing(player);
+                        SetState(FishingState.Complete, player);
+                    }
+                    break;
+                case FishingState.Complete:
+                    {
+                        player.ResetCurrentAnimation();
+                        player.PlayAnimation($"fishing_rod_complete_{player.MovementDirection.ToString().ToLower()}");
+
+                        if (previousState != FishingState.Casting)
+                        {
+                            ResourcesManager.GetSoundEffect("SoundEffects", "bobber_catch")
+                                .Play(1.0f, Calc.Random.Range(0.0f, 0.5f), 0.0f);
+                        }
+
+                        Vector2 bobberEndPosition = player.GetTilePosition() * Engine.TILE_SIZE +
+                            new Vector2(Engine.TILE_SIZE / 2, -Engine.TILE_SIZE);
+
+                        fishingBobber.Complete(
+                            fishingBobber.LocalPosition,
+                            bobberEndPosition,
+                            Engine.TILE_SIZE * 2);
                     }
                     break;
             }
-        }
-
-        private void StopFishing(Player player)
-        {
-            player.CurrentLocation.RemoveChild(fishingBobber);
-
-            player.SetState(new PlayerIdleState());
-
-            SetState(FishingState.None, player);
         }
 
         public void Exit(Player player)
@@ -253,7 +262,7 @@ namespace palmesneo_village
             {
                 case FishShadow.FishState.Playing:
                     {
-                        ResourcesManager.GetSoundEffect("SoundEffects", "bobber_splash")
+                        ResourcesManager.GetSoundEffect("SoundEffects", "fish_biting")
                             .Play(1.0f, Calc.Random.Range(0.0f, 0.5f), 0.0f);
 
                         MInput.GamePads[0].Rumble(6f, 0.2f);
@@ -263,7 +272,7 @@ namespace palmesneo_village
                     break;
                 case FishShadow.FishState.Biting:
                     {
-                        ResourcesManager.GetSoundEffect("SoundEffects", "bobber_catch")
+                        ResourcesManager.GetSoundEffect("SoundEffects", "bobber_hooked")
                             .Play(1.0f, Calc.Random.Range(0.0f, 0.5f), 0.0f);
 
                         MInput.GamePads[0].Rumble(12f, 0.4f);

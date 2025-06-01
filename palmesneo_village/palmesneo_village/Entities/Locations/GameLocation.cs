@@ -331,7 +331,7 @@ namespace palmesneo_village
             }
         }
 
-        public void InteractWithTile(int x, int y, Inventory inventory, int activeSlotIndex, PlayerEnergyManager playerEnergyManager)
+        public void InteractWithTile(int x, int y, Inventory inventory, int activeSlotIndex)
         {
             Item handItem = inventory.GetSlotItem(activeSlotIndex);
 
@@ -339,7 +339,7 @@ namespace palmesneo_village
 
             if (building != null)
             {
-                building.Interact(inventory, activeSlotIndex, playerEnergyManager);
+                building.Interact(inventory, activeSlotIndex);
             }
 
             if (handItem is ToolItem toolItem)
@@ -355,7 +355,6 @@ namespace palmesneo_village
                                 && building == null)
                             {
                                 toolItem.PlaySoundEffect();
-                                playerEnergyManager.ConsumeEnergy(1);
                                 SetGroundTile(x, y, GroundTile.FarmPlot);
 
                                 if(timeOfDayManager.CurrentWeather == Weather.Rain)
@@ -366,7 +365,6 @@ namespace palmesneo_village
                             else if(groundTile == GroundTile.FarmPlot && building == null)
                             {
                                 toolItem.PlaySoundEffect();
-                                playerEnergyManager.ConsumeEnergy(1);
                                 SetGroundTile(x, y, GroundTile.Ground);
 
                                 SetGroundTopTile(x, y, GroundTopTile.None);
@@ -387,7 +385,6 @@ namespace palmesneo_village
                                     toolItem.PlaySoundEffect();
                                     inventory.SubSlotItemContentAmount(activeSlotIndex, 1);
                                     SetGroundTopTile(x, y, GroundTopTile.Moisture);
-                                    playerEnergyManager.ConsumeEnergy(1);
                                 }
                             }
                         }
@@ -403,8 +400,6 @@ namespace palmesneo_village
                                 });
 
                                 SetTileFloorPathItem(x, y, null);
-
-                                playerEnergyManager.ConsumeEnergy(1);
                             }
                         }
                         break;
