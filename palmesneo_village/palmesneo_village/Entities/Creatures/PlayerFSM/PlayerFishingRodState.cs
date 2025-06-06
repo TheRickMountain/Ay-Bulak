@@ -251,6 +251,7 @@ namespace palmesneo_village
             [
                 Engine.ItemsDatabase.GetItemByName("prussian_carp"),
                 Engine.ItemsDatabase.GetItemByName("common_bream"),
+                Engine.ItemsDatabase.GetItemByName("european_perch")
             ];
 
             return Calc.Random.Choose(loot);

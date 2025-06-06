@@ -71,6 +71,15 @@
       "IsTradable": true,
       "IsDroppable": true,
       "Price": 10
+    },
+    {
+      "Id": 82,
+      "Name": "european_perch",
+      "Description": "test",
+      "IsStackable": true,
+      "IsTradable": true,
+      "IsDroppable": true,
+      "Price": 10
     }
   ],
   "ToolItems": [
