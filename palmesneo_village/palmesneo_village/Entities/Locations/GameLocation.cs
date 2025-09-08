@@ -867,6 +867,8 @@ namespace palmesneo_village
 
         public bool CheckGroundPattern(int x, int y, string groundPatternId)
         {
+            if (x < 0 || y < 0 || x >= MapWidth || y >= MapHeight) return false;
+
             if (buildingsMap[x, y] != null) return false;
 
             if (GetGroundTopTile(x, y) == GroundTopTile.ForestTrunk) return false;
