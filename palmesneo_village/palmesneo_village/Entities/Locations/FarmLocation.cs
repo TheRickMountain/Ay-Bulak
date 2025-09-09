@@ -11,7 +11,9 @@ namespace palmesneo_village
         {
             GenerateGrassTiles();
 
-            GenerateWaterTiles();
+            var waterTiles = GenerateWaterTiles();
+
+            PlaceCattails(waterTiles);
 
             GenerateForestTilesOnMapBorders();
 
@@ -79,11 +81,45 @@ namespace palmesneo_village
             }
         }
 
-        private void GenerateWaterTiles()
+        private List<Point> GenerateWaterTiles()
         {
+            List<Point> waterTiles = new List<Point>();
             foreach (Point tile in CalcGridShapes.GetFilledCirclePoints(new Point(MapWidth / 2, 0), 9.9f))
             {
-                TrySetGroundTile(tile.X, tile.Y, GroundTile.Water);
+                if(TrySetGroundTile(tile.X, tile.Y, GroundTile.Water))
+                {
+                    waterTiles.Add(tile);
+                }
+            }
+
+            return waterTiles;
+        }
+
+        private void PlaceCattails(List<Point> waterTiles)
+        {
+            HashSet<Point> candidateTiles = new HashSet<Point>();
+
+            foreach (Point tile in waterTiles)
+            {
+                foreach (Vector2 checkTile in GetNeighbourTiles(tile.ToVector2(), true))
+                {
+                    switch(GetGroundTile((int)checkTile.X, (int)checkTile.Y))
+                    {
+                        case GroundTile.Grass:
+                        case GroundTile.Ground:
+                            candidateTiles.Add(tile);
+                            break;
+                    }
+                }
+            }
+
+            foreach (Point tile in candidateTiles)
+            {
+                if(Calc.Random.Chance(0.2f))
+                {
+                    var cattail = Engine.ItemsDatabase.GetItemByName<BuildingItem>("cattail");
+                    TryBuild(cattail, tile.X, tile.Y, Direction.Down);
+                }
             }
         }
 

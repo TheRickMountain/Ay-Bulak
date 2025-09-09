@@ -731,6 +731,21 @@
         "X": 8,
         "Y": 10
       }
+    },
+    {
+      "Id": 1016,
+      "Name": "cattail",
+      "Description": "None",
+      "IsStackable": false,
+      "Width": 1,
+      "Height": 1,
+      "GroundPattern": [
+        [
+          "J"
+        ]
+      ],
+      "IsRotatable": false,
+      "IsPassable": true
     }
   ],
   "PlantItems": [

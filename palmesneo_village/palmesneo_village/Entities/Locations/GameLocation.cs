@@ -190,12 +190,15 @@ namespace palmesneo_village
             UpdateTilePassability(x, y);
         }
 
-        public void TrySetGroundTile(int x, int y, GroundTile groundTile)
+        public bool TrySetGroundTile(int x, int y, GroundTile groundTile)
         {
             if (groundTilemap.TrySetCell(x, y, (int)groundTile))
             {
                 UpdateTilePassability(x, y);
+                return true;
             }
+
+            return false;
         }
 
         public GroundTile GetGroundTile(int x, int y)
@@ -309,13 +312,13 @@ namespace palmesneo_village
             // Добавляем диагональные направления, если требуется
             if (includeDiagonal)
             {
-                directions.AddRange(new[]
-                {
+                directions.AddRange(
+                [
                     (-1, -1), // Левый верхний
                     (1, -1),  // Правый верхний
                     (-1, 1),  // Левый нижний
                     (1, 1)    // Правый нижний
-                });
+                ]);
             }
 
             // Возвращаем все действительные соседние тайлы
@@ -324,7 +327,7 @@ namespace palmesneo_village
                 int newX = tileX + dx;
                 int newY = tileY + dy;
 
-                if (newX >= 0 && newX < MapWidth && newY >= 0 && newY < MapHeight)
+                if (IsTileWithinLocation(newX, newY))
                 {
                     yield return new Vector2(newX, newY);
                 }
@@ -438,6 +441,11 @@ namespace palmesneo_village
         public Vector2 MapToWorld(Vector2 vector)
         {
             return groundTilemap.MapToWorld(vector);
+        }
+
+        private bool IsTileWithinLocation(int x, int y)
+        {
+            return x >= 0 && y >= 0 && x < MapWidth && y < MapHeight;
         }
 
         public virtual void StartNextDay()
@@ -867,7 +875,7 @@ namespace palmesneo_village
 
         public bool CheckGroundPattern(int x, int y, string groundPatternId)
         {
-            if (x < 0 || y < 0 || x >= MapWidth || y >= MapHeight) return false;
+            if (IsTileWithinLocation(x, y) == false) return false;
 
             if (buildingsMap[x, y] != null) return false;
 
@@ -919,6 +927,10 @@ namespace palmesneo_village
                             groundTile == GroundTile.Ground || 
                             groundTile == GroundTile.CoopHouseFloor) &&
                             floorPathMap[x, y] == null;
+                    }
+                case "J":
+                    {
+                        return groundTile == GroundTile.Water;
                     }
             }
 
