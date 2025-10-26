@@ -41,9 +41,6 @@ namespace palmesneo_village
 
             IsDepthSortEnabled = true;
 
-            // TODO: перестать использовать BodyImage
-            BodyImage.IsVisible = false;
-
             CreateAndInitializeBodySprite(texture);
 
             // TODO: создать отдельный класс для воспроизведения звуков

@@ -52,9 +52,6 @@ namespace palmesneo_village
             CreatureAnimation animation = new CreatureAnimation(_movement, visual);
             AddChild(animation);
 
-            // TODO: Удалить BodyImage в будущем, так как будет заменено CreatureVisual
-            RemoveChild(BodyImage);
-
             InitializeSoundEffects();
         }
 

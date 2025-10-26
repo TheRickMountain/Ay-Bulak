@@ -11,9 +11,6 @@ namespace palmesneo_village
         public NPC(string name, MTexture texture, float speed) 
             : base(name, texture, speed)
         {
-            // TODO: перестать использовать BodyImage
-            BodyImage.IsVisible = false;
-
             CreateAndInitializeBodySprite(texture);
         }
 

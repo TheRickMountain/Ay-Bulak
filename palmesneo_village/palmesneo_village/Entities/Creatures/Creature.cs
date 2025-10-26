@@ -8,20 +8,10 @@ namespace palmesneo_village
         protected float Speed { get; private set; }
         public GameLocation CurrentLocation { get; private set; }
 
-        protected ImageEntity BodyImage { get; private set; }
-
         public Creature(string name, MTexture texture, float speed)
         {
             Name = name;
             Speed = speed;
-
-            // TODO: постараться избавиться в будущем
-            BodyImage = new ImageEntity();
-            //BodyImage.Texture = texture;
-            //BodyImage.Centered = true;
-            //BodyImage.Offset = new Vector2(0, texture.Height / 2 - Engine.TILE_SIZE / 2);
-
-            AddChild(BodyImage);
         }
 
         public override void Update()
