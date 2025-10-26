@@ -541,21 +541,6 @@ namespace palmesneo_village
             return entitiesList.GetChildren<Creature>();
         }
 
-        #region NPC
-
-        public bool TrySpawnNPC(int x, int y)
-        {
-            NPC npc = new NPC("Test", ResourcesManager.GetTexture("Sprites", "player"), RenderManager.Pixel, 0);
-
-            npc.SetGameLocation(this);
-            npc.SetTilePosition(new Vector2(x, y));
-            entitiesList.AddChild(npc);
-
-            return true;
-        }
-
-        #endregion
-
         #region Animals
 
         public bool TrySpawnAnimal(AnimalItem animalItem, int x, int y)
