@@ -12,17 +12,21 @@ namespace palmesneo_village
 
     public class CreatureMovement : Entity
     {
-
         public MovementState State { get; private set; } = MovementState.Success;
+
+        public Direction Direction { get; private set; }
 
         private float speed;
 
+        private List<PathNode> path;
         private PathNode currentNode;
         private PathNode nextNode;
 
         private float movementPercent = 0;
 
-        private List<PathNode> path;
+        private float currentRotation = 0.0f;
+        private float targetRotation = 0.0f;
+        private int[] rotationSetInDegrees = [-15, 15];
 
         public CreatureMovement(float speed)
         {
@@ -49,6 +53,17 @@ namespace palmesneo_village
                             {
                                 nextNode = path[path.Count - 1];
                                 path.RemoveAt(path.Count - 1);
+
+                                if (currentNode.X < nextNode.X)
+                                {
+                                    Direction = Direction.Right;
+                                }
+                                else if (currentNode.X > nextNode.X)
+                                {
+                                    Direction = Direction.Left;
+                                }
+
+                                targetRotation = MathHelper.ToRadians(Calc.Random.Choose(rotationSetInDegrees));
                             }
                         }
 
@@ -89,9 +104,20 @@ namespace palmesneo_village
             {
                 currentNode = nextNode;
                 movementPercent = 0;
+
+                currentRotation = 0;
             }
 
             Parent.LocalPosition = Vector2.Lerp(currentNode.ToVector2(), nextNode.ToVector2(), movementPercent) * Engine.TILE_SIZE;
+
+            if (movementPercent <= 0.5f)
+            {
+                currentRotation = MathHelper.Lerp(0, targetRotation, movementPercent / 0.5f);
+            }
+            else if (movementPercent > 0.5f)
+            {
+                currentRotation = MathHelper.Lerp(targetRotation, 0, (movementPercent - 0.5f) / 0.5f);
+            }
         }
 
         public void SetPath(List<PathNode> path)
@@ -112,6 +138,11 @@ namespace palmesneo_village
         {
             path = null;
             State = MovementState.Completion;
+        }
+
+        public float GetRotation()
+        {
+            return currentRotation;
         }
     }
 }

@@ -4,6 +4,7 @@ using MonoGame.Extended;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace palmesneo_village
 {
@@ -23,11 +24,9 @@ namespace palmesneo_village
 
         private float idleTime = 0;
 
-        private Direction movementDirection = Direction.Down;
-
         private float[] idleTimeSet = { 0.0f, 1.0f, 2.0f, 3.0f };
 
-        private CreatureMovement creatureMovement;
+        private CreatureMovement _movement;
 
         private SoundEffect[] soundEffects;
 
@@ -35,19 +34,26 @@ namespace palmesneo_village
 
         private Range<float> soundEffectTimeRange = new Range<float>(5.0f, 20.0f);
 
-        public Animal(AnimalItem animalItem) 
+        public Animal(AnimalItem animalItem)
             : base(animalItem.Name, null, animalItem.MovementSpeed)
         {
             this.animalItem = animalItem;
 
-            // TODO: заменить на анимированный спрайт
-            BodyImage.Texture = animalItem.DirectionTexture[movementDirection];
+            _movement = new CreatureMovement(animalItem.MovementSpeed);
+            AddChild(_movement);
 
-            BodyImage.Centered = true;
-            BodyImage.Offset = new Vector2(0, animalItem.DirectionTexture[movementDirection].Height / 2 - Engine.TILE_SIZE / 2);
-            BodyImage.LocalPosition = new Vector2(Engine.TILE_SIZE / 2, Engine.TILE_SIZE / 2);
+            ImageEntity shadow = new ImageEntity();
+            shadow.Texture = animalItem.ShadowSprite;
+            AddChild(shadow);
 
-            AddChild(creatureMovement = new CreatureMovement(animalItem.MovementSpeed));
+            CreatureBodyVisual visual = new CreatureBodyVisual(animalItem.BodySprite);
+            AddChild(visual);
+
+            CreatureAnimation animation = new CreatureAnimation(_movement, visual);
+            AddChild(animation);
+
+            // TODO: Удалить BodyImage в будущем, так как будет заменено CreatureVisual
+            RemoveChild(BodyImage);
 
             InitializeSoundEffects();
         }
@@ -68,8 +74,6 @@ namespace palmesneo_village
 
         public override void Update()
         {
-            BodyImage.Texture = animalItem.DirectionTexture[movementDirection];
-
             switch (animalState)
             {
                 case AnimalState.Idle:
@@ -79,7 +83,7 @@ namespace palmesneo_village
                     break;
                 case AnimalState.Moving:
                     {
-                        if(creatureMovement.State == MovementState.Success)
+                        if(_movement.State == MovementState.Success)
                         {
                             animalState = AnimalState.Idle;
                             idleTime = Calc.Random.Choose(idleTimeSet);
@@ -112,9 +116,7 @@ namespace palmesneo_village
                 {
                     Vector2 currentTile = GetTilePosition();
 
-                    movementDirection = GetMovementDirection(currentTile, targetTile);
-
-                    creatureMovement.SetPath(CurrentLocation.FindPath(currentTile, targetTile, false));
+                    _movement.SetPath(CurrentLocation.FindPath(currentTile, targetTile, false));
 
                     animalState = AnimalState.Moving;
                 }
@@ -128,32 +130,7 @@ namespace palmesneo_village
         public override void SetTilePosition(Vector2 tile)
         {
             PathNode pathNode = CurrentLocation.GetPathNode((int)tile.X, (int)tile.Y);
-            creatureMovement.TeleportTo(pathNode);
-        }
-
-        private Direction GetMovementDirection(Vector2 startTile, Vector2 finishTile)
-        {
-            if (finishTile.X < startTile.X)
-            {
-                return Direction.Left;
-            }
-            
-            if (finishTile.X > startTile.X)
-            {
-                return Direction.Right;
-            }
-            
-            if (finishTile.Y < startTile.Y)
-            {
-                return Direction.Up;
-            }
-            
-            if (finishTile.Y > startTile.Y)
-            {
-                return Direction.Down;
-            }
-
-            return Direction.Down;
+            _movement.TeleportTo(pathNode);
         }
 
         private Vector2 GetRandomTargetTile()

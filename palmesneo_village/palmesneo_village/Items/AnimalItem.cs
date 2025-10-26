@@ -1,7 +1,5 @@
-﻿using Microsoft.Xna.Framework;
-using MonoGame.Extended;
+﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 
 namespace palmesneo_village
 {
@@ -10,27 +8,24 @@ namespace palmesneo_village
         public float MovementSpeed { get; init; }
         public string[] SoundEffects { get; init; } = Array.Empty<string>();
 
-        public Dictionary<Direction, MTexture> DirectionTexture { get; private set; } = new();
+        [JsonIgnore]
+        public MTexture BodySprite = RenderManager.Pixel;
+
+        [JsonIgnore]
+        public MTexture ShadowSprite = RenderManager.Pixel;
 
         public override void Initialize(MTileset sourceTileset)
         {
-            MTexture texture = ResourcesManager.GetTexture("Items", Name);
+            MTexture spriteSheet = ResourcesManager.GetTexture("Items", Name);
 
-            int directionTextureWidth = texture.Width / 4;
-            int directionTextureHeight = texture.Height;
+            int singleSpriteWidth = spriteSheet.Width / 2;
+            int singleSpriteHeight = spriteSheet.Height;
 
-            foreach (Direction direction in Enum.GetValues<Direction>())
-            {
-                MTexture directionTexture = new MTexture(texture, new Rectangle(
-                    directionTextureWidth * (int)direction,
-                    0,
-                    directionTextureWidth,
-                    directionTextureHeight));
+            BodySprite = new MTexture(spriteSheet, 0, 0, singleSpriteWidth, singleSpriteHeight);
 
-                DirectionTexture.Add(direction, directionTexture);
-            }
+            ShadowSprite = new MTexture(spriteSheet, singleSpriteWidth, 0, singleSpriteWidth, singleSpriteHeight);
 
-            Icon = DirectionTexture[Direction.Left];
+            Icon = BodySprite;
         }
     }
 }
