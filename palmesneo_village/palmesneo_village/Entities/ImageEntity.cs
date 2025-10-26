@@ -49,11 +49,11 @@ namespace palmesneo_village
             {
                 if (Centered)
                 {
-                    origin = new Vector2(Texture.Width / 2, Texture.Height / 2) + offset;
+                    origin = new Vector2(Texture.Width / 2, Texture.Height / 2) - offset;
                 }
                 else
                 {
-                    origin = offset;
+                    origin = -offset;
                 }
             }
         }
