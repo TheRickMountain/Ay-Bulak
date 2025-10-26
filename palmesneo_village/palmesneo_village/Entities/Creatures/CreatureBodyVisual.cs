@@ -12,9 +12,7 @@ namespace palmesneo_village
             _bodyImage = new ImageEntity();
             _bodyImage.Texture = bodyTexture;
 
-            _bodyImage.Centered = true;
-            _bodyImage.Offset = new Vector2(0, bodyTexture.Height / 2 - Engine.TILE_SIZE / 2);
-            _bodyImage.LocalPosition = new Vector2(Engine.TILE_SIZE / 2, Engine.TILE_SIZE / 2);
+            _bodyImage.Offset = new Vector2(bodyTexture.Width / 2, bodyTexture.Height - Engine.TILE_SIZE / 2);
 
             AddChild(_bodyImage);
         }
@@ -30,10 +28,14 @@ namespace palmesneo_village
         }
 
         // TODO: временное решение, так как родительское вращение не влияет на детей
-        public void SetRotation(float rotation)
+        public void SetBodyRotation(float rotation)
         {
             _bodyImage.LocalRotation = rotation;
         }
 
+        public Vector2 GetBodyOffset()
+        {
+            return _bodyImage.Offset;
+        }
     }
 }

@@ -21,8 +21,6 @@ namespace palmesneo_village
         private const float ITEM_ATTRACTION_DISTANCE = 48f;
         private const float ITEM_PICKUP_DISTANCE = 5f;
 
-        private SpriteEntity bodySprite;
-
         private SoundEffectInstance currentSFX;
 
         private List<SoundEffectInstance> grassShakeSFXs = new();
@@ -31,17 +29,15 @@ namespace palmesneo_village
 
         private IPlayerState currentState;
 
-        public Player(string name, MTexture texture, float speed, Inventory inventory, InventoryHotbar inventoryHotbar,
+        public Player(string name, MTexture bodySprite, MTexture shadowSprite, float speed, Inventory inventory, InventoryHotbar inventoryHotbar,
             PlayerEnergyManager energyManager) : 
-            base(name, texture, speed)
+            base(name, bodySprite, shadowSprite, speed)
         {
             this.inventory = inventory;
             this.inventoryHotbar = inventoryHotbar;
             this.energyManager = energyManager;
 
             IsDepthSortEnabled = true;
-
-            CreateAndInitializeBodySprite(texture);
 
             // TODO: создать отдельный класс для воспроизведения звуков
             grassShakeSFXs = new List<SoundEffectInstance>();
@@ -59,88 +55,6 @@ namespace palmesneo_village
             fishingBobber = new FishingBobberEntity();
 
             SetState(new PlayerIdleState());
-        }
-
-        private void CreateAndInitializeBodySprite(MTexture spritesheet)
-        {
-            int framesColumns = 10;
-            int framesRows = 8;
-
-            int frameWidth = spritesheet.Width / framesColumns;
-            int frameHeight = spritesheet.Height / framesRows;
-
-            bodySprite = new SpriteEntity();
-            bodySprite.AddAnimation("idle_down", new Animation(spritesheet, 1, 0, frameWidth, frameHeight, 0, 0));
-            bodySprite.AddAnimation("idle_left", new Animation(spritesheet, 1, 0, frameWidth, frameHeight, 0, frameHeight));
-            bodySprite.AddAnimation("idle_up", new Animation(spritesheet, 1, 0, frameWidth, frameHeight, 0, frameHeight * 2));
-            bodySprite.AddAnimation("idle_right", new Animation(spritesheet, 1, 0, frameWidth, frameHeight, 0, frameHeight * 3));
-
-            bodySprite.AddAnimation("walk_down", new Animation(spritesheet, 4, 0, frameWidth, frameHeight, 0, 0));
-            bodySprite.AddAnimation("walk_left", new Animation(spritesheet, 4, 0, frameWidth, frameHeight, 0, frameHeight));
-            bodySprite.AddAnimation("walk_up", new Animation(spritesheet, 4, 0, frameWidth, frameHeight, 0, frameHeight * 2));
-            bodySprite.AddAnimation("walk_right", new Animation(spritesheet, 4, 0, frameWidth, frameHeight, 0, frameHeight * 3));
-            AddChild(bodySprite);
-
-            bodySprite.AddAnimation("showel_down", new Animation(spritesheet, 3, 0, frameWidth, frameHeight, frameWidth * 4, 0));
-            bodySprite.AddAnimation("showel_left", new Animation(spritesheet, 3, 0, frameWidth, frameHeight, frameWidth * 4, frameHeight));
-            bodySprite.AddAnimation("showel_up", new Animation(spritesheet, 3, 0, frameWidth, frameHeight, frameWidth * 4, frameHeight * 2));
-            bodySprite.AddAnimation("showel_right", new Animation(spritesheet, 3, 0, frameWidth, frameHeight, frameWidth * 4, frameHeight * 3));
-
-            bodySprite.GetAnimation("showel_down").Loop = false;
-            bodySprite.GetAnimation("showel_left").Loop = false;
-            bodySprite.GetAnimation("showel_up").Loop = false;
-            bodySprite.GetAnimation("showel_right").Loop = false;
-
-            bodySprite.AddAnimation("watering_can_down", new Animation(spritesheet, 3, 0, frameWidth, frameHeight, 0, frameHeight * 4));
-            bodySprite.AddAnimation("watering_can_left", new Animation(spritesheet, 3, 0, frameWidth, frameHeight, 0, frameHeight * 5));
-            bodySprite.AddAnimation("watering_can_up", new Animation(spritesheet, 3, 0, frameWidth, frameHeight, 0, frameHeight * 6));
-            bodySprite.AddAnimation("watering_can_right", new Animation(spritesheet, 3, 0, frameWidth, frameHeight, 0, frameHeight * 7));
-
-            bodySprite.GetAnimation("watering_can_down").Loop = false;
-            bodySprite.GetAnimation("watering_can_left").Loop = false;
-            bodySprite.GetAnimation("watering_can_up").Loop = false;
-            bodySprite.GetAnimation("watering_can_right").Loop = false;
-
-            bodySprite.AddAnimation("axe_down", new Animation(spritesheet, 3, 0, frameWidth, frameHeight, frameWidth * 4, frameHeight * 4));
-            bodySprite.AddAnimation("axe_left", new Animation(spritesheet, 3, 0, frameWidth, frameHeight, frameWidth * 4, frameHeight * 5));
-            bodySprite.AddAnimation("axe_up", new Animation(spritesheet, 3, 0, frameWidth, frameHeight, frameWidth * 4, frameHeight * 6));
-            bodySprite.AddAnimation("axe_right", new Animation(spritesheet, 3, 0, frameWidth, frameHeight, frameWidth * 4, frameHeight * 7));
-
-            bodySprite.GetAnimation("axe_down").Loop = false;
-            bodySprite.GetAnimation("axe_left").Loop = false;
-            bodySprite.GetAnimation("axe_up").Loop = false;
-            bodySprite.GetAnimation("axe_right").Loop = false;
-
-            bodySprite.AddAnimation("scythe_down", new Animation(spritesheet, 3, 0, frameWidth, frameHeight, frameWidth * 7, 0));
-            bodySprite.AddAnimation("scythe_left", new Animation(spritesheet, 3, 0, frameWidth, frameHeight, frameWidth * 7, frameHeight));
-            bodySprite.AddAnimation("scythe_up", new Animation(spritesheet, 3, 0, frameWidth, frameHeight, frameWidth * 7, frameHeight * 2));
-            bodySprite.AddAnimation("scythe_right", new Animation(spritesheet, 3, 0, frameWidth, frameHeight, frameWidth * 7, frameHeight * 3));
-
-            bodySprite.GetAnimation("scythe_down").Loop = false;
-            bodySprite.GetAnimation("scythe_left").Loop = false;
-            bodySprite.GetAnimation("scythe_up").Loop = false;
-            bodySprite.GetAnimation("scythe_right").Loop = false;
-
-            bodySprite.AddAnimation("fishing_rod_down", new Animation(spritesheet, 3, 0, frameWidth, frameHeight, frameWidth * 7, frameHeight * 4));
-            bodySprite.AddAnimation("fishing_rod_left", new Animation(spritesheet, 3, 0, frameWidth, frameHeight, frameWidth * 7, frameHeight * 5));
-            bodySprite.AddAnimation("fishing_rod_up", new Animation(spritesheet, 3, 0, frameWidth, frameHeight, frameWidth * 7, frameHeight * 6));
-            bodySprite.AddAnimation("fishing_rod_right", new Animation(spritesheet, 3, 0, frameWidth, frameHeight, frameWidth * 7, frameHeight * 7));
-
-            bodySprite.GetAnimation("fishing_rod_down").Loop = false;
-            bodySprite.GetAnimation("fishing_rod_left").Loop = false;
-            bodySprite.GetAnimation("fishing_rod_up").Loop = false;
-            bodySprite.GetAnimation("fishing_rod_right").Loop = false;
-
-            bodySprite.AddAnimation("fishing_rod_complete_down", new Animation(spritesheet, 1, 0, frameWidth, frameHeight, frameWidth * 3, frameHeight * 4));
-            bodySprite.AddAnimation("fishing_rod_complete_left", new Animation(spritesheet, 1, 0, frameWidth, frameHeight, frameWidth * 3, frameHeight * 5));
-            bodySprite.AddAnimation("fishing_rod_complete_up", new Animation(spritesheet, 1, 0, frameWidth, frameHeight, frameWidth * 3, frameHeight * 6));
-            bodySprite.AddAnimation("fishing_rod_complete_right", new Animation(spritesheet, 1, 0, frameWidth, frameHeight, frameWidth * 3, frameHeight * 7));
-
-            bodySprite.LocalPosition = new Vector2(-frameWidth / 2, -(frameHeight - (Engine.TILE_SIZE / 2)));
-
-            bodySprite.AnimationFrameChaged += OnBodySpriteAnimationFrameChanged;
-
-            bodySprite.Play("idle_down");
         }
 
         public override void Update()
@@ -404,21 +318,22 @@ namespace palmesneo_village
             }
         }
 
+        // TODO: адаптировать под новую систему анимаций
         public void PlayAnimation(string animationName)
         {
-            bodySprite.Play(animationName);
+            
         }
 
+        // TODO: адаптировать под новую систему анимаций
         public void ResetCurrentAnimation()
         {
-            bodySprite.CurrentAnimation?.Reset();
+            
         }
 
+        // TODO: адаптировать под новую систему анимаций
         public bool IsCurrentAnimationFinished()
         {
-            if (bodySprite.CurrentAnimation == null) return true;
-
-            return bodySprite.CurrentAnimation.IsFinished;
+            return true;
         }
 
         public bool CanChangeHotbarSlot()
@@ -440,6 +355,7 @@ namespace palmesneo_village
             }
         }
 
+        // TODO: адаптировать под новую систему анимаций
         private void OnBodySpriteAnimationFrameChanged(int frameIndex)
         {
             currentState?.AnimationFrameChanged(this, frameIndex);

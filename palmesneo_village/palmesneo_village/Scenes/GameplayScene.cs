@@ -92,7 +92,8 @@ namespace palmesneo_village
 
             PlayerEnergyManager = new PlayerEnergyManager(100, 100);
 
-            player = new Player("Player", ResourcesManager.GetTexture("Sprites", "player"), 80, PlayerInventory, 
+            player = new Player("Player", ResourcesManager.GetTexture("Sprites", "human_body"), 
+                ResourcesManager.GetTexture("Sprites", "human_shadow"), 80, PlayerInventory, 
                 inventoryHotbar, PlayerEnergyManager);
 
             RegisterLocation(new FarmLocation("farm", timeOfDayManager));

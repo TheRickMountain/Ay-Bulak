@@ -108,7 +108,8 @@ namespace palmesneo_village
                 currentRotation = 0;
             }
 
-            Parent.LocalPosition = Vector2.Lerp(currentNode.ToVector2(), nextNode.ToVector2(), movementPercent) * Engine.TILE_SIZE;
+            Parent.LocalPosition = Vector2.Lerp(currentNode.ToVector2(), nextNode.ToVector2(), movementPercent) * Engine.TILE_SIZE 
+                + new Vector2(Engine.TILE_SIZE / 2);
 
             if (movementPercent <= 0.5f)
             {
@@ -131,7 +132,7 @@ namespace palmesneo_village
         {
             currentNode = nextNode = node;
 
-            Parent.LocalPosition = currentNode.ToVector2() * Engine.TILE_SIZE;
+            Parent.LocalPosition = currentNode.ToVector2() * Engine.TILE_SIZE + new Vector2(Engine.TILE_SIZE / 2);
         }
 
         public void Complete()

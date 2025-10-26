@@ -8,10 +8,10 @@ namespace palmesneo_village
 
         private SpriteEntity bodySprite;
 
-        public NPC(string name, MTexture texture, float speed) 
-            : base(name, texture, speed)
+        public NPC(string name, MTexture bodySprite, MTexture shadowSprite, float speed) 
+            : base(name, bodySprite, shadowSprite, speed)
         {
-            CreateAndInitializeBodySprite(texture);
+            CreateAndInitializeBodySprite(bodySprite);
         }
 
         private void CreateAndInitializeBodySprite(MTexture spritesheet)

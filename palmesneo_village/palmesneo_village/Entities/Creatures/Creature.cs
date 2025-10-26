@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using System;
 
 namespace palmesneo_village
 {
@@ -6,12 +7,23 @@ namespace palmesneo_village
     public abstract class Creature : InteractableEntity
     {
         protected float Speed { get; private set; }
+        protected CreatureBodyVisual BodyVisual { get; private set; }
+
         public GameLocation CurrentLocation { get; private set; }
 
-        public Creature(string name, MTexture texture, float speed)
+        public Creature(string name, MTexture bodySprite, MTexture shadowSprite, float speed)
         {
             Name = name;
             Speed = speed;
+
+            ImageEntity shadow = new ImageEntity();
+            shadow.Texture = shadowSprite;
+            AddChild(shadow);
+
+            BodyVisual = new CreatureBodyVisual(bodySprite);
+            AddChild(BodyVisual);
+
+            shadow.Offset = BodyVisual.GetBodyOffset();
         }
 
         public override void Update()

@@ -545,7 +545,7 @@ namespace palmesneo_village
 
         public bool TrySpawnNPC(int x, int y)
         {
-            NPC npc = new NPC("Test", ResourcesManager.GetTexture("Sprites", "player"), 0);
+            NPC npc = new NPC("Test", ResourcesManager.GetTexture("Sprites", "player"), RenderManager.Pixel, 0);
 
             npc.SetGameLocation(this);
             npc.SetTilePosition(new Vector2(x, y));

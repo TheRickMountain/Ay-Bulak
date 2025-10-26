@@ -35,21 +35,14 @@ namespace palmesneo_village
         private Range<float> soundEffectTimeRange = new Range<float>(5.0f, 20.0f);
 
         public Animal(AnimalItem animalItem)
-            : base(animalItem.Name, null, animalItem.MovementSpeed)
+            : base(animalItem.Name, animalItem.BodySprite, animalItem.ShadowSprite, animalItem.MovementSpeed)
         {
             this.animalItem = animalItem;
 
             _movement = new CreatureMovement(animalItem.MovementSpeed);
             AddChild(_movement);
 
-            ImageEntity shadow = new ImageEntity();
-            shadow.Texture = animalItem.ShadowSprite;
-            AddChild(shadow);
-
-            CreatureBodyVisual visual = new CreatureBodyVisual(animalItem.BodySprite);
-            AddChild(visual);
-
-            CreatureAnimation animation = new CreatureAnimation(_movement, visual);
+            CreatureAnimation animation = new CreatureAnimation(_movement, BodyVisual);
             AddChild(animation);
 
             InitializeSoundEffects();

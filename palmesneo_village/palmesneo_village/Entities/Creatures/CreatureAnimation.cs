@@ -54,7 +54,7 @@ namespace palmesneo_village
                 case MovementState.Completion:
                     {
                         _bodyVisual.LocalPosition = _bodyVisualOriginalLocalPosition;
-                        _bodyVisual.SetRotation(_movement.GetRotation());
+                        _bodyVisual.SetBodyRotation(_movement.GetRotation());
                     }
                     break;
             }
